@@ -1,0 +1,39 @@
+Mon Nov  9 19:23:28 UTC 2026
+ 19:23:28 up 22 days, 20:19,  6 users,  load average: 2.74, 1.96, 1.37
+top - 19:23:28 up 22 days, 20:19,  6 users,  load average: 2.74, 1.96, 1.37
+Tasks: 577 total,   1 running, 576 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  9.1 us,  1.8 sy,  0.0 ni, 89.1 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem : 122566.0 total,  25648.6 free,  12398.2 used,  88862.2 buff/cache     
+MiB Swap:  16384.0 total,  12484.7 free,   3899.3 used. 110167.8 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+1977462 ankitsa+  20   0  785152  57328  35860 S 272.7   0.0   0:00.50 ffmpeg
+   2575 ankitsa+  20   0 2353596  19536   7852 S   9.1   0.0 340:13.79 python
+1795207 ankitsa+  20   0 6179292 530652 129096 S   9.1   0.4   1:50.53 claude
+1977460 ankitsa+  20   0   26960   5464   3308 R   9.1   0.0   0:00.01 top
+      1 root      20   0   24860  12108   6508 S   0.0   0.0   5:38.39 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:04.25 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+               total        used        free      shared  buff/cache   available
+Mem:          122566       12398       25648           3       88862      110167
+Swap:          16383        3899       12484
+6.17.0-1032-nvidia
+Python 3.12.3
+3.45.1-1ubuntu2.8
+580.173.02
+abf99132-fd8b-41f9-b9fd-62241e40110c
+NRestarts=0
+ExecMainStartTimestamp=Sat 2026-10-17 23:04:05 UTC
+earlyoom: active
+/usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+vm.min_free_kbytes 1048576
+ollama pid 2564 oom_score_adj 0
+MemAvailable:   112832324 kB
+-- concurrent jobs (ffmpeg / nvenc / surgical-cv / uvicorn / pytest), this script and its ancestors excluded (R680(c))
+excluded pids: 1977457 1977436 1977434 1795207 1794760 1735364 1735179 1735175 1 
+1017068 Mon Nov  9 02:15:03 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+1962913 Mon Nov  9 19:20:54 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1794250678757-i7p0tp.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { builtin unalias -- 'which'; builtin unset -f -- 'whic
+1962934 Mon Nov  9 19:20:54 2026 timeout 1500 /home/ankitsarin/projects/surgical-cv/.venv/bin/python -m pytest tests/ -q -p no:cacheprovider
+1962937 Mon Nov  9 19:20:54 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python -m pytest tests/ -q -p no:cacheprovider
+1969565 Mon Nov  9 19:21:30 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python -B -c from multiprocessing.resource_tracker import main;main(11)
+1977533 Mon Nov  9 19:23:28 2026 ffmpeg -nostdin -hide_banner -v error -n -f lavfi -i testsrc2=size=160x120:rate=60 -frames:v 600 -c:v libx264 -bf 3 -pix_fmt yuv420p -video_track_timescale 15360 -force_key_frames 0,1.3,2.05,4.6,7.9 /tmp/pytest-of-ank

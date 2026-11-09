@@ -1,0 +1,922 @@
+b0: tests/test_u27_cloud_run_faults.py on the parent of U27's engine commit, HEAD 76cfd4eaaa9ddfc3aa9cb842602ababdb9046081, engine/ unchanged since 69e9db8 (0 diff lines); 2026-11-09T19:21:25Z
+FF..FF..F.F.                                                             [100%]
+=================================== FAILURES ===================================
+E   AssertionError: 8-openai-recorder-sqlite3: the run fault did not leave run_arm as itself: None
+    assert None is OperationalError('database is locked')
+----------------------------- Captured stderr call -----------------------------
+[Cloud o4-mini] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 1 failed: database is locked — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 2 failed: database is locked — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 1 failed after 3 attempts: database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+sqlite3.OperationalError: database is locked
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 1 failed: database is locked — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 2 failed: database is locked — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 2 failed after 3 attempts: database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+sqlite3.OperationalError: database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py:204: AssertionError: 8-openai-recorder-sqlite3: the run fault did not leave run_arm as itself: None
+E   AssertionError: 8-openai-provider-ConnectionError: the run fault did not leave run_arm as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+----------------------------- Captured stderr call -----------------------------
+[Cloud o4-mini] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 1 failed: [Errno 111] Connection refused — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 2 failed: [Errno 111] Connection refused — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 1 failed after 3 attempts: [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+ConnectionError: [Errno 111] Connection refused
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 1 failed: [Errno 111] Connection refused — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 2 failed: [Errno 111] Connection refused — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 2 failed after 3 attempts: [Errno 111] Connection refused
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+ConnectionError: [Errno 111] Connection refused
+/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py:204: AssertionError: 8-openai-provider-ConnectionError: the run fault did not leave run_arm as itself: None
+E   AssertionError: 9-anthropic-recorder-sqlite3: the run fault did not leave run_arm as itself: None
+    assert None is OperationalError('database is locked')
+----------------------------- Captured stderr call -----------------------------
+[Cloud Sonnet] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud Sonnet] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud Sonnet] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 1 failed: database is locked — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 2 failed: database is locked — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 1 failed after 3 attempts: database is locked
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 1 failed: database is locked — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 2 failed: database is locked — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 2 failed after 3 attempts: database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py:204: AssertionError: 9-anthropic-recorder-sqlite3: the run fault did not leave run_arm as itself: None
+E   AssertionError: 9-anthropic-provider-ConnectionError: the run fault did not leave run_arm as itself: None
+    assert None is ConnectionError('[Errno 111] Connection refused')
+----------------------------- Captured stderr call -----------------------------
+[Cloud Sonnet] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud Sonnet] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud Sonnet] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 1 failed: [Errno 111] Connection refused — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 2 failed: [Errno 111] Connection refused — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 1 failed after 3 attempts: [Errno 111] Connection refused
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 1 failed: [Errno 111] Connection refused — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 2 failed: [Errno 111] Connection refused — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 2 failed after 3 attempts: [Errno 111] Connection refused
+/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py:204: AssertionError: 9-anthropic-provider-ConnectionError: the run fault did not leave run_arm as itself: None
+E   AssertionError: 10-openai-store-sqlite3: the run fault did not leave run_arm as itself: None
+    assert None is OperationalError('database is locked')
+----------------------------- Captured stderr call -----------------------------
+[Cloud o4-mini] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:210 Paper 1: store_result failed: database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 196, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+sqlite3.OperationalError: database is locked
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:210 Paper 2: store_result failed: database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 196, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 196, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+sqlite3.OperationalError: database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py:204: AssertionError: 10-openai-store-sqlite3: the run fault did not leave run_arm as itself: None
+E   AssertionError: 11-anthropic-store-sqlite3: the run fault did not leave run_arm as itself: None
+    assert None is OperationalError('database is locked')
+----------------------------- Captured stderr call -----------------------------
+[Cloud Sonnet] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud Sonnet] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud Sonnet] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:238 Paper 1: store_result failed: database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 224, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+sqlite3.OperationalError: database is locked
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:238 Paper 2: store_result failed: database is locked
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 224, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 224, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+sqlite3.OperationalError: database is locked
+/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py:204: AssertionError: 11-anthropic-store-sqlite3: the run fault did not leave run_arm as itself: None
+==================================== PASSES ====================================
+_ test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-KeyError] _
+----------------------------- Captured stderr call -----------------------------
+[Cloud o4-mini] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 1 failed: 'x' — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 2 failed: 'x' — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 1 failed after 3 attempts: 'x'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+KeyError: 'x'
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 1 failed: 'x' — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 2 failed: 'x' — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 2 failed after 3 attempts: 'x'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 146, in send
+    rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 166, in _failing_record_call
+    raise exc
+KeyError: 'x'
+_ test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-APIConnectionError] _
+----------------------------- Captured stderr call -----------------------------
+[Cloud o4-mini] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 1 failed: Connection error. — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 1 attempt 2 failed: Connection error. — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 1 failed after 3 attempts: Connection error.
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+openai.APIConnectionError: Connection error.
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 1 failed: Connection error. — retrying in 2s
+WARNING  engine.cloud.openai_extractor:openai_extractor.py:182 Paper 2 attempt 2 failed: Connection error. — retrying in 4s
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:188 Paper 2 failed after 3 attempts: Connection error.
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 148, in run
+    result = self.extract_with_completeness(pid, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 426, in extract_with_completeness
+    result = self.extract_paper(paper_id, parsed_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 51, in extract_paper
+    response = self.send(paper_id, prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 140, in send
+    response = self._create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 46, in _create
+    return self.client.chat.completions.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 128, in _create
+    raise exc
+openai.APIConnectionError: Connection error.
+_ test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-KeyError] _
+----------------------------- Captured stderr call -----------------------------
+[Cloud Sonnet] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud Sonnet] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud Sonnet] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 1 failed: 'x' — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 2 failed: 'x' — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 1 failed after 3 attempts: 'x'
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 1 failed: 'x' — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 2 failed: 'x' — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 2 failed after 3 attempts: 'x'
+_ test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-APIConnectionError] _
+----------------------------- Captured stderr call -----------------------------
+[Cloud Sonnet] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud Sonnet] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud Sonnet] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 1 failed: Connection error. — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 1 attempt 2 failed: Connection error. — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 1 failed after 3 attempts: Connection error.
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 1 failed: Connection error. — retrying in 2s
+WARNING  engine.cloud.anthropic_extractor:anthropic_extractor.py:208 Paper 2 attempt 2 failed: Connection error. — retrying in 4s
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:214 Paper 2 failed after 3 attempts: Connection error.
+_ test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-KeyError] _
+----------------------------- Captured stderr call -----------------------------
+[Cloud o4-mini] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud o4-mini] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud o4-mini] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:210 Paper 1: store_result failed: 'x'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 196, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+KeyError: 'x'
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:210 Paper 2: store_result failed: 'x'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 196, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/openai_extractor.py", line 196, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+KeyError: 'x'
+_ test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-KeyError] _
+----------------------------- Captured stderr call -----------------------------
+[Cloud Sonnet] 1/2 (50.0%) | Paper EE-001 FAILED | 0s | ETA ~0s | 1 failed
+[Cloud Sonnet] 2/2 (100.0%) | Paper EE-002 FAILED | 0s | ETA ~0s | 2 failed
+============================================================
+[Cloud Sonnet] COMPLETE
+  Total papers : 2
+  Succeeded    : 0
+  Failed       : 2
+  Wall time    : 0s
+  Mean/paper   : 0s
+  Median/paper : 0s
+  Max/paper    : 0s
+============================================================
+------------------------------ Captured log call -------------------------------
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:238 Paper 1: store_result failed: 'x'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 224, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+KeyError: 'x'
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:238 Paper 2: store_result failed: 'x'
+Traceback (most recent call last):
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 224, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/anthropic_extractor.py", line 224, in run
+    self.store_result(
+  File "/home/ankitsarin/projects/evidence-engine/engine/cloud/base.py", line 363, in store_result
+    cur = self._conn.execute(
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/ankitsarin/projects/evidence-engine/tests/test_u27_cloud_run_faults.py", line 91, in execute
+    raise self.exc
+KeyError: 'x'
+=========================== short test summary info ============================
+PASSED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-KeyError]
+PASSED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-APIConnectionError]
+PASSED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-KeyError]
+PASSED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-APIConnectionError]
+PASSED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-KeyError]
+PASSED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-KeyError]
+FAILED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-sqlite3]
+FAILED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-ConnectionError]
+FAILED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-sqlite3]
+FAILED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-ConnectionError]
+FAILED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-sqlite3]
+FAILED tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-sqlite3]
+6 failed, 6 passed in 10.79s

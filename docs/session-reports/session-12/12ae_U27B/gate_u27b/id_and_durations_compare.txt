@@ -1,0 +1,27 @@
+gate ids 3538 ref 3526
+only-gate: 12; only-ref: 0
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-KeyError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-sqlite3]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-KeyError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-sqlite3]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-APIConnectionError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-ConnectionError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-KeyError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-sqlite3]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-APIConnectionError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-ConnectionError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-KeyError]
+  only-gate tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-sqlite3]
+phases ref 2615 gate 2698
+slower by >10 s: 0
+-- summary line
+=== 3537 passed, 17 deselected, 1 xfailed, 2 warnings in 1057.26s (0:17:37) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

@@ -1,0 +1,17 @@
+gate ids 3496 ref 3494
+only-gate: 2; only-ref: 0
+  only-gate tests/test_u24_preflight_spec.py::test_every_engine_preflight_probe_sends_the_spec_preflight_block
+  only-gate tests/test_u24_preflight_spec.py::test_no_engine_probe_call_omits_the_spec
+phases ref 2555 gate 2586
+slower by >10 s: 0
+-- summary line
+= 2 failed, 3493 passed, 17 deselected, 1 xfailed, 2 warnings in 929.13s (0:15:29) =
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

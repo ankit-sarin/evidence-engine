@@ -1,0 +1,64 @@
+RULING [evidence-engine 12ae-R787] — 12ae-U24B-R1 accepted: U24 landed, C49 closes; the series
+  gains 930.54 s; the red first run's evidence committed; readings; U25's Phase A opens
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U24B-R1
+  final report (engine 94ab7a8e86363eff95ce0b1e7d94aded01b88ec3; its class-(c) fix
+  1f6bc16344f1cdc5795f3574441bb0c92d3ed3e4; evidence 7732a4f1ebde34b1bef19ecb7b6451dea2430cff).
+  Transcribe at item 0 of the 12ae-U25A brief below, by transcribe_ruling.py, in the block after
+  R786's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the report):
+  MEASURED: "The amended patch is 62dfc916…6d17. Its diff against the held one is that hunk only";
+    "10 JSON paths differ"; "Three summary counters each go up by one: spec flag 16 → 17,
+    review-name flag 57 → 58, files calling resolver 20 → 21"; "No data/ listing changes"; "The
+    diff is ten files: entry_points.json 46 / 15, entry_points.md 8 / 8"; "pin_tuples_u24b.json is
+    byte-identical to 12ad_close/pin_tuples_close.json"; "94ab7a8e86363eff95ce0b1e7d94aded01b88ec3,
+    parent b8becaa"; "1f6bc16344f1cdc5795f3574441bb0c92d3ed3e4, parent 94ab7a8, touching only
+    tests/test_entry_points_take_the_lock.py (2 / 2)"; run 1: "= 2 failed, 3493 passed, 17
+    deselected, 1 xfailed, 2 warnings in 929.13s"; "Both fail with SystemExit(2), argparse refusing
+    an argv that has no --review"; run 2: "wall 930.54 s"; "==== 3495 passed, 17 deselected, 1
+    xfailed, 2 warnings in 928.34s (0:15:28) ===="; "Collected 3,513 / 17 deselected / 3,496
+    selected"; "only-gate exactly the two U24 ids, only-ref 0"; "Journal window: -- No entries --";
+    "the idle surgical-cv uvicorn (pid 1017068) only"; "Ledger 2930dff, parent faa6418";
+    "7732a4f1ebde34b1bef19ecb7b6451dea2430cff, parent 1f6bc16"; "22 files, added only (+12,798)";
+    "brief_12ae_U24B_R1.md (902620ba6e4d5f6335581b50c73cc12fdae8ee082e34715ac1d9c917fca8b2af,
+    7,963 B, 103 lines" (the architect's copy: equal); "Ledger 7b35dd4, parent 2930dff"; "Its
+    header reads Generated at commit b8becaa…".
+  READ (CC's): findings 1–6; "the tests call the CLI through the module alias (preflight.main()),
+    and census_u24a's main rule required the string "ollama_preflight" in the callee"; "The red run
+    is in ~/scratch/12ae-u24b/gate_u24b_run1/".
+  INFERRED: none.
+
+R787(a) — The 12ae-U24B-R1 report is accepted as reported: the amended patch (one hunk, the spec
+  load inside the lock), the inventory regenerated with the drift set of R786(b) plus the third
+  counter and the help-text literal (finding 4, the architect's set short by the resolver counter
+  the CLI's new call adds — the record's), the engine commit 94ab7a8 (ten files), the class-(c)
+  fix 1f6bc16 under R746(c) (two argv literals gain --review surgical_autonomy, subjects kept; the
+  U22 form), the gate of record 3,495 / 1 / 17 on 3,513 / 3,496 at 930.54 s inside 837–1021 s,
+  only-gate the two U24 ids, no load, the nineteen files; the evidence commit 7732a4f with the R1
+  brief byte-equal to the architect's copy (the third paste-fidelity match); ledgers 2930dff and
+  7b35dd4 with trailers. Both pins and the audit prompt_hash byte-identical; no request byte
+  moved. U24 is landed; P1's fix units 37, done 27.
+R787(b) — C49 CLOSES on U24 (94ab7a8 with 1f6bc16), by R514: the row's stated fix is delivered
+  (spec=spec at the three sites; the CLI's --review/--spec) and its acceptance test passes
+  (tests/test_u24_preflight_spec.py::test_every_engine_preflight_probe_sends_the_spec_preflight_block,
+  red on the parent b8becaa in 12ae_U24B/b0_parent_acceptance.txt, green in 12ae_U24B/gate_u24b/,
+  with ::test_no_engine_probe_call_omits_the_spec beside it). Noted CLOSED at 12ae-U25A's item 0
+  in INT-g12-6's note form, naming both commits and both tests; counted until P1 closes (R607(d),
+  R753(d)(ii)). The same item 0 writes the dated units line (37, done 27: U01–U24, U37, U38, U39).
+R787(c) — The series on this host state gains 930.54 s (run 2, the gate of record): thirty-three.
+  Run 1 (931.16 s wall, two failed) is not a member, as U22's red run was not. The red run's
+  evidence is committed under 12ae_U24B/gate_u24b_run1/ at 12ae-U25A's item 0 (finding 3; U22's
+  form, gate_u22b/ beside gate_u22b_rerun/), copied from scratch, every sha256 equal, in the
+  item-0 commit beside the block.
+R787(d) — Readings, no row: finding 1 (E3 missed tests/test_entry_points_take_the_lock.py; the
+  census instrument's declared alias limit was the cause and it declared it — the instrument
+  stands, the limit stands as declared, R746(c) absorbed the miss as designed); finding 2 (two
+  engine-side commits, the U22 precedent); finding 5 (inventory --write records the HEAD it ran
+  on, so the regenerated file names the parent — U23's at 9ae1fde names 66092a2 the same way; the
+  tool's form, not a defect; no row); finding 6 (R786's text hashes to the architect's value).
+  Finding 4 is recorded in (a). The session's stop count: one, the architect's (R786(a)).
+R787(e) — U25's Phase A opens: 12l_P1A.md §3's U25, "Unquoted YAML booleans and nulls refused at
+  codebook load" (INT-i12-31), read-only, in 12ae_U24A.md's form, its entry quoted first. The
+  codebook is frozen (R26): the fix is the loader's, and the live codebook must still load
+  byte-unchanged. No engine, test, script, spec or codebook edit; no model call; no live write.
+  This ruling states no standing rule.

@@ -4186,7 +4186,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 509,
+            "line": 520,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4196,7 +4196,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 69,
+            "line": 70,
             "scope": "CloudExtractorBase.__init__"
           }
         ],
@@ -5890,7 +5890,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 517,
+            "line": 526,
             "names": [
               "--review"
             ],
@@ -5899,7 +5899,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 518,
+            "line": 527,
             "names": [
               "--arm"
             ],
@@ -5908,7 +5908,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 519,
+            "line": 528,
             "names": [
               "--codebook"
             ],
@@ -5917,7 +5917,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 520,
+            "line": 529,
             "names": [
               "--strict"
             ],
@@ -5931,7 +5931,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 531,
+            "line": 540,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -5939,7 +5939,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 526,
+            "line": 535,
             "scope": "main"
           }
         ],
@@ -6871,7 +6871,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "e89d602102524dce80b2515b385d3bb312ae6e09",
+    "generated_at_commit": "6bfbe36a807abe048119863fb9256d3d236c7a16",
     "scan_roots": [
       "engine",
       "scripts",

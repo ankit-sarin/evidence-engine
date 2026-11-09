@@ -11,6 +11,7 @@ from engine.agents.extractor import build_extraction_prompt
 from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
 from engine.agents.models import ExtractionOutput
 from engine.cloud.schema import init_cloud_tables
+from engine.core.citation_guard import LEGACY, enforce_citations
 from engine.core.completeness import (
     MAX_COMPLETENESS_ATTEMPTS,
     IncompleteExtractionError,
@@ -356,6 +357,16 @@ class CloudExtractorBase:
             arm=arm,
             salvage=self._last_salvage,
         )
+        # U28 (R794(f)): the local legacy write boundary's citation guard, its tokens
+        # read from the codebook as extractor.py reads them (_absence_tokens,
+        # _contract_unmet_token): an uncited non-sentinel value or an empty value is
+        # refused and nothing is inserted; a sentinel keeps its "" (R132).
+        enforce_citations(
+            spans, paper_id=paper_id, arm=arm, mode=LEGACY,
+            escape_token=self._codebook.escape_token,
+            absence_sentinels=frozenset(s.strip().upper() for s in self._codebook.absence_sentinels),
+            contract_unmet_token=self._codebook.raw.get("contract_unmet_token"),
+        )
 
         now = datetime.now(timezone.utc).isoformat()
 
@@ -514,4 +525,6 @@ class CloudExtractorBase:
             codebook_path=codebook_path,
             extracted_count=stats.get("extracted", 0),
             failed_count=stats.get("failed", 0),
+            min_population="arm",
+            skip_on_failures=False,
         )

@@ -586,14 +586,16 @@ class TestSonnetEmptyStringNormalization:
         return SimpleNamespace(content=[thinking_block, text_block], usage=usage)
 
     @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
-    def test_empty_string_normalized_to_null(self, mock_anthropic_cls, test_db, spec_path):
-        """Empty string '' gets normalized to null with 'empty_string_to_null' annotation."""
+    def test_an_empty_value_is_refused_at_the_write_boundary(self, mock_anthropic_cls, test_db, spec_path):
+        """An empty value is refused at the cloud write boundary and the paper is counted
+        failed, with nothing stored for it (R794(f)): store_result runs the local legacy
+        boundary's citation guard, which reads an empty value with a snippet as BLANK_VALUE."""
         mock_client = MagicMock()
         mock_anthropic_cls.return_value = mock_client
 
         # study_type carries the empty string under test; the remaining fields are
-        # present so the extraction clears the completeness guard and the
-        # normalization can be observed round-tripping through store_result.
+        # present so the extraction clears the completeness guard and reaches the
+        # citation guard.
         fields_with_empty = {"fields": (
             [{"field_name": "study_type", "value": "", "source_snippet": "snippet",
               "confidence": 0.9, "tier": 1}]
@@ -607,31 +609,18 @@ class TestSonnetEmptyStringNormalization:
             extractor.close()
             pytest.skip("No pending papers")
 
-        result = extractor.extract_paper(pending[0]["paper_id"], "Test text.")
-        span = [s for s in result["spans"] if s["field_name"] == "study_type"][0]
-        assert span["value"] is None
-        assert span["notes"] == "empty_string_to_null"
+        pid = pending[0]["paper_id"]
+        write_parsed(test_db, pid, "Test text.")
+        stats = extractor.run(max_papers=1)
 
-        # Verify it round-trips through store_result
-        ext_id = extractor.store_result(
-            paper_id=pending[0]["paper_id"], arm=extractor.arm_name,
-            model_string=extractor.model_string,
-            extracted_data=result["extracted_data"],
-            reasoning_trace=result["reasoning_trace"],
-            prompt_text=result["prompt_text"],
-            input_tokens=result["input_tokens"],
-            output_tokens=result["output_tokens"],
-            reasoning_tokens=result["reasoning_tokens"],
-            cost_usd=result["cost_usd"], spans=result["spans"],
-        )
-        row = extractor._conn.execute(
-            "SELECT value, notes FROM cloud_evidence_spans "
-            " WHERE cloud_extraction_id = ? AND field_name = 'study_type'",
-            (ext_id,),
-        ).fetchone()
-        assert row["value"] is None
-        assert row["notes"] == "empty_string_to_null"
+        assert stats["failed"] == 1
+        assert stats["extracted"] == 0
+        assert extractor._conn.execute(
+            "SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = ?",
+            (pid, extractor.arm_name),
+        ).fetchone()[0] == 0
         extractor.close()
+
 
     @patch("engine.cloud.anthropic_extractor.anthropic.Anthropic")
     def test_null_converted_to_nr(self, mock_anthropic_cls, test_db, spec_path):
@@ -797,7 +786,7 @@ class TestSonnetRateLimitBackoff:
 
 
 class TestStoreResultCrashProtection:
-    """a paper-outcome store_result failures are caught per-paper; run continues."""
+    """Paper-outcome store_result failures are caught per-paper; run continues."""
 
     @patch("engine.cloud.openai_extractor.openai.OpenAI")
     def test_openai_store_failure_continues_run(self, mock_openai_cls, test_db, spec_path):

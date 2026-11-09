@@ -245,7 +245,7 @@ python -m engine.agents.ft_screener ... --verify-only
 3. **OpenAI arm:** `chat.completions.create()` with reasoning_effort=high, json_object format. Reasoning trace from `message.reasoning_content`
 4. **Anthropic arm:** `messages.create()` with extended thinking (budget_tokens=10000), max_tokens=16000. Thinking blocks separated from text blocks. Markdown fence stripping
 5. Response JSON parsed via `parse_response_to_spans()` (8+ alternate key names, flat dict restructuring, null → "NR")
-6. `store_result()` — atomic insert to cloud_extractions + cloud_evidence_spans. Rejects 0-span results
+6. `store_result()` — atomic insert to cloud_extractions + cloud_evidence_spans. Rejects 0-span results and, through `enforce_citations` (LEGACY), uncited or empty values
 7. Post-extraction: `run_distribution_check()` for the arm
 
 **No paper status change:** Cloud extractions are parallel data stored in separate tables
@@ -302,7 +302,7 @@ PYTHONPATH=. python scripts/run_cloud_extraction.py --dry-run
    - **OK:** all other fields
 5. `assert_no_collapse()` raises `DistributionCollapseError` on COLLAPSED fields; `--strict` also fails on LOW_VARIANCE
 
-**Skip conditions:** `run_post_extraction_check()` skips if the codebook is missing, and by its population rule: `min_population="run"` (cloud default) when the run extracted fewer than 10 papers, `"arm"` (local) when fewer than 10 eligible papers hold a live claim for the arm; with `skip_on_failures=True` (cloud default) also when any paper in the run failed
+**Skip conditions:** `run_post_extraction_check()` skips if the codebook is missing, and by its population rule: `min_population="run"` when the run extracted fewer than 10 papers, `"arm"` (both callers since U28) when fewer than 10 eligible papers hold a live claim for the arm; with `skip_on_failures=True` (no caller since U28) also when any paper in the run failed; and, after the check, when the arm holds no non-null value for any categorical field (U28)
 
 **Integrated into:** Cloud extractors (`run()` calls `run_distribution_check()`; COLLAPSED raises) and the local extract stage (`run_pipeline._distribution_check`, R167: `raise_on_collapse=False`, `skip_on_failures=False`, `min_population="arm"`; the result is written to `<review>/telemetry/run_events.jsonl` as a `distribution_check` row, skips included)
 

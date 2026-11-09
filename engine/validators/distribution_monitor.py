@@ -493,6 +493,15 @@ def run_post_extraction_check(
                                "entropy", "total_non_null")}
         for r in results]
 
+    # U28 (R794(e), N44): an arm holding no non-null value for any categorical
+    # field is reported skipped — each field stays OK with zeros (the per-field
+    # contract, A12), but there is nothing to assert a collapse from.
+    if all(r["total_non_null"] == 0 for r in results):
+        summary["skipped"] = True
+        summary["skip_reason"] = "arm holds no non-null value for any categorical field"
+        logger.info("Distribution monitor skipped: %s", summary["skip_reason"])
+        return summary
+
     # Fail-fast: raise on COLLAPSED (or LOW_VARIANCE in strict mode) — the cloud
     # contract. The local extract stage reads the result instead (R167).
     if raise_on_collapse:
@@ -535,6 +544,8 @@ def main():
 
     results = check_distribution(db_path, args.review, args.arm, codebook_path)
     print_distribution_report(results)
+    if all(r["total_non_null"] == 0 for r in results):
+        print(f"arm {args.arm} holds no non-null value for any categorical field; nothing was checked")
 
     try:
         assert_no_collapse(results, strict=args.strict)

@@ -1,0 +1,131 @@
+RULING [evidence-engine 12ae-R795] — 12ae-U28B accepted: U28 landed (D, B, C), B9 and C28 wait for
+  U40; the series gains 963.43 s; readings, one the architect's; session 12ae closes now on U28 —
+  the 12ae-CLOSE brief follows; no closeout gate; the band figure computed at the closeout
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-U28B
+  final report (item 0 6bfbe36; engine 24ce26bc3a39cd28ad0f38a71f4c4b6b31a2f39c; evidence
+  b14d0da8cb40f3830f9443ac377cfda616e6a706). Transcribe at item 0 of the 12ae-CLOSE brief below,
+  by transcribe_ruling.py, in the block after R794's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the report):
+  MEASURED: "12ae_U28B/brief_12ae_U28B.md is c67c1cf27a613419c0baafeca01a2a1fc60906841b9f87994f8a37e65b463fb2,
+    37,552 B, 457 lines" (the architect's copy: equal); "Plan +188 / −2; the "−" lines are exactly
+    B9's and C28's rows"; "5 failed, 2 passed in 5.64s"; "base.py 13 / 0; distribution_monitor.py
+    11 / 0; CLAUDE.md 3 / 3; pipeline.md 2 / 2; test_cloud_extraction.py 18 / 29; the new test 160
+    / 0; entry_points.json 9 / 9; entry_points.md 4 / 4"; ""line": 509 → 520 … 526 → 535";
+    "pin_tuples_u28b.json is aea19354…f24f, cmp byte-identical to pin_tuples_u27b.json"; "163
+    passed"; "Wall 963.43 s, inside 837–1021 s"; "==== 3544 passed, 17 deselected, 1 xfailed, 2
+    warnings in 961.57s (0:16:01) ===="; "collected 3562 items / 17 deselected / 3545 selected";
+    "only-gate 8 (the 7 new ids plus …::test_an_empty_value_is_refused_at_the_write_boundary);
+    only-ref 1 (…::test_empty_string_normalized_to_null)"; "none slower by more than 10 s"; "--
+    No entries --"; "/api/ps is {"models": []} both times"; "surgical-cv uvicorn (pid 2021661,
+    restarted 20:00:49) only, before and after"; "all nineteen present"; "21 files, all added";
+    "Ledger 84fd685 … 422df0b … b108211".
+  READ (CC's): findings 1–7; "extractor.py:541–542: cb = load_codebook(codebook_path) / return
+    cb.escape_token, frozenset(s.strip().upper() for s in cb.absence_sentinels)"; ":525: return
+    load_codebook(codebook_path).raw.get("contract_unmet_token")"; "base.py:91 self._codebook =
+    load_codebook(self._review_dir / CODEBOOK_FILENAME)"; "anthropic_extractor.py:108–113: if
+    span.get("value") == "": span["value"] = None; span["notes"] = "empty_string_to_null""; "Paper
+    4: store_result failed: … study_type (BLANK_VALUE)"; "claude-config 422df0b, at 20:48:04
+    during the gate, has the message "ledger: rows through 2026-11-09T20:41:46Z" and carries only
+    my row … It has no trailers"; "test_distribution_collapse_not_caught calls
+    extractor.run(max_papers=0), which processes papers because if max_papers: treats 0 as
+    unlimited".
+  INFERRED: none.
+
+R795(a) — The 12ae-U28B final report is accepted as reported: item 0 6bfbe36 (Block 192; the B9 and
+  C28 notes; the dated units line with U40 entered; the brief file byte-equal to the architect's
+  copy, the eleventh match of eleven; the item-0 check written for its brief), the engine commit
+  24ce26b (eight files: D's two keyword arguments, B's summary rule and CLI line, C's guard call
+  and import, the five docs lines as authored, the rewritten test and the docstring word, the
+  inventory regenerated under R786(b) for moved recorded lines; the zero-value branch, the two
+  protected monitor tests, effective.py, scripts/ and the transports untouched), the gate 3,544 /
+  1 / 17 on 3,562 / 3,545 at 963.43 s inside 837–1021 s, only-gate the 7 new ids plus the renamed
+  test's new id, only-ref its old id, no load, uvicorn the one concurrent job, the nineteen files,
+  green at the first run; the evidence commit b14d0da; ledgers 84fd685, 422df0b and b108211. Both
+  pins and the audit prompt_hash byte-identical. U28 is landed; P1's fix units 38, done 31
+  (U01–U28, U37, U38, U39). I3 held: the three tokens come from the codebook on both paths. The
+  acceptance tests tests/test_u28_cloud_gate_and_boundary.py (5 cases red on the parent 6bfbe36
+  in 12ae_U28B/b0_parent_acceptance.txt, 2 preservation cases green on both; green in
+  12ae_U28B/gate_u28b/) are U28's acceptance. B9 and C28 stay open for U40 (R794(b), (h)); their
+  notes at the next item 0 record U28's landing and these tests, not a close.
+R795(b) — The series on this host state gains 963.43 s: thirty-seven. The band in force stays
+  837–1021 s (R783(b)) until the wrap ruling sets 12af's.
+R795(c) — Readings, no row: finding 1 (E3 was the architect's — two insertions above recorded
+  entries move their lines, as U25 and U26 showed; the expectation was written against the
+  previous unit's stamp-only result, not against the edits' positions; regenerated under R786(b)
+  as R794(g) provided); finding 2 (the empty-string normalization branch is in
+  anthropic_extractor.py:108–113, not store_result — the architect placed it from the test's name;
+  it is reachable and its output is now refused at the boundary as BLANK_VALUE, so an empty value
+  on the Anthropic path is refused twice over; housekeeping: the branch is removed at U40's build
+  if anthropic_extractor.py is among U40's files, else it joins P7 — a dated note on C28 at the
+  next item 0 records where it is); finding 3 (a test-file slice that swallowed two neighbouring
+  tests, caught by the diff stat before any commit — the "−" count read and matched is the check
+  that caught it; no rule); finding 4 (the engine check's "−" expectation replaced by content
+  equality — the stronger form; kept for the next build); finding 5 (claude-config 422df0b: another
+  session's ledger commit carried this lane's engine row, with no trailers; the row and message are
+  true; pushed, no amend (R680(b)); the mirror of R793(e) finding 4 — the ledger is one shared
+  file, and whichever session commits next carries what is pending; recorded, no rule); finding 6
+  (test_distribution_collapse_not_caught's max_papers=0 processes papers, confirming C28's text on
+  the if max_papers: incidental, which keeps its owner, R598(b)); finding 7 (E1 and E2 held).
+R795(d) — Session 12ae closes now on U28. Nothing is in flight: five units landed (U24, U25, U26,
+  U27, U28), three rows closed (C49, INT-i12-31, C56), two opened (INT-ae12-1, INT-ae12-2), one
+  unit entered (U40), and the next step — U40's Phase A — is a fresh read that belongs to a fresh
+  session. The 12ae-CLOSE brief follows 12ad-CLOSE's form read from the record (the 12ad closeout
+  block at docs/plan/ENGINE_REFACTOR_PLAN.md "Session 12ad closed 2026-11-02 UTC" and
+  docs/session-reports/session-12/12ad_close/): item 0 (this ruling by transcribe_ruling.py; the
+  B9 and C28 landing notes and C28's note of (c) finding 2; the dated units line; no standing rule
+  — this ruling states none, so the id list, the glosses file and STANDING_RULES.md are untouched,
+  asserted by content, R777(b)), the counterpart files in 12ad_close/'s names with 12ae's sources,
+  the closure paragraph, the "Expected values at session-12af open" block, the lane line written
+  and not applied, the closeout block in the record's element order, the rNNN.txt table r783–r795.
+R795(e) — No closeout gate: the expected gate values for 12af are U28's gate (12ae_U28B/gate_u28b/:
+  3,544 passed / 1 xfailed / 17 deselected, collected 3,562 / selected 3,545, its collected_ids as
+  the reference, its durations file as the comparison). The engine tree changed last at 24ce26b, so
+  under R749(b) the closeout writes its own expected nightly file,
+  12ae_close/expected_nightly_20261110.md, in 12ad_close/expected_nightly_20261102.md's form with
+  U28's counts, and it governs the 2026-11-10 nightly and, while the tree stays unchanged,
+  2026-11-11's. The 2026-11-09 07:00 health job and 09:00 nightly have run (the closeout runs after
+  10:35 UTC): the closeout reads them as R749(b)–(c) and R779(c) place such reads — the HEAD each
+  ran on by the reflog method with the lock line; the nightly's counts and ids against the gate of
+  that tree (the 12ae unit whose engine commit was HEAD at 09:00, named from the reflog, its
+  collected_ids.txt the comparison); the health job's loads and outcome with the NVRM grep —
+  readings. The 2026-11-02 to 11-08 files read at 12ae-OPEN stay in 12ad_close/ and are not
+  rewritten.
+R795(f) — The band figure: computed by CC at the closeout from the last four standard gates on this
+  host state, read from the record (the series' last four members: 921.98 (U25), 945.63 (U26),
+  1059.11 (U27, confounded by the surgical-cv full suite, R793(c)), 963.43 (U28)), ±10% of their
+  mean, rounded inward as R683(c) rounded, stated as a computation with its proposed figure in
+  12ae_close/band_computation.txt, each gate's concurrent jobs described from its evidence
+  (R748(b)); the confounded member named as such beside its value (R677(f)); it is set by the wrap
+  ruling. The architect's arithmetic, to be matched, not copied: mean 972.5375 s, ×0.9 875.28375,
+  ×1.1 1069.79125, inward 876–1069 s. The band in force stays 837–1021 s until then.
+R795(g) — The recount script is written at this closeout in R651(a)'s chained form
+  (12ad_close/recount_12ad_close.py as the model, read), extended to read section "L (12ae
+  additions, R785)" as the 12ad table is read, its output the recount of record: 286 rows (94 / 56
+  / 136, 0 unclassed) expected — 284 at 6cb4ab6 plus INT-ae12-1 and INT-ae12-2, each Class 3, as
+  12ad's three L-section rows were counted by R782(g); P1, P6 and P7 as the script reads them; fix
+  units 38, done 31; R510 for 12ae: rows in 2 (INT-ae12-1, INT-ae12-2), rows out 0, no class or
+  package move; C49, INT-i12-31 and C56 CLOSED and counted. The dated units lines of this session
+  that read "Rows 284 (94 / 56 / 134, 0 unclassed) unchanged" after the two rows were opened were
+  the architect's carry-forward error, written from the previous count rather than from a count:
+  not rewritten (the record stands); the closeout's dated line states the measured count and names
+  the error, and the closure paragraph records it as the architect's. A count other than 286 for
+  the rows, or other than 2 / 0 for R510, is a stop before the closeout commit, both values
+  reported.
+R795(h) — The stops, for the closure: listed by CC from the rulings on disk and this brief's item 0
+  (each stop ruling names its step and its cause), never from this ruling's memory; the
+  architect's and CC's counted apart; a pause at the R86 window that resumed in the same brief
+  (12ae-U25B's item 0) is listed as a pause, not a stop. The architect reads one stop this session
+  (12ae-U24B before its first edit, R786, the architect's — the inventory question); the record
+  decides.
+R795(i) — Carried to the wrap ruling and the plan: the tools items (R752(c), R765(d), R766(d),
+  R784(d), R791(c) finding 4, R793(e) finding 3 — six, for one tools change); the standing rules
+  added this session (R783(d), R784(g); STANDING_RULES.md 87 / 8 / 95); U40 entered after U28 and
+  before U29 (R794(b)); INT-ae12-2 (P7); the housekeeping of (c) finding 2; the two shared-ledger
+  readings (R793(e) finding 4, (c) finding 5). The 12ae lane line is drafted in 12ad's form with
+  12ae's sources and written to ~/scratch/12ae-close/lane_line_12ae.txt, not applied; the wrap
+  ruling approves it.
+R795(j) — Timing: the closeout runs now, outside 07:00–10:35 UTC; if the clock reaches 06:30 UTC on
+  2026-11-10 before the closeout commit, STOP with the work on disk uncommitted and report. No
+  model call, no provider call, no live write (mode=ro instruments only); the fingerprint
+  IDENTICAL before and after the closeout push. This ruling states no standing rule.

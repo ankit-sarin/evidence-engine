@@ -1,0 +1,89 @@
+# 12ae-U25B b0: the acceptance tests on the parent, HEAD 4a4c8500904ae2158bf78f042149a7b55827161d (engine tree equal to 1f6bc16's; the two new fixtures written, codebook.py unedited), 2026-11-09T16:12:06Z
+# command: .venv/bin/python -m pytest tests/test_u25_codebook_scalars.py -vv -p no:cacheprovider
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/ankitsarin/projects/evidence-engine/.venv/bin/python
+rootdir: /home/ankitsarin/projects/evidence-engine
+configfile: pyproject.toml
+plugins: Faker-40.4.0, anyio-4.12.1
+collecting ... collected 6 items
+
+tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[instruction_no] FAILED [ 16%]
+tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_no] FAILED [ 33%]
+tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_null] FAILED [ 50%]
+tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_one] FAILED [ 66%]
+tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_yes] FAILED [ 83%]
+tests/test_u25_codebook_scalars.py::test_the_live_codebook_loads_unchanged PASSED [100%]
+
+=================================== FAILURES ===================================
+__ test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[instruction_no] ___
+
+case = 'instruction_no'
+
+    @pytest.mark.parametrize("case", sorted(CASES))
+    def test_unquoted_yaml_booleans_and_nulls_are_refused_at_load(case):
+        path = FIXTURES / case / "extraction_codebook.yaml"
+        assert path.is_file(), path
+        with pytest.raises(CodebookError) as refused:
+            load_codebook(path)
+        message = str(refused.value)
+        assert CASES[case] in message
+>       assert "quote" in message
+E       assert 'quote' in "Codebook at /home/ankitsarin/projects/evidence-engine/docs/session-reports/session-12/12ae_U25A/fixtures/instruction_no/extraction_codebook.yaml: field 'study_type' has an empty `instruction`."
+
+tests/test_u25_codebook_scalars.py:47: AssertionError
+____ test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_no] ____
+
+case = 'sentinel_no'
+
+    @pytest.mark.parametrize("case", sorted(CASES))
+    def test_unquoted_yaml_booleans_and_nulls_are_refused_at_load(case):
+        path = FIXTURES / case / "extraction_codebook.yaml"
+        assert path.is_file(), path
+>       with pytest.raises(CodebookError) as refused:
+E       Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+
+tests/test_u25_codebook_scalars.py:43: Failed
+___ test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_null] ___
+
+case = 'sentinel_null'
+
+    @pytest.mark.parametrize("case", sorted(CASES))
+    def test_unquoted_yaml_booleans_and_nulls_are_refused_at_load(case):
+        path = FIXTURES / case / "extraction_codebook.yaml"
+        assert path.is_file(), path
+>       with pytest.raises(CodebookError) as refused:
+E       Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+
+tests/test_u25_codebook_scalars.py:43: Failed
+_____ test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_one] _____
+
+case = 'value_one'
+
+    @pytest.mark.parametrize("case", sorted(CASES))
+    def test_unquoted_yaml_booleans_and_nulls_are_refused_at_load(case):
+        path = FIXTURES / case / "extraction_codebook.yaml"
+        assert path.is_file(), path
+>       with pytest.raises(CodebookError) as refused:
+E       Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+
+tests/test_u25_codebook_scalars.py:43: Failed
+_____ test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_yes] _____
+
+case = 'value_yes'
+
+    @pytest.mark.parametrize("case", sorted(CASES))
+    def test_unquoted_yaml_booleans_and_nulls_are_refused_at_load(case):
+        path = FIXTURES / case / "extraction_codebook.yaml"
+        assert path.is_file(), path
+>       with pytest.raises(CodebookError) as refused:
+E       Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+
+tests/test_u25_codebook_scalars.py:43: Failed
+=========================== short test summary info ============================
+FAILED tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[instruction_no] - assert 'quote' in "Codebook at /home/ankitsarin/projects/evidence-engine/docs/session-reports/session-12/12ae_U25A/fixtures/instruction_no/extraction_codebook.yaml: field 'study_type' has an empty `instruction`."
+FAILED tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_no] - Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+FAILED tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_null] - Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+FAILED tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_one] - Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+FAILED tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_yes] - Failed: DID NOT RAISE <class 'engine.core.codebook.CodebookError'>
+========================= 5 failed, 1 passed in 0.25s ==========================
+pytest exit code: 1

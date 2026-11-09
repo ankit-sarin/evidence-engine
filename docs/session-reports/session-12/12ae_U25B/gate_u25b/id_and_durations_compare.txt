@@ -1,0 +1,21 @@
+gate ids 3502 ref 3496
+only-gate: 6; only-ref: 0
+  only-gate tests/test_u25_codebook_scalars.py::test_the_live_codebook_loads_unchanged
+  only-gate tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[instruction_no]
+  only-gate tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_no]
+  only-gate tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[sentinel_null]
+  only-gate tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_one]
+  only-gate tests/test_u25_codebook_scalars.py::test_unquoted_yaml_booleans_and_nulls_are_refused_at_load[value_yes]
+phases ref 2582 gate 2570
+slower by >10 s: 0
+-- summary line
+==== 3501 passed, 17 deselected, 1 xfailed, 2 warnings in 919.97s (0:15:19) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

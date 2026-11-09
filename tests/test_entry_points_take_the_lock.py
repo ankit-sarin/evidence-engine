@@ -121,7 +121,7 @@ def test_run_extractions_own_acquire_nests_under_the_entry_points(monkeypatch):
 
 
 def test_the_preflight_cli_refuses_under_a_held_lock_before_probing(held_elsewhere, monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["ollama_preflight.py", "--models", "some-model:1b"])
+    monkeypatch.setattr(sys, "argv", ["ollama_preflight.py", "--review", "surgical_autonomy", "--models", "some-model:1b"])
     monkeypatch.setattr(preflight, "preflight_check", _never("preflight_check"))
     monkeypatch.setattr(preflight, "check_model", _never("check_model"))
     with pytest.raises(SystemExit) as stopped:
@@ -137,7 +137,7 @@ def test_the_preflight_cli_probes_under_the_lock_when_it_is_free(monkeypatch, ca
         seen["held"] = L.self_holds_lock()
         return preflight.PreflightResult(success=True, models=[], total_vram_gb=0.0)
 
-    monkeypatch.setattr(sys, "argv", ["ollama_preflight.py", "--models", "some-model:1b"])
+    monkeypatch.setattr(sys, "argv", ["ollama_preflight.py", "--review", "surgical_autonomy", "--models", "some-model:1b"])
     monkeypatch.setattr(preflight, "preflight_check", probe)
     preflight.main()
     assert seen == {"held": True} and L.self_holds_lock() is False

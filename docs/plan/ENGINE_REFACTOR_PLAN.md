@@ -384,7 +384,7 @@ Provenance of human decisions: every human decision on disk (36 full-text adjudi
 | I1 | `auto_backup` is `shutil.copy2` of the main file under WAL: in the production shape the backup is a 4,096-byte empty database. Called at three destructive sites. No restore procedure exists in any form | D1-7 | ARMED (every backup to date unverifiable) |
 | I2 | The size/mtime baseline cannot see a WAL-resident write; the fingerprint (0.365 s) exists but is not a standing close/start step | Part A | — |
 | I3 | The nightly cron loads models without the experiment lock | v49 NIGHTLY-LOCK-01 | ARMED *Note 2026-10-08 (12g item 0c, R527–R528):* the 12f table carries this row as A-1N ("I3 / NIGHTLY-LOCK-01 **confirmed** — the same defect"; section L) — Class 2; owning package P1, with A-1 and B-F17 (R540). *Note 2026-10-08 (12g close, R544):* A-1N (section L) is the owning row; this row closes when A-1N closes. |
-| I4 | The session-archive tool leaves `tool-results/` undetected | v49 ARCHIVE-FIX-01 | — |
+| I4 | The session-archive tool leaves `tool-results/` undetected | v49 ARCHIVE-FIX-01 | — *Note 2026-11-09 (12ae-U24A item 0, R784(e)):* the transcript of session `fac6237e` was archived at 2026-11-02 14:33:44 UTC, and its `~/.claude/projects/…/fac6237e…/tool-results/` directory survives in place, because session-archive moves only `*.jsonl` files and job directories; the directory is left where it is. |
 | I5 | *Analysis readers open the live database read-write*: `engine/analysis/concordance.py` (×2) and `analysis/paper1/export_disagreement_pairs.py` (×1) call `sqlite3.connect(db_path)` with no `mode=ro`. Not changed in INSTRUMENTS-01 by ruling; the regeneration went through a scratch copy instead. Closes in session 6 | INSTRUMENTS-01 report, §“Inventory rows this session adds” item 1 | ARMED *Note 2026-10-11 (12k item 0c, R603):* R603: "Row owners: P5's Phase A confirms whether I5 and A12 are fixed at HEAD, as L14 read them. A row confirmed fixed is closed with that evidence; otherwise it stays as recorded." The read-out (`12j_review_w2.md`, quoted): "L14 reads I5 (`mode=ro`) and A12 (registry routing) as fixed in the code at HEAD although the rows naming them do not say closed; A16 stays as recorded, with two further details in `readers/L14.md`. Recorded for the row owners; not chased." The row stays as recorded until P5's Phase A confirms it; this note states no class or package. |
 | I13 | *An analysis reader reaches the live database read-write through a **private attribute***: `analysis/paper1/judge_loader.py` used `db._conn` on an open `ReviewDatabase`. Not a `sqlite3.connect` call, so the I5 grep could not see it — the same exposure by a different route. Closed in READERS-01 Phase 2a: the loader now receives a `mode=ro` connection and opens nothing | READERS-01 Phase 1 read-out, contradiction 6 (R38) | closed 2026-09-22 |
 | I14 | *The test suite has no default barrier between a test and the model server.* Measured: demoting `--pairs-csv` (R28) turned a path that used to refuse into one that runs, and the test pinning the refusal — which therefore carried no judge mock — **reached a live Ollama server** and hung. `tests/conftest.py`'s fence covers `subprocess` and `os.system` (service managers, privilege escalation) and nothing at the HTTP boundary, so a guard that stops guarding is silently a live call | READERS-01 Phase 2a, contradiction 6 (R45) | ARMED |
@@ -16202,3 +16202,122 @@ R783(h) — Session 12ad closes now. After R783(f) has landed, run /wrap. Report
 | 2026-11-02 | R783(a) — The 12ad-CLOSE closeout block is accepted as printed: item 0 2f73fd6 (Blocks 179–180 by transcribe_ruling.py; the E-ROOT CLOSED note and dated note; INT-ad12-3; INT-ad12-1's note; the dated units line; the three rules files untouched by content), the closeout 6cb4ab6 (21 files; the 20 counterpart files; the closure and the 12ae block), ledgers b074ac4 and f79fb8a with trailers. The closure and the 12ae block are not pasted into the report (finding, the report's departure): the committed text is the record, read from the clone; CC's reason stands. R783(b) — The band for 12ae is 837–1021 s: ±10% of 928.935 s, the mean of the last four standard gates on this host state (926.70, 928.81, 935.67, 924.56), rounded inward as R683(c) rounded, each described as band_computation.txt describes it. The series stands at the thirty-one of R782(c). A 12ae gate outside the band is reported with its concurrent jobs, not adapted to. R783(c) — The stops, counted by the PI: none — no brief of 12ad stopped; every record condition passed at every check (12ad-OPEN, 12ad-U23A, 12ad-U23B, 12ad-U23B-R1, 12ad-CLOSE). The architect's two miscounts in the build RESUME (R782(d)) and the inventory-tool clause withdrawn at R781(b) were caught by checks that read their arguments and by the Phase B reads, as R772(c), R777(b) and the two-phase form intend. The session's measured point for the estimate: one CC session (03:49 → the wrap), one fix unit from Phase A to gate, one row closed, three opened, no stop. R783(d) — Finding 1. Rule from here: a full hash is proved to exist by git cat-file -e <hash>^{commit} in the repository it belongs to; git rev-parse --verify on a 40-character hash proves its form only and is not the existence check. R730(c)'s "resolved with git rev-parse --verify" reads as this from here; every brief's step-0 hash check uses the cat-file form, and a hash that does not exist is a stop as before. The hashes of 12ad stand: each was also matched against HEAD or git log. This clause is a standing rule: "A R783(d)" joins the list at 12ae-OPEN's item 0 (R754(c)(iii)), the file regenerated there. R783(e) — Readings, no row: finding 2 (the dated units line is inserted after the previous one; the record's form; "replaced" was the brief's word); finding 3 (a section L row's note goes in its Evidence cell; R716(b)'s target; "text cell" was the brief's); finding 4 (the beside wording and R781's sentence form as composed); finding 5 (the closure's deferral to R782(d)'s count stands as committed; the count is a reading); finding 6; finding 7 (a spacing difference in the dpkg line, the version equal); finding 8 (the rules-file header names the plan at 10a64eb; the 12ae-OPEN regeneration under (d) refreshes it; the id list's comment stays for the tools change, R766(d)); finding 9 (the recount's evidence is the second run, by path; a checkout aborted on the untracked directory is a reading on the scratch-clone method). R783(f) — The lane line (sha256 7e5e9bbd592629b598f9115a7e712d95b48f9a0593ae0423af8e89dc8e35ae22, 6,626 bytes, 10 lines) is approved and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R783(g) — 12ae-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block, copies lane_line_12ad.txt into docs/session-reports/session-12/12ad_close/, adds "A R783(d)" to the list with its gloss and regenerates the file (the diff classified, R766(b)). It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ae open" block, the recount by 12ad_close/recount_12ad_close.py; reads the 2026-11-02 and, if run, 2026-11-03 jobs against 12ad_close/expected_nightly_20261102.md (R782(f)); the gate by the wrapper, against 837–1021 s. Then U24's Phase A. R783(h) — Session 12ad closes now. After R783(f) has landed, run /wrap. Report the lane-line commit's hash and parent, the wrap's verdict, and the archive command as run with its result. | PI, 2026-11-02, during session 12ad, on architect recommendation, on the 12ad-CLOSE closeout block (6cb4ab6) |
 
 The decision log in this file ends at R783.
+
+**Block 182.** *Transcribed 2026-11-09 (item 0 of the 12ae-U24A brief), in its own commit with the I4 note, the standing-rules regeneration and the brief file it orders, in the R597(e) form:* ruling R784, made by PI on architect recommendation on 2026-11-09 UTC, during session 12ae, on the 12ae-OPEN final report (item 0 `ca9d3486ae0a7c0d3291bb477f4e894d5cc5a247`; evidence `95dad8d37e0b7da65caa6f0dc263827e500c439e`). The 12ae-U24A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ae-R784] — 12ae-OPEN accepted; the series gains 940.16 s; claude-config
+  e909961 accepted; the open check's health section reads the latest run only (a recorded limit);
+  the wrap time corrected; a brief carries only what is new and is committed at its item 0 (a
+  standing rule, PI's word); U24's Phase A opens
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation and on the PI's
+  approval in words of the brief-efficiency recommendation, on the 12ae-OPEN final report (item 0
+  ca9d3486ae0a7c0d3291bb477f4e894d5cc5a247; evidence 95dad8d37e0b7da65caa6f0dc263827e500c439e).
+  Transcribe at item 0 of the 12ae-U24A brief below, by transcribe_ruling.py, in the block after
+  R783's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12ae-OPEN final report):
+  MEASURED: "02:57:23 UTC, 2026-11-09; commit date 2026-11-09"; "HEAD e909961, 13 commits past
+    866115c (rc 0 for both hashes)"; "fac6237e archive time: 2026-11-02 14:33:44 UTC, read from the
+    archived transcript's ctime"; "Seven pairs ran on this HEAD (11-02 to 11-08)"; "All seven ran
+    20/20 with 0 FAIL lines and 0 non-200 responses"; "NV_ERR_NO_MEMORY: 31 lines this boot, 5 of
+    them new since 11-02. All five fall inside health-job windows"; "Foreign loads since the
+    closeout: 6"; "Each matches the expected file line for line"; "HEAD 6cb4ab6, because the
+    reflog's last move is at 11-02 05:37:10"; "Wall times were 929.52, 934.11, 953.71, 930.96,
+    946.35, 933.67 and 933.36 s"; "r783.txt: 52cbd571…aebe, 7258 B, 84 lines, equal to the
+    architect's hash"; "Append: +95 / −0 to the plan. The "ends at" lines go from 137 to 138"; "The
+    plan is now 16204 lines, 4e33d5d9…bb65, 2805498 B, ending "…ends at R783.""; "Id list: one added
+    line, "A R783(d)", after "A R780(b)" (numstat 1/0)"; "wrote …: 94 clauses of 1516"; "3 header
+    lines changed, 1 new section, 17 "Named by" lines that only append ids, other 0"; "The commit is
+    ca9d3486ae0a7c0d3291bb477f4e894d5cc5a247, parent 6cb4ab6"; "The ledger commit is 7a5adc1b,
+    parent e909961, for the row at 2026-11-09T03:04:18Z"; "session_open_check.py passed with 0
+    mismatches and no SKIPPED section"; "284 rows, 94 / 56 / 134, 0 without a class"; "37, done 26
+    (dated lines, measured)"; "R510: 210 rows at 6cb4ab6 and 210 at ca9d348. 0 rows in, 0 out";
+    "Exit at 03:21:59.5 after 940.16 s, inside the band"; "Summary 3493 passed, 17 deselected, 1
+    xfailed, 2 warnings; collected 3511, selected 3494, ids 0/0"; "The only concurrent job was the
+    idle surgical-cv uvicorn (pid 1017068)"; "all 19 files are present"; "48 files added only: 19
+    into 12ae_open/gate_12ae_open/ and 29 into 12ad_close/"; "The commit is
+    95dad8d37e0b7da65caa6f0dc263827e500c439e, parent ca9d348"; "The ledger commit is 2f1a53b4,
+    parent 7a5adc1, for the row at 03:22:55Z"; "The fingerprint was IDENTICAL before and after the
+    push" (both commits).
+  READ (CC's): findings 1–8 of that report; "The section compares the cron log's mtime date and
+    reads only the last 20 Testing lines, so it can only ever read the latest run"; "The lane-line
+    commit 866115c is at 14:28:46, and the archive ctime is 14:33:44"; "session-archive moves only
+    *.jsonl files and job directories"; "The exact extract_rules command line for the 12ad-U23B
+    regeneration is not recorded anywhere"; "It split ids on whitespace … I fixed it before any read
+    was written or relied on".
+  INFERRED: none.
+
+R784(a) — The 12ae-OPEN final report is accepted as printed: item 0 ca9d348 (Block 181 by
+  transcribe_ruling.py, beside Block 163's; "A R783(d)" with its gloss, STANDING_RULES.md at 94
+  clauses, Tier A 86 / Tier B 8, its diff classified other 0; the lane-line copy), the evidence
+  commit 95dad8d (the nineteen gate files under 12ae_open/gate_12ae_open/; the twenty-nine job-read
+  files under 12ad_close/), ledgers 7a5adc1 and 2f1a53b with trailers; the open check 0 MISMATCH, 0
+  SKIPPED; the recount 284 (94 / 56 / 134), P1 62 (25 / 25 / 12), fix units 35 / 37 / 19 / 37 done
+  26; R510 210 / 210, in 0, out 0; seven nightlies on 6cb4ab6 each a line-for-line match, ids 0/0,
+  windows empty. No stop.
+R784(b) — The series on this host state gains 940.16 s (the 12ae-OPEN gate, beside the idle
+  uvicorn only): the thirty-one of R782(c) plus 940.16, thirty-two. The band in force stays
+  837–1021 s (R783(b)). The seven nightly wall times are readings, not members (a nightly is not a
+  wrapper gate).
+R784(c) — claude-config at e909961, thirteen commits past 866115c, is accepted under R663(b): ten
+  carry ledger rows of other lanes (surgical-cv's and hello-ai-v2's, named in the report), none
+  removing a row of this lane; three are the PI's rules-review commits (ecbea4d, 0e63927,
+  8b29276), their primer hunks at lines 1002 and 1555, lines 41–45 untouched. The next check reads
+  claude-config at 2f1a53b or an accepted descendant.
+R784(d) — Finding 1: session_open_check.py's health section reads the latest run only, by the log's
+  mtime date and its last twenty lines. A recorded limit of the tool, joining R752(c)'s two for the
+  next tools change. CC's setting of the section's date to 2026-11-08 was right under R732(a): the
+  tool governs, and the 11-02 run stood as step 1's explicit read. The brief's "the script's
+  health section repeats the 11-02 read" was the architect's premise, written from the 12ad
+  precedent in which the latest run and the first governed run were the same day; the premise is
+  withdrawn, and an open after a gap names the latest run in the script's health section and reads
+  every earlier run explicitly.
+R784(e) — Readings, no row: finding 2 (the 12ad wrap landed at 14:28:46 UTC on 2026-11-02 and the
+  archive at 14:33:44, not "about 05:45" — the unified plan's figure, corrected at v102; the brief
+  asked for the archive time to be read from the record, and it was); finding 3 (a
+  fac6237e…/tool-results/ directory survives the archive because session-archive moves only *.jsonl
+  files and job directories — a dated note on inventory row I4, which already records that the
+  tool leaves tool-results/ undetected, written at 12ae-U24A's item 0; the directory is left in
+  place); finding 4 (the 12ad-U23B regeneration's command line is recorded nowhere; from this
+  ruling the item-0 check's evidence file carries the regeneration invocation as run, and the
+  committed brief under (g) carries it as directed); finding 5 (R782(f)'s file governs every
+  nightly on the unchanged tree from its date, as the brief read it; the file's "2026-11-03"
+  wording is a dated wording, not edited; R749(b) reads so); finding 6 (the id list's header
+  comment stays, R766(d)); finding 7 (CC's first id parser split on whitespace and was corrected
+  before any read was written — a reading, in CC's own words); finding 8 (1489 → 1516 clauses in
+  the log, a measurement).
+R784(f) — The 12ae-OPEN brief's length: 900 lines before its preface, of which the architect counts
+  about 350 as new to this open; the rest restated clauses STANDING_RULES.md holds (43 of the 62
+  ids the brief cites), quoted tool docstrings and README text CC reads at the step that uses
+  them, quoted the "Expected values" block CC reads whole at its step 0c, and carried the 12ac-OPEN
+  and 12ad-OPEN scaffolding verbatim because no brief is on disk to point at. The PI, in words on
+  2026-11-09: the recommendation is agreed, "as long as context and fidelity of chat and work
+  stays". Clause (g) is that agreement as a rule.
+R784(g) — Rule from here, a standing rule (PI's word, 2026-11-09): a brief carries only what is new
+  to its task. (i) A clause STANDING_RULES.md holds is cited by its id and not restated; a brief
+  restates a convention only when the file lacks it. (ii) A tool's docstring or the README is not
+  quoted into a brief; the brief names the tool and the step that reads it. (iii) The "Expected
+  values at session-N open" block is quoted into an open brief only where a value gates a stop;
+  the block is read whole by CC at its step 0. (iv) The form of a deliverable is named by the path
+  of a committed read-out or brief, with the deltas stated, never by pasting the form. (v) Each
+  brief is committed as pasted, at its own item 0, into the evidence directory it governs, as
+  brief_<task id>.md (the whole pasted block, Section 1 included), written once from the paste and
+  hashed straight after the write (R738(b)), the hash reported; the architect compares it against
+  its own copy at the next report, and a mismatch is a finding, not an edit (R739(b)). (vi) The
+  stop conditions, the expected values and the steps are the brief; the rest is a pointer. From
+  the 12ae-U24A brief on; the 12ae-OPEN brief stays in the architect's record and the archived
+  session transcript and is not reconstructed. Fidelity is not reduced by this rule: a rule cited
+  by id is the same rule, and a form named by path is the same form. "A R784(g)" joins the list at
+  12ae-U24A's item 0 (R754(c)(iii)), the file regenerated there, the diff classified (R766(b)).
+R784(h) — U24's Phase A opens: 12l_P1A.md §3's U24, "Every preflight probe is sent the spec's
+  block" (C49), read-only, in 12ad_U23A.md's form (§0–§9), its entry quoted first. No engine, test,
+  script, spec or codebook edit; no model call; no live write. The design ruling follows its
+  read-out.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-09 | R784(a) — The 12ae-OPEN final report is accepted as printed: item 0 ca9d348 (Block 181 by transcribe_ruling.py, beside Block 163's; "A R783(d)" with its gloss, STANDING_RULES.md at 94 clauses, Tier A 86 / Tier B 8, its diff classified other 0; the lane-line copy), the evidence commit 95dad8d (the nineteen gate files under 12ae_open/gate_12ae_open/; the twenty-nine job-read files under 12ad_close/), ledgers 7a5adc1 and 2f1a53b with trailers; the open check 0 MISMATCH, 0 SKIPPED; the recount 284 (94 / 56 / 134), P1 62 (25 / 25 / 12), fix units 35 / 37 / 19 / 37 done 26; R510 210 / 210, in 0, out 0; seven nightlies on 6cb4ab6 each a line-for-line match, ids 0/0, windows empty. No stop. R784(b) — The series on this host state gains 940.16 s (the 12ae-OPEN gate, beside the idle uvicorn only): the thirty-one of R782(c) plus 940.16, thirty-two. The band in force stays 837–1021 s (R783(b)). The seven nightly wall times are readings, not members (a nightly is not a wrapper gate). R784(c) — claude-config at e909961, thirteen commits past 866115c, is accepted under R663(b): ten carry ledger rows of other lanes (surgical-cv's and hello-ai-v2's, named in the report), none removing a row of this lane; three are the PI's rules-review commits (ecbea4d, 0e63927, 8b29276), their primer hunks at lines 1002 and 1555, lines 41–45 untouched. The next check reads claude-config at 2f1a53b or an accepted descendant. R784(d) — Finding 1: session_open_check.py's health section reads the latest run only, by the log's mtime date and its last twenty lines. A recorded limit of the tool, joining R752(c)'s two for the next tools change. CC's setting of the section's date to 2026-11-08 was right under R732(a): the tool governs, and the 11-02 run stood as step 1's explicit read. The brief's "the script's health section repeats the 11-02 read" was the architect's premise, written from the 12ad precedent in which the latest run and the first governed run were the same day; the premise is withdrawn, and an open after a gap names the latest run in the script's health section and reads every earlier run explicitly. R784(e) — Readings, no row: finding 2 (the 12ad wrap landed at 14:28:46 UTC on 2026-11-02 and the archive at 14:33:44, not "about 05:45" — the unified plan's figure, corrected at v102; the brief asked for the archive time to be read from the record, and it was); finding 3 (a fac6237e…/tool-results/ directory survives the archive because session-archive moves only *.jsonl files and job directories — a dated note on inventory row I4, which already records that the tool leaves tool-results/ undetected, written at 12ae-U24A's item 0; the directory is left in place); finding 4 (the 12ad-U23B regeneration's command line is recorded nowhere; from this ruling the item-0 check's evidence file carries the regeneration invocation as run, and the committed brief under (g) carries it as directed); finding 5 (R782(f)'s file governs every nightly on the unchanged tree from its date, as the brief read it; the file's "2026-11-03" wording is a dated wording, not edited; R749(b) reads so); finding 6 (the id list's header comment stays, R766(d)); finding 7 (CC's first id parser split on whitespace and was corrected before any read was written — a reading, in CC's own words); finding 8 (1489 → 1516 clauses in the log, a measurement). R784(f) — The 12ae-OPEN brief's length: 900 lines before its preface, of which the architect counts about 350 as new to this open; the rest restated clauses STANDING_RULES.md holds (43 of the 62 ids the brief cites), quoted tool docstrings and README text CC reads at the step that uses them, quoted the "Expected values" block CC reads whole at its step 0c, and carried the 12ac-OPEN and 12ad-OPEN scaffolding verbatim because no brief is on disk to point at. The PI, in words on 2026-11-09: the recommendation is agreed, "as long as context and fidelity of chat and work stays". Clause (g) is that agreement as a rule. R784(g) — Rule from here, a standing rule (PI's word, 2026-11-09): a brief carries only what is new to its task. (i) A clause STANDING_RULES.md holds is cited by its id and not restated; a brief restates a convention only when the file lacks it. (ii) A tool's docstring or the README is not quoted into a brief; the brief names the tool and the step that reads it. (iii) The "Expected values at session-N open" block is quoted into an open brief only where a value gates a stop; the block is read whole by CC at its step 0. (iv) The form of a deliverable is named by the path of a committed read-out or brief, with the deltas stated, never by pasting the form. (v) Each brief is committed as pasted, at its own item 0, into the evidence directory it governs, as brief_<task id>.md (the whole pasted block, Section 1 included), written once from the paste and hashed straight after the write (R738(b)), the hash reported; the architect compares it against its own copy at the next report, and a mismatch is a finding, not an edit (R739(b)). (vi) The stop conditions, the expected values and the steps are the brief; the rest is a pointer. From the 12ae-U24A brief on; the 12ae-OPEN brief stays in the architect's record and the archived session transcript and is not reconstructed. Fidelity is not reduced by this rule: a rule cited by id is the same rule, and a form named by path is the same form. "A R784(g)" joins the list at 12ae-U24A's item 0 (R754(c)(iii)), the file regenerated there, the diff classified (R766(b)). R784(h) — U24's Phase A opens: 12l_P1A.md §3's U24, "Every preflight probe is sent the spec's block" (C49), read-only, in 12ad_U23A.md's form (§0–§9), its entry quoted first. No engine, test, script, spec or codebook edit; no model call; no live write. The design ruling follows its read-out. | PI, 2026-11-09, during session 12ae, on architect recommendation, on the 12ae-OPEN final report (item 0 ca9d348; evidence 95dad8d) |
+
+The decision log in this file ends at R784.

@@ -3,9 +3,9 @@
 **Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
 - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `4e33d5d93a2c51447df92fe2f370da0b8051377feeb4bc03a852899c3548bb65`
-- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `e40d47cb7d01f8bcbbe5d9ce3ff05ade93e57d1013ca1f5023eea4b12534bed1`
-- Selection: the id list: Tier A 86, Tier B 8, 94 of 1516 clauses in the log.
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `fb14a3fd3270ab89894bf87ce1a90bc7d7b9d97b04dbf6eafedf9c11e74f155c`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `0657ba83ca1dd54871ed7634a866cc9de3c5286038b46d81f8911fa6dd2bcd62`
+- Selection: the id list: Tier A 87, Tier B 8, 95 of 1524 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
 
 # Tier A — process rules
@@ -263,7 +263,7 @@ R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is
   non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
 ```
 
-Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c).
+Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c), R784(c).
 
 Gloss (CC's, not ruled): Another lane's committed claude-config change that leaves this lane's rows and primer lines 41–45 intact is accepted as found, noted by hash and lane.
 
@@ -988,7 +988,7 @@ R732(a) — The stop is correct and is the architect's: the brief named Blocks 1
   governing (R18).
 ```
 
-Named by: R736(f), R739(c), R741(d).
+Named by: R736(f), R739(c), R741(d), R784(d).
 
 Gloss (CC's, not ruled): A multi-ruling brief names the pattern, not a model block; CC finds the most recent such commit and quotes its form, and the record wins over the brief.
 
@@ -1096,7 +1096,7 @@ R738(b) — Finding 1 is CC's: r737.txt was first written with a line not in Sec
   stop, and the file is not edited to reach a match.
 ```
 
-Named by: R739(a), R739(c), R741(d).
+Named by: R739(a), R739(c), R741(d), R784(g).
 
 Gloss (CC's, not ruled): A ruling file is hashed straight after its one write, before any read-back; a mismatch stops, and the file is not edited to match.
 
@@ -1143,7 +1143,7 @@ R739(b) — The mismatched file is not edited and not deleted: it is moved by it
   stop. From here a ruling file that fails its hash is cleared this way, under a ruling.
 ```
 
-Named by: none.
+Named by: R784(g).
 
 Gloss (CC's, not ruled): A ruling file that fails its hash is moved to scratch, verified there and rewritten, only under a ruling.
 
@@ -1223,7 +1223,7 @@ R749(b) — An open does not wait for a day's scheduled jobs. A brief is valid a
   … health job and … nightly" clause in timing only.
 ```
 
-Named by: R764(c), R767(d), R774(b), R782(f).
+Named by: R764(c), R767(d), R774(b), R782(f), R784(e).
 
 Gloss (CC's, not ruled): An open does not wait for a day's jobs; each job is read by the first brief after it runs, against its governing expected file, and a gate must exit before 07:00 UTC.
 
@@ -1354,7 +1354,7 @@ R766(b) — The 17 "Named by" lines are accepted: each only appends ids, no exis
   classification is written by the check into its own evidence file, never by eye.
 ```
 
-Named by: R767(c), R768(a), R775(b), R783(g).
+Named by: R767(c), R768(a), R775(b), R783(g), R784(g).
 
 Gloss (CC's, not ruled): A regeneration of STANDING_RULES.md after new blocks moves its derived "Named by" lines; the pre-commit check classifies every changed line and allows only the three header lines, a new section for an id the list gained, and a "Named by" line that only appends ids.
 
@@ -1411,9 +1411,36 @@ R783(d) — Finding 1. Rule from here: a full hash is proved to exist by git cat
   item 0 (R754(c)(iii)), the file regenerated there.
 ```
 
-Named by: none.
+Named by: R784(a).
 
 Gloss (CC's, not ruled): In this lane a full hash is shown to exist by git cat-file -e <hash>^{commit} in its own repository; git rev-parse --verify on a 40-character hash shows only that it is well formed, and a brief's step-0 hash check uses the cat-file form.
+
+## R784(g)
+
+2026-11-09, session 12ae.
+
+```text
+R784(g) — Rule from here, a standing rule (PI's word, 2026-11-09): a brief carries only what is new
+  to its task. (i) A clause STANDING_RULES.md holds is cited by its id and not restated; a brief
+  restates a convention only when the file lacks it. (ii) A tool's docstring or the README is not
+  quoted into a brief; the brief names the tool and the step that reads it. (iii) The "Expected
+  values at session-N open" block is quoted into an open brief only where a value gates a stop;
+  the block is read whole by CC at its step 0. (iv) The form of a deliverable is named by the path
+  of a committed read-out or brief, with the deltas stated, never by pasting the form. (v) Each
+  brief is committed as pasted, at its own item 0, into the evidence directory it governs, as
+  brief_<task id>.md (the whole pasted block, Section 1 included), written once from the paste and
+  hashed straight after the write (R738(b)), the hash reported; the architect compares it against
+  its own copy at the next report, and a mismatch is a finding, not an edit (R739(b)). (vi) The
+  stop conditions, the expected values and the steps are the brief; the rest is a pointer. From
+  the 12ae-U24A brief on; the 12ae-OPEN brief stays in the architect's record and the archived
+  session transcript and is not reconstructed. Fidelity is not reduced by this rule: a rule cited
+  by id is the same rule, and a form named by path is the same form. "A R784(g)" joins the list at
+  12ae-U24A's item 0 (R754(c)(iii)), the file regenerated there, the diff classified (R766(b)).
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): In this lane a brief carries only what is new to its task: a standing rule is cited by id, a tool or a deliverable's form is named by path, the open block is quoted only where a value gates a stop, and each brief is committed as pasted at its own item 0 and hashed.
 
 # Tier B — engine governance, pending the adoption ruling
 
@@ -1461,7 +1488,7 @@ Gloss (CC's, not ruled): No cloud extraction until sessions 8 and 9 land, and th
 R510 — **Y4.** "Each close records pre-tag rows in / out and counts by class."
 ```
 
-Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a), R758(a), R763(f), R764(d), R767(a), R774(c), R779(a), R780(g), R781(i), R782(g).
+Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a), R758(a), R763(f), R764(d), R767(a), R774(c), R779(a), R780(g), R781(i), R782(g), R784(a).
 
 Gloss (CC's, not ruled): Each close records pre-tag rows in and out and the counts by class.
 

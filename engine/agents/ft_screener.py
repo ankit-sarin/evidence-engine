@@ -325,6 +325,7 @@ def run_ft_screening(
     require_preflight(
         [spec.ft_screening_models.primary, spec.ft_screening_models.verifier],
         runner_name="FT screening",
+        spec=spec,
     )
 
     papers = db.get_papers_by_status("PARSED")

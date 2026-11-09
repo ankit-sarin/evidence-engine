@@ -262,6 +262,7 @@ def test_abstract_screening_calls_preflight(tmp_path, spec):
 
     mock_pf.assert_called_once_with(
         [spec.screening_models.primary], runner_name="Abstract screening",
+        spec=spec,
     )
     db.close()
 
@@ -277,6 +278,7 @@ def test_abstract_verification_calls_preflight(tmp_path, spec):
 
     mock_pf.assert_called_once_with(
         [spec.screening_models.verification], runner_name="Abstract verification",
+        spec=spec,
     )
     db.close()
 

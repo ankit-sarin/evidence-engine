@@ -3887,7 +3887,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 659,
+            "line": 660,
             "names": [
               "--review"
             ],
@@ -3896,7 +3896,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 660,
+            "line": 661,
             "names": [
               "--spec"
             ],
@@ -3905,7 +3905,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 664,
+            "line": 665,
             "names": [
               "--screen-only"
             ],
@@ -3914,7 +3914,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 665,
+            "line": 666,
             "names": [
               "--verify-only"
             ],
@@ -3923,7 +3923,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 666,
+            "line": 667,
             "names": [
               "--background"
             ],
@@ -3939,7 +3939,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 662,
+            "line": 663,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -3947,7 +3947,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 677,
+            "line": 678,
             "scope": "main"
           }
         ],
@@ -3955,7 +3955,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 676,
+            "line": 677,
             "scope": "main"
           }
         ],
@@ -5800,6 +5800,24 @@
             "dest": null,
             "line": 314,
             "names": [
+              "--review"
+            ],
+            "required": true
+          },
+          {
+            "default": "None",
+            "dest": null,
+            "line": 315,
+            "names": [
+              "--spec"
+            ],
+            "required": false
+          },
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 319,
+            "names": [
               "--models"
             ],
             "required": true
@@ -5807,7 +5825,7 @@
           {
             "default": "30",
             "dest": null,
-            "line": 315,
+            "line": 320,
             "names": [
               "--timeout"
             ],
@@ -5818,10 +5836,23 @@
         "literal_review_ids": [],
         "order": {},
         "path": "engine/utils/ollama_preflight.py",
-        "path_construction": [],
+        "path_construction": [
+          {
+            "kind": "literal",
+            "line": 317,
+            "role": "help_text",
+            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
+          }
+        ],
         "review_database": [],
         "review_id_constants": [],
-        "spec_access": [],
+        "spec_access": [
+          {
+            "func": "load_spec_for",
+            "line": 328,
+            "scope": "main"
+          }
+        ],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -6823,10 +6854,10 @@
       "entry_points": 83,
       "entry_points_constructing_reviewdatabase": 22,
       "entry_points_name_only": 41,
-      "entry_points_with_review_name_flag": 57,
-      "entry_points_with_spec_flag": 16,
+      "entry_points_with_review_name_flag": 58,
+      "entry_points_with_spec_flag": 17,
       "files_calling_load_review_spec_directly": 8,
-      "files_calling_resolver": 20,
+      "files_calling_resolver": 21,
       "files_scanned": 204,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
@@ -6840,7 +6871,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "66092a213327751bd18ebacd6a6cb254d3028fc0",
+    "generated_at_commit": "b8becaaa7bbc4f386f82da8e12b9ad06daa0c97d",
     "scan_roots": [
       "engine",
       "scripts",

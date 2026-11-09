@@ -168,7 +168,7 @@ def run_screening(db: ReviewDatabase, spec: ReviewSpec) -> dict:
 
     # Pre-flight: verify screening model is loaded and responsive
     from engine.utils.ollama_preflight import require_preflight
-    require_preflight([primary_model], runner_name="Abstract screening")
+    require_preflight([primary_model], runner_name="Abstract screening", spec=spec)
 
     papers = db.get_papers_by_status("INGESTED")
     total = len(papers)
@@ -256,7 +256,7 @@ def run_verification(db: ReviewDatabase, spec: ReviewSpec) -> dict:
 
     # Pre-flight: verify verification model is loaded and responsive
     from engine.utils.ollama_preflight import require_preflight
-    require_preflight([verification_model], runner_name="Abstract verification")
+    require_preflight([verification_model], runner_name="Abstract verification", spec=spec)
 
     papers = db.get_papers_by_status("ABSTRACT_SCREENED_IN")
 

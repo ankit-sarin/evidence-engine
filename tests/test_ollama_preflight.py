@@ -272,6 +272,7 @@ class TestRunnerIntegration:
             mock_pf.assert_called_once_with(
                 [spec.ft_screening_models.primary, spec.ft_screening_models.verifier],
                 runner_name="FT screening",
+                spec=spec,
             )
         db.close()
 

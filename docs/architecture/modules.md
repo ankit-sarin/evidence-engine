@@ -380,9 +380,9 @@ Deleted. It read `extractions.reasoning_trace` and `evidence_spans.audit_status`
 
 ### `ollama_preflight.py`
 **Purpose:** Pre-flight health check.
-- `preflight_check(models, timeout)` — Load test + VRAM budget (100 GB limit)
+- `preflight_check(models, timeout, *, spec)` — Load test + VRAM budget (100 GB limit); the probe's options and `keep_alive` resolve from the spec's `preflight` and `ollama` blocks
 - `check_ollama_env()` — Validates required systemd env vars (OLLAMA_FLASH_ATTENTION, OLLAMA_MAX_LOADED_MODELS)
-- `require_preflight(models, runner_name)` — Orchestrator: env check → model check → abort on failure
+- `require_preflight(models, runner_name, timeout, *, spec)` — Orchestrator: env check → model check → abort on failure; every engine caller passes the spec (U24)
 
 ### `progress.py`
 **Purpose:** Batch progress reporting.

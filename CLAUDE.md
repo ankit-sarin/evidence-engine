@@ -589,7 +589,7 @@ python -m engine.tools.db_fingerprint data/surgical_autonomy/review.db [--out fp
 python -m engine.tools.inventory --check | --write
 
 # Ollama pre-flight
-python -m engine.utils.ollama_preflight --models qwen3.5:27b gemma3:27b deepseek-r1:32b
+python -m engine.utils.ollama_preflight --review surgical_autonomy --models qwen3.5:27b gemma3:27b deepseek-r1:32b
 
 # Cloud extraction
 # --arm names spec arms and must be a subset of cloud.enabled_arms (empty on live — R71)

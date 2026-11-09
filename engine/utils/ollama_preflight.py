@@ -311,14 +311,22 @@ def main():
     )
 
     parser = argparse.ArgumentParser(description="Ollama model pre-flight health check")
+    parser.add_argument("--review", required=True, help="Review id. The probe's options and keep_alive come from its spec's preflight and ollama blocks (U24).")
+    parser.add_argument(
+        "--spec", default=None,
+        help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id.",
+    )
     parser.add_argument("--models", nargs="+", required=True, help="Model names to check")
     parser.add_argument("--timeout", type=int, default=30, help="Timeout per model (seconds)")
     args = parser.parse_args()
 
+    from engine.core.review_paths import load_spec_for
+
     # The experiment lock, before any database, manifest or model call (R629(b), (c)).
     try:
         with hold_experiment_lock():
-            result = preflight_check(args.models, timeout=args.timeout)
+            spec = load_spec_for(args.review, args.spec)
+            result = preflight_check(args.models, timeout=args.timeout, spec=spec)
     except ExperimentLockHeld as exc:
         raise SystemExit(str(exc)) from None
 

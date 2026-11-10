@@ -1,0 +1,9 @@
+2026-11-10T23:08:44.660494709Z
+total 1184
+drwx------    5 ankitsarin ankitsarin   4096 2026-11-10 23:08:16.177944253 +0000 .
+drwxrwxrwt  453 root       root        61440 2026-11-10 23:08:39.761999197 +0000 ..
+drwx------ 3283 ankitsarin ankitsarin 364544 2026-11-10 03:45:39.439338131 +0000 pytest-610
+drwx------ 3547 ankitsarin ankitsarin 401408 2026-11-10 09:16:10.850327083 +0000 pytest-611
+drwx------ 3283 ankitsarin ankitsarin 364544 2026-11-10 23:08:16.181944262 +0000 pytest-612
+lrwxrwxrwx    1 ankitsarin ankitsarin     36 2026-11-10 23:01:38.133020588 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-612
+1834970855	/tmp/pytest-of-ankitsarin

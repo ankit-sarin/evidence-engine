@@ -1,0 +1,111 @@
+RULING [evidence-engine 12ae-R796] — wrap ruling: closeout accepted; the band set 876–1069 s; one
+  stop and one pause this session, both counted; readings on the closeout's eleven findings; no
+  standing rule; lane line approved and applied; close now
+STATUS: PI ruling, 2026-11-09 UTC, session 12ae, on architect recommendation, on the 12ae-CLOSE
+  closeout block (840db24454f08f2486d488ba3e7501fdb73d2dfb) and final report. Transcribe as item 0
+  of 12af-OPEN by transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the closeout block and report):
+  MEASURED: "item 0 is df3e721 and the closeout is 840db24"; "12ae_CLOSE/brief_12ae_CLOSE.md is
+    05170e3e1d61c4af62bf33f996aaff904dfbe985e5325a065520ad32009d5367, 32,218 B, 395 lines" (the
+    architect's copy: equal, cmp byte for byte — the twelfth match of twelve); "plan sha256
+    ae6159342c216594ae88a6ec7af71f7be05d0c803fccd60638aaac27fd374ba7 3036042 bytes 17693 lines";
+    "rows 286 (94/56/136/0); P1 62 (25/25/12); P6 12; P7 121"; "fix_units 35; literal 37/19; dated
+    lines 38/31; R510 in 2 (INT-ae12-1, INT-ae12-2), out 0"; "the chain reproduced 12ad's JSON
+    3c733cd1…ce21"; "mean 972.5374999999999 s; x0.9 875.2837499999999; x1.1 1069.79125 / rounded
+    inward: 876–1069 s"; "the series has thirty-seven members (37): True"; "diff_engine_since_6cb4ab6.txt:
+    18 files, 854 insertions, 37 deletions"; "diff_since_24ce26b.txt: empty"; "23 MATCH / 0
+    MISMATCH"; "fingerprint_close.txt: IDENTICAL"; "dbchecks_close.txt … cmp equal to 12ad's;
+    pin_tuples_close.json cmp equal to 12ad's and to pin_tuples_u28b.json"; the 2026-11-09 health
+    job "20/20 loads OK, 0 FAIL … NV_ERR_NO_MEMORY in its window: 0"; the 2026-11-09 nightly "ran
+    on 4a4c850 … Its engine tree equals 1f6bc16's, so it was compared with U24's gate of record …
+    3495 passed, 17 deselected, 1 xfailed, 2 warnings in 922.59s … Ids: 3,496, 0/0"; "NV_ERR_NO_MEMORY:
+    31 this boot, the last at 2026-11-08T07:03:51"; "pytest-586, -587, -588 and pytest-current;
+    412,381,306 B"; the lane line "sha256 4ef90bb2882523f16ed51bbe5b56c1fc2f2148fcebef5912bb9096d533df21f0,
+    7,205 B, 10 lines … Its five "->" lines are 12ad's five "+>" lines with the sign changed. Those
+    equal primer.md lines 41–45 today"; "Ledger: fff9296 … carries my row (23:07:50Z) and the two
+    pending foreign rows (surgical-cv-fw1h-b 9f5ab96, 88f0cc2)"; "Ledger: 2aa4eac … row 23:17:30Z.
+    No foreign rows"; "RESULT: PASS" twice.
+  READ (CC's): findings 1–11; "the closeout's "full hash is in the closeout block". A commit cannot
+    contain its own hash"; "du counts each inode once across its arguments"; "No expected-nightly
+    file covered the 2026-11-09 nightly's tree"; "The carry-forward error covers five lines … plan
+    :920–:928"; "2930dff carries both 94ab7a8 and 1f6bc16".
+  INFERRED: none.
+
+R796(a) — The 12ae-CLOSE closeout block is accepted as printed: item 0 df3e721 (Block 193 by
+  transcribe_ruling.py; the B9 and C28 landing notes with C28's housekeeping note; the dated units
+  line with the measured count 286; the brief file byte-equal to the architect's copy; the three
+  rules files untouched by content), the closeout 840db24 (the plan's closure and 12af blocks, +162
+  / −0, inserted at the matched anchor; the 24 counterpart files; the 2026-11-09 jobs read; the
+  recount and its chain; the band computation; the expected nightly file), ledgers fff9296 and
+  2aa4eac with trailers. Every expectation held (E1–E5; I1; I2 read). Twelve committed briefs this
+  session, twelve byte-equal to the architect's copies: R784(g)(v)'s check has not yet found a
+  paste difference.
+R796(b) — The band for 12af is 876–1069 s: ±10% of 972.5375 s, the mean of the last four standard
+  gates on this host state (921.98, 945.63, 1059.11, 963.43), rounded inward as R683(c) rounded,
+  each described as band_computation.txt describes it, the third a confounded member carried under
+  R677(f) with its confounder named (the surgical-cv full suite beside an ffmpeg encode at launch,
+  R793(c)). The series stands at the thirty-seven of R795(b); U24's red run (931.16 s) is not a
+  member. A 12af gate outside the band is reported with its concurrent jobs, not adapted to. The
+  band is wider and higher than 12ae's because of the confounded member; the 12af closeout's recut
+  from four unconfounded gates is expected to bring it back, and no rule changes for that.
+R796(c) — The stops, counted by the PI from the rulings: one stop, the architect's — 12ae-U24B
+  stopped before its first edit on the inventory question (R786(a); R786(b) allowed the
+  regeneration and the build resumed as 12ae-U24B-R1); one pause, the clock's — 12ae-U25B's item 0
+  reached the R86 window and resumed in the same brief (R789(a)). CC's stops: none. The architect's
+  other errors this session (the open brief's length, R784(g); the expected block's health-section
+  premise, R784(d); the inventory counters, R787; the ten yaml sites and the R124/R131 citation,
+  R788(e); the fourteen except lines, R790; the "no other line changes" clause, R791(c); the Wave 2
+  notes' rows, R792(h); C49's CLOSED form, R794(i); the inventory stamp expectation, R795(c); the
+  branch's placement, R795(c); the five dated lines' row count, R795(g)) were each caught by a
+  check reading its arguments or by CC reading the record over the brief (R732(a)), and none
+  stopped a brief or reached a commit wrong. The session's measured point for the estimate: one CC
+  session (the open at 03:xx UTC on 2026-11-09 to the wrap at 23:xx), five fix units from Phase A
+  to gate, three rows closed, two opened, one unit entered, one stop, one pause.
+R796(d) — Readings, no row: finding 1 (two foreign hook rows pending in the shared ledger at step 0,
+  carried by fff9296 and named — the third shared-ledger reading, R793(e), R795(c); no rule);
+  finding 2 (du's inode de-duplication across arguments made the combined line read 0; the root's
+  own du -sb is the figure and the file says why — a reading on the measurement form, carried to
+  12af-CLOSE's temp-root line); finding 3 (the 2026-11-09 nightly ran on 4a4c850, U24's engine tree,
+  between two engine commits of the same session, so no expected-nightly file covered it; CC read
+  it against U24's gate of record and it matched line for line — the right reading under R749(b);
+  a session whose engine tree changes mid-day leaves that day's nightly to the closeout's reflog
+  method, as here); finding 4 (the five dated lines at plan :920–:928 stand as written, named by
+  the closure and the new dated line); finding 5 (band_computation.txt's raw floats stand as
+  committed; the figure and the closure's values are exact; no reformat); finding 6 (the closeout
+  check failed its dry run on two unprefixed file names and passed after the fix — the check did
+  its job); finding 7 (the expected block's HEAD bullet, inherited from 12ad's form, says the
+  closeout's full hash is "in the closeout block": it is in the lane line and the report; 12af-CLOSE
+  writes that bullet as "its full hash is in the lane line and the closeout report", the form
+  corrected forward, the 12ae block not rewritten); finding 8 (the tags read lists five models
+  where 12ad's listed three — the two added since are readings, the five digests named in the
+  block, R767(c)); finding 9 (2930dff carried two of this lane's rows, 94ab7a8's and 1f6bc16's; the
+  commit list says so); finding 10 (E1–E5 held); finding 11 ((a)).
+R796(e) — Carried to 12af and the plan, from R795(i) and this closeout: the six tools items
+  (R752(c), R765(d), R766(d), R784(d), R791(c) finding 4, R793(e) finding 3) for one tools change;
+  U40 next after 12af-OPEN, two-phase, with 12ae_U28A.md §9's questions (the event writer's form
+  for a write with a run_id and no activation; the grid's consumers — concordance, the exports, the
+  judge loader, the audit; is_assigned for a model-kind arm; whether any reader filters cloud
+  arms); the housekeeping at U40's build or P7 (anthropic_extractor.py:108–113); INT-ae12-1 and
+  INT-ae12-2 (P7); the stage-key question at 12f_C56-A.md:717 (not U40's); the shared-ledger
+  readings (three; a rule is not proposed); the 2026-11-10 and 11-11 jobs against
+  12ae_close/expected_nightly_20261110.md. This ruling states no standing rule: the id list, the
+  glosses file and STANDING_RULES.md are untouched at 12af-OPEN's item 0, asserted by content.
+R796(f) — The lane line (sha256 4ef90bb2882523f16ed51bbe5b56c1fc2f2148fcebef5912bb9096d533df21f0,
+  7,205 bytes, 10 lines, ~/scratch/12ae-close/lane_line_12ae.txt) is approved as pasted and applied
+  now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal
+  its five "−" lines, taken from primer.md itself) with its five "+" lines, applied from the file,
+  not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the
+  row's exact timestamp, foreign rows named by hash); push; level.
+R796(g) — 12af-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a
+  child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with
+  transcribe_ruling.py as the next block (Block 194) and copies lane_line_12ae.txt into
+  docs/session-reports/session-12/12ae_close/; no standing rule, the three rules files untouched by
+  content. It runs session_open_check.py and the steps R747(b) keeps explicit, against the
+  "Expected values at session-12af open" block, the recount by 12ae_close/recount_12ae_close.py
+  (286; 38 done 31; R510 2 / 0); reads the 2026-11-10 and, if run, 2026-11-11 jobs against
+  12ae_close/expected_nightly_20261110.md (R795(e)); the gate by the wrapper, against 876–1069 s,
+  its reference 12ae_close/collected_ids_12ae_close.txt and durations_12ae_u28b.txt. Its brief is
+  committed at its item 0 as brief_12af_OPEN.md (R784(g)(v)). Then U40's Phase A.
+R796(h) — Session 12ae closes now. After R796(f) has landed, run /wrap. Report the lane-line
+  commit's hash and parent, the wrap's verdict, and the archive command as run with its result.

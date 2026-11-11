@@ -1,0 +1,44 @@
+b0: tests/test_u29_cloud_call_record.py on the parent 95ce15f0fe8df50618880b08d901a5c97496b9e0 (engine tree as at 53eabfd), 2026-11-11T04:18:30Z
+?? tests/test_u29_cloud_call_record.py
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:177: assert 0 == 1
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:177: assert 0 == 1
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:78 Paper 2: failed to parse OpenAI JSON response
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:211: AssertionError: assert ('completed' == 'error'
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:78 Paper 2: failed to parse OpenAI JSON response
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:211: AssertionError: assert ('completed' == 'error'
+ERROR    engine.cloud.openai_extractor:openai_extractor.py:78 Paper 2: failed to parse OpenAI JSON response
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:211: AssertionError: assert ('completed' == 'error'
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:82 Paper 2: failed to parse Anthropic JSON response
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:211: AssertionError: assert ('completed' == 'error'
+ERROR    engine.cloud.anthropic_extractor:anthropic_extractor.py:82 Paper 2: failed to parse Anthropic JSON response
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:211: AssertionError: assert ('completed' == 'error'
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:231: assert None == '328b2cbdff997d3238a93bdffd66a4f1c707fe613622ec7e518d8af8e7450009'
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:231: assert None == 'e1908611a326109d85cf2c6b380502be162007f33e3184552e1da9000dd6b57f'
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:262: AssertionError: (Counter({'df04f17d4e7ea14ed23d497dab8effe7ed52e9e2c84c1e0c24abafd1e1022d5f': 2}), Counter({'df04f17d4e7ea14ed23d497dab8effe7ed52e9e2c84c1e0c24abafd1e1022d5f': 1}))
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:262: AssertionError: (Counter({'a66eec9945c3086d362d708492204562753be20d7427cb10c9221ef73cb58cb4': 2}), Counter({'a66eec9945c3086d362d708492204562753be20d7427cb10c9221ef73cb58cb4': 1}))
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:275: AssertionError: assert [('openai', {...credential'})] == [('openai', {...retries': 0})]
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:275: AssertionError: assert [('anthropic'...credential'})] == [('anthropic'...retries': 0})]
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:99: openai.APIConnectionError: Connection error.
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:99: anthropic.APIConnectionError: Connection error.
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:320: Failed: DID NOT RAISE <class 'AttributeError'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u29_cloud_call_record.py:320: Failed: DID NOT RAISE <class 'AttributeError'>
+PASSED tests/test_u29_cloud_call_record.py::test_outside_a_run_nothing_is_recorded_and_the_exception_passes[openai]
+PASSED tests/test_u29_cloud_call_record.py::test_outside_a_run_nothing_is_recorded_and_the_exception_passes[anthropic]
+FAILED tests/test_u29_cloud_call_record.py::test_a_cloud_send_that_raises_still_records_its_call[openai]
+FAILED tests/test_u29_cloud_call_record.py::test_a_cloud_send_that_raises_still_records_its_call[anthropic]
+FAILED tests/test_u29_cloud_call_record.py::test_a_truncated_or_refused_response_is_an_error_row_with_its_detail_and_a_digest[openai-truncated]
+FAILED tests/test_u29_cloud_call_record.py::test_a_truncated_or_refused_response_is_an_error_row_with_its_detail_and_a_digest[openai-content_filter]
+FAILED tests/test_u29_cloud_call_record.py::test_a_truncated_or_refused_response_is_an_error_row_with_its_detail_and_a_digest[openai-refusal_text_only]
+FAILED tests/test_u29_cloud_call_record.py::test_a_truncated_or_refused_response_is_an_error_row_with_its_detail_and_a_digest[anthropic-truncated]
+FAILED tests/test_u29_cloud_call_record.py::test_a_truncated_or_refused_response_is_an_error_row_with_its_detail_and_a_digest[anthropic-refusal]
+FAILED tests/test_u29_cloud_call_record.py::test_a_complete_response_is_completed_with_a_content_digest[openai]
+FAILED tests/test_u29_cloud_call_record.py::test_a_complete_response_is_completed_with_a_content_digest[anthropic]
+FAILED tests/test_u29_cloud_call_record.py::test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row[openai]
+FAILED tests/test_u29_cloud_call_record.py::test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row[anthropic]
+FAILED tests/test_u29_cloud_call_record.py::test_each_sdk_client_is_constructed_with_max_retries_zero[openai]
+FAILED tests/test_u29_cloud_call_record.py::test_each_sdk_client_is_constructed_with_max_retries_zero[anthropic]
+FAILED tests/test_u29_cloud_call_record.py::test_a_recorder_fault_during_a_provider_exception_surfaces_as_the_run_fault[openai]
+FAILED tests/test_u29_cloud_call_record.py::test_a_recorder_fault_during_a_provider_exception_surfaces_as_the_run_fault[anthropic]
+FAILED tests/test_u29_cloud_call_record.py::test_an_unreadable_response_is_an_error_row_and_raises[openai]
+FAILED tests/test_u29_cloud_call_record.py::test_an_unreadable_response_is_an_error_row_and_raises[anthropic]
+17 failed, 2 passed in 14.43s

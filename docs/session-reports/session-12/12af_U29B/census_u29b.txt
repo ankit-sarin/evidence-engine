@@ -1,0 +1,150 @@
+
+-- (a) tests naming the cloud send path: 39
+  tests/analysis/paper1/test_judge_cli.py:208 test_help_exits_zero | names ['run'] | params ['capsys'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:215 test_missing_review | names ['run'] | params [] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:223 test_unknown_input_rejected | names ['run'] | params [] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:231 test_no_pairs_csv_judges_the_full_grid | names ['run'] | params ['setup_review', 'caplog'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:267 test_pairs_csv_still_works_and_warns_that_it_is_legacy | names ['run'] | params ['setup_review', 'caplog'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:296 test_pass_2_raises_not_implemented | names ['run'] | params ['setup_review'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:307 test_human_pairs_raises_not_implemented | names ['run'] | params ['setup_review'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:323 test_dry_run_skips_db_writes | names ['run'] | params ['setup_review', 'capsys'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:364 test_all_succeed_writes_expected_rows | names ['run'] | params ['setup_review', 'capsys'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:398 test_partial_failure | names ['run'] | params ['setup_review', 'capsys'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:430 test_all_failed_exit_1 | names ['run'] | params ['setup_review'] | run_calls SQL []
+  tests/analysis/paper1/test_judge_cli.py:445 test_exit_zero_at_exactly_90pct | names ['run'] | params ['setup_review'] | run_calls SQL []
+  tests/test_cloud_extraction.py:255 test_get_pending_excludes_completed | names ['store_result'] | params ['test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:327 test_store_result_rejects_empty_spans | names ['store_result'] | params ['test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:358 test_store_result_atomic | names ['store_result'] | params ['test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:432 test_extract_paper | names ['extract_paper'] | params ['mock_openai_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:459 test_cost_calculation | names ['extract_paper'] | params ['mock_openai_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:503 test_extract_paper | names ['extract_paper'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:526 test_reasoning_trace_from_thinking_blocks | names ['extract_paper'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:547 test_json_extracted_from_text_blocks | names ['extract_paper'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:569 test_cost_calculation | names ['extract_paper'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:635 test_an_empty_value_is_refused_at_the_write_boundary | names ['run'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:672 test_null_converted_to_nr | names ['extract_paper'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:710 test_nonempty_string_unchanged | names ['extract_paper'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:741 test_429_triggers_30s_plus_backoff | names ['run'] | params ['mock_anthropic_cls', 'mock_sleep', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:790 test_429_uses_retry_after_header | names ['run'] | params ['mock_anthropic_cls', 'mock_sleep', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:840 test_openai_store_failure_continues_run | names ['run', 'store_result'] | params ['mock_openai_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:890 test_distribution_collapse_not_caught | names ['run'] | params ['mock_openai_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:919 test_openai_401_aborts_immediately | names ['run'] | params ['mock_openai_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:948 test_anthropic_401_aborts_immediately | names ['run'] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:983 test_429_triggers_30s_plus_backoff | names ['run'] | params ['mock_openai_cls', 'mock_sleep', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_cloud_extraction.py:1034 test_429_uses_retry_after_header | names ['run'] | params ['mock_openai_cls', 'mock_sleep', 'test_db', 'spec_path'] | run_calls SQL []
+  tests/test_corpus_authority.py:317 test_no_inline_four_status_literal_outside_the_authority | names ['run'] | params [] | run_calls SQL []
+  tests/test_corpus_authority.py:365 test_engine_core_corpus_is_frozen_and_only_a_migration_reads_it | names ['run'] | params [] | run_calls SQL []
+  tests/test_request_capture.py:350 test_openai_request_as_sent | names ['extract_paper'] | params ['tmp_path', 'spec'] | run_calls SQL []
+  tests/test_request_capture.py:378 test_anthropic_request_as_sent | names ['extract_paper'] | params ['tmp_path', 'spec'] | run_calls SQL []
+  tests/test_run_manifest.py:373 test_a_cloud_call_records_the_hash_of_its_complete_payload | names ['send'] | params ['review', 'spec'] | run_calls SQL ['C16: run_calls.request_hash is over system message, user turn AND parameters.', 'SELECT stage, request_hash FROM run_calls']
+  tests/test_u27_cloud_run_faults.py:99 test_run_faults_leave_the_cloud_handlers_as_themselves | names ['run'] | params ['tmp_path', 'monkeypatch', 'case_id', 'provider', 'route', 'make_exc'] | run_calls SQL ['SELECT COUNT(*) FROM run_calls']
+  tests/test_u40_cloud_claim_events.py:217 test_a_refused_cloud_store_leaves_nothing_in_either_store | names ['extract_paper'] | params ['cloud', 'case', 'refusal'] | run_calls SQL []
+
+-- (b) tests constructing or patching an SDK client: 26
+  tests/test_cloud_extraction.py:432 test_extract_paper | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:459 test_cost_calculation | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:503 test_extract_paper | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:526 test_reasoning_trace_from_thinking_blocks | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:547 test_json_extracted_from_text_blocks | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:569 test_cost_calculation | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:635 test_an_empty_value_is_refused_at_the_write_boundary | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:672 test_null_converted_to_nr | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:710 test_nonempty_string_unchanged | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:741 test_429_triggers_30s_plus_backoff | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:790 test_429_uses_retry_after_header | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:840 test_openai_store_failure_continues_run | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:890 test_distribution_collapse_not_caught | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:919 test_openai_401_aborts_immediately | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:948 test_anthropic_401_aborts_immediately | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:983 test_429_triggers_30s_plus_backoff | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:1034 test_429_uses_retry_after_header | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:1101 test_openai_reads_from_spec | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:1116 test_anthropic_reads_from_spec | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_cloud_extraction.py:1131 test_no_default_price | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_cloud_extraction.py:1139 test_no_default_arm | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_request_capture.py:350 test_openai_request_as_sent | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_request_capture.py:378 test_anthropic_request_as_sent | ['engine.cloud.anthropic_extractor.anthropic.Anthropic'] | keyword asserts []
+  tests/test_run_manifest.py:373 test_a_cloud_call_records_the_hash_of_its_complete_payload | ['engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts []
+  tests/test_u21_no_overlap.py:336 test_other_timeout_members_keep_their_retry | [] | keyword asserts ["oc.ollama_chat(model='m:8b', messages=MESSAGES, max_retries=1, retry_delay=0).message.content == 'OK'"]
+  tests/test_u27_cloud_run_faults.py:99 test_run_faults_leave_the_cloud_handlers_as_themselves | ['engine.cloud.anthropic_extractor.anthropic.Anthropic', 'engine.cloud.openai_extractor.openai.OpenAI'] | keyword asserts ["kw == {'api_key': PLACEHOLDER_KEY}"]
+
+-- (c) runtime record over 11 files: ['tests/analysis/paper1/test_judge_cli.py', 'tests/test_cloud_extraction.py', 'tests/test_completeness_guard.py', 'tests/test_corpus_authority.py', 'tests/test_parsed_text_resolver.py', 'tests/test_request_capture.py', 'tests/test_run_manifest.py', 'tests/test_u21_no_overlap.py', 'tests/test_u27_cloud_run_faults.py', 'tests/test_u28_cloud_gate_and_boundary.py', 'tests/test_u40_cloud_claim_events.py']
+   pytest: ['194 passed in 88.50s (0:01:28)']
+   tests that reached send: 39
+     tests/test_cloud_extraction.py::TestAnthropicExtractor::test_cost_calculation [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestAnthropicExtractor::test_extract_paper [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestAnthropicExtractor::test_json_extracted_from_text_blocks [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestAnthropicExtractor::test_reasoning_trace_from_thinking_blocks [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestAuthErrorAbort::test_anthropic_401_aborts_immediately [AnthropicExtractor] in_run=False raised anthropic.AuthenticationError ×1
+     tests/test_cloud_extraction.py::TestAuthErrorAbort::test_openai_401_aborts_immediately [OpenAIExtractor] in_run=False raised openai.AuthenticationError ×1
+     tests/test_cloud_extraction.py::TestOpenAIExtractor::test_cost_calculation [OpenAIExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestOpenAIExtractor::test_extract_paper [OpenAIExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestOpenAIRateLimitBackoff::test_429_triggers_30s_plus_backoff [OpenAIExtractor] in_run=True raised openai.RateLimitError ×2; in_run=True types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestOpenAIRateLimitBackoff::test_429_uses_retry_after_header [OpenAIExtractor] in_run=True raised openai.RateLimitError ×1; in_run=True types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestSonnetEmptyStringNormalization::test_an_empty_value_is_refused_at_the_write_boundary [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestSonnetEmptyStringNormalization::test_nonempty_string_unchanged [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestSonnetEmptyStringNormalization::test_null_converted_to_nr [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestSonnetRateLimitBackoff::test_429_triggers_30s_plus_backoff [AnthropicExtractor] in_run=True raised anthropic.RateLimitError ×2; in_run=True types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestSonnetRateLimitBackoff::test_429_uses_retry_after_header [AnthropicExtractor] in_run=True raised anthropic.RateLimitError ×1; in_run=True types.SimpleNamespace ×1
+     tests/test_cloud_extraction.py::TestStoreResultCrashProtection::test_distribution_collapse_not_caught [OpenAIExtractor] in_run=False unittest.mock.MagicMock ×3
+     tests/test_cloud_extraction.py::TestStoreResultCrashProtection::test_openai_store_failure_continues_run [OpenAIExtractor] in_run=True types.SimpleNamespace ×2
+     tests/test_request_capture.py::test_anthropic_request_as_sent [AnthropicExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_request_capture.py::test_openai_request_as_sent [OpenAIExtractor] in_run=False types.SimpleNamespace ×1
+     tests/test_run_manifest.py::test_a_cloud_call_records_the_hash_of_its_complete_payload [OpenAIExtractor] in_run=True builtins.str ×1
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-KeyError] [Probe] in_run=True types.SimpleNamespace ×2
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-sqlite3] [Probe] in_run=True types.SimpleNamespace ×1
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-KeyError] [Probe] in_run=True types.SimpleNamespace ×2
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-sqlite3] [Probe] in_run=True types.SimpleNamespace ×1
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-APIConnectionError] [Probe] in_run=True raised openai.APIConnectionError ×6
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-ConnectionError] [Probe] in_run=True raised builtins.ConnectionError ×1
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-KeyError] [Probe] in_run=True raised builtins.KeyError ×6
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-sqlite3] [Probe] in_run=True raised sqlite3.OperationalError ×1
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-APIConnectionError] [Probe] in_run=True raised anthropic.APIConnectionError ×6
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-ConnectionError] [Probe] in_run=True raised builtins.ConnectionError ×1
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-KeyError] [Probe] in_run=True raised builtins.KeyError ×6
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-sqlite3] [Probe] in_run=True raised sqlite3.OperationalError ×1
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[a_second_store_of_the_same_text-ReuseKeyAlreadyClaimed] [_FakeTransport] in_run=True types.SimpleNamespace ×2
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_reference_kept-ClaimWithoutInputIdentity] [_FakeTransport] in_run=True types.SimpleNamespace ×1
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_run_id-RunLinkRefused] [_FakeTransport] in_run=True types.SimpleNamespace ×1
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[state_kept_for_another_paper-ClaimWithoutInputIdentity] [_FakeTransport] in_run=True types.SimpleNamespace ×1
+     tests/test_u40_cloud_claim_events.py::test_cloud_gate_sees_what_store_result_wrote [_FakeTransport] in_run=True types.SimpleNamespace ×18
+     tests/test_u40_cloud_claim_events.py::test_the_legacy_rows_and_the_claims_agree [_FakeTransport] in_run=True types.SimpleNamespace ×1
+     tests/test_u40_cloud_claim_events.py::test_the_processing_axis_is_untouched_by_cloud_stores [_FakeTransport] in_run=True types.SimpleNamespace ×12
+   tests that called store_result on a provider-less instance (R800(g)): 6
+     tests/test_cloud_extraction.py::TestCloudExtractorBase::test_get_pending_excludes_completed [CloudExtractorBase]
+     tests/test_cloud_extraction.py::TestCloudExtractorBase::test_store_result_atomic [CloudExtractorBase]
+     tests/test_cloud_extraction.py::TestCloudExtractorBase::test_store_result_rejects_empty_spans [CloudExtractorBase]
+     tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[empty_value_with_a_snippet] [CloudExtractorBase]
+     tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[sentinel_with_an_empty_snippet] [CloudExtractorBase]
+     tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[uncited_non_sentinel] [CloudExtractorBase]
+   tests whose send ran inside a run (the accessor reads their response): 25
+     tests/test_cloud_extraction.py::TestOpenAIRateLimitBackoff::test_429_triggers_30s_plus_backoff
+     tests/test_cloud_extraction.py::TestOpenAIRateLimitBackoff::test_429_uses_retry_after_header
+     tests/test_cloud_extraction.py::TestSonnetRateLimitBackoff::test_429_triggers_30s_plus_backoff
+     tests/test_cloud_extraction.py::TestSonnetRateLimitBackoff::test_429_uses_retry_after_header
+     tests/test_cloud_extraction.py::TestStoreResultCrashProtection::test_openai_store_failure_continues_run
+     tests/test_run_manifest.py::test_a_cloud_call_records_the_hash_of_its_complete_payload
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-KeyError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[10-openai-store-sqlite3]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-KeyError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[11-anthropic-store-sqlite3]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-APIConnectionError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-provider-ConnectionError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-KeyError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[8-openai-recorder-sqlite3]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-APIConnectionError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-provider-ConnectionError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-KeyError]
+     tests/test_u27_cloud_run_faults.py::test_run_faults_leave_the_cloud_handlers_as_themselves[9-anthropic-recorder-sqlite3]
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[a_second_store_of_the_same_text-ReuseKeyAlreadyClaimed]
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_reference_kept-ClaimWithoutInputIdentity]
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_run_id-RunLinkRefused]
+     tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[state_kept_for_another_paper-ClaimWithoutInputIdentity]
+     tests/test_u40_cloud_claim_events.py::test_cloud_gate_sees_what_store_result_wrote
+     tests/test_u40_cloud_claim_events.py::test_the_legacy_rows_and_the_claims_agree
+     tests/test_u40_cloud_claim_events.py::test_the_processing_axis_is_untouched_by_cloud_stores
+
+== counts
+(a) tests naming the cloud send path: 39
+(b) tests constructing or patching an SDK client: 26
+send-reaching tests: 39; in a run: 25; provider-less stores: 6

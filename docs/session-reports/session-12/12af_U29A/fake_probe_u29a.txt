@@ -1,0 +1,56 @@
+=== setup: cloud run 2; arms openai_o4_mini_2025_04_16_high, anthropic_claude_sonnet_4_6; run_stage_configs [('cloud:anthropic_claude_sonnet_4_6', 'anthropic', 'claude-sonnet-4-6'), ('cloud:openai_o4_mini_2025_04_16_high', 'openai', 'o4-mini-2025-04-16')]
+  instances: FakeOpenAIExtractor (PROVIDER 'openai', stage cloud:openai_o4_mini_2025_04_16_high), FakeAnthropicExtractor (PROVIDER 'anthropic', stage cloud:anthropic_claude_sonnet_4_6); no SDK client attribute: True
+
+=== (1) the entry's test at HEAD — a _create that raises
+  openai, raises before transmission (ValueError)
+    RAISED ValueError: Streaming is required for operations that may take longer than 10 minutes.
+    run_calls rows: []
+    chain: paper 1, 1 hash(es) ['c98cf2e9c5ee']; last_request_hash c98cf2e9c5ee
+  openai, raises after transmission (openai.APITimeoutError)
+    RAISED APITimeoutError: Request timed out.
+    run_calls rows: []
+    chain: paper 1, 2 hash(es) ['c98cf2e9c5ee', 'c98cf2e9c5ee']; last_request_hash c98cf2e9c5ee
+  anthropic, raises after transmission (anthropic.APIConnectionError)
+    RAISED APIConnectionError: Connection error.
+    run_calls rows: []
+    chain: paper 2, 1 hash(es) ['6b5f1680d8b2']; last_request_hash 6b5f1680d8b2
+  the papers' chains after the raises: openai paper 1: 2 hashes; anthropic paper 2: 1 hash; run_calls rows for the run so far: 0
+
+=== (2) truncated and refused responses
+  openai, finish_reason 'length' (truncated)
+    returned; extract_paper finish_reason='length'; spans 0
+    run_calls rows: [(1, 'cloud:openai_o4_mini_2025_04_16_high', 3, 'd6a147a6e0f1', None, 'completed', None)]
+    chain: paper 3, 1 hash(es) ['d6a147a6e0f1']; last_request_hash d6a147a6e0f1
+  openai, refusal (message.refusal set, content None, finish_reason 'content_filter')
+    returned; extract_paper finish_reason='content_filter'; spans 0
+    run_calls rows: [(2, 'cloud:openai_o4_mini_2025_04_16_high', 3, 'd6a147a6e0f1', None, 'completed', None)]
+    chain: paper 3, 2 hash(es) ['d6a147a6e0f1', 'd6a147a6e0f1']; last_request_hash d6a147a6e0f1
+  anthropic, stop_reason 'max_tokens' (truncated)
+    returned; extract_paper finish_reason='max_tokens'; spans 0
+    run_calls rows: [(3, 'cloud:anthropic_claude_sonnet_4_6', 4, 'a66eec9945c3', None, 'completed', None)]
+    chain: paper 4, 1 hash(es) ['a66eec9945c3']; last_request_hash a66eec9945c3
+  anthropic, stop_reason 'refusal'
+    returned; extract_paper finish_reason='refusal'; spans 0
+    run_calls rows: [(4, 'cloud:anthropic_claude_sonnet_4_6', 4, 'a66eec9945c3', None, 'completed', None)]
+    chain: paper 4, 2 hash(es) ['a66eec9945c3', 'a66eec9945c3']; last_request_hash a66eec9945c3
+
+=== (3) a complete response, and what a digest over it would vary on
+  openai, complete (finish_reason 'stop')
+    returned; extract_paper finish_reason='stop'; spans 20
+    run_calls rows: [(5, 'cloud:openai_o4_mini_2025_04_16_high', 1, 'c98cf2e9c5ee', None, 'completed', None)]
+    chain: paper 1, 1 hash(es) ['c98cf2e9c5ee']; last_request_hash c98cf2e9c5ee
+  anthropic, complete (stop_reason 'end_turn')
+    returned; extract_paper finish_reason='end_turn'; spans 20
+    run_calls rows: [(6, 'cloud:anthropic_claude_sonnet_4_6', 2, '6b5f1680d8b2', None, 'completed', None)]
+    chain: paper 2, 1 hash(es) ['6b5f1680d8b2']; last_request_hash 6b5f1680d8b2
+  response_digest on the two complete rows: [None, None]
+  openai ChatCompletion, two answers identical in content (id, created, usage differ): to_json() sha256 equal False; rm.response_digest(message.content) equal True; fields that differ: ['created', 'id', 'usage']
+  anthropic Message, two answers identical in content (id, usage differ): to_json() sha256 equal False; content blocks' model_dump equal True; fields that differ: ['id', 'usage']
+
+=== totals: run_calls rows for the run: [('completed', 6, 6)]
+
+=== the record
+SDK client constructions (openai.OpenAI / anthropic.Anthropic): {'openai.OpenAI': 0, 'anthropic.Anthropic': 0}
+
+=== Ollama journal, the probe's window 2026-11-11 03:55:45 → 2026-11-11 03:55:46 UTC
+-- No entries --

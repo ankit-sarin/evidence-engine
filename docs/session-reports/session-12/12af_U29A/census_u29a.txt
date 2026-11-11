@@ -1,0 +1,196 @@
+
+-- (a) record_active_ollama_call → engine.core.run_manifest.record_active_ollama_call: 1
+  engine/utils/ollama_client.py:728 <module>.ollama_chat._record | record_active_ollama_call(stage, request, paper_id, response, started_at,
+
+-- (a) record_call → engine.core.extraction_telemetry.record_call: 5
+  engine/agents/extractor.py:948 <module>.extract_paper_with_completeness | record_call(
+  engine/agents/extractor.py:891 <module>.extract_paper_with_completeness | record_call(
+  engine/agents/extractor.py:921 <module>.extract_paper_with_completeness | record_call(
+  engine/cloud/base.py:487 <module>.CloudExtractorBase.extract_with_completeness | record_call(
+  engine/core/extraction_events.py:729 <module>.write_extraction_events | record_call(review_dir, arm=t.get("model") or outcome.arm, paper_id=outcome.paper_id,
+
+-- (a) record_call → engine.core.run_manifest: 1
+  engine/cloud/base.py:159 <module>.CloudExtractorBase.send | rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
+
+-- (a) record_call → engine.core.run_manifest (same module): 1
+  engine/core/run_manifest.py:1192 <module>.record_active_ollama_call | record_call(conn, run_id, key, paper_id, request, digest, started_at, _now(),
+
+-- (b) [migrations] run_calls — DDL: 7
+  engine/migrations/020_run_manifest.py:1 <module> | """Migration 020: the run manifest, run linkage and arm pinning (S3a, S3b, R59, R68).
+  engine/migrations/020_run_manifest.py:188 <module> | RUN_CALLS_SQL = """
+  engine/migrations/020_run_manifest.py:203 <module> | "CREATE INDEX IF NOT EXISTS idx_run_calls_run ON run_calls(run_id, stage)",
+  engine/migrations/022_run_kinds_and_audit_tables.py:342 <module> | "CREATE INDEX IF NOT EXISTS idx_run_calls_run ON run_calls(run_id, stage)",
+  engine/migrations/022_run_kinds_and_audit_tables.py:540 <module>.run_migration | """Apply R212-R218: rebuild paper_events, run_manifests and run_calls;
+  engine/migrations/022_run_kinds_and_audit_tables.py:526 <module>._rebuild_run_calls | conn.execute("DROP TABLE run_calls")
+  engine/migrations/022_run_kinds_and_audit_tables.py:527 <module>._rebuild_run_calls | conn.execute(f"ALTER TABLE {tmp} RENAME TO run_calls")
+
+-- (b) [migrations] run_calls — INSERT: 2
+  engine/migrations/022_run_kinds_and_audit_tables.py:1 <module> | """Migration 022: session-10 rulings R212-R218 (10a-R1, R222a).
+  engine/migrations/022_run_kinds_and_audit_tables.py:524 <module>._rebuild_run_calls | f"INSERT INTO {tmp} ({old_cols}, outcome) "
+
+-- (b) [migrations] run_calls — SELECT: 2
+  engine/migrations/022_run_kinds_and_audit_tables.py:511 <module>._rebuild_run_calls | before = conn.execute("SELECT COUNT(*) FROM run_calls").fetchone()[0]
+  engine/migrations/022_run_kinds_and_audit_tables.py:533 <module>._rebuild_run_calls | after = conn.execute("SELECT COUNT(*) FROM run_calls").fetchone()[0]
+
+-- (b) [migrations] run_calls — other (prose or a name): 10
+  engine/migrations/020_run_manifest.py:458 <module>.run_migration | for stmt in _record_only_triggers("run_calls", "one row per call, never edited"):
+  engine/migrations/022_run_kinds_and_audit_tables.py:323 <module>.run_calls_sql | def run_calls_sql(name: str = "run_calls") -> str:
+  engine/migrations/022_run_kinds_and_audit_tables.py:506 <module>._rebuild_run_calls | live_cols = _columns(conn, "run_calls")
+  engine/migrations/022_run_kinds_and_audit_tables.py:512 <module>._rebuild_run_calls | seq_before = _seq(conn, "run_calls")
+  engine/migrations/022_run_kinds_and_audit_tables.py:530 <module>._rebuild_run_calls | for stmt in _record_only_triggers("run_calls", "one row per call, never edited"):
+  engine/migrations/022_run_kinds_and_audit_tables.py:532 <module>._rebuild_run_calls | _restore_seq(conn, "run_calls", seq_before)
+  engine/migrations/022_run_kinds_and_audit_tables.py:509 <module>._rebuild_run_calls | f"022 refuses: run_calls columns are {live_cols}, expected "
+  engine/migrations/022_run_kinds_and_audit_tables.py:535 <module>._rebuild_run_calls | raise RuntimeError(f"022 copied {after} run_calls rows but found {before} — refusing")
+  engine/migrations/022_run_kinds_and_audit_tables.py:556 <module>.run_migration | "run_calls": _rebuild_run_calls(conn),
+  engine/migrations/022_run_kinds_and_audit_tables.py:576 <module>.run_migration | r for t in ("paper_events", "run_manifests", "run_calls",
+
+-- (b) run_calls — INSERT: 1
+  engine/core/run_manifest.py:1054 <module>.record_call | "INSERT INTO run_calls (run_id, stage, paper_id, request_hash, response_digest, "
+
+-- (b) run_calls — SELECT: 1
+  engine/exporters/methods_section.py:45 <module>._run_extraction_models | "SELECT sc.model_name, COUNT(DISTINCT rc.paper_id) "
+
+-- (b) run_calls — other (prose or a name): 13
+  engine/adjudication/import_extraction_entry.py:1 <module> | """Extraction-entry import — a review entered at extraction (R204, 11c).
+  engine/agents/auditor.py:56 <module>.semantic_verify | """Use an LLM to verify if extracted value matches the source snippet.
+  engine/agents/ft_screener.py:212 <module>.ft_screen_paper | """Screen a single paper's full text. Returns the structured decision and
+  engine/cloud/anthropic_extractor.py:41 <module>.AnthropicExtractor.request_payload | """The complete outbound request: model, parameters, the system
+  engine/cloud/openai_extractor.py:40 <module>.OpenAIExtractor.request_payload | """The complete outbound request: model, system + user messages, and the
+  engine/core/effective_config.py:146 <module>.EffectiveConfig.with_options | """A caller's option override, recorded as source `caller`. Live callers:
+  engine/core/run_manifest.py:1 <module> | """Run open, arm pinning and call recording (S3a, S3b, S3g, R59, R66–R68).
+  engine/core/run_manifest.py:1038 <module>.record_call | """`outcome` (R216/C24, 022's `run_calls.outcome` column) is required,
+  engine/exporters/methods_section.py:36 <module>._run_extraction_models | """{model_name: papers} for the run's local extraction stages (R177).
+  engine/exporters/methods_section.py:56 <module>._run_audit_models | """{model_name: papers} for the run's audit stage (R177).
+  engine/exporters/methods_section.py:76 <module>.generate_methods_section | """Generate a draft PRISMA-style methods paragraph from pipeline data.
+  engine/utils/ollama_client.py:641 <module>.ollama_chat | """Call Ollama chat with HTTP timeouts, wall-clock watchdog, and retries.
+  scripts/run_cloud_extraction.py:2 <module> | """CLI for running cloud extraction arms — opt-in per run, declared in the spec (S3g).
+
+-- (c) SDK client construction Anthropic [engine]: 1
+  engine/cloud/anthropic_extractor.py:38 <module>.AnthropicExtractor.__init__ | keywords ['api_key'] | self.client = anthropic.Anthropic(api_key=key)
+
+-- (c) SDK client construction OpenAI [engine]: 1
+  engine/cloud/openai_extractor.py:37 <module>.OpenAIExtractor.__init__ | keywords ['api_key'] | self.client = openai.OpenAI(api_key=key)
+
+-- (d) tests naming _create/run_calls: 1
+  tests/test_u27_cloud_run_faults.py:99 test_run_faults_leave_the_cloud_handlers_as_themselves | params: tmp_path,monkeypatch,case_id,provider,route,make_exc | file-local fixtures: -
+
+-- (d) tests naming last_request_hash: 2
+  tests/test_request_capture.py:350 test_openai_request_as_sent | params: tmp_path,spec | file-local fixtures: spec
+  tests/test_request_capture.py:378 test_anthropic_request_as_sent | params: tmp_path,spec | file-local fixtures: spec
+
+-- (d) tests naming last_request_hash/run_calls/send: 1
+  tests/test_run_manifest.py:373 test_a_cloud_call_records_the_hash_of_its_complete_payload | params: review,spec | file-local fixtures: review,spec
+
+-- (d) tests naming record_call: 9
+  tests/test_completeness_guard.py:179 test_telemetry_records_a_call | params: tmp_path | file-local fixtures: -
+  tests/test_completeness_guard.py:197 test_telemetry_appends_one_line_per_attempt | params: tmp_path | file-local fixtures: -
+  tests/test_completeness_guard.py:203 test_telemetry_truncates_a_huge_response_and_says_so | params: tmp_path | file-local fixtures: -
+  tests/test_completeness_guard.py:213 test_telemetry_never_raises_on_a_bad_path | params: - | file-local fixtures: -
+  tests/test_thinking_channel.py:190 test_telemetry_schema_is_v3_and_carries_the_thinking_fields | params: tmp_path | file-local fixtures: -
+  tests/test_thinking_channel.py:205 test_telemetry_thinking_fields_default_to_none_for_cloud_arms | params: tmp_path | file-local fixtures: -
+  tests/test_thinking_channel.py:215 test_telemetry_records_pass1_done_reason_and_prompt_eval_counts | params: tmp_path | file-local fixtures: -
+  tests/test_thinking_channel.py:233 test_telemetry_records_each_passs_eval_count_under_schema_v4 | params: tmp_path | file-local fixtures: -
+  tests/test_thinking_channel.py:261 test_telemetry_v3_fields_default_to_none_and_v2_rows_stay_readable | params: tmp_path | file-local fixtures: -
+
+-- (d) tests naming record_call/run_calls: 2
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:420 test_T6_record_call_on_a_fixture_writes_outcome_completed | params: fresh | file-local fixtures: fresh
+  tests/test_presented_context.py:440 test_T8_cloud_send_still_computes_its_own_hash_unaffected | params: review,spec | file-local fixtures: review,spec
+
+-- (d) tests naming run_calls: 33
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:62 test_T1_fresh_database_carries_022_executed | params: fresh | file-local fixtures: fresh
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:389 test_T6_run_calls_insert_without_outcome_refused | params: fresh | file-local fixtures: fresh
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:399 test_T6_every_declared_outcome_token_is_accepted | params: fresh | file-local fixtures: fresh
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:409 test_T6_an_unlisted_outcome_token_is_refused | params: fresh | file-local fixtures: fresh
+  tests/migrations/test_022_run_kinds_and_audit_tables.py:549 test_T9_structure_differences_name_exactly_the_touched_tables | params: tmp_path | file-local fixtures: -
+  tests/test_audit_paper_id.py:102 test_T6_every_audit_call_row_carries_the_paper_it_verified | params: db,spec,run_id,review_dir | file-local fixtures: db,review_dir,run_id,spec
+  tests/test_audit_paper_id.py:125 test_T7_no_other_stage_is_affected | params: db,spec,run_id,review_dir | file-local fixtures: db,review_dir,run_id,spec
+  tests/test_exporters.py:534 test_methods_counts_papers_not_calls | params: run_db | file-local fixtures: run_db
+  tests/test_extraction_run_link.py:139 test_t3_a_digest_disagreeing_with_the_pin_refuses_before_selection | params: db,spec,fake_ollama | file-local fixtures: db,fake_ollama,spec
+  tests/test_extraction_run_link.py:173 test_t4_every_extractor_call_records_its_paper | params: db,spec,fake_ollama | file-local fixtures: db,fake_ollama,spec
+  tests/test_ft_adjudication_import.py:108 test_1_one_import_manifest_with_zero_stage_rows_closed_completed | params: db,spec,tmp_path | file-local fixtures: db,spec
+  tests/test_ft_bridge.py:200 test_2_preflight_calls_carry_paper_id_null_and_satisfy_the_fk | params: db,spec,fake | file-local fixtures: db,fake,spec
+  tests/test_ft_bridge.py:377 test_7_dirty_tree_refuses_before_any_model_call_and_writes_nothing | params: db,spec,fake | file-local fixtures: db,fake,spec
+  tests/test_ft_bridge.py:419 test_9_i_after_a_completed_confirm_a_fresh_verify_only_selects_nothing | params: db,spec,fake | file-local fixtures: db,fake,spec
+  tests/test_import_extraction_entry.py:118 test_t1_three_papers_enter_at_ft_eligible_with_refs_events_and_one_manifest | params: db,spec,tmp_path | file-local fixtures: db,spec
+  tests/test_import_screening_entry.py:96 test_t1_four_entries_enter_at_ingested_under_one_manifest | params: db,spec,tmp_path | file-local fixtures: db,spec
+  tests/test_pin_records.py:149 test_an_elicited_run_declares_and_pins_two_stages_and_refuses_the_snippet_retry | params: review,elicited,spec,monkeypatch | file-local fixtures: elicited,review,spec
+  tests/test_presented_context.py:98 test_T1_success_hash_equals_the_recorded_row | params: review,spec | file-local fixtures: review,spec
+  tests/test_presented_context.py:114 test_T1_pre_call_refusal_hash_equals_the_recorded_row | params: review,spec,monkeypatch | file-local fixtures: review,spec
+  tests/test_presented_context.py:133 test_T1_exhaustion_hash_equals_the_recorded_row | params: review,spec | file-local fixtures: review,spec
+  tests/test_presented_context.py:193 test_T3_every_claim_carries_pass2s_hash_and_the_full_chain | params: review,spec | file-local fixtures: review,spec
+  tests/test_presented_context.py:225 test_T4_a_retried_snippet_carries_its_own_hash_a_clean_one_does_not | params: review,spec | file-local fixtures: review,spec
+  tests/test_run_interrupts.py:233 test_t6_an_interrupt_mid_paper_keeps_finished_papers_and_writes_none_for_it | params: db,spec,fields,monkeypatch | file-local fixtures: db,fields,spec
+  tests/test_run_manifest.py:100 test_the_manifest_exists_before_the_first_model_call_and_every_call_is_recorded | params: review,spec,monkeypatch | file-local fixtures: review,spec
+  tests/test_run_manifest_migration.py:85 test_a_fresh_database_carries_020_with_an_executed_receipt | params: fresh | file-local fixtures: fresh
+  tests/test_run_manifest_migration.py:118 test_append_only_or_record_only_triggers_are_present | params: fresh,table | file-local fixtures: fresh
+  tests/test_run_manifest_migration.py:306 test_a_call_row_must_name_a_declared_stage | params: linked | file-local fixtures: linked
+  tests/test_run_pipeline_starts.py:164 test_a_start_that_screens_declares_and_sends_the_screening_preflight | params: review,spec,skip_to | file-local fixtures: review,spec
+  tests/test_u18_digest_per_call.py:165 test_u18_the_unchanged_case_sends_the_same_request_bytes | params: review,spec,fake | file-local fixtures: fake,review,spec
+  tests/test_u20_loaded_context.py:142 test_a_a_loaded_context_equal_to_the_ceiling_completes_and_is_recorded | params: review,spec,fake,caplog | file-local fixtures: fake,review,spec
+  tests/test_undeclared_call.py:216 test_6_an_undeclared_call_leaves_the_extraction_loop_as_a_run_fault | params: tmp_path,spec,fake,monkeypatch | file-local fixtures: fake,spec
+  tests/test_undeclared_override.py:82 test_T1_a_differing_option_under_a_declared_stage_is_refused | params: review,spec | file-local fixtures: review,spec
+  tests/test_units_as_source_slices.py:230 test_an_elicited_run_opens_pins_verifies_and_writes_real_events | params: db,elicited_spec,fake_ollama | file-local fixtures: db,elicited_spec,fake_ollama
+
+-- (e) CloudExtractorBase(...) — PROVIDER "": 11
+  tests/test_cloud_extraction.py:247 <module>.TestCloudExtractorBase.test_get_pending_papers | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:257 <module>.TestCloudExtractorBase.test_get_pending_excludes_completed | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:284 <module>.TestCloudExtractorBase.test_parse_response_valid_json | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:294 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:307 <module>.TestCloudExtractorBase.test_parse_response_bare_list | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:313 <module>.TestCloudExtractorBase.test_parse_response_data_extraction_key | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:321 <module>.TestCloudExtractorBase.test_parse_response_recovers_from_raw | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:328 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:360 <module>.TestCloudExtractorBase.test_store_result_atomic | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_cloud_extraction.py:400 <module>.TestCloudExtractorBase.test_get_progress | base = CloudExtractorBase(test_db, spec_path)
+  tests/test_u28_cloud_gate_and_boundary.py:95 <module>.cloud | base = CloudExtractorBase(str(db_path), str(spec_path), arm_name=arm)
+
+-- (e) a cloud method called unbound on another object: 4
+  tests/test_completeness_guard.py:250 <module>._driver | return CloudExtractorBase.extract_with_completeness(fake, 277, "text")
+  tests/test_parsed_text_resolver.py:113 <module>.test_cloud_site_hands_on_the_file | got = CloudExtractorBase.load_parsed_text(SimpleNamespace(_conn=db._conn), 7)
+  tests/test_parsed_text_resolver.py:116 <module>.test_cloud_site_hands_on_the_file | CloudExtractorBase.load_parsed_text(SimpleNamespace(_conn=db._conn), 8)
+  tests/test_u40_cloud_claim_events.py:69 <module>._FakeTransport.__init__ | CloudExtractorBase.__init__(self, db_path, spec_path, arm_name=arm_name)
+
+-- (e) a subclass of a cloud class whose __init__ skips its base's own constructor: 1
+  tests/test_u40_cloud_claim_events.py:65 class _FakeTransport(OpenAIExtractor) | __init__ calls ['CloudExtractorBase.__init__']
+
+-- (e) object.__new__ of a cloud class: 1
+  tests/test_corpus_authority.py:145 <module>._detached_extractor | ext = object.__new__(CloudExtractorBase)
+
+-- (f) runtime reach of the U40 guards: 28 files run: ['tests/migrations/test_022_run_kinds_and_audit_tables.py', 'tests/test_audit_paper_id.py', 'tests/test_cloud_extraction.py', 'tests/test_completeness_guard.py', 'tests/test_corpus_authority.py', 'tests/test_exporters.py', 'tests/test_extraction_run_link.py', 'tests/test_ft_adjudication_import.py', 'tests/test_ft_bridge.py', 'tests/test_import_extraction_entry.py', 'tests/test_import_screening_entry.py', 'tests/test_parsed_text_resolver.py', 'tests/test_pin_records.py', 'tests/test_presented_context.py', 'tests/test_request_capture.py', 'tests/test_run_interrupts.py', 'tests/test_run_manifest.py', 'tests/test_run_manifest_migration.py', 'tests/test_run_pipeline_starts.py', 'tests/test_thinking_channel.py', 'tests/test_u18_digest_per_call.py', 'tests/test_u20_loaded_context.py', 'tests/test_u27_cloud_run_faults.py', 'tests/test_u28_cloud_gate_and_boundary.py', 'tests/test_u40_cloud_claim_events.py', 'tests/test_undeclared_call.py', 'tests/test_undeclared_override.py', 'tests/test_units_as_source_slices.py']
+   pytest: ['515 passed in 303.37s (0:05:03)']
+   calls recorded: 148 (send 99, store_result 49)
+   base.py:148 send — getattr(self, "_request_chain", None): default taken by 0 test(s)
+   base.py:431 store_result — getattr(self, "_text_ref", None): default taken by 0 test(s)
+   base.py:432 store_result — getattr(self, "_request_chain", None): default taken by 0 test(s)
+   base.py:434/444 store_result — getattr(self, "stage_cfg", None) and the f"cloud:{arm}" fallback: default taken by 6 test(s)
+     tests/test_cloud_extraction.py::TestCloudExtractorBase::test_get_pending_excludes_completed [CloudExtractorBase]
+     tests/test_cloud_extraction.py::TestCloudExtractorBase::test_store_result_atomic [CloudExtractorBase]
+     tests/test_cloud_extraction.py::TestCloudExtractorBase::test_store_result_rejects_empty_spans [CloudExtractorBase]
+     tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[empty_value_with_a_snippet] [CloudExtractorBase]
+     tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[sentinel_with_an_empty_snippet] [CloudExtractorBase]
+     tests/test_u28_cloud_gate_and_boundary.py::test_store_result_refuses_an_uncited_or_empty_value[uncited_non_sentinel] [CloudExtractorBase]
+
+== counts
+(a) record_active_ollama_call → engine.core.run_manifest.record_active_ollama_call: 1
+(a) record_call → engine.core.extraction_telemetry.record_call: 5
+(a) record_call → engine.core.run_manifest: 1
+(a) record_call → engine.core.run_manifest (same module): 1
+(b) [migrations] run_calls — DDL: 7
+(b) [migrations] run_calls — INSERT: 2
+(b) [migrations] run_calls — SELECT: 2
+(b) [migrations] run_calls — other (prose or a name): 10
+(b) run_calls — INSERT: 1
+(b) run_calls — SELECT: 1
+(b) run_calls — other (prose or a name): 13
+(c) SDK client construction Anthropic [engine]: 1
+(c) SDK client construction OpenAI [engine]: 1
+(d) tests naming _create/run_calls: 1
+(d) tests naming last_request_hash: 2
+(d) tests naming last_request_hash/run_calls/send: 1
+(d) tests naming record_call: 9
+(d) tests naming record_call/run_calls: 2
+(d) tests naming run_calls: 33
+(e) CloudExtractorBase(...) — PROVIDER "": 11
+(e) a cloud method called unbound on another object: 4
+(e) a subclass of a cloud class whose __init__ skips its base's own constructor: 1
+(e) object.__new__ of a cloud class: 1

@@ -1,0 +1,13 @@
+# git diff --stat 840db24 HEAD -- engine tests scripts analysis review_specs, at 2026-11-11T05:54:04Z, HEAD 4884bc3e794be1b1c136c73cd87a56d726f93641
+ engine/cloud/anthropic_extractor.py       |  30 +++++++++++++-
+ engine/cloud/base.py                      | 117 ++++++++++++++++++++++++++++++++++++++++++++++++------
+ engine/cloud/openai_extractor.py          |  35 ++++++++++++++++-
+ engine/core/extraction_events.py          |  21 ++++++++--
+ tests/test_cloud_extraction.py            |  86 ++++++++++++++++++++++++++++++++++------
+ tests/test_parsed_text_resolver.py        |   5 ++-
+ tests/test_run_manifest.py                |   9 ++++-
+ tests/test_u27_cloud_run_faults.py        |   8 +++-
+ tests/test_u28_cloud_gate_and_boundary.py |  45 +++++++++++++++------
+ tests/test_u29_cloud_call_record.py       | 325 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/test_u40_cloud_claim_events.py      | 299 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 11 files changed, 932 insertions(+), 48 deletions(-)

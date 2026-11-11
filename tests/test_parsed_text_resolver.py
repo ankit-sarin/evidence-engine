@@ -142,10 +142,11 @@ def test_extractor_site_hands_on_the_file(db, tmp_path):
     "engine.cloud.base"])  # the human-review queue module retired 9c-C3 (R162)
 def test_each_former_glob_site_reads_through_the_resolver(module):
     mod = importlib.import_module(module)
-    if module in ("engine.agents.extractor", "engine.agents.audit_events"):
+    if module in ("engine.agents.extractor", "engine.agents.audit_events", "engine.cloud.base"):
         # 9b-2a: selection resolves the reference; the loop reads it through
         # the resolver's verified read (R95). 9b-FLIP R8: the auditor's site moved
-        # to the event-side auditor with run_audit's retirement.
+        # to the event-side auditor with run_audit's retirement. U40 (R798(d)(i)):
+        # the cloud site resolves the reference itself, keeps it, and reads through it.
         assert mod.read_parsed_text is pt.read_parsed_text
     else:
         assert mod.load_parsed_text is pt.load_parsed_text

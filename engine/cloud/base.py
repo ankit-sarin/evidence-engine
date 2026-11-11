@@ -21,8 +21,10 @@ from engine.core.completeness import (
 )
 from engine.core.effective import corpus_id_sql
 from engine.core.effective_config import cloud_stage_config, sha256_canonical
+from engine.core.events import mint_extraction_uid
+from engine.core.extraction_events import legacy_record, write_extraction_events
 from engine.core.extraction_telemetry import record_call
-from engine.core.parsed_text import NoParsedText, load_parsed_text
+from engine.core.parsed_text import NoParsedText, read_parsed_text, resolve_parsed_text
 from engine.core.review_spec import ReviewSpec, load_review_spec
 
 logger = logging.getLogger(__name__)
@@ -85,6 +87,10 @@ class CloudExtractorBase:
         #: Set by the runner to record each call in `run_calls` (S3b).
         self.run_id: int | None = None
         self.last_request_hash: str | None = None
+        #: U40 (R798(d)): (paper_id, ParsedTextRef) of the last text loaded, and
+        #: (paper_id, [request hash, …]) of the sends made for one paper.
+        self._text_ref = None
+        self._request_chain = None
 
         # The prompt is built from the codebook, so its content is recorded
         # beside the spec-derived schema hash (CODEBOOK-AUTH-01). Loaded from
@@ -137,6 +143,12 @@ class CloudExtractorBase:
         from engine.core import run_manifest as rm
         payload = self.request_payload(prompt)
         self.last_request_hash = sha256_canonical(payload)
+        # U40 (R798(d)(ii)): every hash computed is kept, in call order, with its
+        # paper id; a send for another paper starts a new chain.
+        chain = getattr(self, "_request_chain", None)
+        if chain is None or chain[0] != paper_id:
+            chain = self._request_chain = (paper_id, [])
+        chain[1].append(self.last_request_hash)
         started = datetime.now(timezone.utc).isoformat()
         response = self._create(**payload)
         if self.run_id is not None:
@@ -174,11 +186,17 @@ class CloudExtractorBase:
         No recorded text still raises `FileNotFoundError`, which `run` already
         handles; a missing or modified recorded file raises its own
         `ParsedTextError`.
+
+        U40 (R798(d)(i)): the reference the text was read through is kept with
+        its paper id — the input identity the paper's claims carry.
         """
         try:
-            return load_parsed_text(self._conn, paper_id)
+            ref = resolve_parsed_text(self._conn, paper_id)
+            text = read_parsed_text(ref)
         except NoParsedText as exc:
             raise FileNotFoundError(str(exc)) from exc
+        self._text_ref = (paper_id, ref)
+        return text
 
     def build_prompt(self, parsed_text: str) -> str:
         """Build the extraction prompt — identical to the local extractor."""
@@ -406,7 +424,34 @@ class CloudExtractorBase:
                     ),
                 )
 
+            # U40 (R798(d)(iii), (iv)): the arm's claim events, in this
+            # transaction, and no paper event (A1-β). A reference or a chain kept
+            # for another paper is absent, never used; the writer's own refusals
+            # then fire and the rollback below leaves nothing in either store.
+            kept_ref = getattr(self, "_text_ref", None)
+            kept_chain = getattr(self, "_request_chain", None)
+            chain = tuple(kept_chain[1]) if kept_chain and kept_chain[0] == paper_id else ()
+            stage_cfg = getattr(self, "stage_cfg", None)
+            write_extraction_events(
+                self._conn,
+                legacy_record(
+                    paper_id=paper_id, arm=arm, run_id=self.run_id,
+                    extraction_uid=mint_extraction_uid(),
+                    parsed_text=kept_ref[1] if kept_ref and kept_ref[0] == paper_id else None,
+                    model=model_string, model_digest=None,
+                    expected=tuple(self.expected_fields), spans=spans,
+                    attempts=len(chain),
+                    stage_name=stage_cfg.stage if stage_cfg is not None else f"cloud:{arm}",
+                    presented_context_sha256=chain[-1] if chain else None,
+                    context_chain=chain),
+                sentinels=frozenset(self._codebook.absence_sentinels),
+                paper_event=False)
+
             self._conn.commit()
+            if kept_ref and kept_ref[0] == paper_id:
+                self._text_ref = None
+            if kept_chain and kept_chain[0] == paper_id:
+                self._request_chain = None
             return ext_id
 
         except Exception:

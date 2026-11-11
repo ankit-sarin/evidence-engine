@@ -147,6 +147,46 @@ COMPLETE_FIELDS = _complete_fields()
 COMPLETE_RESPONSE = {"fields": COMPLETE_FIELDS}
 
 
+def _cloud_run(db_path, provider: str):
+    """U40 (R798(d), (f)): the cloud run a store writes its claims under, opened as
+    `scripts/run_cloud_extraction.run_arm` opens it — `rm.open_run(…, cloud_arms=[arm])`
+    on a spec copy beside the database whose `enabled_arms` names the spec's one arm of
+    `provider`, the tree patched clean — which registers and pins the arm. Returns
+    (run_id, arm)."""
+    from engine.core import run_manifest as rm
+    from engine.core.codebook import load_codebook
+    from engine.core.review_spec import load_review_spec
+
+    (arm,) = [a.name for a in load_review_spec(SPEC_PATH).arms if a.provider == provider]
+    text = SPEC_PATH.read_text()
+    assert text.count("enabled_arms: []") == 1
+    spec_copy = Path(db_path).parent / "spec_cloud_run.yaml"
+    spec_copy.write_text(text.replace("enabled_arms: []", f"enabled_arms: [{arm}]"))
+    conn = sqlite3.connect(str(db_path))
+    try:
+        with patch.object(rm, "git_state",
+                          lambda *a, **k: rm.GitState(commit="b" * 40, dirty=False, tag=None)):
+            handle = rm.open_run(conn, load_review_spec(spec_copy), kind="extraction", stages=(),
+                                 codebook=load_codebook(Path(db_path).parent / "extraction_codebook.yaml"),
+                                 cloud_arms=[arm], payload_description="test")
+        conn.commit()
+    finally:
+        conn.close()
+    return handle.run_id, arm
+
+
+def _give_reference_and_chain(base, pid: int) -> None:
+    """U40 (R798(d)(i), (ii)): what a transport's run gives the instance before its store —
+    the paper's text loaded through `load_parsed_text` (which keeps its reference) and one
+    request hash kept for the paper, as `send` keeps it. `CloudExtractorBase` alone has no
+    provider to send to, so the hash is set at the chain's own attribute."""
+    from engine.core.effective_config import sha256_canonical
+
+    write_parsed(base._conn, pid, "Paper text.")
+    base.load_parsed_text(pid)
+    base._request_chain = (pid, [sha256_canonical({"fixture_request_for_paper": pid})])
+
+
 # ── init_cloud_tables ────────────────────────────────────────────────
 
 
@@ -213,15 +253,18 @@ class TestCloudExtractorBase:
         base.close()
 
     def test_get_pending_excludes_completed(self, test_db, spec_path):
+        run_id, arm = _cloud_run(test_db, "openai")
         base = CloudExtractorBase(test_db, spec_path)
-        pending_before = base.get_pending_papers("openai_o3_mini_high")
+        base.run_id = run_id
+        pending_before = base.get_pending_papers(arm)
 
         # Store a result for the first paper
         if pending_before:
             pid = pending_before[0]["paper_id"]
+            _give_reference_and_chain(base, pid)
             base.store_result(
                 paper_id=pid,
-                arm="openai_o3_mini_high",
+                arm=arm,
                 model_string="o3-mini",
                 extracted_data=COMPLETE_RESPONSE,
                 reasoning_trace="test trace",
@@ -232,7 +275,7 @@ class TestCloudExtractorBase:
                 cost_usd=0.001,
                 spans=COMPLETE_FIELDS,
             )
-            pending_after = base.get_pending_papers("openai_o3_mini_high")
+            pending_after = base.get_pending_papers(arm)
             assert len(pending_after) == len(pending_before) - 1
 
         base.close()
@@ -313,16 +356,19 @@ class TestCloudExtractorBase:
         base.close()
 
     def test_store_result_atomic(self, test_db, spec_path):
+        run_id, arm = _cloud_run(test_db, "openai")
         base = CloudExtractorBase(test_db, spec_path)
-        pending = base.get_pending_papers("test_arm")
+        base.run_id = run_id
+        pending = base.get_pending_papers(arm)
         if not pending:
             base.close()
             pytest.skip("No pending papers")
 
         pid = pending[0]["paper_id"]
+        _give_reference_and_chain(base, pid)
         ext_id = base.store_result(
             paper_id=pid,
-            arm="test_arm",
+            arm=arm,
             model_string="test-model",
             extracted_data=COMPLETE_RESPONSE,
             reasoning_trace="test trace",
@@ -339,7 +385,7 @@ class TestCloudExtractorBase:
             "SELECT * FROM cloud_extractions WHERE id = ?", (ext_id,)
         ).fetchone()
         assert row is not None
-        assert row["arm"] == "test_arm"
+        assert row["arm"] == arm
         assert row["cost_usd"] == 0.001
 
         # Verify span rows
@@ -719,6 +765,7 @@ class TestSonnetRateLimitBackoff:
         mock_client.messages.create.side_effect = [rate_err, rate_err, success_resp]
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        extractor.run_id, _ = _cloud_run(test_db, "anthropic")
         pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
@@ -765,6 +812,7 @@ class TestSonnetRateLimitBackoff:
         mock_client.messages.create.side_effect = [rate_err, success_resp]
 
         extractor = AnthropicExtractor(test_db, spec_path, api_key="test-key")
+        extractor.run_id, _ = _cloud_run(test_db, "anthropic")
         pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
@@ -809,6 +857,7 @@ class TestStoreResultCrashProtection:
         mock_client.chat.completions.create.return_value = resp
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        extractor.run_id, _ = _cloud_run(test_db, "openai")
         pending = extractor.get_pending_papers(extractor.arm_name)
         if len(pending) < 2:
             extractor.close()
@@ -962,6 +1011,7 @@ class TestOpenAIRateLimitBackoff:
         mock_client.chat.completions.create.side_effect = [rate_err, rate_err, success_resp]
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        extractor.run_id, _ = _cloud_run(test_db, "openai")
         pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()
@@ -1011,6 +1061,7 @@ class TestOpenAIRateLimitBackoff:
         mock_client.chat.completions.create.side_effect = [rate_err, success_resp]
 
         extractor = OpenAIExtractor(test_db, spec_path, api_key="test-key")
+        extractor.run_id, _ = _cloud_run(test_db, "openai")
         pending = extractor.get_pending_papers(extractor.arm_name)
         if not pending:
             extractor.close()

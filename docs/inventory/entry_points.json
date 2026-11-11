@@ -4186,7 +4186,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 520,
+            "line": 565,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4196,7 +4196,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 70,
+            "line": 72,
             "scope": "CloudExtractorBase.__init__"
           }
         ],
@@ -6871,7 +6871,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "6bfbe36a807abe048119863fb9256d3d236c7a16",
+    "generated_at_commit": "27fda1cbd95f73b4955ab2530affd7a813b866d5",
     "scan_roots": [
       "engine",
       "scripts",

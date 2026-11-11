@@ -245,7 +245,7 @@ python -m engine.agents.ft_screener ... --verify-only
 3. **OpenAI arm:** `chat.completions.create()` with reasoning_effort=high, json_object format. Reasoning trace from `message.reasoning_content`
 4. **Anthropic arm:** `messages.create()` with extended thinking (budget_tokens=10000), max_tokens=16000. Thinking blocks separated from text blocks. Markdown fence stripping
 5. Response JSON parsed via `parse_response_to_spans()` (8+ alternate key names, flat dict restructuring, null → "NR")
-6. `store_result()` — atomic insert to cloud_extractions + cloud_evidence_spans. Rejects 0-span results and, through `enforce_citations` (LEGACY), uncited or empty values
+6. `store_result()` — one transaction: the insert to cloud_extractions + cloud_evidence_spans and the arm's claim events (`write_extraction_events(…, paper_event=False)`: no paper event, so the paper's processing axis does not move; U40, R798). Rejects 0-span results and, through `enforce_citations` (LEGACY), uncited or empty values
 7. Post-extraction: `run_distribution_check()` for the arm
 
 **No paper status change:** Cloud extractions are parallel data stored in separate tables

@@ -2,15 +2,16 @@
 boundary refuses an uncited or empty value.
 
 Seams: 12ae_U28A/fake_probe_u28a.py's. A scratch ReviewDatabase under tmp_path with fourteen papers, each with an eligibility event
-(`seed_eligibility`); the live codebook copied beside it (read, never written); a spec copy whose `enabled_arms: []` names the openai arm;
+(`seed_eligibility`) and, since U40, a recorded parsed text (`write_parsed`); the live codebook copied beside it (read, never written); a spec copy whose `enabled_arms: []` names the openai arm;
 `rm.git_state` patched clean; `rm.open_run(conn, spec, kind="extraction", stages=(), codebook=…, cloud_arms=[arm], …)` exactly as
-`scripts/run_cloud_extraction.run_arm` calls it, which registers and pins the arm; `store_result` called on a `CloudExtractorBase`
-(PROVIDER "" — no transport). `openai.OpenAI` and `anthropic.Anthropic` are replaced by recorders that refuse, and every test asserts that
+`scripts/run_cloud_extraction.run_arm` calls it, which registers and pins the arm, its run_id set on the instance as the runner sets it;
+`store_result` called on a `CloudExtractorBase` (PROVIDER "" — no transport), given the paper's reference through its own
+`load_parsed_text` and one request hash at its chain (U40, R798(d), (f)). `openai.OpenAI` and `anthropic.Anthropic` are replaced by recorders that refuse, and every test asserts that
 neither was constructed. No server, no provider, no key, no gitignored fixture.
 
 Claims, by the U28A read-out's numbering and R794's letters:
   (i)   D — the cloud gate (`CloudExtractorBase.run_distribution_check`) skips by the arm's live-claim population, a failed paper recorded,
-        not a veto. Until U40, store_result writes no claim events, so twelve stored papers leave the arm's population at 0.
+        not a veto: a cloud run that stored no paper leaves the arm's population at 0.
   (ii)  B, claim (2) / N44 — `run_post_extraction_check` reports an arm holding no non-null value for any categorical field as skipped;
         `check_distribution`'s per-field contract (OK with zeros, the B5 rewrite under A12) stands.
   (iii) C, claim (3) — `store_result` refuses a non-sentinel value without a snippet, and an empty value, with UncitedValueError, inserting
@@ -32,10 +33,12 @@ from engine.core import run_manifest as rm
 from engine.core.citation_guard import BLANK_VALUE, VALUE_WITHOUT_CITATION, UncitedValueError
 from engine.core.codebook import load_codebook
 from engine.core.database import ReviewDatabase
+from engine.core.effective_config import sha256_canonical
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 from engine.validators import distribution_monitor as dm
 from _event_store_fixture import seed_eligibility
+from _parsed_text_fixture import write_parsed
 
 REPO = Path(__file__).resolve().parent.parent
 SPEC_PATH = REPO / "review_specs" / "surgical_autonomy.yaml"
@@ -76,6 +79,7 @@ def cloud(tmp_path, monkeypatch):
     pids = [r["id"] for r in db.get_papers_by_status("INGESTED")]
     for pid in pids:
         seed_eligibility(db._conn, pid)
+        write_parsed(db, pid, f"Paper {pid}.\n\nSnippet for study_type.\n", version=1)
     db._conn.commit()
     db_path = Path(db.db_path)
     shutil.copy2(LIVE_CODEBOOK, db_path.parent / "extraction_codebook.yaml")
@@ -85,16 +89,19 @@ def cloud(tmp_path, monkeypatch):
     spec_path = tmp_path / "spec.yaml"
     spec_path.write_text(text.replace("enabled_arms: []", f"enabled_arms: [{arm}]"))
     cbk = load_codebook(db_path.parent / "extraction_codebook.yaml")
-    rm.open_run(db._conn, load_review_spec(spec_path), kind="extraction", stages=(), codebook=cbk,
-                cloud_arms=[arm], payload_description="test")
+    handle = rm.open_run(db._conn, load_review_spec(spec_path), kind="extraction", stages=(), codebook=cbk,
+                         cloud_arms=[arm], payload_description="test")
     db.close()
     base = CloudExtractorBase(str(db_path), str(spec_path), arm_name=arm)
+    base.run_id = handle.run_id
     yield base, db_path, arm, pids, cbk, sdk
     base.close()
     assert sdk["constructed"] == 0
 
 
 def _store(base, arm, pid, spans):
+    base.load_parsed_text(pid)
+    base._request_chain = (pid, [sha256_canonical({"fixture_request_for_paper": pid})])
     return base.store_result(paper_id=pid, arm=arm, model_string="fake", extracted_data={"fields": []}, reasoning_trace="",
                              prompt_text="p", input_tokens=1, output_tokens=1, reasoning_tokens=0, cost_usd=0.0, spans=spans)
 
@@ -111,13 +118,11 @@ def _rows(db_path, arm, pid=None):
 
 @pytest.mark.parametrize("failed", [0, 1], ids=["no_failed_paper", "one_failed_paper"])
 def test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok(cloud, failed):
-    """(i), D (R794(d)): twelve store_result writes with one identical categorical value; the cloud gate skips by the arm's
-    live-claim population (0 until U40), with or without a failed paper — never eleven OK rows over a store it did not read."""
+    """(i), D (R794(d)): a cloud run that stored no paper; the cloud gate skips by the arm's live-claim population (0), with or
+    without a failed paper — never eleven OK rows over a store it did not read."""
     base, db_path, arm, pids, cbk, _ = cloud
-    for pid in pids[:12]:
-        _store(base, arm, pid, _spans(cbk))
-    assert _rows(db_path, arm) == 12
-    summary = base.run_distribution_check({"extracted": 12, "failed": failed})
+    assert _rows(db_path, arm) == 0
+    summary = base.run_distribution_check({"extracted": 0, "failed": failed})
     assert summary["skipped"] is True, summary
     assert summary["skip_reason"] == f"only 0 eligible papers hold a live claim for arm {arm} (minimum 10)"
     assert summary["arm_population"] == 0

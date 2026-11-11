@@ -668,12 +668,26 @@ def plan_extraction_events(outcome, *, live: Mapping[str, tuple[LiveClaimEvent, 
 
 # ── The writer ──────────────────────────────────────────────────────
 def write_extraction_events(conn, outcome, *, sentinels=frozenset(),
-                            review_dir: str | Path | None = None) -> EventPlan:
+                            review_dir: str | Path | None = None,
+                            paper_event: bool = True) -> EventPlan:
     """Plan `outcome` against the database's live claims and write it: every event
     in one savepoint, one commit, nothing on any refusal.
 
     A record under the floor is refused with `HeldFieldsBelowFloor` and nothing
-    is written: the paper's failure goes through `outcome_for_exception`."""
+    is written: the paper's failure goes through `outcome_for_exception`.
+
+    `paper_event` (U40, R798(c)): with the default, True, the plan's paper event
+    is written with its field events, as always. With False the plan is made and
+    written exactly as with True — the same planner, savepoint, refusals,
+    `claim_inputs` and supersession — and its one paper event is not written, so
+    the paper's processing axis does not move: the cloud store's form, whose arm is
+    a comparison arm and not the paper's processing (A1-β). A `PaperFailure` with
+    `paper_event=False` is refused with `ValueError` before anything is read or
+    written: a failure IS its paper event."""
+    if not paper_event and isinstance(outcome, PaperFailure):
+        raise ValueError(
+            f"paper {outcome.paper_id} ({outcome.arm}): a PaperFailure is written as its paper "
+            "event; paper_event=False refuses it and nothing is written (R798(c))")
     if isinstance(outcome, ExtractionRecord) and floor_failure(outcome) is not None:
         raise HeldFieldsBelowFloor(outcome)
     by_field: dict[str, list[LiveClaimEvent]] = {}
@@ -698,7 +712,8 @@ def write_extraction_events(conn, outcome, *, sentinels=frozenset(),
     try:
         for fe in plan.field_events:
             write_field_event(conn, **fe, commit=False)
-        write_paper_event(conn, **plan.paper_event, commit=False)
+        if paper_event:
+            write_paper_event(conn, **plan.paper_event, commit=False)
         conn.execute("RELEASE extraction_events")
         if conn.in_transaction:
             conn.commit()

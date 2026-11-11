@@ -1,0 +1,42 @@
+b0: tests/test_u40_cloud_claim_events.py on the parent 27fda1cbd95f73b4955ab2530affd7a813b866d5 (engine tree as at 24ce26b), 2026-11-11T02:50:59Z
+?? tests/test_u40_cloud_claim_events.py
+/home/ankitsarin/projects/evidence-engine/tests/test_u40_cloud_claim_events.py:238: Failed: DID NOT RAISE <class 'engine.core.events.RunLinkRefused'>
+E   Failed: DID NOT RAISE <class 'engine.core.extraction_events.ReuseKeyAlreadyClaimed'>
+/home/ankitsarin/projects/evidence-engine/tests/test_u40_cloud_claim_events.py:238: Failed: DID NOT RAISE <class 'engine.core.extraction_events.ReuseKeyAlreadyClaimed'>
+E   AssertionError: assert {'autonomy_le..._metric', ...} == set()
+      
+      Extra items in the left set:
+      'sample_size'
+      'surgical_domain'
+      'country'
+      'study_design'
+      'task_select'...
+      
+      ...Full output truncated (40 lines hidden), use '-vv' to show
+/home/ankitsarin/projects/evidence-engine/tests/test_u40_cloud_claim_events.py:263: AssertionError: assert {'autonomy_le..._metric', ...} == set()
+E   TypeError: write_extraction_events() got an unexpected keyword argument 'paper_event'
+/home/ankitsarin/projects/evidence-engine/tests/test_u40_cloud_claim_events.py:294: TypeError: write_extraction_events() got an unexpected keyword argument 'paper_event'
+E   AssertionError: assert set() == {'engine/cloud/base.py'}
+      
+      Extra items in the right set:
+      'engine/cloud/base.py'
+      
+      Full diff:
+      + set()
+      - {
+      -     'engine/cloud/base.py',
+      - }
+/home/ankitsarin/projects/evidence-engine/tests/test_u40_cloud_claim_events.py:285: AssertionError: assert set() == {'engine/cloud/base.py'}
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_u40_cloud_claim_events.py::test_the_processing_axis_is_untouched_by_cloud_stores
+FAILED tests/test_u40_cloud_claim_events.py::test_cloud_gate_sees_what_store_result_wrote
+FAILED tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_reference_kept-ClaimWithoutInputIdentity]
+FAILED tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_send_made-ClaimWithoutPresentedContext]
+FAILED tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[state_kept_for_another_paper-ClaimWithoutInputIdentity]
+FAILED tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_run_id-RunLinkRefused]
+FAILED tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[a_second_store_of_the_same_text-ReuseKeyAlreadyClaimed]
+FAILED tests/test_u40_cloud_claim_events.py::test_the_legacy_rows_and_the_claims_agree
+FAILED tests/test_u40_cloud_claim_events.py::test_the_paper_event_keyword[paper_failure_refused]
+FAILED tests/test_u40_cloud_claim_events.py::test_the_paper_event_keyword[census_base_only]
+========================= 9 failed, 1 passed in 8.62s ==========================

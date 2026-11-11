@@ -1,0 +1,89 @@
+setup
+  W0: cloud run 2, local run 3; local claims on papers [15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+  W1: cloud run 2, local run 3; local claims on papers [15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+audit #1 (local)
+  W0: papers_audited=10 located=10 not_located=190 skipped_by_state=[] skipped_refused=[]
+  W1: papers_audited=10 located=10 not_located=190 skipped_by_state=[] skipped_refused=[]
+audit #2 (local)
+  W0: papers_audited=0 located=0 not_located=0 skipped_by_state=[]
+  W1: papers_audited=0 located=0 not_located=0 skipped_by_state=[]
+audited_ai papers
+  W0: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24]; of them, papers the local arm holds no claim on: []
+  W1: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24]; of them, papers the local arm holds no claim on: []
+cloud store counts
+  W0: {'cloud_extractions': 0, 'field_events': 0, 'claim_inputs': 0, 'paper_events naming the arm': 0}
+  W1: {'cloud_extractions': 14, 'field_events': 280, 'claim_inputs': 14, 'paper_events naming the arm': 0}
+workflow gate's read (processing per corpus paper)
+  W0: 569 chars, W1: 569 chars (compared below)
+papers at 'extracted' (AI_AUDIT_COMPLETE_STAGE pending)
+  W0: []
+  W1: []
+generate_prisma_flow
+  W0: 947 chars, W1: 947 chars (compared below)
+get_pipeline_stats
+  W0: 383 chars, W1: 383 chars (compared below)
+evidence rows (local)
+  W0: 19529 chars, W1: 19529 chars (compared below)
+evidence rows (local) summary
+  W0: 24 rows; study_type 'Original Research' 10; processing column values ['audited_ai', 'no_recorded_state']
+  W1: 24 rows; study_type 'Original Research' 10; processing column values ['audited_ai', 'no_recorded_state']
+docx (local)
+  W0: written, True
+  W1: written, True
+evidence rows (cloud)
+  W0: 12309 chars, W1: 22599 chars (compared below) — cloud-arm or shared: W1 differs by design
+evidence rows (cloud) summary
+  W0: 24 rows; study_type 'Original Research' 0; processing column values ['audited_ai', 'no_recorded_state']
+  W1: 24 rows; study_type 'Original Research' 14; processing column values ['audited_ai', 'no_recorded_state']
+docx (cloud)
+  W0: written, True
+  W1: written, True
+concordance.load_arm (local)
+  W0: 5240 chars, W1: 5240 chars (compared below)
+concordance.load_arm (local) summary
+  W0: 10 papers; study_type values ['Original Research']
+  W1: 10 papers; study_type values ['Original Research']
+concordance.load_arm (cloud)
+  W0: 2 chars, W1: 7327 chars (compared below) — cloud-arm or shared: W1 differs by design
+concordance.load_arm (cloud) summary
+  W0: 0 papers; study_type values []
+  W1: 14 papers; study_type values ['Original Research']
+concordance.run_concordance (local, cloud)
+  W0: n_papers=0 a_only=10 b_only=0
+  W1: n_papers=4 a_only=6 b_only=10
+judge_loader.load_grid (local arm outputs)
+  W0: 16394 chars, W1: 16394 chars (compared below)
+judge_loader.load_grid (local) summary
+  W0: 480 JudgeInputs; local ArmOutputs 480, with a value 200
+  W1: 480 JudgeInputs; local ArmOutputs 480, with a value 200
+judge_loader.load_grid (cloud arm outputs)
+  W0: 16644 chars, W1: 16294 chars (compared below) — cloud-arm or shared: W1 differs by design
+judge_loader.load_grid (cloud) summary
+  W0: 480 JudgeInputs; cloud ArmOutputs 480, with a value 0
+  W1: 480 JudgeInputs; cloud ArmOutputs 480, with a value 280
+validate_all (local)
+  W0: issues 0, bleeds 0
+  W1: issues 0, bleeds 0
+validate_all (cloud)
+  W0: issues 0, bleeds 0
+  W1: issues 0, bleeds 0
+
+=== local-arm results, W0 == W1 (a difference is a STOP before the gate)
+  audit #1 (local): equal True
+  audit #2 (local): equal True
+  audited_ai papers: equal True
+  workflow gate's read (processing per corpus paper): equal True
+  papers at 'extracted' (AI_AUDIT_COMPLETE_STAGE pending): equal True
+  generate_prisma_flow: equal True
+  get_pipeline_stats: equal True
+  evidence rows (local): equal True
+  docx (local): equal True
+  concordance.load_arm (local): equal True
+  judge_loader.load_grid (local arm outputs): equal True
+  validate_all (local): equal True
+local-arm differences: none
+
+=== the record
+calls refused and counted: {'openai.OpenAI': 0, 'anthropic.Anthropic': 0, 'ollama_chat': 0, 'semantic_verify': 0}
+SDK client constructions: 0
+live data root entries before 7, after 7, equal: True; 'u40bprobe' under it: False

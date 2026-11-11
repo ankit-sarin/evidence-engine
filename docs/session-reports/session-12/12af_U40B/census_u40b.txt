@@ -1,0 +1,32 @@
+== (1) test functions reaching store_result (counts are (outside pytest.raises, inside))
+  tests/test_cloud_extraction.py:215 test_get_pending_excludes_completed | params: test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'store_result': (1, 0)} | expects: store
+  tests/test_cloud_extraction.py:284 test_store_result_rejects_empty_spans | params: test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'store_result': (0, 1)} | expects: refusal
+  tests/test_cloud_extraction.py:315 test_store_result_atomic | params: test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'store_result': (1, 0)} | expects: store
+  tests/test_cloud_extraction.py:589 test_an_empty_value_is_refused_at_the_write_boundary | params: mock_anthropic_cls,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (1, 0)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:695 test_429_triggers_30s_plus_backoff | params: mock_anthropic_cls,mock_sleep,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (1, 0)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:743 test_429_uses_retry_after_header | params: mock_anthropic_cls,mock_sleep,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (1, 0)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:792 test_openai_store_failure_continues_run | params: mock_openai_cls,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (1, 0)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:841 test_distribution_collapse_not_caught | params: mock_openai_cls,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (0, 1)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:870 test_openai_401_aborts_immediately | params: mock_openai_cls,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (0, 1)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:899 test_anthropic_401_aborts_immediately | params: mock_anthropic_cls,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (0, 1)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:934 test_429_triggers_30s_plus_backoff | params: mock_openai_cls,mock_sleep,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (1, 0)} | expects: run: decided by the selected run
+  tests/test_cloud_extraction.py:984 test_429_uses_retry_after_header | params: mock_openai_cls,mock_sleep,test_db,spec_path | file-local fixtures: spec_path,test_db | via: - | reach: {'run': (1, 0)} | expects: run: decided by the selected run
+  tests/test_u27_cloud_run_faults.py:99 test_run_faults_leave_the_cloud_handlers_as_themselves | params: tmp_path,monkeypatch,case_id,provider,route,make_exc | file-local fixtures: - | via: run | reach: {'run': (2, 0)} | expects: run: decided by the selected run
+  tests/test_u28_cloud_gate_and_boundary.py:113 test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok | params: cloud,failed | file-local fixtures: cloud | via: _store | reach: {'store_result': (1, 0)} | expects: store
+  tests/test_u28_cloud_gate_and_boundary.py:145 test_store_result_refuses_an_uncited_or_empty_value | params: cloud,case | file-local fixtures: cloud | via: _store | reach: {'store_result': (1, 0)} | expects: store
+  by file: tests/test_cloud_extraction.py 12, tests/test_u28_cloud_gate_and_boundary.py 2, tests/test_u27_cloud_run_faults.py 1
+
+== (2) test functions naming write_extraction_events
+  tests/test_audit_admitted_set.py: 2
+  tests/test_extraction_events.py: 18
+  tests/test_floor_and_stored_attempt.py: 1
+
+== (3) production calls of write_extraction_events (engine/, scripts/, analysis/) and their keywords
+  engine/agents/extractor.py:709 keywords: ['sentinels', 'review_dir']
+  engine/agents/extractor.py:1087 keywords: []
+  engine/agents/extractor.py:1178 keywords: ['review_dir']
+  engine/elicitation/pipeline.py:663 keywords: ['sentinels', 'review_dir']
+
+== counts
+tests reaching store_result: 15 / 3 files; expecting a store (direct): 4; refusal only: 1; run only: 10
+tests naming write_extraction_events: 21 / 3 files

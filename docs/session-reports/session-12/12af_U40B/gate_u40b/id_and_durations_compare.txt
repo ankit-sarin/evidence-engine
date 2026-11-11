@@ -1,0 +1,25 @@
+gate ids 3555 ref 3545
+only-gate: 10; only-ref: 0
+  only-gate tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[a_second_store_of_the_same_text-ReuseKeyAlreadyClaimed]
+  only-gate tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_reference_kept-ClaimWithoutInputIdentity]
+  only-gate tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_run_id-RunLinkRefused]
+  only-gate tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[no_send_made-ClaimWithoutPresentedContext]
+  only-gate tests/test_u40_cloud_claim_events.py::test_a_refused_cloud_store_leaves_nothing_in_either_store[state_kept_for_another_paper-ClaimWithoutInputIdentity]
+  only-gate tests/test_u40_cloud_claim_events.py::test_cloud_gate_sees_what_store_result_wrote
+  only-gate tests/test_u40_cloud_claim_events.py::test_the_legacy_rows_and_the_claims_agree
+  only-gate tests/test_u40_cloud_claim_events.py::test_the_paper_event_keyword[census_base_only]
+  only-gate tests/test_u40_cloud_claim_events.py::test_the_paper_event_keyword[paper_failure_refused]
+  only-gate tests/test_u40_cloud_claim_events.py::test_the_processing_axis_is_untouched_by_cloud_stores
+phases ref 2620 gate 2662
+slower by >10 s: 0
+-- summary line
+==== 3554 passed, 17 deselected, 1 xfailed, 2 warnings in 963.80s (0:16:03) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

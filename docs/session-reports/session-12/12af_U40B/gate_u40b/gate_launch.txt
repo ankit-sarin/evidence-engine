@@ -1,0 +1,2 @@
+2026-11-11T03:01:42.505338410Z
+run_gate.sh /home/ankitsarin/scratch/12af-u40b/gate_u40b 12af_u40b docs/session-reports/session-12/12af_open/gate_12af_open/collected_ids.txt docs/session-reports/session-12/12af_open/gate_12af_open/durations_12af_open.txt 

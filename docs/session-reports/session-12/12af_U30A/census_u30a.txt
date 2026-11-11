@@ -1,0 +1,106 @@
+
+-- (a) .commit(): 6
+  engine/cloud/base.py:500 <module>.CloudExtractorBase.store_result | receiver self._conn | self._conn.commit()
+  engine/cloud/schema.py:95 <module>.init_cloud_tables | receiver conn | conn.commit()
+  engine/core/run_manifest.py:711 <module>.open_run | receiver conn | conn.commit()
+  engine/core/run_manifest.py:924 <module>.close_run | receiver conn | conn.commit()
+  engine/core/run_manifest.py:1058 <module>.record_call | receiver conn | conn.commit()
+  engine/core/extraction_events.py:719 <module>.write_extraction_events | receiver conn | conn.commit()
+
+-- (a) .rollback(): 1
+  engine/cloud/base.py:508 <module>.CloudExtractorBase.store_result | receiver self._conn | self._conn.rollback()
+
+-- (b) handlers on the cloud path: 26
+  engine/cloud/anthropic_extractor.py:107 <module>.AnthropicExtractor.extract_paper | except json.JSONDecodeError | re-raises: False
+  engine/cloud/anthropic_extractor.py:188 <module>.AnthropicExtractor.run | except FileNotFoundError | re-raises: False
+  engine/cloud/anthropic_extractor.py:266 <module>.AnthropicExtractor.run | except Exception | re-raises: True
+  engine/cloud/anthropic_extractor.py:200 <module>.AnthropicExtractor.run | except IncompleteExtractionError | re-raises: False
+  engine/cloud/anthropic_extractor.py:206 <module>.AnthropicExtractor.run | except anthropic.AuthenticationError | re-raises: True
+  engine/cloud/anthropic_extractor.py:211 <module>.AnthropicExtractor.run | except anthropic.RateLimitError | re-raises: False
+  engine/cloud/anthropic_extractor.py:232 <module>.AnthropicExtractor.run | except Exception | re-raises: True
+  engine/cloud/base.py:194 <module>.CloudExtractorBase.send | except Exception | re-raises: True
+  engine/cloud/base.py:202 <module>.CloudExtractorBase.send | except Exception | re-raises: True
+  engine/cloud/base.py:247 <module>.CloudExtractorBase.load_parsed_text | except NoParsedText | re-raises: True
+  engine/cloud/base.py:378 <module>.CloudExtractorBase.parse_response_to_spans | except Exception | re-raises: False
+  engine/cloud/base.py:507 <module>.CloudExtractorBase.store_result | except Exception | re-raises: True
+  engine/cloud/base.py:274 <module>.CloudExtractorBase.parse_response_to_spans | except json.JSONDecodeError | re-raises: False
+  engine/cloud/base.py:302 <module>.CloudExtractorBase.parse_response_to_spans | except json.JSONDecodeError | re-raises: False
+  engine/cloud/openai_extractor.py:108 <module>.OpenAIExtractor.extract_paper | except json.JSONDecodeError | re-raises: False
+  engine/cloud/openai_extractor.py:170 <module>.OpenAIExtractor.run | except FileNotFoundError | re-raises: False
+  engine/cloud/openai_extractor.py:243 <module>.OpenAIExtractor.run | except Exception | re-raises: True
+  engine/cloud/openai_extractor.py:182 <module>.OpenAIExtractor.run | except IncompleteExtractionError | re-raises: False
+  engine/cloud/openai_extractor.py:189 <module>.OpenAIExtractor.run | except openai.AuthenticationError | re-raises: True
+  engine/cloud/openai_extractor.py:194 <module>.OpenAIExtractor.run | except openai.RateLimitError | re-raises: False
+  engine/cloud/openai_extractor.py:211 <module>.OpenAIExtractor.run | except Exception | re-raises: True
+  scripts/run_cloud_extraction.py:198 <module>.main | except CloudArmNotEnabled | re-raises: False
+  scripts/run_cloud_extraction.py:121 <module>.run_arm | except BaseException | re-raises: True
+  engine/core/run_manifest.py:712 <module>.open_run | except BaseException | re-raises: True
+  engine/core/extraction_events.py:720 <module>.write_extraction_events | except BaseException | re-raises: True
+  engine/core/extraction_events.py:704 <module>.write_extraction_events | except NoParsedText | re-raises: False
+
+-- (c) close_run calls: 12
+  engine/adjudication/ft_screening_adjudicator.py:586 <module>._apply_ft_decisions | status 'completed' | rm.close_run(conn, run_id, "completed")
+  engine/adjudication/ft_screening_adjudicator.py:583 <module>._apply_ft_decisions | status 'aborted' if refused else 'failed' | rm.close_run(conn, run_id, "aborted" if refused else "failed",
+  engine/adjudication/import_extraction_entry.py:329 <module>.import_extraction_entry | status 'completed' | rm.close_run(conn, run_id, "completed")
+  engine/adjudication/import_extraction_entry.py:326 <module>.import_extraction_entry | status 'aborted' if refused else 'failed' | rm.close_run(conn, run_id, "aborted" if refused else "failed",
+  engine/adjudication/import_screening_entry.py:185 <module>.import_screening_entry | status 'completed' | rm.close_run(conn, run_id, "completed")
+  engine/adjudication/import_screening_entry.py:182 <module>.import_screening_entry | status 'aborted' if refused else 'failed' | rm.close_run(conn, run_id, "aborted" if refused else "failed",
+  engine/agents/ft_screener.py:612 <module>.run_ft_invocation | status 'completed' | rm.close_run(db._conn, run_id, "completed")
+  engine/agents/ft_screener.py:617 <module>.run_ft_invocation | status 'aborted' | rm.close_run(db._conn, run_id, "aborted", reason=str(exc))
+  engine/agents/ft_screener.py:621 <module>.run_ft_invocation | status 'failed' | rm.close_run(db._conn, run_id, "failed", reason=rm.failure_reason(exc))
+  engine/agents/ft_screener.py:630 <module>.run_ft_invocation | status 'interrupted' | rm.close_run(db._conn, run_id, "interrupted",
+  scripts/run_cloud_extraction.py:127 <module>.run_arm | status status | rm.close_run(extractor._conn, handle.run_id, status, reason=reason)
+  scripts/run_pipeline.py:576 <module>._finish_review_run | status status | rm.close_run(db._conn, run_id, status, reason=reason)
+
+-- (d) interrupt constructs: 10
+  engine/agents/ft_screener.py:623 <module>.run_ft_invocation | except (KeyboardInterrupt, rm.RunInterrupted)
+  engine/agents/ft_screener.py:700 <module> | rm.exit_process(…) | rm.exit_process(main())
+  engine/agents/ft_screener.py:684 <module>.main | except (KeyboardInterrupt, rm.RunInterrupted)
+  engine/agents/ft_screener.py:681 <module>.main | rm.interrupt_signals(…) | with rm.interrupt_signals():
+  engine/core/run_manifest.py:1010 <module>.interrupt_signals | signal.signal(…) | prior[signum] = signal.signal(signum, _raise)
+  engine/core/run_manifest.py:1014 <module>.interrupt_signals | signal.signal(…) | signal.signal(signum, handler)
+  scripts/run_pipeline.py:217 <module>.run_pipeline | except (KeyboardInterrupt, rm.RunInterrupted)
+  scripts/run_pipeline.py:645 <module>.main | except (KeyboardInterrupt, rm.RunInterrupted)
+  scripts/run_pipeline.py:657 <module> | rm.exit_process(…) | rm.exit_process(main())
+  scripts/run_pipeline.py:639 <module>.main | rm.interrupt_signals(…) | with rm.interrupt_signals():
+
+-- (e) tests coupled: 31
+  tests/test_cloud_extraction.py:259 test_get_pending_papers | names ['get_pending_papers'] | params ['test_db', 'spec_path']
+  tests/test_cloud_extraction.py:268 test_get_pending_excludes_completed | names ['get_pending_papers', 'store_result'] | params ['test_db', 'spec_path']
+  tests/test_cloud_extraction.py:340 test_store_result_rejects_empty_spans | names ['get_pending_papers', 'store_result'] | params ['test_db', 'spec_path']
+  tests/test_cloud_extraction.py:371 test_store_result_atomic | names ['get_pending_papers', 'store_result'] | params ['test_db', 'spec_path']
+  tests/test_cloud_extraction.py:412 test_get_progress | names ['get_progress'] | params ['test_db', 'spec_path']
+  tests/test_cloud_extraction.py:445 test_extract_paper | names ['get_pending_papers'] | params ['mock_openai_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:472 test_cost_calculation | names ['get_pending_papers'] | params ['mock_openai_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:516 test_extract_paper | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:539 test_reasoning_trace_from_thinking_blocks | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:560 test_json_extracted_from_text_blocks | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:582 test_cost_calculation | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:648 test_an_empty_value_is_refused_at_the_write_boundary | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:685 test_null_converted_to_nr | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:723 test_nonempty_string_unchanged | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:754 test_429_triggers_30s_plus_backoff | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'mock_sleep', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:803 test_429_uses_retry_after_header | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'mock_sleep', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:853 test_openai_store_failure_continues_run | names ['get_pending_papers', 'store_result'] | params ['mock_openai_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:932 test_openai_401_aborts_immediately | names ['get_pending_papers'] | params ['mock_openai_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:961 test_anthropic_401_aborts_immediately | names ['get_pending_papers'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:996 test_429_triggers_30s_plus_backoff | names ['get_pending_papers'] | params ['mock_openai_cls', 'mock_sleep', 'test_db', 'spec_path']
+  tests/test_cloud_extraction.py:1047 test_429_uses_retry_after_header | names ['get_pending_papers'] | params ['mock_openai_cls', 'mock_sleep', 'test_db', 'spec_path']
+  tests/test_codebook_review_at_open.py:129 test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send | names ['run_arm'] | params ['review', 'spec', 'monkeypatch', 'tmp_path']
+  tests/test_corpus_authority.py:151 test_cloud_get_pending_papers_now_reads_the_eligibility_axis | names ['get_pending_papers'] | params ['review_dir']
+  tests/test_corpus_authority.py:201 test_cloud_get_progress_counts_the_corpus_from_the_axis | names ['get_progress'] | params ['review_dir']
+  tests/test_corpus_authority.py:218 test_cloud_pending_excludes_papers_already_extracted_for_the_arm | names ['get_pending_papers'] | params ['review_dir']
+  tests/test_failed_close_reason.py:55 test_failure_reason_is_the_class_then_the_context_then_the_first_line | names ['KeyboardInterrupt'] | params ['exc', 'context', 'want']
+  tests/test_failed_close_reason.py:70 test_a_stored_failure_reason_satisfies_the_manifest_check | names ['close_run'] | params ['tmp_path']
+  tests/test_failed_close_reason.py:146 test_a_cloud_arm_interrupted_closes_failed_naming_the_interrupt | names ['KeyboardInterrupt'] | params ['cloud']
+  tests/test_run_manifest.py:158 test_a_run_records_its_end_once | names ['close_run'] | params ['review', 'spec']
+  tests/test_u27_cloud_run_faults.py:99 test_run_faults_leave_the_cloud_handlers_as_themselves | names ['run_arm'] | params ['tmp_path', 'monkeypatch', 'case_id', 'provider', 'route', 'make_exc']
+  tests/test_u29_cloud_call_record.py:236 test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row | names ['store_result'] | params ['world', 'provider']
+
+== counts
+(a) .commit(): 6
+(a) .rollback(): 1
+(b) handlers on the cloud path: 26
+(c) close_run calls: 12
+(d) interrupt constructs: 10
+(e) tests coupled: 31

@@ -1,0 +1,26 @@
+=== (A) KeyboardInterrupt between store_result's extraction INSERT and its span INSERTs
+  run_arm: KeyboardInterrupt propagated
+  manifest (run_id, end_status, end_reason, ended): [(1, None, None, 0), (2, 'failed', 'KeyboardInterrupt', 1)]
+  paper 1: cloud_extractions 1, cloud_evidence_spans 0, field_events 0, claim_inputs 0
+  run_calls for paper 1 (outcome, detail, digest present): [('completed', None, 1)]
+  get_pending_papers('openai_o4_mini_2025_04_16_high'): [2] — paper 1 pending: False
+
+=== (B) KeyboardInterrupt inside the provider call
+  run_arm: KeyboardInterrupt propagated
+  manifest (run_id, end_status, end_reason, ended): [(1, None, None, 0), (2, 'failed', 'KeyboardInterrupt', 1)]
+  paper 1: cloud_extractions 0, cloud_evidence_spans 0, field_events 0, claim_inputs 0
+  run_calls for paper 1 (outcome, detail, digest present): []
+  get_pending_papers('openai_o4_mini_2025_04_16_high'): [1, 2] — paper 1 pending: True
+
+=== (C) KeyboardInterrupt inside the event writer's savepoint (first INSERT INTO field_events)
+  run_arm: KeyboardInterrupt propagated
+  manifest (run_id, end_status, end_reason, ended): [(1, None, None, 0), (2, 'failed', 'KeyboardInterrupt', 1)]
+  paper 1: cloud_extractions 1, cloud_evidence_spans 20, field_events 0, claim_inputs 0
+  run_calls for paper 1 (outcome, detail, digest present): [('completed', None, 1)]
+  get_pending_papers('openai_o4_mini_2025_04_16_high'): [2] — paper 1 pending: False
+
+=== the record
+SDK constructions recorded (FakeOpenAI, no client): 3, keywords [{'api_key': 'placeholder-not-a-credential', 'max_retries': 0}]; provider creates 3; sleeps []; httpx sends 0; socket connects 0; real openai.OpenAI never constructed (patched in every case)
+
+=== Ollama journal, the probe's window 2026-11-11 05:34:24 → 2026-11-11 05:34:26 UTC
+-- No entries --

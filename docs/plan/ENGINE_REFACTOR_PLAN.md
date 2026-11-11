@@ -17813,3 +17813,101 @@ R796(h) — Session 12ae closes now. After R796(f) has landed, run /wrap. Report
 | 2026-11-09 | R796(a) — The 12ae-CLOSE closeout block is accepted as printed: item 0 df3e721 (Block 193 by transcribe_ruling.py; the B9 and C28 landing notes with C28's housekeeping note; the dated units line with the measured count 286; the brief file byte-equal to the architect's copy; the three rules files untouched by content), the closeout 840db24 (the plan's closure and 12af blocks, +162 / −0, inserted at the matched anchor; the 24 counterpart files; the 2026-11-09 jobs read; the recount and its chain; the band computation; the expected nightly file), ledgers fff9296 and 2aa4eac with trailers. Every expectation held (E1–E5; I1; I2 read). Twelve committed briefs this session, twelve byte-equal to the architect's copies: R784(g)(v)'s check has not yet found a paste difference. R796(b) — The band for 12af is 876–1069 s: ±10% of 972.5375 s, the mean of the last four standard gates on this host state (921.98, 945.63, 1059.11, 963.43), rounded inward as R683(c) rounded, each described as band_computation.txt describes it, the third a confounded member carried under R677(f) with its confounder named (the surgical-cv full suite beside an ffmpeg encode at launch, R793(c)). The series stands at the thirty-seven of R795(b); U24's red run (931.16 s) is not a member. A 12af gate outside the band is reported with its concurrent jobs, not adapted to. The band is wider and higher than 12ae's because of the confounded member; the 12af closeout's recut from four unconfounded gates is expected to bring it back, and no rule changes for that. R796(c) — The stops, counted by the PI from the rulings: one stop, the architect's — 12ae-U24B stopped before its first edit on the inventory question (R786(a); R786(b) allowed the regeneration and the build resumed as 12ae-U24B-R1); one pause, the clock's — 12ae-U25B's item 0 reached the R86 window and resumed in the same brief (R789(a)). CC's stops: none. The architect's other errors this session (the open brief's length, R784(g); the expected block's health-section premise, R784(d); the inventory counters, R787; the ten yaml sites and the R124/R131 citation, R788(e); the fourteen except lines, R790; the "no other line changes" clause, R791(c); the Wave 2 notes' rows, R792(h); C49's CLOSED form, R794(i); the inventory stamp expectation, R795(c); the branch's placement, R795(c); the five dated lines' row count, R795(g)) were each caught by a check reading its arguments or by CC reading the record over the brief (R732(a)), and none stopped a brief or reached a commit wrong. The session's measured point for the estimate: one CC session (the open at 03:xx UTC on 2026-11-09 to the wrap at 23:xx), five fix units from Phase A to gate, three rows closed, two opened, one unit entered, one stop, one pause. R796(d) — Readings, no row: finding 1 (two foreign hook rows pending in the shared ledger at step 0, carried by fff9296 and named — the third shared-ledger reading, R793(e), R795(c); no rule); finding 2 (du's inode de-duplication across arguments made the combined line read 0; the root's own du -sb is the figure and the file says why — a reading on the measurement form, carried to 12af-CLOSE's temp-root line); finding 3 (the 2026-11-09 nightly ran on 4a4c850, U24's engine tree, between two engine commits of the same session, so no expected-nightly file covered it; CC read it against U24's gate of record and it matched line for line — the right reading under R749(b); a session whose engine tree changes mid-day leaves that day's nightly to the closeout's reflog method, as here); finding 4 (the five dated lines at plan :920–:928 stand as written, named by the closure and the new dated line); finding 5 (band_computation.txt's raw floats stand as committed; the figure and the closure's values are exact; no reformat); finding 6 (the closeout check failed its dry run on two unprefixed file names and passed after the fix — the check did its job); finding 7 (the expected block's HEAD bullet, inherited from 12ad's form, says the closeout's full hash is "in the closeout block": it is in the lane line and the report; 12af-CLOSE writes that bullet as "its full hash is in the lane line and the closeout report", the form corrected forward, the 12ae block not rewritten); finding 8 (the tags read lists five models where 12ad's listed three — the two added since are readings, the five digests named in the block, R767(c)); finding 9 (2930dff carried two of this lane's rows, 94ab7a8's and 1f6bc16's; the commit list says so); finding 10 (E1–E5 held); finding 11 ((a)). R796(e) — Carried to 12af and the plan, from R795(i) and this closeout: the six tools items (R752(c), R765(d), R766(d), R784(d), R791(c) finding 4, R793(e) finding 3) for one tools change; U40 next after 12af-OPEN, two-phase, with 12ae_U28A.md §9's questions (the event writer's form for a write with a run_id and no activation; the grid's consumers — concordance, the exports, the judge loader, the audit; is_assigned for a model-kind arm; whether any reader filters cloud arms); the housekeeping at U40's build or P7 (anthropic_extractor.py:108–113); INT-ae12-1 and INT-ae12-2 (P7); the stage-key question at 12f_C56-A.md:717 (not U40's); the shared-ledger readings (three; a rule is not proposed); the 2026-11-10 and 11-11 jobs against 12ae_close/expected_nightly_20261110.md. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at 12af-OPEN's item 0, asserted by content. R796(f) — The lane line (sha256 4ef90bb2882523f16ed51bbe5b56c1fc2f2148fcebef5912bb9096d533df21f0, 7,205 bytes, 10 lines, ~/scratch/12ae-close/lane_line_12ae.txt) is approved as pasted and applied now: verify the file's sha256, replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines, taken from primer.md itself) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows named by hash); push; level. R796(g) — 12af-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block (Block 194) and copies lane_line_12ae.txt into docs/session-reports/session-12/12ae_close/; no standing rule, the three rules files untouched by content. It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12af open" block, the recount by 12ae_close/recount_12ae_close.py (286; 38 done 31; R510 2 / 0); reads the 2026-11-10 and, if run, 2026-11-11 jobs against 12ae_close/expected_nightly_20261110.md (R795(e)); the gate by the wrapper, against 876–1069 s, its reference 12ae_close/collected_ids_12ae_close.txt and durations_12ae_u28b.txt. Its brief is committed at its item 0 as brief_12af_OPEN.md (R784(g)(v)). Then U40's Phase A. R796(h) — Session 12ae closes now. After R796(f) has landed, run /wrap. Report the lane-line commit's hash and parent, the wrap's verdict, and the archive command as run with its result. | PI, 2026-11-09, during session 12ae, on architect recommendation, on the 12ae-CLOSE closeout block (840db24) and final report |
 
 The decision log in this file ends at R796.
+
+**Block 195.** *Transcribed 2026-11-11 (item 0 of the 12af-U40A brief), in its own commit with the brief file it orders, in the R597(e) form:* ruling R797, made by PI on architect recommendation on 2026-11-10 UTC, during session 12af, on the 12af-OPEN final report (item 0 `91a619b833d177e27b2570d030e4e9e476238f81`; evidence `3310738c92f2dca32e407f8bef7d102813c1fda9`). The 12af-U40A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12af-R797] — 12af-OPEN accepted; the series gains 966.10 s; claude-config
+  0a479b6 accepted; the gate launch held for another lane's suite was right and is a reading; two
+  of the brief's values were the architect's; no standing rule; U40's Phase A opens
+STATUS: PI ruling, 2026-11-10 UTC, session 12af, on architect recommendation, on the 12af-OPEN
+  final report (item 0 91a619b833d177e27b2570d030e4e9e476238f81; evidence
+  3310738c92f2dca32e407f8bef7d102813c1fda9). Transcribe at item 0 of the 12af-U40A brief below,
+  by transcribe_ruling.py, in the block after R796's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the 12af-OPEN final report):
+  MEASURED: "22:55:54 UTC on 2026-11-10, so the item-0 commit carries 2026-11-10"; "HEAD was
+    0a479b6, a child of 34e422a, level and clean"; "Its ctime is 2026-11-09 23:40:06 UTC; the
+    transcript runs 02:57:16Z to 23:39:58Z"; "the 2026-11-10 pair only"; "20/20 loads OK, no FAIL,
+    67 GIN lines with no non-200, 20 loads. NV_ERR_NO_MEMORY still 31 this boot"; "matches line for
+    line on 840db24: collection 3562/17/3545, "3544 passed, 17 deselected, 1 xfailed, 2 warnings in
+    964.91s", exit 0 as the last line"; "r796.txt is 7805916b…f1, 10,200 B, 111 lines, equal to
+    your hash"; "The render's element order equals Block 181's"; "brief_12af_OPEN.md is
+    d6f66cff023f65eb1e59944a06c9c51e3cf72490ccb2237818e07307b6ea6d5f, 34,437 B, 430 lines" (the
+    architect's copy: equal, cmp byte for byte against the clone); "Plan numstat +122/−0. "ends at"
+    lines 150 before, 151 after. The plan is now 17,815 lines,
+    a6263dc99c7f758eb8cd5324904760ecf58af69d28ff4108adef797a259c97c9, 3,054,151 B, and ends at
+    R796"; "91a619b (parent 840db24), pushed and level, fingerprint IDENTICAL before and after";
+    "5beed3d (parent 0a479b6), row 23:02:07Z, no foreign pending rows"; "RESULT PASS, 0 mismatches,
+    no SKIPPED"; "rows 286 (94/56/136/0); P1 62 (25/25/12); P6 12; P7 121; fix units 35 / 37,19 /
+    38 done 31; R510 2 in, 0 out; expected_holds true. Its JSON is byte-equal to the committed
+    0b9f41f9…"; "212 at 840db24 and 212 at 91a619b, 0 in, 0 out, no move"; "Launch:
+    2026-11-10T23:08:50Z … Exit 23:24:56Z, rc 0"; "966.10 s, inside 876–1069 s"; "3544 passed, 17
+    deselected, 1 xfailed, 2 warnings (sklearn) on 3562 / 3545. Ids 0/0. 2,620 phases, none slower
+    by more than 10 s"; ""-- No entries --", no load"; "uvicorn only, before and after the gate";
+    "the nineteen files, names equal to gate_12ae_open/'s"; "24 copies (19 gate files, plus 5
+    job-read files into 12ae_close/), every one sha256-equal to its source"; "3310738 (parent
+    91a619b), pushed and level, fingerprint IDENTICAL before and after"; "96f776c (parent 5beed3d),
+    row 23:26:17Z"; "the four band values are unchanged".
+  READ (CC's): findings 1–7; "authored by the PI's account with no trailers. It adds six
+    surgical-cv-r53-b1 rows, removes no row and leaves primer.md 41–45 intact"; "It holds
+    expected_nightly_20261110.md, the file this brief itself cites"; "I waited on their PIDs with a
+    60-minute bound, and they cleared at 23:08:36"; "pytest-614, appeared at 23:13:05, inside the
+    gate window. Its origin is not attributed"; "I ran it on 91a619b; the JSON is byte-equal".
+  READ (the architect's clone at 3310738): the two full hashes in STATUS; gate_wall.txt "wall:
+    966.095243901 s".
+  INFERRED: none.
+
+R797(a) — The 12af-OPEN final report is accepted as printed: item 0 91a619b (Block 194 by
+  transcribe_ruling.py; r796.txt in 12ae_close/ beside the lane-line copy; the brief file
+  byte-equal to the architect's copy; the three rules files untouched by content), the evidence
+  commit 3310738 (the nineteen gate files under 12af_open/gate_12af_open/; the five job-read files
+  under 12ae_close/), ledgers 5beed3d and 96f776c; the open check 0 MISMATCH, 0 SKIPPED; the
+  recount 286 (94 / 56 / 136), fix units 35 / 37, 19 / 38 done 31, its JSON byte-equal; R510 212 /
+  212, in 0, out 0; the 2026-11-10 nightly a line-for-line match on 840db24, ids 0/0, its window
+  empty; the health job 20/20. No stop.
+R797(b) — The series on this host state gains 966.10 s (the 12af-OPEN gate, beside uvicorn only
+  in both snapshots): the thirty-seven of R796(b) plus 966.10, thirty-eight. It is a standard
+  member, not a confounded one: the foreign suite had exited before the launch. The temp-root
+  entry pytest-614 that appeared inside its window is carried beside the value as an unattributed
+  reading. The band in force stays 876–1069 s (R796(b)) until the wrap ruling sets 12ag's.
+R797(c) — claude-config at 0a479b6, one commit past 34e422a, is accepted under R663(b) (finding
+  1): six rows of another lane, no row of this lane removed, primer.md lines 41–45 intact. The
+  next check reads claude-config at 96f776c or an accepted descendant.
+R797(d) — Finding 4, the hold. CC held the gate's launch from 23:04 to 23:08:50 UTC while another
+  lane's full test suite ran, bounded the wait at sixty minutes, and launched when it exited. The
+  brief did not provide for this and CC was right: the suite is the confounder R793(c) named, the
+  wait was short, bounded and reported, and nothing was signalled. A reading, no row. For the
+  gates of session 12af each gate brief carries the same step as a task gate: when the snapshot
+  before launch names another lane's full test suite or an encode, the launch waits for it,
+  bounded at sixty minutes and by the R86 clock; a launch made at the bound is reported with the
+  job named and its value enters the series as confounded (R677(f)). Whether this becomes a
+  standing rule is for the 12af wrap, on the session's gates; none is stated here. That a job
+  can start inside a gate's window unseen by either snapshot (pytest-614) joins the cross-lane
+  item for dgx-infra.
+R797(e) — Readings, no row: finding 2 (the brief's I2 gave session 53a21c5b's end as 23:24 UTC —
+  the unified plan's wrap time, not the session's last entry; the record reads 23:39:58Z and the
+  archive 23:40:06; CC's window from the record stands, and the plan's figure is corrected at its
+  next version); finding 3 (the brief's R4 said 12ae_close/ held no file dated 20261110: the
+  architect's, written from the names the open would add and not from the listing it had read —
+  expected_nightly_20261110.md is one of the 24; nothing was overwritten, which was the thing the
+  line was for); finding 5 (the 12af block says the recount runs on the plan at df3e721 and the
+  brief named the item-0 commit as the eighth argument, as 12ae-OPEN ran it; the JSON is
+  byte-equal either way, as the block's own sentence on a later plan says); finding 6 (the diff
+  stats compared by content, the layout a difference of form — the right comparison); finding 7
+  (E1–E5 held). The architect's errors this session so far: two (findings 2 and 3), each caught
+  by CC reading the record over the brief (R732(a)); neither stopped the brief.
+R797(f) — U40's Phase A opens: "The cloud path writes claim events" (B9 and C28 for Wave 2 row
+  25; R794(b)), read-only, in 12ae_U28A.md's form, its entry quoted first, 12ae_U28A.md §9's
+  questions answered before any option is written: the event writer's form for a write with a
+  run_id and no activation; what each consumer of the grid does with a cloud arm's claims;
+  is_assigned for a model-kind arm; whether any reader filters cloud arms or still reads the two
+  legacy tables. No engine, test, script, spec or codebook edit; no model call; no provider call;
+  no live write. The design ruling follows its read-out. This ruling states no standing rule.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-10 | R797(a) — The 12af-OPEN final report is accepted as printed: item 0 91a619b (Block 194 by transcribe_ruling.py; r796.txt in 12ae_close/ beside the lane-line copy; the brief file byte-equal to the architect's copy; the three rules files untouched by content), the evidence commit 3310738 (the nineteen gate files under 12af_open/gate_12af_open/; the five job-read files under 12ae_close/), ledgers 5beed3d and 96f776c; the open check 0 MISMATCH, 0 SKIPPED; the recount 286 (94 / 56 / 136), fix units 35 / 37, 19 / 38 done 31, its JSON byte-equal; R510 212 / 212, in 0, out 0; the 2026-11-10 nightly a line-for-line match on 840db24, ids 0/0, its window empty; the health job 20/20. No stop. R797(b) — The series on this host state gains 966.10 s (the 12af-OPEN gate, beside uvicorn only in both snapshots): the thirty-seven of R796(b) plus 966.10, thirty-eight. It is a standard member, not a confounded one: the foreign suite had exited before the launch. The temp-root entry pytest-614 that appeared inside its window is carried beside the value as an unattributed reading. The band in force stays 876–1069 s (R796(b)) until the wrap ruling sets 12ag's. R797(c) — claude-config at 0a479b6, one commit past 34e422a, is accepted under R663(b) (finding 1): six rows of another lane, no row of this lane removed, primer.md lines 41–45 intact. The next check reads claude-config at 96f776c or an accepted descendant. R797(d) — Finding 4, the hold. CC held the gate's launch from 23:04 to 23:08:50 UTC while another lane's full test suite ran, bounded the wait at sixty minutes, and launched when it exited. The brief did not provide for this and CC was right: the suite is the confounder R793(c) named, the wait was short, bounded and reported, and nothing was signalled. A reading, no row. For the gates of session 12af each gate brief carries the same step as a task gate: when the snapshot before launch names another lane's full test suite or an encode, the launch waits for it, bounded at sixty minutes and by the R86 clock; a launch made at the bound is reported with the job named and its value enters the series as confounded (R677(f)). Whether this becomes a standing rule is for the 12af wrap, on the session's gates; none is stated here. That a job can start inside a gate's window unseen by either snapshot (pytest-614) joins the cross-lane item for dgx-infra. R797(e) — Readings, no row: finding 2 (the brief's I2 gave session 53a21c5b's end as 23:24 UTC — the unified plan's wrap time, not the session's last entry; the record reads 23:39:58Z and the archive 23:40:06; CC's window from the record stands, and the plan's figure is corrected at its next version); finding 3 (the brief's R4 said 12ae_close/ held no file dated 20261110: the architect's, written from the names the open would add and not from the listing it had read — expected_nightly_20261110.md is one of the 24; nothing was overwritten, which was the thing the line was for); finding 5 (the 12af block says the recount runs on the plan at df3e721 and the brief named the item-0 commit as the eighth argument, as 12ae-OPEN ran it; the JSON is byte-equal either way, as the block's own sentence on a later plan says); finding 6 (the diff stats compared by content, the layout a difference of form — the right comparison); finding 7 (E1–E5 held). The architect's errors this session so far: two (findings 2 and 3), each caught by CC reading the record over the brief (R732(a)); neither stopped the brief. R797(f) — U40's Phase A opens: "The cloud path writes claim events" (B9 and C28 for Wave 2 row 25; R794(b)), read-only, in 12ae_U28A.md's form, its entry quoted first, 12ae_U28A.md §9's questions answered before any option is written: the event writer's form for a write with a run_id and no activation; what each consumer of the grid does with a cloud arm's claims; is_assigned for a model-kind arm; whether any reader filters cloud arms or still reads the two legacy tables. No engine, test, script, spec or codebook edit; no model call; no provider call; no live write. The design ruling follows its read-out. This ruling states no standing rule. | PI, 2026-11-10, during session 12af, on architect recommendation, on the 12af-OPEN final report (item 0 91a619b; evidence 3310738) |
+
+The decision log in this file ends at R797.

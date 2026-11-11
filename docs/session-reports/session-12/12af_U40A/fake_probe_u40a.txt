@@ -1,0 +1,69 @@
+=== setup
+  cloud run 2: arms row ('openai_o4_mini_2025_04_16_high', 'model', 'pinned', 2)
+  its run_stage_configs rows: [('cloud:openai_o4_mini_2025_04_16_high', 'cloud', 'openai_o4_mini_2025_04_16_high', 'openai', 'o4-mini-2025-04-16')]
+  CloudExtractorBase: PROVIDER='' arm_name='openai_o4_mini_2025_04_16_high' run_id=2 connection row_factory=Row isolation_level=''; expected_fields tuple of 20
+  activation outside any run: rm.active_field_names() = None
+
+=== (i) the entry's test at HEAD — twelve papers through store_result, study_type identical
+  stored: {'cloud_extractions': 12, 'cloud_evidence_spans': 240, 'field_events': 0, 'claim_inputs': 0, 'paper_events naming the arm': 0}
+  base.run_distribution_check({'extracted': 12, 'failed': 0}): returned: skipped=True skip_reason='only 0 eligible papers hold a live claim for arm openai_o4_mini_2025_04_16_high (minimum 10)' ok=0 low_variance=0 collapsed=0 study_type=[]
+  arm_population: 0
+  get_pending_papers('openai_o4_mini_2025_04_16_high'): 12 of 24 corpus papers; get_progress: {'total_papers': 24, 'completed': 12, 'remaining': 12, 'total_cost_usd': 0.0}
+
+=== (ii) the writer — the same values for the registered cloud arm, legacy_record's form, the cloud run's run_id
+  (a) parsed_text=None (store_result holds no ParsedTextRef): REFUSED ClaimWithoutInputIdentity: asserted refused: paper 1 field 'study_type' arm 'openai_o4_mini_2025_04_16_high' carries no reuse_key, parsed_text_sha256, parsed_text_uid in its payload. An extractor's claim names the input it was made from (F2, 9b-2c R1).
+  (b) presented_context_sha256=None, context_chain=() (store_result holds no request hash): REFUSED ClaimWithoutPresentedContext: asserted refused: paper 1 field 'study_type' arm 'openai_o4_mini_2025_04_16_high' carries no presented_context_sha256, or an absent/empty context_chain, in its payload. An extractor's claim names the call that supplied its value a
+  (c) run_id=None (CloudExtractorBase.run_id unset outside the runner): REFUSED RunLinkRefused: event refused: run_id is required (R68). Every event a run writes carries that run's manifest id; a reviewer's session is a run of kind 'review_session'. Only seeded rows carry no run, marked 'pre-manifest'.
+  after (a)–(c): {'cloud_extractions': 12, 'cloud_evidence_spans': 240, 'field_events': 0, 'claim_inputs': 0, 'paper_events naming the arm': 0}; conn.in_transaction=False
+  (d) the full form: ref resolved, a request hash, chain (hash,), the cloud run: ACCEPTED — 20 field events (['asserted']); paper event extracted -> extracted from None payload.arm=openai_o4_mini_2025_04_16_high
+  paper 1: processing=extracted reason=None by_event=extracted
+  its study_type event: ('asserted', 'model', 'extractor', 'o4-mini-2025-04-16', 2, 1, 'Original Research', 'Snippet for study_type.', 0.9)
+  its claim_inputs row: ('openai_o4_mini_2025_04_16_high', 1, 2, 68, 1)
+  (e) a second write, same paper, same text: REFUSED ReuseKeyAlreadyClaimed: paper 1 field 'study_type': arm 'openai_o4_mini_2025_04_16_high' already holds a live claim under reuse key rk1:720acd113a124541d8ddb06085f17258070c40477e0a18ea609db24cd250ad2a; selection should have skipped this paper (R96). Noth
+  (d) for the other eleven: {'cloud_extractions': 12, 'cloud_evidence_spans': 240, 'field_events': 240, 'claim_inputs': 12, 'paper_events naming the arm': 12}
+  gate after: RAISED DistributionCollapseError: Distribution collapse detected in 1 field(s): study_type
+  arm_population: 12
+
+--- the transaction it would share with store_result's INSERT (pids 15, 16)
+  INSERT pending (in_transaction=True), writer accepted: in_transaction after=False; the INSERT visible to a second connection: 1 (the writer's commit committed it)
+    writer refused after a pending INSERT: REFUSED ClaimWithoutInputIdentity: asserted refused: paper 16 field 'study_type' arm 'openai_o4_mini_2025_04_16_high' carries no reuse_key, parsed_text_sha256, parsed_text_uid in its payload. An extractor's claim names the input it was made from (F2, 9b-2c R1).
+  INSERT pending (in_transaction=True); after the refusal in_transaction=True; visible to a second connection: 0
+  after store_result's own rollback: cloud_extractions rows for paper 16: 0
+
+=== (iii-a) the processing axis with cloud events interleaved — the local audit stage (audit_events.audit_run)
+  local run 3; local claims written for papers 13, 14 (the local form, extractor.py:709)
+  before the audit: paper 1 processing=extracted reason=None by_event=extracted; paper 13 processing=extracted reason=None by_event=extracted; paper 21 processing=no_recorded_state reason=None by_event=None
+  audit_run(arm='local_deepseek_r1_32b') #1: papers_audited=15 located=2 not_located=38 skipped_by_state=[] skipped_refused=[]
+  audited_ai written for the local arm with located 0 on papers [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15]; of them, papers the local arm holds no claim on: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15]
+  after a cloud store on 13 and a cloud PaperFailure on 14: paper 13 processing=extracted reason=None by_event=extracted; paper 14 processing=extraction_failed reason=model_call_failed by_event=extraction_failed
+  _advance_extraction_workflow's read (run_pipeline.py:252): papers at 'extracted' (AI_AUDIT_COMPLETE_STAGE pending) [13]
+  audit_run(arm='local_deepseek_r1_32b') #2: papers_audited=1 located=0 skipped_by_state=[]
+  get_pipeline_stats(): processing {'audited_ai': 14, 'extraction_failed': 1, 'no_recorded_state': 9} failures {'model_call_failed': 1} analysis_ready 14
+  generate_prisma_flow: {"studies_included": 14, "extraction_failed": 1, "extraction_in_progress": 9, "extracted_incomplete": 0}
+
+=== (iii-b) the grid consumers, driven once with the cloud arm holding claims
+  concordance.load_arm('openai_o4_mini_2025_04_16_high'): 14 papers; study_type values ['Original Research']
+  concordance.run_concordance(local, cloud): ACCEPTED — n_papers=1 a_only=1 b_only=13
+  concordance.check_schema_parity(['local_deepseek_r1_32b', 'openai_o4_mini_2025_04_16_high']): {'local_deepseek_r1_32b': set(), 'openai_o4_mini_2025_04_16_high': {'f261af76feadd650f3c58b36498e2d140ef2dc4ffec6a80a16c06741eb2f5646', 'h'}}
+  evidence_table._build_evidence_rows(arm='openai_o4_mini_2025_04_16_high'): 24 rows; rows with study_type 'Original Research' 14; the processing column of paper 14's row: 'extraction_failed'
+  docx_export.export_evidence_docx(arm=cloud): ACCEPTED — 37863 B written
+  judge_loader.load_grid: ACCEPTED — 480 JudgeInputs; arms in them ['local_deepseek_r1_32b', 'openai_o4_mini_2025_04_16_high']; the cloud arm's ArmOutputs 480, with a value 280
+  export_disagreement_pairs.arms_in_scope: REFUSED RuntimeError: the disagreement-pairs row format has no column for ['local_deepseek_r1_32b', 'openai_o4_mini_2025_04_16_high']. Its three value columns are ['local_value', 'o4mini_value', 'sonnet_value']; a fourth arm needs a format decision, no
+  extraction_validator.validate_all(arm='openai_o4_mini_2025_04_16_high'): issues 0, bleeds 0
+  distribution_monitor.check_distribution: study_type [('COLLAPSED', 14)]
+  audit_events.audit_run(arm='openai_o4_mini_2025_04_16_high') — no caller passes a cloud arm; driven to show what it does: papers_audited=14 located=14 not_located=266 skipped_by_state=[]
+
+=== (iv) U28's two leftovers
+  main --review u40probe --arm empty_model_arm: exit 0; 16 lines; study_type line ['study_type                              0     0 —                               0.0%   0.00 OK']; last line 'arm empty_model_arm holds no non-null value for any categorical field; nothing was checked'
+  main --review u40probe --arm strict_model_arm: exit 0; 17 lines; study_type line ['study_type                             22     2 Original Research              90.9%   0.44 LOW_VARIANCE']; last line 'Summary: 10 OK, 1 LOW_VARIANCE, 0 COLLAPSED'
+  main --review u40probe --arm strict_model_arm --strict: exit 1; 17 lines; study_type line ['study_type                             22     2 Original Research              90.9%   0.44 LOW_VARIANCE']; last line 'Summary: 10 OK, 1 LOW_VARIANCE, 0 COLLAPSED'
+  assert_no_collapse(strict=False) on strict_model_arm: ACCEPTED — None
+  assert_no_collapse(strict=True) on strict_model_arm: REFUSED DistributionCollapseError: Distribution collapse detected in 1 field(s): study_type
+
+=== the record
+calls refused and counted: {'openai.OpenAI': 0, 'anthropic.Anthropic': 0, 'ollama_chat': 0, 'semantic_verify': 0}
+SDK client constructions (openai.OpenAI / anthropic.Anthropic): 0
+live data root entries before 7, after 7, equal: True; 'u40probe' under it: False
+
+=== the Ollama journal for the probe window (2026-11-11 01:02:01 – 2026-11-11 01:02:05)
+-- No entries --

@@ -1,0 +1,640 @@
+== the static closures
+modules in the run7 closure: 91; in the run_cloud_extraction closure: 61
+  engine/core/extraction_events.py: run7 True; cloud True
+  engine/core/events.py: run7 True; cloud True
+  engine/core/effective.py: run7 True; cloud True
+  engine/cloud/base.py: run7 True; cloud True
+  engine/validators/distribution_monitor.py: run7 True; cloud True
+  engine/agents/auditor.py: run7 True; cloud True
+  engine/analysis/concordance.py: run7 False; cloud False
+
+== (c) files outside engine/core/effective.py naming iter_grid, effective_value, live_claim_events or registered_arms
+  [analysis] analysis/paper1/export_disagreement_pairs.py: iter_grid, registered_arms
+  [analysis] analysis/paper1/judge_loader.py: iter_grid, registered_arms
+  [run7/engine] engine/agents/audit_events.py: effective_value, live_claim_events
+  [engine] engine/analysis/concordance.py: iter_grid, registered_arms
+  [run7/cloud/engine] engine/core/extraction_events.py: live_claim_events
+  [run7/cloud/engine] engine/core/selection.py: live_claim_events
+  [run7/engine] engine/exporters/docx_export.py: iter_grid, registered_arms
+  [run7/engine] engine/exporters/evidence_table.py: iter_grid, registered_arms
+  [run7/cloud/engine] engine/validators/distribution_monitor.py: iter_grid, live_claim_events, registered_arms
+  [engine] engine/validators/extraction_validator.py: iter_grid, registered_arms
+  files: 10
+
+== sites (engine, scripts, analysis)
+
+-- (a) call write_extraction_events: 4
+  [run7/cloud/engine] engine/agents/extractor.py:1087 <module>.record_selection_refusals | write_extraction_events(db._conn, PaperFailure(
+  [run7/cloud/engine] engine/agents/extractor.py:1178 <module>._extract_selected.record_failure | write_extraction_events(db._conn, outcome, review_dir=review_dir)
+  [run7/cloud/engine] engine/agents/extractor.py:709 <module>.extract_paper | write_extraction_events(
+  [run7/cloud/engine] engine/elicitation/pipeline.py:663 <module>.extract_paper_elicited | write_extraction_events(
+
+-- (a) call write_field_event: 2
+  [run7/cloud/engine] engine/core/extraction_events.py:700 <module>.write_extraction_events | write_field_event(conn, **fe, commit=False)
+  [run7/engine] engine/agents/audit_events.py:245 <module>.audit_run | write_field_event(
+
+-- (a) call write_paper_event: 9
+  [engine] engine/adjudication/ft_screening_adjudicator.py:558 <module>._apply_ft_decisions | write_paper_event(
+  [engine] engine/adjudication/import_extraction_entry.py:304 <module>.import_extraction_entry | write_paper_event(
+  [run7/cloud/engine] engine/agents/ft_screener.py:258 <module>._write_eligibility_event | return write_paper_event(
+  [run7/cloud/engine] engine/core/extraction_events.py:701 <module>.write_extraction_events | write_paper_event(conn, **plan.paper_event, commit=False)
+  [run7/cloud/engine] engine/parsers/pdf_parser.py:1120 <module>.parse_all_pdfs | write_paper_event(
+  [run7/cloud/engine] engine/parsers/pdf_parser.py:1137 <module>.parse_all_pdfs | write_paper_event(
+  [run7/engine] engine/agents/audit_events.py:183 <module>.audit_run | write_paper_event(
+  [run7/engine] engine/agents/audit_events.py:259 <module>.audit_run | write_paper_event(
+  [run7/engine] engine/migrations/017_seed_event_store.py:119 <module>.build_seed | write_paper_event(
+
+-- (b) call corpus_id_sql: 2
+  [run7/cloud/engine] engine/cloud/base.py:158 <module>.CloudExtractorBase.get_pending_papers | corpus_sql, corpus_params = corpus_id_sql(self._conn, "p.id")
+  [run7/cloud/engine] engine/cloud/base.py:490 <module>.CloudExtractorBase.get_progress | corpus_sql, corpus_params = corpus_id_sql(self._conn, "id")
+
+-- (b) call effective_state: 12
+  [engine] engine/adjudication/ft_screening_adjudicator.py:557 <module>._apply_ft_decisions | current = effective_state(conn, paper_id).eligibility
+  [run7/cloud/engine] engine/agents/extractor.py:1081 <module>.record_selection_refusals | state = effective_state(db._conn, pid)
+  [run7/cloud/engine] engine/agents/ft_screener.py:257 <module>._write_eligibility_event | current = effective_state(db._conn, paper_id).eligibility
+  [run7/cloud/engine] engine/core/database.py:712 <module>.ReviewDatabase.get_pipeline_stats | state = effective_state(self._conn, pid)
+  [run7/cloud/engine] engine/core/extraction_events.py:682 <module>.write_extraction_events | processing = effective_state(conn, outcome.paper_id).processing
+  [run7/engine] engine/agents/audit_events.py:182 <module>.audit_run | if effective_state(conn, pid).processing == "extracted":
+  [run7/engine] engine/agents/audit_events.py:197 <module>.audit_run | state = effective_state(conn, pid)
+  [run7/engine] engine/exporters/docx_export.py:144 <module>.export_evidence_docx | state = effective_state(conn, pid)
+  [run7/engine] engine/exporters/evidence_table.py:100 <module>._build_evidence_rows | state = effective_state(conn, pid)
+  [run7/engine] engine/exporters/prisma.py:172 <module>.generate_prisma_flow | state = effective_state(conn, pid)
+  [run7/engine] engine/exporters/prisma.py:298 <module>.validate_prisma_counts | if effective_state(conn, pid).eligibility == "full_text_out")
+  [run7/scripts] scripts/run_pipeline.py:252 <module>._processing_states | return {pid: effective_state(conn, pid).processing for pid in eligible_paper_ids(conn)}
+
+-- (b) call effective_value: 2
+  [run7/cloud/engine] engine/core/effective.py:598 <module>.iter_grid | yield paper_id, field_name, arm, effective_value(
+  [run7/engine] engine/agents/audit_events.py:116 <module>.low_yield | "value": effective_value(conn, paper_id, f["name"], arm,
+
+-- (b) call eligible_paper_ids: 14
+  [engine] engine/validators/extraction_validator.py:315 <module>.main | print(f"Corpus papers:   {len(eligible_paper_ids(conn))}")
+  [run7/cloud/engine] engine/agents/ft_screener.py:445 <module>.run_ft_verification | eligible = set(eligible_paper_ids(db._conn))
+  [run7/cloud/engine] engine/core/database.py:682 <module>.ReviewDatabase.get_screening_summary | summary["eligible"] = len(eligible_paper_ids(self._conn))
+  [run7/cloud/engine] engine/core/effective.py:558 <module>.corpus_id_sql | ids = eligible_paper_ids(conn)
+  [run7/cloud/engine] engine/core/effective.py:574 <module>.grid_cells | paper_ids = tuple(papers) if papers is not None else eligible_paper_ids(conn)
+  [run7/cloud/engine] engine/core/selection.py:93 <module>.select_for_extraction | for paper_id in eligible_paper_ids(conn):
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:361 <module>.arm_population | return sum(1 for pid in eligible_paper_ids(conn)
+  [run7/engine] engine/agents/audit_events.py:174 <module>.audit_run | for pid in eligible_paper_ids(conn):
+  [run7/engine] engine/exporters/docx_export.py:111 <module>.export_evidence_docx | paper_ids = eligible_paper_ids(conn)
+  [run7/engine] engine/exporters/evidence_table.py:183 <module>.export_evidence_excel | paper_ids = eligible_paper_ids(db._conn)
+  [run7/engine] engine/exporters/evidence_table.py:83 <module>._build_evidence_rows | paper_ids = eligible_paper_ids(conn)
+  [run7/engine] engine/exporters/prisma.py:142 <module>.generate_prisma_flow | eligible_ids = eligible_paper_ids(conn)
+  [run7/engine] engine/exporters/prisma.py:270 <module>.validate_prisma_counts | eligible_ids = set(eligible_paper_ids(conn))
+  [run7/scripts] scripts/run_pipeline.py:252 <module>._processing_states | return {pid: effective_state(conn, pid).processing for pid in eligible_paper_ids(conn)}
+
+-- (b) call grid_cells: 1
+  [run7/cloud/engine] engine/core/effective.py:596 <module>.iter_grid | for paper_id, field_name, arm in grid_cells(
+
+-- (b) call is_assigned: 2
+  [run7/cloud/engine] engine/core/effective.py:307 <module>.effective_value | if not is_assigned(conn, arm, paper_id):                       # row 0
+  [run7/cloud/engine] engine/core/events.py:360 <module>.write_field_event | if not is_assigned(conn, arm, paper_id):
+
+-- (b) call iter_grid: 9
+  [analysis] analysis/paper1/export_disagreement_pairs.py:182 <module>.build_disagreement_rows | for paper_id, field_name, arm_name, ev in iter_grid(
+  [analysis] analysis/paper1/judge_loader.py:207 <module>._fetch_spans_for_paper | for _pid, field_name, arm_name, ev in iter_grid(
+  [analysis] analysis/paper1/judge_loader.py:251 <module>.load_grid | for paper_id, field_name, arm_name, ev in iter_grid(
+  [engine] engine/analysis/concordance.py:102 <module>.load_arm | for paper_id, field_name, _arm, ev in iter_grid(
+  [engine] engine/validators/extraction_validator.py:231 <module>.arm_cells | for paper_id, field_name, _arm, ev in iter_grid(conn, codebook=codebook, arms=(arm,)):
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:150 <module>._query_all_fields | for _pid, fname, _arm, ev in iter_grid(conn, codebook=codebook, arms=(arm,)):
+  [run7/engine] engine/exporters/docx_export.py:114 <module>.export_evidence_docx | for paper_id, field_name, _arm, ev in iter_grid(
+  [run7/engine] engine/exporters/evidence_table.py:227 <module>.export_evidence_excel | for paper_id, field_name, arm_name, ev in iter_grid(
+  [run7/engine] engine/exporters/evidence_table.py:88 <module>._build_evidence_rows | for paper_id, field_name, _arm, ev in iter_grid(
+
+-- (b) call live_claim_events: 5
+  [run7/cloud/engine] engine/core/extraction_events.py:680 <module>.write_extraction_events | for ev in live_claim_events(conn, outcome.paper_id, outcome.arm):
+  [run7/cloud/engine] engine/core/selection.py:77 <module>._live_reuse_keys | events = live_claim_events(conn, paper_id, arm)
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:362 <module>.arm_population | if live_claim_events(conn, pid, arm))
+  [run7/engine] engine/agents/audit_events.py:175 <module>.audit_run | claims = live_claim_events(conn, pid, arm, event_types=("asserted",))
+  [run7/engine] engine/agents/audit_events.py:176 <module>.audit_run | done = {ev.claim_id for ev in live_claim_events(
+
+-- (b) call live_claims: 1
+  [run7/cloud/engine] engine/core/events.py:371 <module>.write_field_event | live = set(live_claims(conn, paper_id, field_name, arm))
+
+-- (b) call registered_arms: 16
+  [analysis] analysis/paper1/export_disagreement_pairs.py:70 <module>.arms_in_scope | arms = [a for a in registered_arms(conn, kind="model")]
+  [analysis] analysis/paper1/judge_loader.py:245 <module>.load_grid | arms = registered_arms(conn)
+  [engine] engine/analysis/concordance.py:94 <module>.load_arm | if arm not in registered_arms(conn, include_retired=True):
+  [engine] engine/analysis/concordance.py:97 <module>.load_arm | f"are {registered_arms(conn, include_retired=True)}. Routing is "
+  [engine] engine/validators/extraction_validator.py:228 <module>.arm_cells | if arm not in registered_arms(conn, include_retired=True):
+  [engine] engine/validators/extraction_validator.py:271 <module>.select_arm | registered = registered_arms(conn, include_retired=True)
+  [engine] engine/validators/extraction_validator.py:312 <module>.main | registered = "" if arm in registered_arms(conn, include_retired=True) \
+  [run7/cloud/engine] engine/core/effective.py:575 <module>.grid_cells | arm_names = tuple(arms) if arms is not None else registered_arms(conn)
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:114 <module>._query_values | if arm not in registered_arms(conn, include_retired=True):
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:117 <module>._query_values | f"{registered_arms(conn, include_retired=True)}."
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:141 <module>._query_all_fields | if arm not in registered_arms(conn, include_retired=True):
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:144 <module>._query_all_fields | f"{registered_arms(conn, include_retired=True)}."
+  [run7/engine] engine/exporters/docx_export.py:105 <module>.export_evidence_docx | if arm not in registered_arms(conn, include_retired=True):
+  [run7/engine] engine/exporters/docx_export.py:108 <module>.export_evidence_docx | f"{registered_arms(conn, include_retired=True)}."
+  [run7/engine] engine/exporters/evidence_table.py:76 <module>._build_evidence_rows | if arm not in registered_arms(conn, include_retired=True):
+  [run7/engine] engine/exporters/evidence_table.py:80 <module>._build_evidence_rows | f"{registered_arms(conn, include_retired=True)}."
+
+-- (d) [migrations] cloud_evidence_spans — DDL: 3
+  [run7/engine] engine/migrations/006_not_null_confidence_tier.py:1 <module> | """Migration 006: Add tier column to evidence_spans with NOT NULL constraint.
+  [run7/engine] engine/migrations/011_add_absence_claim_class.py:34 <module> | _NEW_TABLE_DDL = """
+  [run7/engine] engine/migrations/014_cloud_tables.py:1 <module> | """Migration 014: bring the cloud extraction tables into the migration set.
+
+-- (d) [migrations] cloud_evidence_spans — INSERT: 1
+  [run7/engine] engine/migrations/017_seed_event_store.py:1 <module> | """Migration 017: seed the event store with identities and eligibility only.
+
+-- (d) [migrations] cloud_evidence_spans — UPDATE/DELETE: 2
+  [run7/engine] engine/migrations/010_add_provenance_classifications.py:1 <module> | """Migration 010: add provenance census tables.
+  [run7/engine] engine/migrations/016_event_store.py:1 <module> | """Migration 016: the event store, the arm registry, and the two identity tables.
+
+-- (d) [migrations] cloud_evidence_spans — other (prose or a name): 5
+  [run7/engine] engine/migrations/014_cloud_tables.py:49 <module>.run_migration | missing = {"cloud_extractions", "cloud_evidence_spans"} - after
+  [run7/engine] engine/migrations/014_cloud_tables.py:55 <module>.run_migration | "created": sorted({"cloud_extractions", "cloud_evidence_spans"} - before),
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:161 <module>._refuse_nulls | f"018 refuses: {bad} cloud_evidence_spans rows have a NULL "
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:203 <module>.run_migration | spans = _rebuild(conn, "cloud_evidence_spans", cloud_evidence_spans_sql,
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:95 <module>.cloud_evidence_spans_sql | def cloud_evidence_spans_sql(name: str = "cloud_evidence_spans") -> str:
+
+-- (d) [migrations] cloud_extractions — DDL: 3
+  [run7/engine] engine/migrations/012_codebook_provenance.py:1 <module> | """Migration 012: codebook provenance on extractions, cloud_extractions, review_runs.
+  [run7/engine] engine/migrations/014_cloud_tables.py:1 <module> | """Migration 014: bring the cloud extraction tables into the migration set.
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:97 <module>.cloud_evidence_spans_sql | return f"""
+
+-- (d) [migrations] cloud_extractions — INSERT: 1
+  [run7/engine] engine/migrations/017_seed_event_store.py:1 <module> | """Migration 017: seed the event store with identities and eligibility only.
+
+-- (d) [migrations] cloud_extractions — UPDATE/DELETE: 1
+  [run7/engine] engine/migrations/016_event_store.py:1 <module> | """Migration 016: the event store, the arm registry, and the two identity tables.
+
+-- (d) [migrations] cloud_extractions — other (prose or a name): 8
+  [run7/engine] engine/migrations/012_codebook_provenance.py:59 <module>.run_migration | """Add the two codebook-provenance columns to the three tables. Idempotent.
+  [run7/engine] engine/migrations/013_drop_schema_hash_not_null.py:40 <module> | ("cloud_extractions", "extraction_schema_hash"),
+  [run7/engine] engine/migrations/014_cloud_tables.py:49 <module>.run_migration | missing = {"cloud_extractions", "cloud_evidence_spans"} - after
+  [run7/engine] engine/migrations/014_cloud_tables.py:55 <module>.run_migration | "created": sorted({"cloud_extractions", "cloud_evidence_spans"} - before),
+  [run7/engine] engine/migrations/014_cloud_tables.py:57 <module>.run_migration | {"cloud_extractions", "cloud_evidence_spans"} & before),
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:127 <module>._has_unique_paper_arm | for idx in conn.execute("PRAGMA index_list(cloud_extractions)"):
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:205 <module>.run_migration | extractions = _rebuild(conn, "cloud_extractions", cloud_extractions_sql,
+  [run7/engine] engine/migrations/018_cloud_shape_and_audit_adjudication.py:72 <module>.cloud_extractions_sql | def cloud_extractions_sql(name: str = "cloud_extractions") -> str:
+
+-- (d) [migrations] field_events — DDL: 5
+  [run7/engine] engine/migrations/016_event_store.py:128 <module>.schema_sql | return f"""
+  [run7/engine] engine/migrations/020_run_manifest.py:1 <module> | """Migration 020: the run manifest, run linkage and arm pinning (S3a, S3b, R59, R68).
+  [run7/engine] engine/migrations/020_run_manifest.py:276 <module> | "CREATE INDEX IF NOT EXISTS idx_field_events_cell "
+  [run7/engine] engine/migrations/020_run_manifest.py:278 <module> | "CREATE INDEX IF NOT EXISTS idx_field_events_claim ON field_events(claim_id)",
+  [run7/engine] engine/migrations/020_run_manifest.py:279 <module> | "CREATE INDEX IF NOT EXISTS idx_field_events_extraction_uid "
+
+-- (d) [migrations] field_events — INSERT: 2
+  [run7/engine] engine/migrations/017_seed_event_store.py:1 <module> | """Migration 017: seed the event store with identities and eligibility only.
+  [run7/engine] engine/migrations/022_run_kinds_and_audit_tables.py:1 <module> | """Migration 022: session-10 rulings R212-R218 (10a-R1, R222a).
+
+-- (d) [migrations] field_events — other (prose or a name): 6
+  [run7/engine] engine/migrations/016_event_store.py:139 <module>.schema_sql | {_spine('field_events')},
+  [run7/engine] engine/migrations/016_event_store.py:212 <module>.schema_sql | {_append_only('field_events')}
+  [run7/engine] engine/migrations/020_run_manifest.py:226 <module>.field_events_sql | def field_events_sql(name: str = "field_events") -> str:
+  [run7/engine] engine/migrations/020_run_manifest.py:383 <module>._refuse_unlinked | for table in ("field_events", "paper_events"):
+  [run7/engine] engine/migrations/020_run_manifest.py:474 <module>.run_migration | "field_events": _rebuild(conn, "field_events", FIELD_COLUMNS, field_events_sql),
+  [run7/engine] engine/migrations/020_run_manifest.py:483 <module>.run_migration | problems = [r for t in ("field_events", "paper_events", "arms",
+
+-- (d) cloud_evidence_spans — DDL: 3
+  [run7/cloud/engine] engine/cloud/schema.py:5 <module> | _CLOUD_SCHEMA = """
+  [run7/cloud/engine] engine/cloud/schema.py:51 <module>.init_cloud_tables | conn.execute("ALTER TABLE cloud_evidence_spans ADD COLUMN notes TEXT")
+  [run7/cloud/engine] engine/cloud/schema.py:72 <module>.init_cloud_tables | conn.executescript("""
+
+-- (d) cloud_evidence_spans — INSERT: 3
+  [run7/cloud/engine] engine/cloud/base.py:394 <module>.CloudExtractorBase.store_result | """INSERT INTO cloud_evidence_spans
+  [scripts] scripts/backfill_cloud_spans.py:76 <module>.main | """INSERT INTO cloud_evidence_spans
+  [scripts] scripts/reparse_cloud_spans.py:75 <module>.main | """INSERT INTO cloud_evidence_spans
+
+-- (d) cloud_evidence_spans — SELECT: 7
+  [analysis] analysis/eval/analyze_schema_eval.py:118 <module>.agreement_vs_run6 | q = ("SELECT c.paper_id, s.field_name, s.value FROM cloud_evidence_spans s "
+  [analysis] analysis/paper1/judge_provenance.py:306 <module>.unjoined_summary | "SELECT c.arm, c.paper_id, COUNT(*) FROM cloud_evidence_spans s "
+  [analysis] analysis/paper1/pi_audit_sampler.py:272 <module>._fetch_arm_value_and_snippet | """SELECT value, source_snippet FROM cloud_evidence_spans
+  [analysis] analysis/paper1/spanloss_autopsy.py:137 <module>.load_extractions | "SELECT c.paper_id, c.arm, c.extracted_data, c.extracted_at, "
+  [analysis] analysis/paper1/spanloss_autopsy.py:176 <module>.surviving_fields | q = ("SELECT s.field_name FROM cloud_evidence_spans s JOIN cloud_extractions c "
+  [analysis] analysis/provenance/census.py:75 <module>.load_spans | """SELECT c.paper_id AS paper_id, c.arm AS arm, s.id AS span_row_id,
+  [scripts] scripts/backfill_cloud_spans.py:106 <module>.main | cur.execute("""
+
+-- (d) cloud_evidence_spans — UPDATE/DELETE: 2
+  [run7/cloud/engine] engine/cloud/schema.py:69 <module>.init_cloud_tables | conn.execute("UPDATE cloud_evidence_spans SET confidence = 0.0 WHERE confidence IS NULL")
+  [run7/cloud/engine] engine/cloud/schema.py:70 <module>.init_cloud_tables | conn.execute("UPDATE cloud_evidence_spans SET tier = 1 WHERE tier IS NULL")
+
+-- (d) cloud_evidence_spans — other (prose or a name): 4
+  [analysis] analysis/provenance/census.py:81 <module>.load_spans | {**dict(r), "span_table": "cloud_evidence_spans"}
+  [run7/cloud/engine] engine/cloud/schema.py:49 <module>.init_cloud_tables | cols = {r[1] for r in conn.execute("PRAGMA table_info(cloud_evidence_spans)").fetchall()}
+  [run7/cloud/engine] engine/cloud/schema.py:63 <module>.init_cloud_tables | col_info = conn.execute("PRAGMA table_info(cloud_evidence_spans)").fetchall()
+  [scripts] scripts/reparse_cloud_spans.py:2 <module> | """Re-parse cloud extractions that have 0 spans using stored extracted_data.
+
+-- (d) cloud_extractions — DDL: 3
+  [run7/cloud/engine] engine/cloud/schema.py:5 <module> | _CLOUD_SCHEMA = """
+  [run7/cloud/engine] engine/cloud/schema.py:60 <module>.init_cloud_tables | conn.execute(f"ALTER TABLE cloud_extractions ADD COLUMN {column} TEXT")
+  [run7/cloud/engine] engine/cloud/schema.py:72 <module>.init_cloud_tables | conn.executescript("""
+
+-- (d) cloud_extractions — INSERT: 1
+  [run7/cloud/engine] engine/cloud/base.py:375 <module>.CloudExtractorBase.store_result | """INSERT INTO cloud_extractions
+
+-- (d) cloud_extractions — SELECT: 12
+  [analysis] analysis/eval/analyze_schema_eval.py:118 <module>.agreement_vs_run6 | q = ("SELECT c.paper_id, s.field_name, s.value FROM cloud_evidence_spans s "
+  [analysis] analysis/paper1/judge_provenance.py:306 <module>.unjoined_summary | "SELECT c.arm, c.paper_id, COUNT(*) FROM cloud_evidence_spans s "
+  [analysis] analysis/paper1/pi_audit_sampler.py:272 <module>._fetch_arm_value_and_snippet | """SELECT value, source_snippet FROM cloud_evidence_spans
+  [analysis] analysis/paper1/spanloss_autopsy.py:137 <module>.load_extractions | "SELECT c.paper_id, c.arm, c.extracted_data, c.extracted_at, "
+  [analysis] analysis/paper1/spanloss_autopsy.py:176 <module>.surviving_fields | q = ("SELECT s.field_name FROM cloud_evidence_spans s JOIN cloud_extractions c "
+  [analysis] analysis/provenance/census.py:75 <module>.load_spans | """SELECT c.paper_id AS paper_id, c.arm AS arm, s.id AS span_row_id,
+  [engine] engine/analysis/concordance.py:192 <module>.check_schema_parity | "SELECT DISTINCT codebook_hash FROM cloud_extractions WHERE arm = ?",
+  [run7/cloud/engine] engine/cloud/base.py:160 <module>.CloudExtractorBase.get_pending_papers | f"""SELECT p.id AS paper_id, p.title, p.authors, p.year
+  [run7/cloud/engine] engine/cloud/base.py:496 <module>.CloudExtractorBase.get_progress | "SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?",
+  [run7/cloud/engine] engine/cloud/base.py:501 <module>.CloudExtractorBase.get_progress | "SELECT COALESCE(SUM(cost_usd), 0) FROM cloud_extractions WHERE arm = ?",
+  [scripts] scripts/_pass2_eyeball.py:54 <module>.load_arm_value | "SELECT extracted_data FROM cloud_extractions "
+  [scripts] scripts/backfill_cloud_spans.py:106 <module>.main | cur.execute("""
+
+-- (d) cloud_extractions — other (prose or a name): 4
+  [engine] engine/analysis/concordance.py:157 <module>.check_schema_parity | """Verify all arms were extracted under the same codebook.
+  [run7/cloud/engine] engine/cloud/schema.py:57 <module>.init_cloud_tables | "PRAGMA table_info(cloud_extractions)").fetchall()}
+  [scripts] scripts/_pass2_eyeball.py:1 <module> | """One-off: dump 28 UNSUPPORTED Pass 2 smoke verdicts as a markdown report.
+  [scripts] scripts/reparse_cloud_spans.py:2 <module> | """Re-parse cloud extractions that have 0 spans using stored extracted_data.
+
+-- (d) field_events — SELECT: 5
+  [run7/cloud/engine] engine/core/effective.py:205 <module>._cell_events | f"SELECT {', '.join(_COLS)} FROM field_events "
+  [run7/cloud/engine] engine/core/events.py:427 <module>.write_field_event | "SELECT ci.parsed_text_sha256 FROM field_events fe "
+  [run7/cloud/engine] engine/core/extraction_events.py:768 <module>.run_extraction_summary | "SELECT field_name, value, payload_json FROM field_events WHERE run_id = ? "
+  [run7/cloud/engine] engine/core/selection.py:83 <module>._live_reuse_keys | f"SELECT DISTINCT ci.reuse_key FROM field_events fe "
+  [run7/engine] engine/agents/audit_events.py:133 <module>.claim_text_ref | "SELECT DISTINCT fe.claim_id, ci.parsed_text_uid, ci.parsed_text_sha256 "
+
+-- (d) field_events — other (prose or a name): 1
+  [run7/cloud/engine] engine/core/events.py:329 <module>.write_field_event | """Append one `field_events` row and its against-set, or refuse.
+
+-- (e) .startswith on an arm: 1
+  [analysis] analysis/paper1/adjudication.py:85 <module>._get_snippet | if arm.startswith("human_"):
+
+-- (e) a compare of an arm against a literal: 21
+  [analysis] analysis/eval/analyze_schema_eval.py:113 <module>.agreement_vs_run6 | if arm_table == "local":
+  [analysis] analysis/eval/analyze_schema_eval.py:291 <module>.main | arm_table = "local" if "deepseek" in arm else arm
+  [analysis] analysis/eval/screen2f.py:148 <module>.check_identity | if not any(s.identity == "arm_c_derived" for s in specs):
+  [analysis] analysis/eval/screen2f.py:198 <module>.make_arm_c_spec_text | if f"    - {ARM_C_STAGE}\n" in m.group("stages"):
+  [analysis] analysis/eval/screen2f.py:329 <module>.arms | path = Path(arm_c_spec).resolve() if spec.spec_kind == "arm_c_variant" else root / spec_rel
+  [analysis] analysis/paper1/adjudication.py:83 <module>._get_snippet | if arm == "local":
+  [analysis] analysis/paper1/judge_provenance.py:215 <module>.true_failure_crosstab | if (arm == "POOLED" or r["arm"] == arm)
+  [analysis] analysis/paper1/judge_provenance.py:220 <module>.true_failure_crosstab | if (arm == "POOLED" or r["arm"] == arm) and r["field_class3"] == fc
+  [analysis] analysis/paper1/judge_provenance.py:240 <module>.symmetry_check | sub = [r for r in rows if (arm == "POOLED" or r["arm"] == arm)]
+  [analysis] analysis/paper1/judge_provenance.py:314 <module>.unjoined_summary.spans_for | if row["arm"] == "local_deepseek_r1_32b":
+  [analysis] analysis/paper1/pi_audit_sampler.py:257 <module>._fetch_arm_value_and_snippet | if arm_name == "local":
+  [analysis] analysis/paper1/pi_audit_sampler.py:571 <module>.enrich_rows | if arm_value is None or str(arm_value).strip() == "":
+  [analysis] analysis/paper1/spanloss_autopsy.py:171 <module>.surviving_fields | if r["arm"] == "local_deepseek_r1_32b":
+  [analysis] analysis/paper1/spanloss_autopsy.py:254 <module>.build_report | openai_aff = {r["paper_id"] for r in aff if r["arm"] == "openai_o4_mini_high"}
+  [engine] engine/analysis/concordance.py:186 <module>.check_schema_parity | if arm == "local":
+  [run7/cloud/engine] engine/core/review_spec.py:908 <module>.ReviewSpec._arms_consistent | if arm is None or arm.provider != "ollama":
+  [run7/cloud/engine] engine/validators/distribution_monitor.py:427 <module>.run_post_extraction_check | if min_population == "arm":
+  [run7/engine] engine/migrations/020_run_manifest.py:462 <module>.run_migration | if "pinned_run_id" not in arm_cols:
+  [run7/engine] engine/migrations/020_run_manifest.py:465 <module>.run_migration | if "pinned_sha256" not in arm_cols:
+  [scripts] scripts/_pass2_delta.py:230 <module>.main | and post.get((pid, field, arm), (None,))[0] == "UNSUPPORTED"
+  [scripts] scripts/_pass2_eyeball.py:46 <module>.load_arm_value | if arm == "local":
+
+-- (e) an arm literal as a call argument: 14
+  [analysis] analysis/eval/analyze_capture01.py:196 <module>.main | "model": sorted({r.get("model") for r in ok_rows}),
+  [analysis] analysis/eval/elicit01/runner.py:100 <module>.digest | if m.get("model") == MODEL:
+  [analysis] analysis/eval/run_capture01.py:91 <module>.model_digest | if m.get("model") == MODEL:
+  [analysis] analysis/eval/score_screen2f.py:485 <module>.timing | by_model.setdefault(c["call"].get("model"), []).append(c["call"])
+  [analysis] analysis/paper1/adjudication.py:85 <module>._get_snippet | if arm.startswith("human_"):
+  [run7/cloud/engine] engine/agents/extractor.py:894 <module>.extract_paper_with_completeness | model=_LAST_PASS2_TELEMETRY.get("model", model_name),
+  [run7/cloud/engine] engine/agents/extractor.py:924 <module>.extract_paper_with_completeness | model=_LAST_PASS2_TELEMETRY.get("model", model_name),
+  [run7/cloud/engine] engine/agents/extractor.py:950 <module>.extract_paper_with_completeness | model=_LAST_PASS2_TELEMETRY.get("model", model_name),
+  [run7/cloud/engine] engine/core/effective_config.py:336 <module>.stage_config | chosen, sources["model"] = blk.model, _src(blk_src, "model")
+  [run7/cloud/engine] engine/core/extraction_events.py:714 <module>.write_extraction_events | record_call(review_dir, arm=t.get("model") or outcome.arm, paper_id=outcome.paper_id,
+  [run7/cloud/engine] engine/core/extraction_events.py:716 <module>.write_extraction_events | model=t.get("model"), finish_reason=t.get("done_reason"),
+  [run7/cloud/engine] engine/core/run_manifest.py:1187 <module>.record_active_ollama_call | key = call_stage_key(stage, request.get("model"))
+  [run7/cloud/engine] engine/elicitation/pipeline.py:648 <module>.extract_paper_elicited | _LAST_PASS2_TELEMETRY.setdefault("model", model_name)
+  [run7/engine] engine/migrations/017_seed_event_store.py:114 <module>.build_seed | register_arm(conn, name, "model", configuration=None,
+
+-- (e) attribute .enabled_arms: 5
+  [cloud/scripts] scripts/run_cloud_extraction.py:203 <module>.main | f"The spec enables {list(spec.cloud.enabled_arms)}.")
+  [cloud/scripts] scripts/run_cloud_extraction.py:48 <module>.select_cloud_arms | enabled = list(spec.cloud.enabled_arms)
+  [run7/cloud/engine] engine/core/review_spec.py:894 <module>.ReviewSpec._arms_consistent | for name in self.cloud.enabled_arms:
+  [run7/cloud/engine] engine/core/run_manifest.py:565 <module>.open_run | enabled = set(spec.cloud.enabled_arms)
+  [run7/engine] engine/exporters/methods_section.py:138 <module>.generate_methods_section | for name in spec.cloud.enabled_arms
+
+-- (e) attribute .provider: 22
+  [cloud/scripts] scripts/run_cloud_extraction.py:110 <module>.run_arm | provider = spec.arm(arm_name).provider
+  [cloud/scripts] scripts/run_cloud_extraction.py:60 <module>._cloud_arm_names | names = {a.name for a in spec.arms if a.provider in EXTRACTORS}
+  [run7/cloud/engine] engine/cloud/base.py:120 <module>.CloudExtractorBase._resolve_arm | if arm.provider != self.PROVIDER:
+  [run7/cloud/engine] engine/cloud/base.py:122 <module>.CloudExtractorBase._resolve_arm | f"arm {arm_name!r} is a {arm.provider!r} arm, not {self.PROVIDER!r}")
+  [run7/cloud/engine] engine/cloud/base.py:124 <module>.CloudExtractorBase._resolve_arm | candidates = [a.name for a in self.spec.arms if a.provider == self.PROVIDER]
+  [run7/cloud/engine] engine/core/effective_config.py:129 <module>.EffectiveConfig.kwargs | if self.provider != "ollama":
+  [run7/cloud/engine] engine/core/effective_config.py:389 <module>.cloud_stage_config | if arm.provider not in ("openai", "anthropic"):
+  [run7/cloud/engine] engine/core/effective_config.py:390 <module>.cloud_stage_config | raise ValueError(f"arm {arm_name!r} is not a cloud arm (provider {arm.provider!r})")
+  [run7/cloud/engine] engine/core/effective_config.py:396 <module>.cloud_stage_config | return _freeze(f"{CLOUD_STAGE_PREFIX}{arm_name}", arm.provider, arm.model, params,
+  [run7/cloud/engine] engine/core/effective_config.py:474 <module>.prompt_hash | if cfg.provider != "ollama":
+  [run7/cloud/engine] engine/core/effective_config.py:528 <module>.resolve_run | digest = _digest(cfg.model) if cfg.provider == "ollama" else None
+  [run7/cloud/engine] engine/core/review_spec.py:641 <module>.ArmSpec._kind_shape | if self.kind == "model" and (self.provider is None or not self.model):
+  [run7/cloud/engine] engine/core/review_spec.py:643 <module>.ArmSpec._kind_shape | if self.kind == "human" and (self.provider or self.model or self.options):
+  [run7/cloud/engine] engine/core/review_spec.py:650 <module>.ArmSpec.effective_options | return dict(PROVIDER_DEFAULT_OPTIONS.get(self.provider or "", {}))
+  [run7/cloud/engine] engine/core/review_spec.py:896 <module>.ReviewSpec._arms_consistent | if arm is None or arm.provider not in CLOUD_PROVIDERS:
+  [run7/cloud/engine] engine/core/review_spec.py:903 <module>.ReviewSpec._arms_consistent | if arm is None or arm.provider not in CLOUD_PROVIDERS:
+  [run7/cloud/engine] engine/core/review_spec.py:908 <module>.ReviewSpec._arms_consistent | if arm is None or arm.provider != "ollama":
+  [run7/cloud/engine] engine/core/run_manifest.py:447 <module>.pin_tuple | lib = {"ollama": "ollama"}.get(arm.provider, arm.provider)
+  [run7/cloud/engine] engine/core/run_manifest.py:450 <module>.pin_tuple | "provider": arm.provider,
+  [run7/cloud/engine] engine/core/run_manifest.py:704 <module>.open_run | (run_id, key, row["stage_kind"], r.arm_name, r.config.provider,
+  [run7/cloud/engine] engine/core/run_manifest.py:803 <module>._stage_row | "arm": r.arm_name, "provider": cfg.provider, "model": cfg.model,
+  [run7/engine] engine/exporters/methods_section.py:137 <module>.generate_methods_section | f"{_PROVIDER_LABEL[spec.arm(name).provider]} {spec.arm(name).model}"
+
+-- (e) registered_arms(kind=…): 1
+  [analysis] analysis/paper1/export_disagreement_pairs.py:70 <module>.arms_in_scope | arms = [a for a in registered_arms(conn, kind="model")]
+
+== tests coupled (functions in tests/ naming store_result, the writer, or a CHANGES consumer)
+
+-- _advance_extraction_workflow: 8 test functions / 3 files
+   by file: test_audit_stage_completion.py 4, test_stage_completion.py 3, test_entry_points_take_the_lock.py 1
+  tests/test_audit_stage_completion.py:130 test_ai_audit_stage_completes_only_when_every_extracted_corpus_paper_is_audited | params: db,spec,caplog | module helpers called: _add,_audit,_extract,_lines,_names,db,spec | file-local fixtures: db,spec
+  tests/test_audit_stage_completion.py:168 test_a_text_refused_at_audit_leaves_the_ai_audit_stage_pending_and_named | params: db,spec,caplog | module helpers called: _audit,_lines,_names,_refused_world,db,spec | file-local fixtures: db,spec
+  tests/test_audit_stage_completion.py:179 test_tv2_a_paper_refused_under_d23_stays_extracted_is_named_and_holds_the_stage | params: db,spec | module helpers called: _audit,_refused_world,db,spec | file-local fixtures: db,spec
+  tests/test_audit_stage_completion.py:226 test_tv1_an_all_declined_paper_is_audited_vacuously_and_the_stage_completes | params: db,spec,names,caplog | module helpers called: _audit,_audited_events,_declined_world,_lines,_listed,_names,db,names,spec | file-local fixtures: db,names,spec
+  tests/test_entry_points_take_the_lock.py:72 test_run_pipeline_holds_the_lock_across_every_stage | params: monkeypatch,tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_stage_completion.py:38 test_t6_extraction_complete_follows_the_processing_axis_not_papers_status | params: db | module helpers called: _processing,db | file-local fixtures: db
+  tests/test_stage_completion.py:47 test_t6_audit_complete_follows_audited_ai | params: db | module helpers called: _processing,db | file-local fixtures: db
+  tests/test_stage_completion.py:54 test_t6_a_legacy_status_alone_completes_nothing | params: db | module helpers called: db | file-local fixtures: db
+
+-- _build_evidence_rows: 5 test functions / 1 files
+   by file: test_readers_on_the_reader.py 5
+  tests/test_readers_on_the_reader.py:164 test_a_declined_field_reports_as_declined_in_the_evidence_table | params: review | module helpers called: _assert_value,_decline,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:180 test_a_withdrawn_value_is_no_value_in_the_evidence_table | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:199 test_the_evidence_table_carries_both_axes_and_no_confidence_column | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:214 test_a_failed_paper_is_exported_with_its_reason_and_is_not_analysis_ready | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:235 test_the_exporter_refuses_an_unregistered_arm | params: review | module helpers called: review | file-local fixtures: review
+
+-- arm_cells: 1 test functions / 1 files
+   by file: test_extraction_validator.py 1
+  tests/test_extraction_validator.py:241 test_default_arm_unregistered_reports_zero_cells | params: review,monkeypatch,capsys | module helpers called: _declare,_point_cli_at,review | file-local fixtures: review
+
+-- arm_population: 4 test functions / 3 files
+   by file: test_distribution_check_wiring.py 2, test_distribution_monitor.py 1, test_u28_cloud_gate_and_boundary.py 1
+  tests/test_distribution_check_wiring.py:130 test_t2_a_collapse_is_recorded_and_logged_and_the_stage_returns | params: tmp_path,spec,monkeypatch,caplog | module helpers called: _db,_manifest_end,_paper_event_count,_stub_stage,spec | file-local fixtures: spec
+  tests/test_distribution_check_wiring.py:79 test_t1_the_stage_calls_the_check_with_the_runs_arm_and_counts_and_skips_under_ten | params: tmp_path,spec,monkeypatch | module helpers called: _db,_spy,_stub_stage,spec | file-local fixtures: spec
+  tests/test_distribution_monitor.py:646 test_t4_arm_population_runs_despite_failures_and_a_small_run | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_u28_cloud_gate_and_boundary.py:113 test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok | params: cloud,failed | module helpers called: _rows,_spans,_store,cloud | file-local fixtures: cloud
+
+-- audit_run: 9 test functions / 5 files
+   by file: test_audit_events.py 3, test_audit_paper_id.py 2, test_migration_backfill_audit_log.py 2, test_extraction_events.py 1, test_ollama_preflight.py 1
+  tests/test_audit_events.py:327 test_t19_an_unlocated_absence_sentinel_gets_no_verdict_row_at_all | params: db,spec,run_id,review_dir,verify | module helpers called: claim,db,located_events,review_dir,run,run_id,spec,verdicts,verify | file-local fixtures: db,review_dir,run_id,spec,verify
+  tests/test_audit_events.py:373 test_an_audit_run_needs_its_audit_stage | params: db,spec | module helpers called: db,spec | file-local fixtures: db,spec
+  tests/test_audit_events.py:470 test_d23_a_claim_with_no_recorded_text_identity_refuses_the_paper | params: db,spec,run_id,review_dir,verify | module helpers called: audited,db,located_events,review_dir,run_id,spec | file-local fixtures: db,review_dir,run_id,spec,verify
+  tests/test_audit_paper_id.py:102 test_T6_every_audit_call_row_carries_the_paper_it_verified | params: db,spec,run_id,review_dir | module helpers called: _claim_unlocatable,_fake_response,db,review_dir,run_id,spec | file-local fixtures: db,review_dir,run_id,spec
+  tests/test_audit_paper_id.py:125 test_T7_no_other_stage_is_affected | params: db,spec,run_id,review_dir | module helpers called: _claim_unlocatable,_fake_response,db,review_dir,run_id,spec | file-local fixtures: db,review_dir,run_id,spec
+  tests/test_extraction_events.py:722 test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper | params: db,spec,run_id,sentinels | module helpers called: _record,_two_claims_on_the_first_text,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_migration_backfill_audit_log.py:106 test_rollback_drops_table_and_indexes | params: tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_migration_backfill_audit_log.py:73 test_migration_applies_cleanly_on_fresh_db | params: tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_ollama_preflight.py:303 test_audit_calls_preflight | params: tmp_path | module helpers called: - | file-local fixtures: -
+
+-- check_distribution: 19 test functions / 2 files
+   by file: test_distribution_monitor.py 18, test_u28_cloud_gate_and_boundary.py 1
+  tests/test_distribution_monitor.py:205 test_all_same_value_collapsed | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:217 test_all_same_below_threshold_not_collapsed | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:225 test_collapsed_entropy_zero | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:238 test_85pct_dominant_low_variance | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:248 test_84pct_not_low_variance | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:257 test_low_variance_below_count_threshold | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:272 test_healthy_spread | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:294 test_all_nr_excluded | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:303 test_mixed_null_and_values | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:313 test_an_arm_with_no_values_is_all_zero_and_OK | params: tmp_path | module helpers called: _make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:330 test_an_unregistered_arm_raises_rather_than_reading_as_empty | params: tmp_path | module helpers called: _make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:339 test_only_categorical_fields_checked | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:354 test_cloud_arm | params: tmp_path | module helpers called: _insert_cloud_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:364 test_human_arm_resolves_and_reads_out_of_scope_under_R13 | params: tmp_path | module helpers called: _insert_human_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:400 test_cloud_arm_filters_by_arm_name | params: tmp_path | module helpers called: _insert_cloud_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:693 test_custom_low_variance_threshold_triggers | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:713 test_custom_collapsed_min_papers | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:730 test_custom_low_variance_min_papers | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_u28_cloud_gate_and_boundary.py:127 test_an_arm_holding_no_non_null_values_is_reported_skipped | params: cloud,half | module helpers called: cloud | file-local fixtures: cloud
+
+-- export_evidence_csv: 4 test functions / 1 files
+   by file: test_exporters.py 4
+  tests/test_exporters.py:158 test_evidence_csv_columns | params: exporter_db,spec,tmp_path | module helpers called: exporter_db,spec | file-local fixtures: exporter_db,spec
+  tests/test_exporters.py:309 test_atomic_csv_no_partial_on_error | params: exporter_db,spec,tmp_path | module helpers called: exporter_db,spec | file-local fixtures: exporter_db,spec
+  tests/test_exporters.py:401 test_empty_extraction_has_marker | params: empty_extraction_db,spec,tmp_path | module helpers called: empty_extraction_db,spec | file-local fixtures: empty_extraction_db,spec
+  tests/test_exporters.py:422 test_exclude_empty_omits_empty_papers | params: empty_extraction_db,spec,tmp_path | module helpers called: empty_extraction_db,spec | file-local fixtures: empty_extraction_db,spec
+
+-- export_evidence_docx: 6 test functions / 2 files
+   by file: test_readers_on_the_reader.py 4, test_exporters.py 2
+  tests/test_exporters.py:237 test_docx_created | params: exporter_db,spec,tmp_path | module helpers called: exporter_db,spec | file-local fixtures: exporter_db,spec
+  tests/test_exporters.py:325 test_atomic_docx_no_partial_on_error | params: exporter_db,spec,tmp_path | module helpers called: exporter_db,spec | file-local fixtures: exporter_db,spec
+  tests/test_readers_on_the_reader.py:412 test_the_docx_reports_declined_and_shows_no_value_for_withdrawn | params: review,tmp_path | module helpers called: _assert_value,_decline,_docx_cells,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:449 test_the_docx_refuses_an_unregistered_arm | params: review,tmp_path | module helpers called: review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:459 test_the_docx_keeps_a_failed_paper_and_reports_it_by_reason | params: review,tmp_path | module helpers called: _assert_value,_docx_cells,_docx_paragraphs,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:483 test_the_docx_has_no_note_when_nothing_failed | params: review,tmp_path | module helpers called: _assert_value,_docx_paragraphs,review | file-local fixtures: review
+
+-- export_evidence_excel: 2 test functions / 1 files
+   by file: test_exporters.py 2
+  tests/test_exporters.py:203 test_evidence_excel_sheets | params: exporter_db,spec,tmp_path | module helpers called: exporter_db,spec | file-local fixtures: exporter_db,spec
+  tests/test_exporters.py:436 test_exclude_empty_excel | params: empty_extraction_db,spec,tmp_path | module helpers called: empty_extraction_db,spec | file-local fixtures: empty_extraction_db,spec
+
+-- generate_prisma_flow: 15 test functions / 8 files
+   by file: test_prisma_reconciliation.py 8, test_audit_admitted_set.py 1, test_exporters.py 1, test_floor_and_stored_attempt.py 1, test_import_extraction_entry.py 1, test_import_screening_entry.py 1, test_parse_failures.py 1, test_selection_refusals.py 1
+  tests/test_audit_admitted_set.py:161 test_t4_prisma_counts_one_included_and_one_parse_failed_after_a_mixed_audit | params: db,spec,run_id | module helpers called: at_state,audit,claim,db,run_id,spec | file-local fixtures: db,run_id,spec
+  tests/test_exporters.py:127 test_prisma_flow_counts | params: prisma_db | module helpers called: prisma_db | file-local fixtures: prisma_db
+  tests/test_floor_and_stored_attempt.py:349 test_a_record_at_or_above_the_floor_is_stored_with_incomplete_fields_and_reported | params: db,spec,names,monkeypatch,tmp_path | module helpers called: _claims,_legacy_run,_paper_events,_run,_selected,db,names,spec | file-local fixtures: db,names,spec
+  tests/test_import_extraction_entry.py:166 test_t2_prisma_seam_holds_on_the_imported_review | params: db,spec,tmp_path | module helpers called: _import,_input,db,spec | file-local fixtures: db,spec
+  tests/test_import_screening_entry.py:125 test_t2_prisma_reads_an_ingested_only_review | params: db,spec,tmp_path | module helpers called: _import,_input,db,spec | file-local fixtures: db,spec
+  tests/test_parse_failures.py:233 test_T5_effective_state_and_prisma_carry_the_new_reason | params: digital_pdf,db | module helpers called: _add_paper,_linked_run,_place_pdf,db,digital_pdf | file-local fixtures: db,digital_pdf
+  tests/test_prisma_reconciliation.py:104 test_in_progress_papers_counted | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:145 test_c_ft_eligible_without_an_event_is_verification_pending | params: db,tmp_path | module helpers called: db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:167 test_live_shape_reads_as_before | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:195 test_pdf_excluded_subcounts_sum | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:219 test_no_paper_in_multiple_terminal_boxes | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:241 test_ai_audit_complete_not_double_counted_with_ft | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:260 test_extract_failed_appears_in_flow_and_csv | params: db,tmp_path | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:287 test_extract_failed_zero_omitted_from_csv | params: db,tmp_path | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_selection_refusals.py:170 test_prisma_moves_the_refused_paper_to_extraction_failed | params: db,spec | module helpers called: _modified,_stage,db,spec | file-local fixtures: db,spec
+
+-- get_pending_papers: 22 test functions / 2 files
+   by file: test_cloud_extraction.py 20, test_corpus_authority.py 2
+  tests/test_cloud_extraction.py:206 test_get_pending_papers | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:215 test_get_pending_excludes_completed | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:284 test_store_result_rejects_empty_spans | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:315 test_store_result_atomic | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:386 test_extract_paper | params: mock_openai_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:413 test_cost_calculation | params: mock_openai_cls,test_db,spec_path | module helpers called: _price,spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:457 test_extract_paper | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:480 test_reasoning_trace_from_thinking_blocks | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:501 test_json_extracted_from_text_blocks | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:523 test_cost_calculation | params: mock_anthropic_cls,test_db,spec_path | module helpers called: _price,spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:589 test_an_empty_value_is_refused_at_the_write_boundary | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:626 test_null_converted_to_nr | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:664 test_nonempty_string_unchanged | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:695 test_429_triggers_30s_plus_backoff | params: mock_anthropic_cls,mock_sleep,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:743 test_429_uses_retry_after_header | params: mock_anthropic_cls,mock_sleep,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:792 test_openai_store_failure_continues_run | params: mock_openai_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:870 test_openai_401_aborts_immediately | params: mock_openai_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:899 test_anthropic_401_aborts_immediately | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:934 test_429_triggers_30s_plus_backoff | params: mock_openai_cls,mock_sleep,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:984 test_429_uses_retry_after_header | params: mock_openai_cls,mock_sleep,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_corpus_authority.py:151 test_cloud_get_pending_papers_now_reads_the_eligibility_axis | params: review_dir | module helpers called: _detached_extractor,review_dir | file-local fixtures: review_dir
+  tests/test_corpus_authority.py:218 test_cloud_pending_excludes_papers_already_extracted_for_the_arm | params: review_dir | module helpers called: _detached_extractor,review_dir | file-local fixtures: review_dir
+
+-- get_pipeline_stats: 1 test functions / 1 files
+   by file: test_database.py 1
+  tests/test_database.py:203 test_pipeline_stats | params: db | module helpers called: _cit,db | file-local fixtures: db
+
+-- load_arm: 13 test functions / 7 files
+   by file: test_readers_on_the_reader.py 4, test_concordance.py 3, test_non_value_tokens_downstream.py 2, test_adjudication_pairs.py 1, test_distribution_monitor.py 1, test_effective_reader.py 1, test_screen2f_scoring.py 1
+  tests/test_adjudication_pairs.py:287 test_an_arm_that_is_not_in_the_registry_raises | params: tmp_path | module helpers called: _make_review_db | file-local fixtures: -
+  tests/test_concordance.py:314 test_registered_arm_with_no_data_returns_empty_dict | params: tmp_path | module helpers called: _write_codebook | file-local fixtures: -
+  tests/test_concordance.py:331 test_an_arm_that_is_not_registered_raises | params: tmp_path | module helpers called: _write_codebook | file-local fixtures: -
+  tests/test_concordance.py:343 test_db_error_raises_not_empty_dict | params: tmp_path | module helpers called: _write_codebook | file-local fixtures: -
+  tests/test_distribution_monitor.py:364 test_human_arm_resolves_and_reads_out_of_scope_under_R13 | params: tmp_path | module helpers called: _insert_human_spans,_make_db | file-local fixtures: -
+  tests/test_effective_reader.py:417 test_d1_4_a_newer_abstention_is_not_dropped_by_a_non_value_guard | params: db | module helpers called: db,one_claim,read,supersede | file-local fixtures: db
+  tests/test_non_value_tokens_downstream.py:219 test_site5_terminal_states_are_dropped_from_the_arm | params: tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_non_value_tokens_downstream.py:283 test_site5_a_field_the_codebook_does_not_declare_is_ignored | params: tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_readers_on_the_reader.py:109 test_load_arm_raises_on_a_name_that_is_not_in_the_registry | params: review | module helpers called: review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:125 test_query_values_and_load_arm_agree_on_a_human_arm | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:147 test_load_arm_does_not_fold_every_extraction | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:96 test_load_arm_returns_nothing_for_a_registered_human_arm_with_no_claims | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_screen2f_scoring.py:105 test_call_pattern_gate_catches_each_violation | params: tmp_path | module helpers called: _labels,_write_arm | file-local fixtures: -
+
+-- load_grid: 2 test functions / 1 files
+   by file: test_readers_on_the_reader.py 2
+  tests/test_readers_on_the_reader.py:245 test_the_judge_loader_attempts_every_cell_whatever_the_verdict | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+  tests/test_readers_on_the_reader.py:287 test_the_scorer_verdict_rides_as_a_feature | params: review | module helpers called: _assert_value,review | file-local fixtures: review
+
+-- record_selection_refusals: 4 test functions / 3 files
+   by file: test_extraction_events.py 2, test_audit_admitted_set.py 1, test_selection_refusals.py 1
+  tests/test_audit_admitted_set.py:224 test_t8_d21_refusal_the_refusal_supersedes_and_the_audit_writes_nothing | params: db,spec,run_id | module helpers called: assert_not_audited,at_state,audit,claim,db,run_id,spec,written | file-local fixtures: db,run_id,spec
+  tests/test_extraction_events.py:649 test_d24_t3_a_selection_refusal_supersedes_every_old_text_claim_in_one_savepoint | params: db,spec,run_id,sentinels | module helpers called: _fev,_pev,_reads,_superseded,_two_claims_on_the_first_text,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:694 test_d24_t5_another_arms_claims_on_the_paper_are_untouched | params: db,spec,run_id,sentinels,how | module helpers called: _record,_two_claims_on_the_first_text,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_selection_refusals.py:182 test_selection_writes_nothing_and_the_helper_writes_the_refusals | params: db,spec | module helpers called: _assert_one_loop_event,_missing,db,spec | file-local fixtures: db,spec
+
+-- run_distribution_check: 2 test functions / 2 files
+   by file: test_cloud_extraction.py 1, test_u28_cloud_gate_and_boundary.py 1
+  tests/test_cloud_extraction.py:841 test_distribution_collapse_not_caught | params: mock_openai_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_u28_cloud_gate_and_boundary.py:113 test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok | params: cloud,failed | module helpers called: _rows,_spans,_store,cloud | file-local fixtures: cloud
+
+-- run_post_extraction_check: 15 test functions / 3 files
+   by file: test_distribution_monitor.py 12, test_write_boundary_guard.py 2, test_u28_cloud_gate_and_boundary.py 1
+  tests/test_distribution_monitor.py:494 test_called_on_completion | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:516 test_skipped_on_partial_run_too_few | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:530 test_skipped_on_partial_run_failures | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:544 test_collapsed_raises_distribution_collapse_error | params: tmp_path,caplog | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:563 test_low_variance_does_not_raise_by_default | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:579 test_strict_mode_raises_on_low_variance | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:595 test_results_in_summary | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:626 test_t3_raise_on_collapse_true_still_raises_the_cloud_contract | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:635 test_t3_raise_on_collapse_false_returns_the_collapse | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:646 test_t4_arm_population_runs_despite_failures_and_a_small_run | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:659 test_t4_the_run_population_rule_skips_the_same_inputs | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_distribution_monitor.py:670 test_t4_skip_on_failures_still_vetoes_under_the_arm_rule | params: tmp_path | module helpers called: _insert_local_spans,_make_db | file-local fixtures: -
+  tests/test_u28_cloud_gate_and_boundary.py:127 test_an_arm_holding_no_non_null_values_is_reported_skipped | params: cloud,half | module helpers called: cloud | file-local fixtures: cloud
+  tests/test_write_boundary_guard.py:212 test_a_stored_record_with_incomplete_fields_is_counted_extracted | params: db,spec,names,monkeypatch,caplog | module helpers called: _legacy,db,names,spec | file-local fixtures: db,names,spec
+  tests/test_write_boundary_guard.py:250 test_a_paper_that_fails_is_still_counted_failed | params: db,spec,names,monkeypatch | module helpers called: _legacy,db,names,spec | file-local fixtures: db,names,spec
+
+-- store_result: 8 test functions / 2 files
+   by file: test_cloud_extraction.py 6, test_u28_cloud_gate_and_boundary.py 2
+  tests/test_cloud_extraction.py:215 test_get_pending_excludes_completed | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:284 test_store_result_rejects_empty_spans | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:315 test_store_result_atomic | params: test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:589 test_an_empty_value_is_refused_at_the_write_boundary | params: mock_anthropic_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:792 test_openai_store_failure_continues_run | params: mock_openai_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_cloud_extraction.py:841 test_distribution_collapse_not_caught | params: mock_openai_cls,test_db,spec_path | module helpers called: spec_path | file-local fixtures: spec_path,test_db
+  tests/test_u28_cloud_gate_and_boundary.py:113 test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok | params: cloud,failed | module helpers called: _rows,_spans,_store,cloud | file-local fixtures: cloud
+  tests/test_u28_cloud_gate_and_boundary.py:145 test_store_result_refuses_an_uncited_or_empty_value | params: cloud,case | module helpers called: _rows,_spans,_store,cloud | file-local fixtures: cloud
+
+-- validate_all: 1 test functions / 1 files
+   by file: test_extraction_validator.py 1
+  tests/test_extraction_validator.py:241 test_default_arm_unregistered_reports_zero_cells | params: review,monkeypatch,capsys | module helpers called: _declare,_point_cli_at,review | file-local fixtures: review
+
+-- validate_prisma_counts: 14 test functions / 5 files
+   by file: test_prisma_reconciliation.py 10, test_ft_adjudication_import.py 1, test_ft_bridge.py 1, test_import_extraction_entry.py 1, test_import_screening_entry.py 1
+  tests/test_ft_adjudication_import.py:283 test_10_adjudicating_a_flagged_paper_eligible_keeps_the_seam_valid | params: db,spec,tmp_path | module helpers called: _file,_import,_paper,db,spec | file-local fixtures: db,spec
+  tests/test_ft_bridge.py:448 test_10_seam_include_is_pending_confirm_is_eligible_exclude_is_valid | params: db,spec,fake | module helpers called: _confirm,_exclude,_include,_invoke,_paper,_status,db,fake,spec | file-local fixtures: db,fake,spec
+  tests/test_import_extraction_entry.py:166 test_t2_prisma_seam_holds_on_the_imported_review | params: db,spec,tmp_path | module helpers called: _import,_input,db,spec | file-local fixtures: db,spec
+  tests/test_import_screening_entry.py:125 test_t2_prisma_reads_an_ingested_only_review | params: db,spec,tmp_path | module helpers called: _import,_input,db,spec | file-local fixtures: db,spec
+  tests/test_prisma_reconciliation.py:104 test_in_progress_papers_counted | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:145 test_c_ft_eligible_without_an_event_is_verification_pending | params: db,tmp_path | module helpers called: db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:158 test_d_ft_eligible_reversed_to_full_text_out_fails | params: db | module helpers called: db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:167 test_live_shape_reads_as_before | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:219 test_no_paper_in_multiple_terminal_boxes | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:241 test_ai_audit_complete_not_double_counted_with_ft | params: db | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:260 test_extract_failed_appears_in_flow_and_csv | params: db,tmp_path | module helpers called: _add_papers,db | file-local fixtures: db
+  tests/test_prisma_reconciliation.py:317 test_bare_add_values_paper_passes_identity_1 | params: tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_prisma_reconciliation.py:48 test_reconciliation_passes_clean_db | params: db,spec | module helpers called: _add_papers,db | file-local fixtures: db,spec
+  tests/test_prisma_reconciliation.py:64 test_reconciliation_catches_mismatch | params: tmp_path | module helpers called: _add_papers | file-local fixtures: -
+
+-- write_extraction_events: 24 test functions / 5 files
+   by file: test_extraction_events.py 18, test_audit_admitted_set.py 2, test_presented_context.py 2, test_citation_guard.py 1, test_floor_and_stored_attempt.py 1
+  tests/test_audit_admitted_set.py:193 test_t6_a_same_key_failure_over_live_claims_stays_extraction_failed_after_the_audit | params: db,spec,run_id | module helpers called: assert_not_audited,at_state,audit,claim,db,run_id,spec | file-local fixtures: db,run_id,spec
+  tests/test_audit_admitted_set.py:207 test_t8_d24_reparse_the_failure_supersedes_and_the_audit_writes_nothing | params: db,spec,run_id | module helpers called: assert_not_audited,at_state,audit,claim,db,run_id,spec,written | file-local fixtures: db,run_id,spec
+  tests/test_citation_guard.py:105 test_uncited_value_never_reaches_the_database | params: tmp_path | module helpers called: - | file-local fixtures: -
+  tests/test_extraction_events.py:145 test_t1_a_complete_record_asserts_every_field_with_its_input | params: db,spec,run_id,sentinels | module helpers called: _fev,_pev,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:171 test_t2_an_exhausted_uncited_value_is_contract_unmet_and_the_paper_stores | params: db,spec,run_id,sentinels,expected | module helpers called: _fev,_legacy,_pev,_spans,db,expected,run_id,sentinels,spec | file-local fixtures: db,expected,run_id,sentinels,spec
+  tests/test_extraction_events.py:190 test_t2_an_elicited_contract_unmet_and_an_incomplete_carrier | params: db,spec,run_id,sentinels,expected | module helpers called: _legacy,_spans,db,expected,run_id,sentinels,spec | file-local fixtures: db,expected,run_id,sentinels,spec
+  tests/test_extraction_events.py:213 test_t3_missing_fields_write_nothing_and_are_named_on_the_paper | params: db,spec,run_id,sentinels | module helpers called: _fev,_pev,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:228 test_t4_a_duplicated_field_is_retried_then_contract_unmet | params: db,spec,run_id,sentinels,expected,tmp_path | module helpers called: _fev,_pass2,_spans,db,expected,run_id,sentinels,spec | file-local fixtures: db,expected,run_id,sentinels,spec
+  tests/test_extraction_events.py:271 test_t6_an_input_that_does_not_fit_is_a_paper_event_and_a_telemetry_row | params: db,spec,run_id,tmp_path | module helpers called: _fev,_pev,db,run_id,spec | file-local fixtures: db,run_id,spec
+  tests/test_extraction_events.py:297 test_t7_each_a14_refusal_is_extraction_failed_with_its_code | params: db,spec,run_id,exc | module helpers called: _fev,_pev,db,run_id,spec | file-local fixtures: db,run_id,spec
+  tests/test_extraction_events.py:306 test_t8_a_failed_model_call_leaves_the_paper_selectable | params: db,spec,run_id | module helpers called: _fev,_pev,db,run_id,spec | file-local fixtures: db,run_id,spec
+  tests/test_extraction_events.py:319 test_t9_a_new_text_version_supersedes_and_the_same_key_refuses | params: db,spec,run_id,sentinels | module helpers called: _fev,_pev,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:366 test_t11_a_refusal_on_the_last_field_writes_nothing_for_the_paper | params: db,spec,run_id,sentinels | module helpers called: _fev,_pev,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:422 test_b10_a_failure_at_the_paper_event_write_writes_nothing_for_the_paper | params: db,spec,run_id,sentinels | module helpers called: _another_paper_written_whole,_claim_inputs,_paper_rows,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:455 test_b10_a_sqlite_raised_error_mid_write_writes_nothing_for_the_paper | params: db,spec,run_id,sentinels | module helpers called: _another_paper_written_whole,_claim_inputs,_paper_rows,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:612 test_d24_t1_an_incomplete_field_on_reextraction_is_superseded_and_reads_missing | params: db,spec,run_id,sentinels | module helpers called: _fev,_reads,_record,_superseded,_two_claims_on_the_first_text,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:632 test_d24_t2_a_failed_reextraction_supersedes_every_old_text_claim | params: db,spec,run_id,sentinels | module helpers called: _pev,_reads,_superseded,_two_claims_on_the_first_text,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:673 test_d24_t4_a_first_extraction_plans_no_superseded_event | params: db,spec,run_id,sentinels | module helpers called: _fev,_record,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:694 test_d24_t5_another_arms_claims_on_the_paper_are_untouched | params: db,spec,run_id,sentinels,how | module helpers called: _record,_two_claims_on_the_first_text,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:722 test_d24_t6_after_a_partial_reextraction_the_audit_runs_on_the_paper | params: db,spec,run_id,sentinels | module helpers called: _record,_two_claims_on_the_first_text,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_extraction_events.py:739 test_d24_t7_a_reviewer_decision_on_a_claim_the_reextraction_retired_needs_rereview | params: db,spec,run_id,sentinels | module helpers called: _reads,_record,_two_claims_on_the_first_text,_value,db,run_id,sentinels,spec | file-local fixtures: db,run_id,sentinels,spec
+  tests/test_floor_and_stored_attempt.py:184 test_a_record_under_the_floor_is_never_written_as_a_record | params: db,spec,names | module helpers called: _claims,_mixed,_paper_events,_record,db,names,spec | file-local fixtures: db,names,spec
+  tests/test_presented_context.py:309 test_T5_the_elicited_chain_carries_both_attempts_presented_is_pass2 | params: tmp_path,monkeypatch | module helpers called: _fake_response | file-local fixtures: -
+  tests/test_presented_context.py:333 test_T5_pass2_skipped_presented_is_the_accepted_pass1_attempt | params: tmp_path,monkeypatch | module helpers called: _fake_response | file-local fixtures: -
+
+== counts
+files naming the R5 functions: 10
+sites (a) call write_extraction_events: 4
+sites (a) call write_field_event: 2
+sites (a) call write_paper_event: 9
+sites (b) call corpus_id_sql: 2
+sites (b) call effective_state: 12
+sites (b) call effective_value: 2
+sites (b) call eligible_paper_ids: 14
+sites (b) call grid_cells: 1
+sites (b) call is_assigned: 2
+sites (b) call iter_grid: 9
+sites (b) call live_claim_events: 5
+sites (b) call live_claims: 1
+sites (b) call registered_arms: 16
+sites (d) [migrations] cloud_evidence_spans — DDL: 3
+sites (d) [migrations] cloud_evidence_spans — INSERT: 1
+sites (d) [migrations] cloud_evidence_spans — UPDATE/DELETE: 2
+sites (d) [migrations] cloud_evidence_spans — other (prose or a name): 5
+sites (d) [migrations] cloud_extractions — DDL: 3
+sites (d) [migrations] cloud_extractions — INSERT: 1
+sites (d) [migrations] cloud_extractions — UPDATE/DELETE: 1
+sites (d) [migrations] cloud_extractions — other (prose or a name): 8
+sites (d) [migrations] field_events — DDL: 5
+sites (d) [migrations] field_events — INSERT: 2
+sites (d) [migrations] field_events — other (prose or a name): 6
+sites (d) cloud_evidence_spans — DDL: 3
+sites (d) cloud_evidence_spans — INSERT: 3
+sites (d) cloud_evidence_spans — SELECT: 7
+sites (d) cloud_evidence_spans — UPDATE/DELETE: 2
+sites (d) cloud_evidence_spans — other (prose or a name): 4
+sites (d) cloud_extractions — DDL: 3
+sites (d) cloud_extractions — INSERT: 1
+sites (d) cloud_extractions — SELECT: 12
+sites (d) cloud_extractions — other (prose or a name): 4
+sites (d) field_events — SELECT: 5
+sites (d) field_events — other (prose or a name): 1
+sites (e) .startswith on an arm: 1
+sites (e) a compare of an arm against a literal: 21
+sites (e) an arm literal as a call argument: 14
+sites (e) attribute .enabled_arms: 5
+sites (e) attribute .provider: 22
+sites (e) registered_arms(kind=…): 1
+tests _advance_extraction_workflow: 8 / 3
+tests _build_evidence_rows: 5 / 1
+tests arm_cells: 1 / 1
+tests arm_population: 4 / 3
+tests audit_run: 9 / 5
+tests check_distribution: 19 / 2
+tests export_evidence_csv: 4 / 1
+tests export_evidence_docx: 6 / 2
+tests export_evidence_excel: 2 / 1
+tests generate_prisma_flow: 15 / 8
+tests get_pending_papers: 22 / 2
+tests get_pipeline_stats: 1 / 1
+tests load_arm: 13 / 7
+tests load_grid: 2 / 1
+tests record_selection_refusals: 4 / 3
+tests run_distribution_check: 2 / 2
+tests run_post_extraction_check: 15 / 3
+tests store_result: 8 / 2
+tests validate_all: 1 / 1
+tests validate_prisma_counts: 14 / 5
+tests write_extraction_events: 24 / 5

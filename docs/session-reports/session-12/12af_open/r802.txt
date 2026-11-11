@@ -1,0 +1,69 @@
+RULING [evidence-engine 12af-R802] — U30A accepted; U30's design is not ruled — its five
+  decisions are the PI's at session 12ag; session 12af closes formally on U29 with U30's read-out
+  committed; no closeout gate; no standing rule
+STATUS: PI ruling, 2026-11-11 UTC, session 12af, on architect recommendation, on the 12af-U30A
+  final report (item 0 faa672914666cc8c21dfb45687d0abe92e9212d4; read-out
+  dacc67c1de93c74ef28f761e5af0b86089a0755b), and on the PI's words of 05:45 UTC quoted in (d).
+  Transcribe at item 0 of the 12af-CLOSE brief below, by transcribe_ruling.py, in the block after
+  R801's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12af-U30A final report, quoted): "faa6729 (parent 2b68cd4)"; "dacc67c (parent
+    faa6729)"; ledgers "702d158", "6c5b4b9"; "r801.txt: 3332bb4e…411c, 7,845 B, 92 lines. Equal to
+    your hash."; "brief_12af_U30A.md:
+    fd161193679f686a034675a92db9aafa7a4d070240a2a3c9e3f9e3708b662b9f, 26,450 B, 340 lines" (the
+    architect's copy: equal, cmp byte for byte against the clone); "check_item0_u30a.py → RESULT
+    PASS"; "Plan numstat +107/−2; the "−" lines are the two rows."; "Six-cell INT- rows: 213
+    before and after."; "The plan is now bd06ac88…59e5, 3,149,415 B, 18,454 lines."; "The measured
+    count is 287, as E3 expected."; "E1 and E2 held."
+  READ (CC's, the report): "a cloud interrupt is rolled back nowhere. run_arm's finally: close_run
+    then commits whatever the interrupt left open"; "The run status tokens are completed, failed,
+    interrupted and aborted."; "R625(a)(8) rules only the failed-close reason form."; "SIGTERM and
+    SIGHUP have no handler on the cloud entry point, so the process ends with no finally run.";
+    "enforce_completeness refuses missing names but only logs unknown ones, which still reach the
+    legacy table (N46)"; the probe, "(A) between extraction INSERT and spans: run 'failed' /
+    'KeyboardInterrupt'; cloud_extractions 1, spans 0, claims 0; pending False" and "(C) inside
+    the writer's savepoint: 'failed'; cloud_extractions 1, spans 20, field_events 0; pending
+    False"; findings 1–8.
+  READ (the architect's clone at dacc67c): the two full hashes in STATUS; the plan's sha256
+    bd06ac8805d953e88e8bce322ef1684566632238e0b89a33257812d9b21859e5, 18,454 lines;
+    12af_U30A/12af_U30A.md's sha256
+    5514b6510f04ed2161990de3e8a1cc64a8c8e3def2fc33067976c29812d3b9b4.
+  INFERRED: none.
+
+R802(a) — The 12af-U30A final report and its read-out are accepted as committed: item 0 faa6729
+  (Block 199; C24 CLOSED on U29; the note on INT-ae12-2; the dated line at the measured 287 (94 /
+  57 / 136), fix units 38, done 33; the brief file byte-equal to the architect's copy; the rules
+  files untouched), the read-out dacc67c with its census and probe, ledgers 702d158 and 6c5b4b9.
+  No stop. E1 and E2 held: an interrupt between the store's INSERTs leaves a paper done without
+  its spans, and the run closes failed.
+R802(b) — U30's design is not ruled. The read-out's §7 puts five decisions, and under R801(g)
+  each is the PI's after a plain-English read-out, at session 12ag: the status an interrupted
+  cloud run closes with (failed as found, or interrupted in the local runners' form); where the
+  rollback sits (run_arm, store_result, or both); whether an interrupted provider call is
+  recorded; whether the cloud entry point handles SIGTERM and SIGHUP; and whether INT-i12-71's
+  first half is closed as answered. No build brief is written before his word. A dated note on
+  INT-i12-71 at 12af-CLOSE's item 0 records the read-out (12af_U30A/12af_U30A.md, dacc67c), the
+  two committed end states its probe shows (a paper done without its spans; a paper done with
+  legacy rows and no claims), that SIGTERM and SIGHUP leave the manifest open, and that the
+  design waits for the PI; class and package unchanged.
+R802(c) — Readings, no row: finding 4 (run_arm's comment cites R625(a)(8) for closing failed on
+  an interrupt, and that clause rules only the reason's form — corrected with U30's build);
+  finding 5 (R798(e) said enforce_completeness already refuses unknown names; it logs them and
+  they still reach the legacy table, which is N46, open with its owner — the architect's, the
+  sixth error of the session, a clause on code no read-out had quoted for that case; no claim
+  carries an unknown name, because legacy_record limits claims to the expected fields, so U40's
+  claims are unaffected; the legacy table's unknown names are put with U30's decisions);
+  finding 6 (the one gap left in U29's record, an interrupted provider call, is decision three
+  of (b)); finding 7 (two ledger messages carry the same correction; both true); finding 8.
+R802(d) — The PI's ruling, in his words: "Formal close with exit and archive of CC session
+  followed by new unified plan and continuation prompt". Session 12af closes on U29 (977c499),
+  with U30's Phase A committed and its design open. The closeout is written in 12ae-CLOSE's form.
+  No closeout gate: the engine tree is unchanged since U29B's gate, which is the gate of record.
+  The closeout drafts the lane line and does not apply it; the wrap ruling follows its report.
+R802(e) — The band figure for 12ag is computed at the closeout from the last four standard gates
+  on this host state, each read from its own file, and is set by the wrap ruling; the band in
+  force until then stays 876–1069 s. The series stands at forty (R801(b)).
+R802(f) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at item 0, asserted by content. Whether R797(d)'s hold becomes
+  a standing rule is the wrap ruling's, on the PI's word.

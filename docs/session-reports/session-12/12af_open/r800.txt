@@ -1,0 +1,132 @@
+RULING [evidence-engine 12af-R800] — U29A accepted; U29's design: send records every call it
+  makes — a raised call and a truncated or refused response as error with a detail, a complete
+  response as completed, each returned response with a content digest; one accessor per
+  transport; the SDK's own retries off; U40's guards and fallback removed; no schema change; no
+  standing rule; the build opens as one brief
+STATUS: PI ruling, 2026-11-11 UTC, session 12af, on architect recommendation, on the 12af-U29A
+  final report (item 0 ffc6c387f3d5ebaaaff768f2836fba25d53b577f; read-out
+  1e3b74d50c10aa8e126da84fad2c4c53d3c1c769) and the read-out it committed. Transcribe at item 0
+  of the 12af-U29B brief below, by transcribe_ruling.py, in the block after R799's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12af-U29A final report, quoted): "ffc6c38 (parent 0814545)"; "1e3b74d (parent
+    ffc6c38)"; ledgers "491d0c6", "389adfd"; "brief_12af_U29A.md:
+    de2d2745afd602662208c1d4ffe92852fc9e7ae9e93e5b591249e3db9396831b, 28,278 B, 363 lines" (the
+    architect's copy: equal, cmp byte for byte against the clone); "check_item0_u29a.py → RESULT
+    PASS"; "Plan numstat +134/−5; the five "−" lines are the five rows, in file order."; "Six-cell
+    INT- rows: 212 before, 213 after."; "The plan is now 870455ca…b66e, 3,112,451 B, 18,206
+    lines."; "measured 287 (94 / 57 / 136), as E2 expected"; "E1 and E2 held".
+  READ (12af_U29A/12af_U29A.md at 1e3b74d, sha256
+    0ced7f60bad1a8b30b2892ec5373de5f0889be67ba05522be7a3e783bfb8a8a1, quoted): "openai 2.24.0 and
+    anthropic 0.84.0"; "An exception from `_create` passes straight through, so no `run_calls` row
+    is written"; the tokens, "`"completed", "refused_input_overflow",
+    "refused_ceiling_unavailable", "refused_input_truncated", "refused_input_dropped", "error"`";
+    "A refused completed call is recorded with outcome 'error' and a detail naming the mismatch;
+    no outcome is added (022's CHECK)"; "The local path records an OUTPUT-length stop as
+    `completed`"; "`outcome_detail = f"{type(exc).__name__}: {exc}"`"; "`response_digest` is
+    `sha256_canonical({"content": content or "", "thinking": thinking or ""})`"; "for OpenAI,
+    `fields that differ: ['created', 'id', 'usage']`"; "It then calls `conn.commit()` (`:1058`).";
+    "`finish_reason: Literal["stop", "length", "tool_calls", "content_filter", "function_call"]`";
+    "`StopReason: TypeAlias = Literal["end_turn", "max_tokens", "stop_sequence", "tool_use",
+    "pause_turn", "refusal"]`"; "Nothing in the engine reads `.refusal`"; "Both SDKs default to
+    `max_retries = 2`"; "both clients are constructed with the key only"; "a recorder fault
+    replaces the provider exception. It propagates, with the provider error as `__context__`";
+    "The three getattr guards: no test needs them."; "Their assertions are unchanged."; "So today
+    a claim stored after a raise-then-succeed sequence carries, in `context_chain`, a hash with no
+    `run_calls` row."
+  READ (the architect's clone at 1e3b74d): the two full hashes in STATUS; the plan's sha256
+    870455cad9ba77e03100275b10b887184c627ed5ea2e1e6247bf40d51eb7b66e, 18,206 lines.
+  INFERRED (each verified at the build's step 2a before any edit; false = STOP): what a provider
+    really returns on truncation or refusal was not established (read-out §9) — the accessor is
+    built on the pinned SDK types' declared fields; the two transports' own loops retry a
+    connection or status error that the SDK no longer retries (the handlers, quoted).
+
+R800(a) — The 12af-U29A final report and its read-out are accepted as committed: item 0 ffc6c38
+  (Block 197; B9 and C28 CLOSED; the notes on A15, A16 and INT-i12-73; INT-af12-1 in its own
+  section-L table, the record's convention — the brief's count of inserted lines was the
+  architect's and the convention governs; the dated line at the measured 287 (94 / 57 / 136);
+  the brief file byte-equal to the architect's copy), the read-out 1e3b74d with its census and
+  probe, ledgers 491d0c6 and 389adfd. No stop. recount_12ae_close.py prints expected_holds False
+  on this plan because it expects 286: a reading for the closeout's recount script, which states
+  its own expectation.
+R800(b) — Where the record is written. In send, and nowhere else: the provider call sits in a
+  try; on an Exception, inside a run, one run_calls row is written with outcome error and the
+  detail in the local recorder's form, the exception's class name, a colon and its message; then
+  the exception is re-raised unchanged. A recorder fault there is not caught: it replaces the
+  provider's exception, which stays as its context, and closes the run through U27's handlers.
+  Outside a run nothing is recorded, as today. KeyboardInterrupt is not this unit's (U30). No
+  call of run_manifest.record_call is added anywhere but send, and send is never reached inside
+  store_result's transaction, because record_call commits the connection it is given.
+R800(c) — The outcome of a returned response, with the six tokens as they stand: complete →
+  completed; truncated → error with the detail "truncated: <field>=<value>"; refused → error
+  with the detail "refused: <field>=<value>", <field> the provider's own name for its finish
+  reason. Truncated is finish_reason "length" (OpenAI) or stop_reason "max_tokens" (Anthropic).
+  Refused is finish_reason "content_filter" or a non-empty message.refusal (OpenAI; when the
+  refusal text is the only sign the detail ends "; refusal text present"), or stop_reason
+  "refusal" (Anthropic). The refusal text is not stored. This is R745(d)'s form: no token is
+  added and no schema changes. The row records what the provider returned; whether a truncated
+  response that a repair completes may be stored is U31's question, not answered here. A token
+  of its own for a truncated or refused output, on both paths, is 023's to decide with R745(d);
+  the local path's output-length stop recorded completed (F2) goes with it.
+R800(d) — The digest. Every returned response's row carries rm.response_digest of the response's
+  text and thinking — the local path's function — whatever its outcome. OpenAI: the message's
+  content and its reasoning content when present. Anthropic: the joined text blocks and the
+  joined thinking blocks. A digest of the whole response object is not taken (it varies with id,
+  created and usage), and the provider's response id is not recorded.
+R800(e) — The accessor. Each transport supplies one method that reads a response and returns its
+  text, its thinking and its finish classified as complete, truncated or refused with the
+  field and value for the detail; send calls it once, after the call returns and before the row
+  is written. base.py holds no provider branch. An accessor that cannot read what it is given
+  raises; send records that as error with the class and message and re-raises — a returned
+  response the engine cannot read is not recorded completed. It is not written to tolerate a
+  test's stand-in: a fake provider returns a response in the SDK's shape. extract_paper's own
+  reading of the response is not edited.
+R800(f) — N47. Both SDK clients are constructed with max_retries=0, so one recorded call is one
+  HTTP send; the transports' own loops do the retrying and every attempt has its row. The SDK's
+  default timeout is not changed. That a live provider honours this on every path is not
+  established (cloud arms are off, R71); the run's record is what this buys, and INT-ae12-2's
+  loops are unchanged.
+R800(g) — U40's leftovers (R799(f)). The three getattr guards on the kept reference and chain go:
+  no test takes their default. The stage-name fallback and its getattr go, and the three storing
+  tests that reach it, with U28's fixture and helper, move to a provider instance in the form of
+  U40's acceptance file, their assertions unchanged. base.py:495's getattr on model_string
+  predates U40 and is not touched; it joins P7.
+R800(h) — Tests. A new file, tests/test_u29_cloud_call_record.py, fail-first on the parent, both
+  transports parametrised, on U40's seam, no SDK client constructed: (1)
+  test_a_cloud_send_that_raises_still_records_its_call, the entry's test — a raising provider
+  call leaves one error row whose request hash is the chain's last hash and whose detail names
+  the class, and the same exception reaches the caller; (2) a truncated response and a refused
+  one, each provider's forms, the refusal-text-only form included, are error rows with the
+  details of R800(c), and carry a digest; (3) a complete response is completed with
+  rm.response_digest of its text and thinking, equal for two responses that differ only in id
+  and usage; (4) after a raise then a success and a store, every hash in the stored claims'
+  chain has a run_calls row; (5) each client is constructed with max_retries=0; (6) a recorder
+  fault while a provider exception is in flight surfaces as the run fault with the provider's
+  exception as its context; (7) outside a run no row is written and the exception passes (green
+  on the parent: a preservation case); (8) an unreadable response is an error row and raises.
+  Coupled tests, class (c), rewritten in the same commit: tests/test_u27_cloud_run_faults.py's
+  provider-route count of zero calls, which pinned the defect C24 names and is superseded by
+  this ruling — it becomes one error row per raised send — and its constructor keywords;
+  tests/test_run_manifest.py's C16 fake and tests/test_request_capture.py's two cloud fakes,
+  given SDK-shaped responses, their assertions kept; the R800(g) moves; any other the census or
+  the selected runs find.
+R800(i) — Docs, in the engine commit: docs/architecture/pipeline.md's :251 line (R799(f)) and its
+  description of what a cloud call records, and each CLAUDE.md line that states what send
+  records or how the SDK clients are built, brought to the fact. Lines found by their text and
+  quoted before and after.
+R800(j) — Rows, at 12af-U29B's item 0: a dated note on C24 — U29's design is ruled (R800(b)–(f));
+  the row closes at the item 0 after it lands. A dated note on INT-ae12-2 — extract_with_
+  completeness re-issues an identical request after a refusal, three paid sends (12af_U29A.md §7
+  item 10); with the SDK's retries off its loops are the only retrying; class and package
+  unchanged. Readings, no row: finding 1 (the section-L table, (a)); finding 2 ((a)); findings 3
+  and 4 (answered by (c) and by (h)(4)); finding 5 (the accessor reads the refusal text's
+  presence, (c)); finding 6 ((b)); finding 7 ((g)); finding 8 (a census line corrected before
+  commit); F7 (two functions named record_call — the census resolves by import). The architect's
+  errors this session so far: four (R797(e)'s two, R798(h), and the inserted-line count of (a));
+  none stopped a brief.
+R800(k) — The build opens as one brief, 12af-U29B, in R785(h)'s form: the read-out quoted send,
+  the recorder, the schema, the SDK sources and every coupled test at ffc6c38 and the engine tree
+  is unchanged since. No model call, no provider call, no network request, no live write; the
+  standard gate by the wrapper against 876–1069 s with R797(d)'s hold. This ruling states no
+  standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at item 0,
+  asserted by content.

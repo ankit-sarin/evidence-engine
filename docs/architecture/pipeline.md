@@ -248,7 +248,7 @@ python -m engine.agents.ft_screener ... --verify-only
 6. `store_result()` — one transaction: the insert to cloud_extractions + cloud_evidence_spans and the arm's claim events (`write_extraction_events(…, paper_event=False)`: no paper event, so the paper's processing axis does not move; U40, R798). Rejects 0-span results and, through `enforce_citations` (LEGACY), uncited or empty values
 7. Post-extraction: `run_distribution_check()` for the arm
 
-**No paper status change:** Cloud extractions are parallel data stored in separate tables
+**No paper status change:** a cloud extraction is stored in the two cloud tables and as the arm's claim events, with no paper event (U40, R798). **Every provider call inside a run is one `run_calls` row** (U29, R800): a call that raises is `error` with `Class: message`; a returned response is `completed` when complete, or `error` with `truncated: <field>=<value>` / `refused: <field>=<value>`, and carries `rm.response_digest` of its text and thinking (each transport's `read_response`). Both SDK clients are built with `max_retries=0`, so one recorded call is one HTTP send
 
 **Cost tracking:** Per-extraction `cost_usd` = (input_tokens × rate / 1M) + (output_tokens × rate / 1M). Batch runs accept `--max-cost` to cap total spend
 

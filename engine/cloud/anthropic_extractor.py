@@ -11,7 +11,14 @@ import anthropic
 from engine.core.completeness import IncompleteExtractionError
 from engine.core.extraction_events import is_run_fault
 
-from engine.cloud.base import CloudExtractorBase, outbound_messages
+from engine.cloud.base import (
+    FINISH_COMPLETE,
+    FINISH_REFUSED,
+    FINISH_TRUNCATED,
+    CloudExtractorBase,
+    ResponseReading,
+    outbound_messages,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +42,9 @@ class AnthropicExtractor(CloudExtractorBase):
             raise ValueError(
                 "Anthropic API key required — pass api_key or set ANTHROPIC_API_KEY"
             )
-        self.client = anthropic.Anthropic(api_key=key)
+        # U29 (R800(f), N47): the SDK's own retries off, so one recorded call is one
+        # HTTP send; the retry loop in `run` does the retrying.
+        self.client = anthropic.Anthropic(api_key=key, max_retries=0)
 
     def request_payload(self, prompt: str) -> dict:
         """The complete outbound request: model, parameters, the system
@@ -48,6 +57,23 @@ class AnthropicExtractor(CloudExtractorBase):
 
     def _create(self, **payload):
         return self.client.messages.create(**payload)
+
+    def read_response(self, response) -> ResponseReading:
+        """U29 (R800(c)–(e)): a `Message`'s text, thinking and finish, read from the
+        pinned type's fields. `content` and each block's `type`, `text` and `thinking`
+        are read as attributes, so a response not in the SDK's shape raises; the
+        optional `stop_reason` defaults to None. The text is the joined text blocks,
+        the thinking the joined thinking blocks. Truncated is stop_reason
+        "max_tokens"; refused is "refusal"."""
+        blocks = list(response.content)
+        text = "".join(b.text for b in blocks if b.type == "text")
+        thinking = "\n".join(b.thinking for b in blocks if b.type == "thinking")
+        reason = getattr(response, "stop_reason", None)
+        if reason == "max_tokens":
+            return ResponseReading(text, thinking, FINISH_TRUNCATED, "stop_reason", reason)
+        if reason == "refusal":
+            return ResponseReading(text, thinking, FINISH_REFUSED, "stop_reason", reason)
+        return ResponseReading(text, thinking, FINISH_COMPLETE, "stop_reason", reason)
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
         """Extract a single paper via Anthropic Claude Sonnet 4.6."""

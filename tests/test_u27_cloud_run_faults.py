@@ -211,10 +211,14 @@ def test_run_faults_leave_the_cloud_handlers_as_themselves(tmp_path, monkeypatch
         assert stored == 0
         assert end == ("completed", None)
         if route in ("recorder", "provider"):
-            assert record["creates"] == 6 and record["sleeps"] == [2, 4, 2, 4] and calls == 0
+            # U29 (R800(b), (h)): the provider route's former `calls == 0` pinned the defect C24 names and is
+            # superseded — every raised send inside the run is one `error` row (6); the recorder route's patched
+            # recorder writes nothing (0).
+            assert record["creates"] == 6 and record["sleeps"] == [2, 4, 2, 4] and calls == (6 if route == "provider" else 0)
         else:
             assert record["creates"] == 2 and record["sleeps"] == [] and calls == 2
 
     # ── the fakes' record: no provider, no key, no network ────────────
-    assert record["constructors"] and all(kw == {"api_key": PLACEHOLDER_KEY} for kw in record["constructors"])
+    # U29 (R800(f)): each SDK client is built with its own retries off.
+    assert record["constructors"] and all(kw == {"api_key": PLACEHOLDER_KEY, "max_retries": 0} for kw in record["constructors"])
     assert record["httpx_send"] == 0 and record["socket_connect"] == 0

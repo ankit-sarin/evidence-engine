@@ -175,16 +175,29 @@ def _cloud_run(db_path, provider: str):
     return handle.run_id, arm
 
 
+class _ProviderInstance(OpenAIExtractor):
+    """U29 (R800(g)): a cloud instance with a provider, in the form of U40's acceptance file —
+    the OpenAI transport with only `CloudExtractorBase.__init__` run (no SDK client) and its
+    provider seam, `_create`, answering one complete response in the SDK's shape."""
+
+    def __init__(self, db_path, spec_path):
+        CloudExtractorBase.__init__(self, db_path, spec_path)
+
+    def _create(self, **payload):
+        from openai.types.chat import ChatCompletion
+        return ChatCompletion(**{"id": "c", "object": "chat.completion", "created": 0, "model": payload["model"],
+                                 "choices": [{"index": 0, "finish_reason": "stop",
+                                              "message": {"role": "assistant", "content": "{}"}}]})
+
+
 def _give_reference_and_chain(base, pid: int) -> None:
     """U40 (R798(d)(i), (ii)): what a transport's run gives the instance before its store —
-    the paper's text loaded through `load_parsed_text` (which keeps its reference) and one
-    request hash kept for the paper, as `send` keeps it. `CloudExtractorBase` alone has no
-    provider to send to, so the hash is set at the chain's own attribute."""
-    from engine.core.effective_config import sha256_canonical
-
+    the paper's text loaded through `load_parsed_text` (which keeps its reference) and the
+    paper's request-hash chain, which the instance's own `send` keeps (U29, R800(g): a
+    provider instance sends instead of a hash set at the chain's attribute)."""
     write_parsed(base._conn, pid, "Paper text.")
     base.load_parsed_text(pid)
-    base._request_chain = (pid, [sha256_canonical({"fixture_request_for_paper": pid})])
+    base.send(pid, "prompt text")
 
 
 # ── init_cloud_tables ────────────────────────────────────────────────
@@ -254,7 +267,7 @@ class TestCloudExtractorBase:
 
     def test_get_pending_excludes_completed(self, test_db, spec_path):
         run_id, arm = _cloud_run(test_db, "openai")
-        base = CloudExtractorBase(test_db, spec_path)
+        base = _ProviderInstance(test_db, spec_path)  # U29, R800(g)
         base.run_id = run_id
         pending_before = base.get_pending_papers(arm)
 
@@ -357,7 +370,7 @@ class TestCloudExtractorBase:
 
     def test_store_result_atomic(self, test_db, spec_path):
         run_id, arm = _cloud_run(test_db, "openai")
-        base = CloudExtractorBase(test_db, spec_path)
+        base = _ProviderInstance(test_db, spec_path)  # U29, R800(g)
         base.run_id = run_id
         pending = base.get_pending_papers(arm)
         if not pending:
@@ -852,7 +865,7 @@ class TestStoreResultCrashProtection:
             content=json.dumps(COMPLETE_RESPONSE),
             reasoning_content="trace",
         )
-        choice = SimpleNamespace(message=msg)
+        choice = SimpleNamespace(message=msg, finish_reason="stop")  # U29: the SDK type's required field (R800(e))
         resp = SimpleNamespace(choices=[choice], usage=usage)
         mock_client.chat.completions.create.return_value = resp
 
@@ -1005,7 +1018,7 @@ class TestOpenAIRateLimitBackoff:
             content=json.dumps(COMPLETE_RESPONSE),
             reasoning_content="trace",
         )
-        choice = SimpleNamespace(message=msg)
+        choice = SimpleNamespace(message=msg, finish_reason="stop")  # U29: the SDK type's required field (R800(e))
         success_resp = SimpleNamespace(choices=[choice], usage=usage)
 
         mock_client.chat.completions.create.side_effect = [rate_err, rate_err, success_resp]
@@ -1055,7 +1068,7 @@ class TestOpenAIRateLimitBackoff:
             content=json.dumps(COMPLETE_RESPONSE),
             reasoning_content="trace",
         )
-        choice = SimpleNamespace(message=msg)
+        choice = SimpleNamespace(message=msg, finish_reason="stop")  # U29: the SDK type's required field (R800(e))
         success_resp = SimpleNamespace(choices=[choice], usage=usage)
 
         mock_client.chat.completions.create.side_effect = [rate_err, success_resp]

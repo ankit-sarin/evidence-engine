@@ -6,6 +6,7 @@ import re
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import NamedTuple
 
 from engine.agents.extractor import build_extraction_prompt
 from engine.core.codebook import CODEBOOK_FILENAME, load_codebook
@@ -48,6 +49,23 @@ PAYLOAD_DESCRIPTION = (
     "text, no identifiers beyond what the paper itself contains, and no PDF bytes "
     "leave the machine."
 )
+
+
+#: U29 (R800(c), (e)): how a transport classifies a returned response's finish.
+FINISH_COMPLETE, FINISH_TRUNCATED, FINISH_REFUSED = "complete", "truncated", "refused"
+
+
+class ResponseReading(NamedTuple):
+    """What a transport's `read_response` returns (R800(e)): the response's text and
+    thinking (R800(d)'s digest inputs), its finish classified as complete, truncated
+    or refused, the provider's own field and value for the detail, and an optional
+    note (`refusal text present`, R800(c))."""
+    text: str | None
+    thinking: str | None
+    finish: str
+    field: str
+    value: str | None
+    note: str | None = None
 
 
 def outbound_messages(prompt: str) -> list[dict]:
@@ -138,27 +156,60 @@ class CloudExtractorBase:
         request (C16). Overridden per provider."""
         raise NotImplementedError
 
+    def read_response(self, response) -> ResponseReading:
+        """The transport's reading of a returned response (U29, R800(e)): its text,
+        its thinking and its finish. Overridden per provider."""
+        raise NotImplementedError
+
     def send(self, paper_id: int, prompt: str):
-        """Build the payload, hash it, make the call, record it if in a run."""
+        """Build the payload, hash it, make the call, record it if in a run.
+
+        U29 (R800(b)–(e)): inside a run every call has exactly one `run_calls` row.
+        A call that raises is recorded `error` with `Class: message` and the
+        exception re-raised unchanged; a recorder fault there is not caught (it
+        surfaces with the provider's exception as its context). A returned
+        response is read once by the transport's `read_response`: complete →
+        `completed`; truncated or refused → `error` with `truncated: <field>=<value>`
+        / `refused: <field>=<value>`; its digest is `rm.response_digest` of its
+        text and thinking. A response the accessor cannot read is recorded
+        `error` and raised. Outside a run nothing is read or recorded."""
         from engine.core import run_manifest as rm
         payload = self.request_payload(prompt)
         self.last_request_hash = sha256_canonical(payload)
         # U40 (R798(d)(ii)): every hash computed is kept, in call order, with its
         # paper id; a send for another paper starts a new chain.
-        chain = getattr(self, "_request_chain", None)
+        chain = self._request_chain
         if chain is None or chain[0] != paper_id:
             chain = self._request_chain = (paper_id, [])
         chain[1].append(self.last_request_hash)
         started = datetime.now(timezone.utc).isoformat()
-        response = self._create(**payload)
-        if self.run_id is not None:
-            # 10a-C3: record_call's `outcome` is now required, no default.
-            # 'completed' is unchanged from before this parameter existed —
-            # the cloud path's own outcome semantics are F15's, out of scope
-            # here (10a-C3 B2, the one permitted touch outside its file list).
+
+        def record(digest, outcome, detail=None):
             rm.record_call(self._conn, self.run_id, self.stage_cfg.stage, paper_id,
-                           payload, None, started, datetime.now(timezone.utc).isoformat(),
-                           outcome="completed")
+                           payload, digest, started, datetime.now(timezone.utc).isoformat(),
+                           outcome=outcome, outcome_detail=detail)
+
+        try:
+            response = self._create(**payload)
+        except Exception as exc:
+            if self.run_id is not None:
+                record(None, "error", f"{type(exc).__name__}: {exc}")
+            raise
+        if self.run_id is None:
+            return response
+        try:
+            reading = self.read_response(response)
+        except Exception as exc:
+            record(None, "error", f"{type(exc).__name__}: {exc}")
+            raise
+        digest = rm.response_digest(reading.text, reading.thinking)
+        if reading.finish == FINISH_COMPLETE:
+            record(digest, "completed")
+        else:
+            detail = f"{reading.finish}: {reading.field}={reading.value}"
+            if reading.note:
+                detail = f"{detail}; {reading.note}"
+            record(digest, "error", detail)
         return response
 
     def get_pending_papers(self, arm: str) -> list[dict]:
@@ -428,10 +479,9 @@ class CloudExtractorBase:
             # transaction, and no paper event (A1-β). A reference or a chain kept
             # for another paper is absent, never used; the writer's own refusals
             # then fire and the rollback below leaves nothing in either store.
-            kept_ref = getattr(self, "_text_ref", None)
-            kept_chain = getattr(self, "_request_chain", None)
+            kept_ref = self._text_ref
+            kept_chain = self._request_chain
             chain = tuple(kept_chain[1]) if kept_chain and kept_chain[0] == paper_id else ()
-            stage_cfg = getattr(self, "stage_cfg", None)
             write_extraction_events(
                 self._conn,
                 legacy_record(
@@ -441,7 +491,7 @@ class CloudExtractorBase:
                     model=model_string, model_digest=None,
                     expected=tuple(self.expected_fields), spans=spans,
                     attempts=len(chain),
-                    stage_name=stage_cfg.stage if stage_cfg is not None else f"cloud:{arm}",
+                    stage_name=self.stage_cfg.stage,
                     presented_context_sha256=chain[-1] if chain else None,
                     context_chain=chain),
                 sentinels=frozenset(self._codebook.absence_sentinels),

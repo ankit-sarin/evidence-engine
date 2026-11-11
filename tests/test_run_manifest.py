@@ -371,7 +371,10 @@ def test_an_enabled_arm_named_on_the_cli_is_selected(spec):
 
 
 def test_a_cloud_call_records_the_hash_of_its_complete_payload(review, spec):
-    """C16: run_calls.request_hash is over system message, user turn AND parameters."""
+    """C16: run_calls.request_hash is over system message, user turn AND parameters.
+    U29 (R800(e), (h)): the fake provider returns a response in the SDK's shape (a
+    `ChatCompletion`), since `send` now reads every response it records."""
+    from openai.types.chat import ChatCompletion
     from engine.cloud.openai_extractor import OpenAIExtractor
     db, cb = review
     arm = _cloud_arm(spec, "openai")
@@ -382,7 +385,9 @@ def test_a_cloud_call_records_the_hash_of_its_complete_payload(review, spec):
     class Completions:
         def create(self, **kw):
             sent.update(kw)
-            return "response"
+            return ChatCompletion(**{"id": "c", "object": "chat.completion", "created": 0, "model": kw["model"],
+                                     "choices": [{"index": 0, "finish_reason": "stop",
+                                                  "message": {"role": "assistant", "content": "{}"}}]})
     with patch("engine.cloud.openai_extractor.openai.OpenAI") as cls:
         cls.return_value = SimpleNamespace(chat=SimpleNamespace(completions=Completions()))
         ex = OpenAIExtractor(db.db_path, str(SPEC_PATH), api_key="k", arm_name=arm)

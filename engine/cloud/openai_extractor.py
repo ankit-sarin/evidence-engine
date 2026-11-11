@@ -10,7 +10,14 @@ import openai
 from engine.core.completeness import IncompleteExtractionError
 from engine.core.extraction_events import is_run_fault
 
-from engine.cloud.base import CloudExtractorBase, outbound_messages
+from engine.cloud.base import (
+    FINISH_COMPLETE,
+    FINISH_REFUSED,
+    FINISH_TRUNCATED,
+    CloudExtractorBase,
+    ResponseReading,
+    outbound_messages,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +41,9 @@ class OpenAIExtractor(CloudExtractorBase):
             raise ValueError(
                 "OpenAI API key required — pass api_key or set OPENAI_API_KEY"
             )
-        self.client = openai.OpenAI(api_key=key)
+        # U29 (R800(f), N47): the SDK's own retries off, so one recorded call is one
+        # HTTP send; the retry loop in `run` does the retrying.
+        self.client = openai.OpenAI(api_key=key, max_retries=0)
 
     def request_payload(self, prompt: str) -> dict:
         """The complete outbound request: model, system + user messages, and the
@@ -45,6 +54,28 @@ class OpenAIExtractor(CloudExtractorBase):
 
     def _create(self, **payload):
         return self.client.chat.completions.create(**payload)
+
+    def read_response(self, response) -> ResponseReading:
+        """U29 (R800(c)–(e)): a `ChatCompletion`'s text, thinking and finish, read from
+        the pinned type's fields. The required ones (`choices`, `message`, `content`,
+        `finish_reason`) are read as attributes, so a response not in the SDK's shape
+        raises; the optional `refusal` and the undeclared `reasoning_content` (read the
+        same way at `extract_paper`) default to None. Truncated is finish_reason
+        "length"; refused is "content_filter" or a non-empty `message.refusal` — when
+        the refusal text is the only sign, the note says it is present; the text
+        itself is not returned."""
+        choice = response.choices[0]
+        message = choice.message
+        text, reason = message.content, choice.finish_reason
+        thinking = getattr(message, "reasoning_content", None)
+        if reason == "length":
+            return ResponseReading(text, thinking, FINISH_TRUNCATED, "finish_reason", reason)
+        if reason == "content_filter":
+            return ResponseReading(text, thinking, FINISH_REFUSED, "finish_reason", reason)
+        if getattr(message, "refusal", None):
+            return ResponseReading(text, thinking, FINISH_REFUSED, "finish_reason", reason,
+                                   "refusal text present")
+        return ResponseReading(text, thinking, FINISH_COMPLETE, "finish_reason", reason)
 
     def extract_paper(self, paper_id: int, parsed_text: str) -> dict:
         """Extract a single paper via OpenAI o4-mini."""

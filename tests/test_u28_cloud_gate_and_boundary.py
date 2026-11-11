@@ -5,8 +5,8 @@ Seams: 12ae_U28A/fake_probe_u28a.py's. A scratch ReviewDatabase under tmp_path w
 (`seed_eligibility`) and, since U40, a recorded parsed text (`write_parsed`); the live codebook copied beside it (read, never written); a spec copy whose `enabled_arms: []` names the openai arm;
 `rm.git_state` patched clean; `rm.open_run(conn, spec, kind="extraction", stages=(), codebook=…, cloud_arms=[arm], …)` exactly as
 `scripts/run_cloud_extraction.run_arm` calls it, which registers and pins the arm, its run_id set on the instance as the runner sets it;
-`store_result` called on a `CloudExtractorBase` (PROVIDER "" — no transport), given the paper's reference through its own
-`load_parsed_text` and one request hash at its chain (U40, R798(d), (f)). `openai.OpenAI` and `anthropic.Anthropic` are replaced by recorders that refuse, and every test asserts that
+`store_result` called on the OpenAI transport with only `CloudExtractorBase.__init__` run and `_create` faked (U29, R800(g); no SDK
+client), given the paper's reference through its own `load_parsed_text` and its chain through its own `send` (U40, R798(d), (f)). `openai.OpenAI` and `anthropic.Anthropic` are replaced by recorders that refuse, and every test asserts that
 neither was constructed. No server, no provider, no key, no gitignored fixture.
 
 Claims, by the U28A read-out's numbering and R794's letters:
@@ -29,11 +29,11 @@ import openai
 import pytest
 
 from engine.cloud.base import CloudExtractorBase
+from engine.cloud.openai_extractor import OpenAIExtractor
 from engine.core import run_manifest as rm
 from engine.core.citation_guard import BLANK_VALUE, VALUE_WITHOUT_CITATION, UncitedValueError
 from engine.core.codebook import load_codebook
 from engine.core.database import ReviewDatabase
-from engine.core.effective_config import sha256_canonical
 from engine.core.review_spec import load_review_spec
 from engine.search.models import Citation
 from engine.validators import distribution_monitor as dm
@@ -56,6 +56,20 @@ def _spans(cbk, **override):
             value, snippet = override.get(f["name"], (value, snippet))
             out.append({"field_name": f["name"], "value": value, "source_snippet": snippet, "confidence": 0.9, "tier": f["tier"]})
     return out
+
+
+class _ProviderInstance(OpenAIExtractor):
+    """U29 (R800(g)): a cloud instance with a provider, in the form of U40's acceptance file — the OpenAI transport with only
+    `CloudExtractorBase.__init__` run (no SDK client) and its provider seam, `_create`, answering one response in the SDK's shape."""
+
+    def __init__(self, db_path, spec_path, arm_name):
+        CloudExtractorBase.__init__(self, db_path, spec_path, arm_name=arm_name)
+
+    def _create(self, **payload):
+        from openai.types.chat import ChatCompletion
+        return ChatCompletion(**{"id": "c", "object": "chat.completion", "created": 0, "model": payload["model"],
+                                 "choices": [{"index": 0, "finish_reason": "stop",
+                                              "message": {"role": "assistant", "content": "{}"}}]})
 
 
 @pytest.fixture
@@ -92,7 +106,7 @@ def cloud(tmp_path, monkeypatch):
     handle = rm.open_run(db._conn, load_review_spec(spec_path), kind="extraction", stages=(), codebook=cbk,
                          cloud_arms=[arm], payload_description="test")
     db.close()
-    base = CloudExtractorBase(str(db_path), str(spec_path), arm_name=arm)
+    base = _ProviderInstance(str(db_path), str(spec_path), arm)  # U29, R800(g)
     base.run_id = handle.run_id
     yield base, db_path, arm, pids, cbk, sdk
     base.close()
@@ -101,7 +115,7 @@ def cloud(tmp_path, monkeypatch):
 
 def _store(base, arm, pid, spans):
     base.load_parsed_text(pid)
-    base._request_chain = (pid, [sha256_canonical({"fixture_request_for_paper": pid})])
+    base.send(pid, "prompt text")  # U29, R800(g): the instance's own send keeps the chain
     return base.store_result(paper_id=pid, arm=arm, model_string="fake", extracted_data={"fields": []}, reasoning_trace="",
                              prompt_text="p", input_tokens=1, output_tokens=1, reasoning_tokens=0, cost_usd=0.0, spans=spans)
 

@@ -1,0 +1,110 @@
+RULING [evidence-engine 12af-R799] — U40 landed and accepted; B9 and C28 close on it; the series
+  gains 965.92 s; the four findings placed — notes on A15, A16 and INT-i12-73, one new row
+  INT-af12-1; R798(h)'s "each needs a row" corrected; no standing rule; U29's Phase A opens
+STATUS: PI ruling, 2026-11-11 UTC, session 12af, on architect recommendation, on the 12af-U40B
+  final report (item 0 27fda1cbd95f73b4955ab2530affd7a813b866d5; engine commit
+  53eabfd0a9d466461b54c5ae2a531b4f69cda085; evidence 0814545c6be6f0fdeb84ab89682f4b0896b28a1b).
+  Transcribe at item 0 of the 12af-U29A brief below, by transcribe_ruling.py, in the block after
+  R798's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12af-U40B final report, quoted): "27fda1c (parent aa97c6a)"; "53eabfd (parent
+    27fda1c)"; "0814545 (parent 53eabfd)"; ledgers "7059f48", "ba61752", "f1f1a7e"; "Each push had
+    the fingerprint IDENTICAL before and after."; "r798.txt: e293ebe4…7bbe, 13,588 B, 153 lines.
+    Equal to your hash."; "brief_12af_U40B.md:
+    e0ce8ddf5a10085fea7295b4c608bd1561e54f4f42c510dbea75a1aaba94526e, 35,743 B, 450 lines" (the
+    architect's copy: equal, cmp byte for byte against the clone); "Plan numstat +166/−2; the "−"
+    lines are exactly B9 and C28."; "The plan is now ad054b49…f183, 3,091,442 B, 18,077 lines.";
+    "Parent run (b0): 9 red, 1 green, as E1 expected."; "Engine diff: extraction_events.py +18/−3
+    and base.py +47/−2."; "Pins: recomputed byte-identical to pin_tuples_close.json (aea19354…).
+    The audit prompt_hash is unchanged."; "Selected runs: 23 files, 450 passed."; "cloud_extractions
+    14, field_events 280, claim_inputs 14, paper events naming the arm 0"; "Local arm, W0 (no cloud
+    stores) against W1 (with them): equal on all twelve readings."; "no consumer raised, and the β
+    column is confirmed"; "Launch: 03:01:42Z. No hold: the snapshot showed uvicorn only, before and
+    after."; "Wall: 965.92 s, inside 876–1069."; "3554 passed, 17 deselected, 1 xfailed, 2 warnings
+    in 963.80s"; "collected 3,572 and selected 3,555"; "only-gate is the 10 new ids; only-ref is
+    empty"; "0814545, 25 files"; "Class 2, P2 (R541)"; "arms row_count 3"; "live holds no
+    manifest-registered arm".
+  READ (CC's): findings 1–9; "Two already have rows: F2 is A15 and F6 is A16"; "This shape pin was
+    not in the census; the selected run found it."; "store_result falls back to f"cloud:{arm}" for
+    a CloudExtractorBase with no provider, which has no stage_cfg".
+  READ (the architect's clone at 0814545): the three full hashes in STATUS; the plan's sha256
+    ad054b4950af3e48e3604465979bed6b9ec3532ea32b798efdf26dcee839f183, 18,077 lines; row A15's status
+    cell, "LATENT — owner F15 (rule whether the axis becomes per (paper, arm) or the cloud arms
+    write field events only)"; row INT-i12-73's note of 2026-10-22, "the second-arm half is
+    latent"; the engine diff 27fda1c..53eabfd whole, in it "kept_ref = getattr(self, "_text_ref",
+    None)", "stage_cfg = getattr(self, "stage_cfg", None)" and "stage_name=stage_cfg.stage if
+    stage_cfg is not None else f"cloud:{arm}","; extraction_events.py's planner, whose field
+    events carry no stage name (the stage name is a paper-event field); gate_wall.txt "wall:
+    965.920872468 s"; the package list, "P5 — exports and the human importer".
+  INFERRED: none.
+
+R799(a) — The 12af-U40B final report is accepted as printed: item 0 27fda1c (Block 196; the B9 and
+  C28 notes; the brief file byte-equal to the architect's copy; the rules files untouched), the
+  engine commit 53eabfd (the keyword on the writer; the reference, the chain and the write in
+  base.py; the new file's ten ids; the coupled tests rewritten with their assertions kept; four
+  docs lines; the inventory regenerated for a moved entry), the gate 3,554 / 1 / 17 on 3,572 /
+  3,555 at 965.92 s inside 876–1069 s, green at its first run, only-gate the ten new ids, no load,
+  the nineteen files; the evidence commit 0814545; ledgers 7059f48, ba61752 and f1f1a7e. Pins and
+  the audit prompt_hash unchanged. I2–I5 held, each on quoted lines. The post-build probe
+  confirmed the β column: fourteen cloud stores wrote 280 claims and no paper event, and every
+  local-arm reading was equal with and without them. U40 is landed: P1's fix units 38, done 32
+  (U01–U28, U37, U38, U39, U40). No stop, no pause.
+R799(b) — The series gains 965.92 s (the U40B gate, beside uvicorn only): thirty-nine. The band in
+  force stays 876–1069 s.
+R799(c) — B9 and C28 are CLOSED on U40 at 12af-U29A's item 0, in C49's form, by R514, each for
+  the Wave 2 findings it was reopened for (R598(b)): B9 for Wave 2 row 25, delivered by U28's D
+  and B and U40's claim events; C28 for Wave 2 rows 25 and 27, delivered by U40 and by U28's C.
+  The acceptance test named is tests/test_u40_cloud_claim_events.py::
+  test_cloud_gate_sees_what_store_result_wrote, red on the parent in 12af_U40B/
+  b0_parent_acceptance.txt and green in 12af_U40B/gate_u40b/, with the file's other cases beside
+  it. The census miss is named in the note: tests/test_parsed_text_resolver.py's shape pin, class
+  (c), found by the selected run. C28's max_papers incidental keeps its owner. Both rows are
+  counted until P1 closes (R607(d)).
+R799(d) — The four findings of R798(h), placed from the record as the report quotes it:
+  F2 is row A15, and A15's status cell already states the choice — the axis per (paper, arm), or
+  the cloud arms writing field events only. R798(c) ruled the second. A note on A15 says so: the
+  cloud store writes field events only (U40, 53eabfd); the per-(paper, arm) axis is not built;
+  T5 stays deferred; a cloud arm's export still shows the shared processing column (the report's
+  finding 8); class and owner unchanged. R798(b) and (h) said this question needed its own row:
+  that was the architect's, written from the read-out's findings without a search of the
+  inventory; CC's step 4 found the row.
+  F6 is row A16. A note: reproduced on a manifest registry (12af_U40A.md §8 F6, FAKE); class and
+  package unchanged.
+  F4 has no row of its own and needs none: it is the consequence of INT-i12-73's second-arm half.
+  A note on INT-i12-73: since U40 a cloud arm can hold claims (behind R71), the pipeline audits
+  the spec's local arm only, so those claims are never located and the judge loader has no span
+  for them (12af_U40A.md §8 F4); class and package unchanged.
+  F5 is a new row, INT-af12-1, in section L in INT-ae12-2's form, its text cell this sentence
+  unchanged: "`export_disagreement_pairs.arms_in_scope` refuses any registry holding a model arm
+  outside `ARM_VALUE_COLUMN`'s three pre-manifest names, the spec's own local arm included
+  (`analysis/paper1/export_disagreement_pairs.py:38–42`, `:70–77`). It does not fire on live
+  today, whose registry holds the three pre-manifest arms only; it fires from the first manifest
+  run that registers an arm, Run 7 included. The refusal is loud and no stored value is wrong."
+  Class 2 (a path that refuses loudly, corrupting nothing); package P5 (exports and the human
+  importer); governing ruling R799(d); evidence 12af_U40A.md §8 F5 and its FAKE (iii-b), and
+  12ae_close/dbchecks_close.txt:2 for the live registry. Rows in 1, rows out 0.
+R799(e) — The dated units line at the same item 0, after the 12ae-CLOSE line and in its form:
+  U40 landed at 53eabfd; B9 and C28 CLOSED on it and counted until P1 closes; P1's fix units 38,
+  done 32; the row count measured on the plan as that item 0 leaves it, by the recount's counting
+  method, the method named in the line (EXPECTED 287, classes 94 / 57 / 136, 0 unclassed — an
+  expectation; the measured figures are the line's); rows in 1 (INT-af12-1), rows out 0.
+R799(f) — Readings, no row: finding 2 (a census miss, class (c), as R799(c) names it); finding 3
+  (two censuses counted different things, and CC ran every file grep finds); finding 4
+  (pipeline.md:251's "separate tables" is now incomplete — brought to the fact with the docs
+  lines of U29's engine commit, the next commit in the cloud path); finding 5; finding 6 (a
+  ValueError for the refused PaperFailure stands. The stage-name fallback and the three getattr
+  guards in store_result and send exist for a cloud instance built without a provider or
+  without its constructor; the stage name is not written when no paper event is, so no stored
+  value depends on the fallback. They are test-shaped code in an engine file: U29's Phase A says
+  which tests build such an instance, and U29's build removes the guards and the fallback if
+  those tests can be given a real instance, else they join P7); finding 7; finding 8 (A15);
+  finding 9. The item-0 check failed its dry run on CC's own slicing and passed after the fix:
+  the check did its job. The architect's errors this session so far: three (R797(e)'s two, and
+  R798(h)); none stopped a brief.
+R799(g) — U29's Phase A opens: "A cloud call that raises still records its call" (C24 for Wave 2
+  row 28; N47 with it), read-only, in 12af_U40A.md's form, its entry quoted first. Since U40 a
+  send that raises leaves its hash in the paper's chain and still no run_calls row. No engine,
+  test, script, spec or codebook edit; no model call; no provider call; no live write. This
+  ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are
+  untouched at item 0, asserted by content.

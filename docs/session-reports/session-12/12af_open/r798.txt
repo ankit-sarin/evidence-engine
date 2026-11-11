@@ -1,0 +1,153 @@
+RULING [evidence-engine 12af-R798] — U40A accepted; U40's design: the cloud store writes the arm's
+  claim events and no paper event (A1-β); A1-α refused; the writer gains one keyword; the text
+  reference and the request-hash chain are kept on the instance by paper; a failed paper still
+  writes nothing; four findings wait for rows; no standing rule; the build opens as one brief
+STATUS: PI ruling, 2026-11-11 UTC, session 12af, on architect recommendation, on the 12af-U40A
+  final report (item 0 9b9f3d6f60f8c98dba7e4f09fcbe93b627dba156; read-out
+  aa97c6af278d91ec0bba5e1a1ff7330397bf842f) and the read-out it committed. Transcribe at item 0
+  of the 12af-U40B brief below, by transcribe_ruling.py, in the block after R797's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12af-U40A final report, quoted): "9b9f3d6f60f8c98dba7e4f09fcbe93b627dba156, parent
+    3310738, at 00:53:20Z"; "plan: 79f1c72038d34b8bfed8e2f7946c3c424eaafa0e4ba27412fbafb9b805e3e347
+    3066737 bytes 17913 lines"; "RESULT: PASS"; "brief_12af_U40A.md:
+    d71ce43e7d7b1a7078010c745191d2b0a9d37c5c5004acae02affdc0c1fb5045, 26,276 B, 339 lines" (the
+    architect's copy: equal, cmp byte for byte against the clone); "f0db725, parent 96f776c, row
+    2026-11-11T00:53:20Z"; "aa97c6af278d91ec0bba5e1a1ff7330397bf842f, parent 9b9f3d6, at
+    01:10:00Z"; "Ledger 9e3fd22, parent f0db725, row 01:10:00Z"; "E2 held".
+  READ (12af_U40A/12af_U40A.md at aa97c6a, sha256
+    8d835294ca15cb36746ba9b4546fd83a3556c76092ca341a6dac1c292e6410ab, quoted): "It always writes
+    one paper-level processing event as well as the claims. `paper_events` has no arm column, so
+    that event moves the paper's single processing axis, which the local pipeline reads."; "20
+    field events (['asserted']); paper event extracted -> extracted from None
+    payload.arm=openai_o4_mini_2025_04_16_high"; "papers the local arm holds no claim on: [1, …
+    12, 15]"; "paper 13 processing=extracted … paper 14 processing=extraction_failed
+    reason=model_call_failed"; "the writer's savepoint nests in `store_result`'s transaction. Its
+    commit then commits both."; "Its one production caller passes the local arm"; "No run-level
+    gate or stage-complete condition reads a registered cloud arm's unclaimed cells as a failure
+    of the local run."; "No grid reader filters cloud arms out."; "No engine consumer reads both
+    stores for one arm's values."; "That is a per-arm branch in `effective_state` (against R12) or
+    a schema change to `paper_events` (an arm column, a migration)."; "Or the existing writer
+    gains a keyword that omits the paper event."; "RAISED DistributionCollapseError: Distribution
+    collapse detected in 1 field(s): study_type".
+  READ (the architect's clone at aa97c6a, engine tree as at 24ce26b): engine/core/
+    extraction_events.py:701 "write_paper_event(conn, **plan.paper_event, commit=False)"; :468–474,
+    the run-fault tuple, which names "EventRefused"; engine/core/events.py:100 "class
+    RunLinkRefused(EventRefused):", :123 "class ClaimWithoutInputIdentity(EventRefused):", :138
+    "class ClaimWithoutPresentedContext(EventRefused):"; extraction_events.py:104 "class
+    ReuseKeyAlreadyClaimed(EventRefused):"; engine/core/parsed_text.py:181–182 "def
+    load_parsed_text(conn: sqlite3.Connection, paper_id: int) -> str:" / "return
+    read_parsed_text(resolve_parsed_text(conn, paper_id))"; extraction_events.py:287–294,
+    legacy_record's keywords, among them "expected: tuple[str, ...], spans" and "stage_name: str =
+    "extract_pass2""; engine/agents/extractor.py:718 "sentinels=frozenset(cb.absence_sentinels),
+    review_dir=Path(db.db_path).parent)"; engine/cloud/openai_extractor.py's store handler "except
+    Exception as exc:" / "if is_run_fault(exc):" / "raise".
+  INFERRED (each verified at the build's step 2a before any edit; false = STOP): the β column of
+    the read-out's consumer table is CODE ORDER — no consumer was driven with claims and no
+    paper event, because no such writer existed; legacy_record takes the span dicts store_result
+    holds; the last send for a paper is the accepted attempt's.
+
+R798(a) — The 12af-U40A final report and its read-out are accepted as committed: item 0 9b9f3d6
+  (Block 195; the brief file byte-equal to the architect's copy; the rules files untouched),
+  the read-out aa97c6a with its census and probe, ledgers f0db725 and 9e3fd22. No stop. The trace
+  R794(b) asked for is complete for the writer and for every consumer.
+R798(b) — A1-α is refused. Calling the writer as it stands from store_result writes a paper event
+  for a cloud store, and the paper's one processing axis is the local pipeline's: the probe shows
+  vacuous local audits on papers the local arm never extracted, a locally audited paper turned
+  extraction_failed by a cloud failure, and the audit stage held pending by a cloud store. Those
+  are wrong results on the local arm caused by a comparison arm. Whether processing is recorded
+  per arm is a real question of the event store's design and it is not U40's: it needs its own
+  row and ruling (h), and nothing in U40 depends on it.
+R798(c) — A1-β is the design. A cloud store writes the arm's claim events and no paper event. The
+  writer's form: write_extraction_events gains one keyword-only argument, paper_event, default
+  True. With the default, the function's behaviour is unchanged in every respect and none of its
+  tests moves. With paper_event=False it plans and writes exactly as today — the same planner,
+  the same savepoint, the same refusals, the same claim_inputs, the same supersession — and
+  omits the one write_paper_event call; a PaperFailure passed with paper_event=False is refused
+  before anything is read or written. Its docstring says both. The one caller that passes the
+  keyword is engine/cloud/base.py, and a census assertion in the acceptance file pins that. A
+  second writer function beside it was the alternative; it is not taken, because the savepoint
+  and the refusals must be one code path, not two that can drift.
+R798(d) — The cloud side, in engine/cloud/base.py and nowhere else:
+  (i) The text reference. CloudExtractorBase.load_parsed_text resolves the paper's current
+  reference and reads the text through it — the two calls parsed_text.load_parsed_text makes —
+  and keeps the reference with its paper id. The identity a claim carries is the text the
+  request was built from. Its return value and its FileNotFoundError behaviour do not change.
+  (ii) The chain. send keeps each request hash it computes, in call order, with its paper id; a
+  send for another paper starts a new chain. last_request_hash stays as it is.
+  (iii) The write. store_result, after its span INSERTs and before its commit, builds one
+  record with legacy_record — paper_id; arm; run_id the instance's; a minted extraction_uid; the
+  kept reference; model the model string; model_digest None; expected the instance's expected
+  fields; the spans it was given; attempts the chain's length; stage_name the instance's stage
+  (cloud:<arm>); presented_context_sha256 the chain's last hash; context_chain the chain — and
+  calls write_extraction_events on its own connection with the codebook's absence sentinels, as
+  the local call passes them, and paper_event=False. One transaction then holds the legacy rows
+  and the claims.
+  (iv) Refusals. A reference or a chain kept for another paper is treated as absent, never used;
+  the writer's own refusals then fire (ClaimWithoutInputIdentity, ClaimWithoutPresentedContext,
+  RunLinkRefused with no run_id, ReuseKeyAlreadyClaimed on a second store of the same text) and
+  nothing is stored for the paper in either store. No new refusal class. Each is an EventRefused,
+  so U27's handlers pass it up and the run closes failed with its reason: a cloud store that the
+  event store refuses is a run fault, not a paper to skip. The tuple is not edited. After a
+  successful store the kept reference and chain for that paper are dropped.
+R798(e) — Unchanged by U40: a failed or exhausted paper writes nothing to the database, as today
+  (whether the cloud path should store an exhausted attempt's held fields is recorded, not ruled);
+  resume stays on cloud_extractions (get_pending_papers is not edited); the cloud run is not
+  activated (enforce_completeness already refuses unknown and missing names); the two legacy
+  tables stay the cloud artefact store (R794(c)); the two transports are not edited, so
+  anthropic_extractor.py:108–113 joins P7 as R795(c) provides; the reader, the monitor, the
+  audit and every exporter are not edited.
+R798(f) — Tests. A new file, tests/test_u40_cloud_claim_events.py, fail-first on the parent,
+  no server, no provider, no key, no gitignored fixture, on the scratch seam of
+  fake_probe_u40a.py: (1) test_cloud_gate_sees_what_store_result_wrote, the entry's test —
+  twelve papers stored through the instance's own load_parsed_text, send (its provider call
+  faked) and store_result with one identical categorical value: the gate raises
+  DistributionCollapseError; the arm holds the claims with a claim_inputs row per paper; each
+  claim's presented context is the paper's last request hash and its chain lists every send for
+  that paper; (2) the processing axis is untouched — for every paper effective_state's
+  processing and the count of paper_events rows are the same before and after the twelve stores
+  (green on the parent: a preservation case); (3) refusals leave nothing in either store — no
+  reference kept, no send made, state kept for another paper, no run_id, a second store of the
+  same text — each raising its EventRefused class; (4) the legacy rows and the claims agree per
+  field and value for a stored paper, a sentinel's "" snippet stored NULL in the claim; (5) the
+  keyword — a PaperFailure with paper_event=False refused with nothing written, and an AST census
+  finding the keyword passed by engine/cloud/base.py only. Tests that reach store_result and
+  expect it to store, in whatever file, are coupled (c): found by the census and the selected
+  runs, rewritten in the same commit with their assertions kept, on a seam that gives the
+  instance a run, a reference and a chain. test_a_cloud_run_with_no_claims_is_reported_skipped_not_ok
+  keeps its assertion for its true subject, a cloud run that stored no paper; its "until U40"
+  wording goes.
+R798(g) — Docs, in the engine commit: docs/architecture/pipeline.md's store_result line and each
+  CLAUDE.md line that describes what the cloud store writes or what the cloud gate reads are
+  brought to the fact — the store writes the legacy rows and the arm's claim events in one
+  transaction, no paper event; the gate reads those claims. Lines found by their text and quoted
+  before and after. No other docs edit.
+R798(h) — Rows. At 12af-U40B's item 0, a dated note on B9 and on C28: U40's design is ruled
+  (A1-β, R798(c), (d)); A1-α refused (R798(b)). Both rows close on U40 at the item 0 after it
+  lands, in C49's form. Four findings are not U40's and each needs a row whose class and package
+  are ruled from the record's precedent, not from a description: the processing axis has no arm,
+  so a comparison arm's per-paper outcome has no event (F2, and (b)); the judge loader gets no
+  span for a claim the pipeline's audit never located (F4); export_disagreement_pairs refuses a
+  registry holding any model arm outside three pre-manifest names, the spec's own local arm
+  included (F5); check_schema_parity's name test sends the spec's local arm to the cloud table
+  (F6). The build's report quotes, for each, the nearest existing rows on the same file or
+  function with their class and package; the rows are ruled after that report and entered at the
+  next item 0. F5 and F6 touch the local arm on any manifest registry, so they are not behind R71.
+R798(i) — Readings, no row: the pending foreign hook row at step 0, carried and named (finding 1,
+  the fourth shared-ledger reading); E1 (the brief's twelve files were a grep and the census
+  counts ten, the two others docstring mentions — the expectation was labelled a grep and the
+  census is the count); F1 (12ae_U28A.md §7's "the writer's preconditions hold" was true of the
+  arm and the run and not of the claim — the sentence R794(b) declined to build on, and the
+  reason this Phase A existed); finding 6 (2h said the monitor CLI was to be left as read if the
+  code gave no scratch root; CC drove it through a patched module global, labelled it FAKE, and
+  listed the live data root before and after — accepted, the safeguard was the right one; a
+  probe step a brief rules out is named as a deviation in the report, as this one was); F3 and
+  F7. §9's first item, whether the live registry holds a manifest-registered arm, is answered at
+  the rows ruling from a committed instrument's output if one shows the arms table, and stays
+  open otherwise; no new query on live is ordered here.
+R798(j) — The build opens as one brief, 12af-U40B, in R785(h)'s form: the read-out quoted the
+  writer, the store, the refusals and the transaction at 9b9f3d6 and the engine tree is unchanged
+  since; the three INFERRED items above are read at HEAD before the first edit and a difference
+  stops the build. No model call, no provider call, no live write; the standard gate by the
+  wrapper against 876–1069 s with R797(d)'s hold. This ruling states no standing rule: the id
+  list, the glosses file and STANDING_RULES.md are untouched at item 0, asserted by content.

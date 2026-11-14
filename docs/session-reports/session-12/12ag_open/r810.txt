@@ -1,0 +1,52 @@
+RULING [evidence-engine 12ag-R810] — 12ag-GATEUNIT-B accepted: the gate launches as a user unit;
+  982.43 s joins the series as a standard member with its launch form recorded; readings; the
+  PI closes session 12ag; no closeout gate; no standing rule
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the
+  12ag-GATEUNIT-B-R1 final report (tools commit b3d353417b9a2dcf004b532acceca6b7d29dd689; evidence
+  3e3c33486120ad40a48fb9e1ffe3a4a7eba1d4ba). Transcribe at item 0 of the 12ag-CLOSE brief below,
+  by transcribe_ruling.py, in the block after R809's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-GATEUNIT-B-R1 final report, quoted): "The unit wrote "nofile soft 500000
+    hard 500000" and "LANG=C.UTF-8", both as set."; "4c, the check: every assertion PASS."; "rc
+    1, as it must"; "REFUSED: user unit gate-unit_hold.service is loaded"; "Commit:
+    b3d353417b9a2dcf004b532acceca6b7d29dd689 (parent b7e5fb1)"; "Ledger:
+    8e5f4fe676840e7ddd00924ce3c23ce3902bfa66."; "The snapshot at 21:28:08 showed surgical-cv's
+    uvicorn only."; "summary "3573 passed, 17 deselected, 1 xfailed, 2 warnings in 980.31s"";
+    "ids 3574 against 3574, 0 / 0"; "Wall time: 982.43 s, inside 872–1065 s."; ""Started
+    gate-12ag_unit.service" at 21:28:21.998696Z"; "shows "-- No entries --""; "Commit:
+    3e3c33486120ad40a48fb9e1ffe3a4a7eba1d4ba (parent b3d3534), 74 new files, +13,426."; "Ledger:
+    5bb0961ba232ac61de2ba314127a7bf3720fb5ae (parent 9b6b7d6)."; "brief_12ag_GATEUNIT_B_R1.md is
+    603220349ec30b59ab607b653562307ac327cb68c42cf02578df11697b723cda, 6,726 B, 96 lines" (the
+    architect's copy: the same sha256, bytes and lines).
+  READ (CC's): findings 1–6; the edit as described; "It was not exercised, since no systemd-run
+    was made to fail."
+  READ (the architect's clone at 3e3c334): 12ag_GATEUNIT_B/gate_12ag_unit/gate_wall.txt "wall:
+    982.433030153 s"; git diff --stat 977c499 HEAD on engine tests scripts analysis review_specs,
+    empty; the plan's last line "The decision log in this file ends at R808.".
+  INFERRED: none.
+
+R810(a) — The 12ag-GATEUNIT-B-R1 final report is accepted as printed: the second probe with the
+  limit and LANG its line set; the tools commit b3d3534 (launch_gate.sh, run_gate.sh's comment,
+  the README; the dry run's check passed, the fail-first assertion failed on the tmux line,
+  both controls refused), ledger 8e5f4fe; the standard gate under gate-12ag_unit at the 12ag
+  block's counts, ids 0 / 0, nineteen files, no load in its window, its start line in the user
+  journal; the evidence commit 3e3c334, ledger 5bb0961; the resume file equal to the
+  architect's copy. The gate launches as a transient user unit from here (R808(b), R809(b)).
+R810(b) — The PI's ruling on the series, in his words: "As a standard member, with its launch
+  form recorded". 982.43 s is the forty-second member, standard, the first launched as a unit.
+  The band in force stays 872–1065 s until the wrap ruling sets 12ah's; the closeout computes
+  the figure from the last four standard gates on this host state.
+R810(c) — Readings, no row: finding 2 (the unit's journal "Consumed" line; its memory figure is
+  not a measure of the suite); finding 3 (one reading does not separate the launch's effect
+  from the day's); finding 4 (claude-config 9b6b7d6, another lane's skills commit, accepted
+  under R663(b)); finding 5 (the launcher's failed-launch path is read from the code and was
+  not exercised — carried with the tools items).
+R810(d) — The PI's ruling, in his words: "Wrap with close of CC session exit and archive then
+  continuation". Session 12ag closes on the tools change (b3d3534), with U30's design ruled
+  (R805(d), R807(b)) and its build not started. The closeout is written in 12af-CLOSE's form.
+  No closeout gate: the engine tree is unchanged since 977c499 and the unit gate is the gate
+  of record. The closeout drafts the lane line and does not apply it; the wrap ruling follows
+  its report.
+R810(e) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at item 0, asserted by content.

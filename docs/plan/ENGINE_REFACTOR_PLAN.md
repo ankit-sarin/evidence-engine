@@ -19110,3 +19110,122 @@ R808(f) — This ruling states one standing rule, (d). The id list gains "A R808
 | 2026-11-14 | R808(a) — The 12ag-GATEUNIT-A final report is accepted as printed: item 0 12c1108 (Blocks 204 and 205; the rules files untouched; the brief file equal to the architect's copy), ledger 55bdba1; the read-out e5055c6 with its census and captured reads, ledger e9d4e4c. No unit was launched and no script run. CC's two slips (finding 9) are readings. R808(b) — The design, the PI's ruling on the five recommendations put to him, in his words: "Agree with your recommendations". (1) launch_gate.sh launches the gate as a transient systemd-run --user unit in place of tmux, the read-out's option (A); there is one launch form. (2) The unit has no memory cap, and the launch record says so. (3) The launch line gives the unit the launching shell's open-files limit and its LANG; no provider key and no other variable is passed. (4) The change is validated by a dry run in 12aa-SETUP's form and then by one standard gate under the hold; that gate's wall time is a reading, and how it enters the series is ruled after it is read. (5) The standing rule of (d). R808(c) — The evidence set stays the nineteen files of R738(d). The global rule's status report and Linger confirmation are Claude Code's at each launch: the launcher prints them after the launch and the report carries them. A twentieth file is not added; it would change a standing rule and has not been put to the PI. R808(d) — Rule from here, restating what R731(b) records: every gate's evidence directory records the complete launch line as it was run, the launcher's own command included, whatever launches it. From this change the launcher is systemd-run --user. R738(c)'s form is unchanged: one variable holds the line, is written to launch_line.txt and is then run. R808(e) — Readings, no row: the user manager reads degraded on two failed units, neither this lane's, and nothing is cleared (the cross-lane item for dgx-infra); gates launched from a Claude Code session have carried both provider keys in their environment, read by no test, and a unit carries neither; the cron nightlies' 984–986 s beside the tmux gates' 963–980 s. R804(b)'s exception was used once and is spent. R808(f) — This ruling states one standing rule, (d). The id list gains "A R808(d)" and STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling (R766(b)). R731(b) stays in the list; R808(d) is read with it. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-GATEUNIT-A final report (item 0 12c1108; read-out e5055c6) |
 
 The decision log in this file ends at R808.
+
+**Block 207.** *Transcribed 2026-11-14 (item 0 of the 12ag-CLOSE brief), in its own commit with Block 208 and the brief file it orders, in the R597(e) form:* ruling R809, made by PI on architect recommendation on 2026-11-14 UTC, during session 12ag, on the 12ag-GATEUNIT-B stop report (item 0 `b7e5fb1011632b7ff082c4aca7a5d6ad9a166424`; stopped at step 2, no tool edited). The 12ag-GATEUNIT-B-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ag-R809] — the 12ag-GATEUNIT-B stop at the probe is correct and is the
+  architect's; the unit's open-files limit is the smaller of the shell's and the manager's; a
+  gate's journal start line is required and its stop line reported if present; item 0 accepted;
+  no standing rule; the build resumes at a fresh probe
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the
+  12ag-GATEUNIT-B stop report (item 0 b7e5fb1011632b7ff082c4aca7a5d6ad9a166424; stopped at step
+  2, no tool edited). Transcribe at the next item 0, by transcribe_ruling.py, in the block after
+  R808's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "the line set LimitNOFILE=524288 (this shell's soft limit) and the unit got 500000
+    soft, 500000 hard"; "/proc/2694/limits (that is systemd --user) reads "Max open files 500000
+    500000""; "The probe unit started and ran under the degraded manager, so I3 holds"; "The
+    three tools still hash to R3's values"; "no gate-* unit is loaded"; "r808.txt: 801dfd05…75c7,
+    4,737 B, 58 lines, equal to your hash."; "3 header lines, 1 new section, 9 "Named by" lines
+    that only append ids, 0 other."; "brief_12ag_GATEUNIT_B.md is
+    884138d299b235254d7266c72f0a9fb812bd15f28405e8225c5cff74f2dd5822, 22,133 B, 306 lines" (the
+    architect's copy: the same sha256, bytes and lines); "Commit:
+    b7e5fb1011632b7ff082c4aca7a5d6ad9a166424 (parent e5055c6)"; "Plan now:
+    3dbe145a0413afec97e2b3f747b442c4b7e80e36951cd90d99d770b4800cdabd, 3,243,845 B, 19,112 lines.";
+    "Ledger: 14cea87271bcc2cdb1ae25a24485cfedcf9f6249 (parent 6c279a6)"; "LANG C.UTF-8 as set";
+    "oom_score_adj 200"; "User journal: one line, "Started gate-probe-12ag.service …"".
+  READ (CC's): findings 1–4; options (a)–(c); "There is no stop or "Deactivated" line".
+  READ (the architect's clone, 12ag_GATEUNIT_A/12ag_GATEUNIT_A.md:145): "DefaultLimitNOFILE=500000".
+  INFERRED: none.
+
+R809(a) — The stop is correct and is the architect's: the brief's C1 set the unit's limit to
+  the launching shell's, 524288, although the Phase A read-out already quoted the manager's
+  500000, which a unit cannot exceed. The architect's errors this session: five. None reached
+  a commit, and no tool was edited.
+R809(b) — The PI's ruling on the limit, option (a), in his words: "1 a". The launch line sets
+  the unit's open-files limit to the smaller of the launching shell's own soft limit and the
+  user manager's own hard limit, both read at launch and neither a literal, and the launch
+  line records the value used. This replaces the wording of R808(b)(3) on the limit; the rest
+  of R808(b) stands.
+R809(c) — The PI's ruling on the journal, in his words: "Require the start line only; report a
+  stop line if one appears". A gate's acceptance asks for the unit's start line in the user
+  journal; its end is the gate's own exit and result files.
+R809(d) — Item 0 is accepted as reported: b7e5fb1 (Block 206; "A R808(d)" on the list, the
+  file regenerated within R766(b)'s three kinds; the brief file equal to the architect's
+  copy), ledger 14cea87. claude-config at 6c279a6, one commit of another lane touching
+  neither the ledger nor primer.md, is accepted under R663(b). Readings, no row: a degraded
+  user manager starts a transient unit; a unit's oom_score_adj reads 200, where the read-out
+  inferred 100.
+R809(e) — This ruling states no standing rule. The build resumes under the resume below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-14 | R809(a) — The stop is correct and is the architect's: the brief's C1 set the unit's limit to the launching shell's, 524288, although the Phase A read-out already quoted the manager's 500000, which a unit cannot exceed. The architect's errors this session: five. None reached a commit, and no tool was edited. R809(b) — The PI's ruling on the limit, option (a), in his words: "1 a". The launch line sets the unit's open-files limit to the smaller of the launching shell's own soft limit and the user manager's own hard limit, both read at launch and neither a literal, and the launch line records the value used. This replaces the wording of R808(b)(3) on the limit; the rest of R808(b) stands. R809(c) — The PI's ruling on the journal, in his words: "Require the start line only; report a stop line if one appears". A gate's acceptance asks for the unit's start line in the user journal; its end is the gate's own exit and result files. R809(d) — Item 0 is accepted as reported: b7e5fb1 (Block 206; "A R808(d)" on the list, the file regenerated within R766(b)'s three kinds; the brief file equal to the architect's copy), ledger 14cea87. claude-config at 6c279a6, one commit of another lane touching neither the ledger nor primer.md, is accepted under R663(b). Readings, no row: a degraded user manager starts a transient unit; a unit's oom_score_adj reads 200, where the read-out inferred 100. R809(e) — This ruling states no standing rule. The build resumes under the resume below. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-GATEUNIT-B stop report (item 0 b7e5fb1; stopped at step 2, no tool edited) |
+
+The decision log in this file ends at R809.
+
+**Block 208.** *Transcribed 2026-11-14 (item 0 of the 12ag-CLOSE brief), in its own commit with Block 207 and the brief file it orders, in the R597(e) form:* ruling R810, made by PI on architect recommendation on 2026-11-14 UTC, during session 12ag, on the 12ag-GATEUNIT-B-R1 final report (tools commit `b3d353417b9a2dcf004b532acceca6b7d29dd689`; evidence `3e3c33486120ad40a48fb9e1ffe3a4a7eba1d4ba`). The 12ag-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ag-R810] — 12ag-GATEUNIT-B accepted: the gate launches as a user unit;
+  982.43 s joins the series as a standard member with its launch form recorded; readings; the
+  PI closes session 12ag; no closeout gate; no standing rule
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the
+  12ag-GATEUNIT-B-R1 final report (tools commit b3d353417b9a2dcf004b532acceca6b7d29dd689; evidence
+  3e3c33486120ad40a48fb9e1ffe3a4a7eba1d4ba). Transcribe at item 0 of the 12ag-CLOSE brief below,
+  by transcribe_ruling.py, in the block after R809's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-GATEUNIT-B-R1 final report, quoted): "The unit wrote "nofile soft 500000
+    hard 500000" and "LANG=C.UTF-8", both as set."; "4c, the check: every assertion PASS."; "rc
+    1, as it must"; "REFUSED: user unit gate-unit_hold.service is loaded"; "Commit:
+    b3d353417b9a2dcf004b532acceca6b7d29dd689 (parent b7e5fb1)"; "Ledger:
+    8e5f4fe676840e7ddd00924ce3c23ce3902bfa66."; "The snapshot at 21:28:08 showed surgical-cv's
+    uvicorn only."; "summary "3573 passed, 17 deselected, 1 xfailed, 2 warnings in 980.31s"";
+    "ids 3574 against 3574, 0 / 0"; "Wall time: 982.43 s, inside 872–1065 s."; ""Started
+    gate-12ag_unit.service" at 21:28:21.998696Z"; "shows "-- No entries --""; "Commit:
+    3e3c33486120ad40a48fb9e1ffe3a4a7eba1d4ba (parent b3d3534), 74 new files, +13,426."; "Ledger:
+    5bb0961ba232ac61de2ba314127a7bf3720fb5ae (parent 9b6b7d6)."; "brief_12ag_GATEUNIT_B_R1.md is
+    603220349ec30b59ab607b653562307ac327cb68c42cf02578df11697b723cda, 6,726 B, 96 lines" (the
+    architect's copy: the same sha256, bytes and lines).
+  READ (CC's): findings 1–6; the edit as described; "It was not exercised, since no systemd-run
+    was made to fail."
+  READ (the architect's clone at 3e3c334): 12ag_GATEUNIT_B/gate_12ag_unit/gate_wall.txt "wall:
+    982.433030153 s"; git diff --stat 977c499 HEAD on engine tests scripts analysis review_specs,
+    empty; the plan's last line "The decision log in this file ends at R808.".
+  INFERRED: none.
+
+R810(a) — The 12ag-GATEUNIT-B-R1 final report is accepted as printed: the second probe with the
+  limit and LANG its line set; the tools commit b3d3534 (launch_gate.sh, run_gate.sh's comment,
+  the README; the dry run's check passed, the fail-first assertion failed on the tmux line,
+  both controls refused), ledger 8e5f4fe; the standard gate under gate-12ag_unit at the 12ag
+  block's counts, ids 0 / 0, nineteen files, no load in its window, its start line in the user
+  journal; the evidence commit 3e3c334, ledger 5bb0961; the resume file equal to the
+  architect's copy. The gate launches as a transient user unit from here (R808(b), R809(b)).
+R810(b) — The PI's ruling on the series, in his words: "As a standard member, with its launch
+  form recorded". 982.43 s is the forty-second member, standard, the first launched as a unit.
+  The band in force stays 872–1065 s until the wrap ruling sets 12ah's; the closeout computes
+  the figure from the last four standard gates on this host state.
+R810(c) — Readings, no row: finding 2 (the unit's journal "Consumed" line; its memory figure is
+  not a measure of the suite); finding 3 (one reading does not separate the launch's effect
+  from the day's); finding 4 (claude-config 9b6b7d6, another lane's skills commit, accepted
+  under R663(b)); finding 5 (the launcher's failed-launch path is read from the code and was
+  not exercised — carried with the tools items).
+R810(d) — The PI's ruling, in his words: "Wrap with close of CC session exit and archive then
+  continuation". Session 12ag closes on the tools change (b3d3534), with U30's design ruled
+  (R805(d), R807(b)) and its build not started. The closeout is written in 12af-CLOSE's form.
+  No closeout gate: the engine tree is unchanged since 977c499 and the unit gate is the gate
+  of record. The closeout drafts the lane line and does not apply it; the wrap ruling follows
+  its report.
+R810(e) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at item 0, asserted by content.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-14 | R810(a) — The 12ag-GATEUNIT-B-R1 final report is accepted as printed: the second probe with the limit and LANG its line set; the tools commit b3d3534 (launch_gate.sh, run_gate.sh's comment, the README; the dry run's check passed, the fail-first assertion failed on the tmux line, both controls refused), ledger 8e5f4fe; the standard gate under gate-12ag_unit at the 12ag block's counts, ids 0 / 0, nineteen files, no load in its window, its start line in the user journal; the evidence commit 3e3c334, ledger 5bb0961; the resume file equal to the architect's copy. The gate launches as a transient user unit from here (R808(b), R809(b)). R810(b) — The PI's ruling on the series, in his words: "As a standard member, with its launch form recorded". 982.43 s is the forty-second member, standard, the first launched as a unit. The band in force stays 872–1065 s until the wrap ruling sets 12ah's; the closeout computes the figure from the last four standard gates on this host state. R810(c) — Readings, no row: finding 2 (the unit's journal "Consumed" line; its memory figure is not a measure of the suite); finding 3 (one reading does not separate the launch's effect from the day's); finding 4 (claude-config 9b6b7d6, another lane's skills commit, accepted under R663(b)); finding 5 (the launcher's failed-launch path is read from the code and was not exercised — carried with the tools items). R810(d) — The PI's ruling, in his words: "Wrap with close of CC session exit and archive then continuation". Session 12ag closes on the tools change (b3d3534), with U30's design ruled (R805(d), R807(b)) and its build not started. The closeout is written in 12af-CLOSE's form. No closeout gate: the engine tree is unchanged since 977c499 and the unit gate is the gate of record. The closeout drafts the lane line and does not apply it; the wrap ruling follows its report. R810(e) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at item 0, asserted by content. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-GATEUNIT-B-R1 final report (tools commit b3d3534; evidence 3e3c334) |
+
+The decision log in this file ends at R810.

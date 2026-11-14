@@ -1,0 +1,5 @@
+# R510 for session 12ag: six-cell INT- rows at 54266b7 (HEAD at the 12ag open, five WR5 commits past the 12af closeout) and at e329ced (12ag-CLOSE item 0)
+54266b7: 213; e329ced: 213; rows in 0 []; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first token of the Owning-package cell compared, row by row)
+no row opened or closed in 12ag, and no note on a row (R805(d) and R807(c) place their notes at and after U30's build)
+method: lines starting '| INT-' with six ' | '-separated cells, as 12af_close/r510_12af.txt's method line

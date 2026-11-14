@@ -1,0 +1,5 @@
+# git diff --stat 54266b7 HEAD -- docs/session-reports/tools, at 2026-11-14T21:57:53Z, HEAD e329cedc280e8136cc825e56dc59c54fd9329968
+ docs/session-reports/tools/README.md      |  6 ++++--
+ docs/session-reports/tools/launch_gate.sh | 10 +++++++---
+ docs/session-reports/tools/run_gate.sh    |  2 +-
+ 3 files changed, 12 insertions(+), 6 deletions(-)

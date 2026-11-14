@@ -3,9 +3,9 @@
 **Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
 - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `4013412bbbe754bd8f908ab20dbb4879c2d6b230f4ef8177d4dcf5550fb027a2`
-- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `5c301ffbb7a4e3e7697006590a863f4df36f03386e6be96262acbbb27ad9a91e`
-- Selection: the id list: Tier A 89, Tier B 8, 97 of 1677 clauses in the log.
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `3dbe145a0413afec97e2b3f747b442c4b7e80e36951cd90d99d770b4800cdabd`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `f3fc106cfa1514a890cd4bac8d95927acf2034f49cb0197285b690c0d2bbda95`
+- Selection: the id list: Tier A 90, Tier B 8, 98 of 1694 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
 
 # Tier A — process rules
@@ -263,7 +263,7 @@ R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is
   non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
 ```
 
-Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c), R784(c), R797(c), R804(d).
+Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c), R784(c), R797(c), R804(d), R806(d).
 
 Gloss (CC's, not ruled): Another lane's committed claude-config change that leaves this lane's rows and primer lines 41–45 intact is accepted as found, noted by hash and lane.
 
@@ -951,7 +951,7 @@ R731(b) — Finding F4 is the architect's: the brief named the 12y-U18C gate dir
   brief's I3 quotes it from there. No row.
 ```
 
-Named by: R732(d), R738(c).
+Named by: R732(d), R738(c), R808(d), R808(f).
 
 Gloss (CC's, not ruled): Every gate's evidence directory records the complete launch line, tmux wrapper included.
 
@@ -1114,7 +1114,7 @@ R738(c) — Finding 3: I3's premise that a wrapper writes the launch line was th
   written and the line run cannot differ.
 ```
 
-Named by: none.
+Named by: R808(d).
 
 Gloss (CC's, not ruled): The launch step holds the line in one variable, writes it to launch_line.txt, and runs that variable, so the two cannot differ.
 
@@ -1128,7 +1128,7 @@ R738(d) — Finding 4: gate_12aa_open/'s nineteen files (gate_c2's set: collecte
   seventeen stand as the earlier form, its launch line reconstructed (R733(a)).
 ```
 
-Named by: none.
+Named by: R808(c).
 
 Gloss (CC's, not ruled): gate_12aa_open's nineteen files are the gate evidence set of record.
 
@@ -1337,7 +1337,7 @@ R763(c) — Finding 50: the notes after the gate, in U20's form, is the record's
   the check is corrected and re-run, under a ruling; this once stands.
 ```
 
-Named by: R765(f), R765(h), R766(d), R767(a), R769(a).
+Named by: R765(f), R765(h), R766(d), R767(a), R769(a), R807(a).
 
 Gloss (CC's, not ruled): A check that crashes is a check that failed: the crash is reported before the check is corrected and re-run, under a ruling; the clause's other items are dated.
 
@@ -1354,7 +1354,7 @@ R766(b) — The 17 "Named by" lines are accepted: each only appends ids, no exis
   classification is written by the check into its own evidence file, never by eye.
 ```
 
-Named by: R767(c), R768(a), R775(b), R783(g), R784(g), R805(h).
+Named by: R767(c), R768(a), R775(b), R783(g), R784(g), R805(h), R806(a), R806(b), R807(a), R808(f).
 
 Gloss (CC's, not ruled): A regeneration of STANDING_RULES.md after new blocks moves its derived "Named by" lines; the pre-commit check classifies every changed line and allows only the three header lines, a new section for an id the list gained, and a "Named by" line that only appends ids.
 
@@ -1411,7 +1411,7 @@ R783(d) — Finding 1. Rule from here: a full hash is proved to exist by git cat
   item 0 (R754(c)(iii)), the file regenerated there.
 ```
 
-Named by: R784(a), R795(i).
+Named by: R784(a), R795(i), R806(d).
 
 Gloss (CC's, not ruled): In this lane a full hash is shown to exist by git cat-file -e <hash>^{commit} in its own repository; git rev-parse --verify on a 40-character hash shows only that it is well formed, and a brief's step-0 hash check uses the cat-file form.
 
@@ -1454,7 +1454,7 @@ R805(c) — The PI's ruling, in his words: "Narrow, and allow identifiers". Rule
   separate reading. An expectation item may carry its value.
 ```
 
-Named by: none.
+Named by: R807(a).
 
 Gloss (CC's, not ruled): R667(e) applies to INFERRED — BLOCKING items only: a blocking item names the fact that must hold and may name the thing it is about by its identifier (a commit, a file, a session); a quantity, a time or a line number a brief wants checked is a separate reading, and an expectation item may carry its value.
 
@@ -1470,9 +1470,24 @@ R805(f) — The hold, the PI's ruling: "Yes". Rule from here: before a standard 
   confounded (R677(f)). A gate brief does not restate it.
 ```
 
-Named by: none.
+Named by: R807(a).
 
 Gloss (CC's, not ruled): Before a standard gate is launched, a snapshot naming another lane's full test suite or an encode makes the launch wait for it: one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock; a launch at the bound is reported with the job named, its value enters the series as confounded (R677(f)), and a gate brief does not restate it.
+
+## R808(d)
+
+2026-11-14, session 12ag.
+
+```text
+R808(d) — Rule from here, restating what R731(b) records: every gate's evidence directory
+  records the complete launch line as it was run, the launcher's own command included,
+  whatever launches it. From this change the launcher is systemd-run --user. R738(c)'s form
+  is unchanged: one variable holds the line, is written to launch_line.txt and is then run.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): Every gate's evidence directory records the complete launch line as it was run, the launcher's own command included, whatever launches it; from this change the launcher is systemd-run --user, and R738(c)'s one-variable form is unchanged.
 
 # Tier B — engine governance, pending the adoption ruling
 

@@ -1,0 +1,58 @@
+RULING [evidence-engine 12ag-R808] — 12ag-GATEUNIT-A accepted; the gate launches as a
+  systemd-run --user unit: the design on the PI's word; the evidence set stays nineteen; one
+  standing rule on the launch line's record; readings; the tools change is built and validated
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the
+  12ag-GATEUNIT-A final report (item 0 12c11080e8e83685b20817f66868083ee21e6782; read-out
+  e5055c67ec33fd5cf62025200e4d56dc42f068b9). Transcribe at item 0 of the 12ag-GATEUNIT-B brief
+  below, by transcribe_ruling.py, in the block after R807's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-GATEUNIT-A final report, quoted): "Commit: 12c11080e8e83685b20817f66868083ee21e6782
+    (parent 19b1f01)"; "Ledger: 55bdba19f0c94865059972be410d805d48f7b01b (parent a4d4296)";
+    "Commit: e5055c67ec33fd5cf62025200e4d56dc42f068b9 (parent 12c1108)"; "Ledger
+    e9d4e4c2ff5f1372662edba468758bcdc89abc54"; "Plan now:
+    a61e2e974d53a15be4f81a78fa2c03647716bb3fa1351fca7012cffca63d9377, 3,235,878 B, 19,043 lines.";
+    "brief_12ag_GATEUNIT_A.md is 33ab527def2c53c21866ed20b6545feabe59446e1a4d77147b6dcbe43a009ac7,
+    20,507 B, 281 lines" (the architect's copy: the same sha256, bytes and lines); "tmux appears
+    only in launch_gate.sh:8 (the refusal), :36 (the launch line) and :38 (its eval), plus the
+    comment at run_gate.sh:2."; "A caller waits on gate_rc.txt. That does not change with the
+    launch."; "Linger=yes. systemd 255."; "DefaultOOMPolicy=stop, DefaultLimitNOFILESoft=1024
+    (this shell has 524288)"; "the unit has LANG en_US.utf8 (this session C.UTF-8), no .venv on
+    PATH, no VIRTUAL_ENV, and neither provider key".
+  READ (CC's): findings 1–9; the census's classes, CC's judgement; what could not be established
+    without launching a unit.
+  READ (the architect's clone at e5055c6): 12ag_GATEUNIT_A/12ag_GATEUNIT_A.md §8 option (A), "The
+    launch line: `systemd-run --user --unit=<unit> --collect [--property=…] bash $E/run_gate.sh
+    $E <name> $REF $REFD $*`, held in `LINE`, written to `launch_line.txt` and run (R738(c)
+    unchanged)"; run_gate.sh:10 ".venv/bin/python -m pytest"; the plan's sha256 as the report
+    gives it, last line "The decision log in this file ends at R807.".
+  INFERRED: none.
+
+R808(a) — The 12ag-GATEUNIT-A final report is accepted as printed: item 0 12c1108 (Blocks 204
+  and 205; the rules files untouched; the brief file equal to the architect's copy), ledger
+  55bdba1; the read-out e5055c6 with its census and captured reads, ledger e9d4e4c. No unit was
+  launched and no script run. CC's two slips (finding 9) are readings.
+R808(b) — The design, the PI's ruling on the five recommendations put to him, in his words:
+  "Agree with your recommendations". (1) launch_gate.sh launches the gate as a transient
+  systemd-run --user unit in place of tmux, the read-out's option (A); there is one launch
+  form. (2) The unit has no memory cap, and the launch record says so. (3) The launch line
+  gives the unit the launching shell's open-files limit and its LANG; no provider key and no
+  other variable is passed. (4) The change is validated by a dry run in 12aa-SETUP's form and
+  then by one standard gate under the hold; that gate's wall time is a reading, and how it
+  enters the series is ruled after it is read. (5) The standing rule of (d).
+R808(c) — The evidence set stays the nineteen files of R738(d). The global rule's status
+  report and Linger confirmation are Claude Code's at each launch: the launcher prints them
+  after the launch and the report carries them. A twentieth file is not added; it would change
+  a standing rule and has not been put to the PI.
+R808(d) — Rule from here, restating what R731(b) records: every gate's evidence directory
+  records the complete launch line as it was run, the launcher's own command included,
+  whatever launches it. From this change the launcher is systemd-run --user. R738(c)'s form
+  is unchanged: one variable holds the line, is written to launch_line.txt and is then run.
+R808(e) — Readings, no row: the user manager reads degraded on two failed units, neither this
+  lane's, and nothing is cleared (the cross-lane item for dgx-infra); gates launched from a
+  Claude Code session have carried both provider keys in their environment, read by no test,
+  and a unit carries neither; the cron nightlies' 984–986 s beside the tmux gates' 963–980 s.
+  R804(b)'s exception was used once and is spent.
+R808(f) — This ruling states one standing rule, (d). The id list gains "A R808(d)" and
+  STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling (R766(b)).
+  R731(b) stays in the list; R808(d) is read with it.

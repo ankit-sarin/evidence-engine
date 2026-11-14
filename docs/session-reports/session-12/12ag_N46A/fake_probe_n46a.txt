@@ -1,0 +1,33 @@
+=== (A) one unexpected span, cited
+  run_arm: returned
+  manifest (run_id, end_status, end_reason, ended): [(1, None, None, 0), (2, 'completed', None, 1)]
+  paper 1: cloud_extractions 1; cloud_evidence_spans 21 (invented_field 1); field_events 20 over 20 names, outside the codebook []; claim_inputs 1
+  extracted_data: keys ['fields'], fields 21, invented_field in it True
+  run_calls (outcome, detail, digest present): [('completed', None, 1)]
+  logged for paper 1: ["engine.core.completeness WARNING: Paper 1 (openai_o4_mini_2025_04_16_high): unexpected field(s) ['invented_field'] dropped (R118) — 21/20 fields, unexpected=['invented_field']"]
+  get_pending_papers: [] — paper 1 pending: False
+
+=== (B) one unexpected span, uncited
+  run_arm: returned
+  manifest (run_id, end_status, end_reason, ended): [(1, None, None, 0), (2, 'completed', None, 1)]
+  paper 1: cloud_extractions 0; cloud_evidence_spans 0 (invented_field 0); field_events 0 over 0 names, outside the codebook []; claim_inputs 0
+  extracted_data: keys NoneType, fields None, invented_field in it None
+  run_calls (outcome, detail, digest present): [('completed', None, 1)]
+  logged for paper 1: ["engine.core.completeness WARNING: Paper 1 (openai_o4_mini_2025_04_16_high): unexpected field(s) ['invented_field'] dropped (R118) — 21/20 fields, unexpected=['invented_field']", 'engine.cloud.openai_extractor ERROR: Paper 1: store_result failed: Paper 1 (openai_o4_mini_2025_04_16_high): 1 field(s) carry a value with no evidence [mode=legacy]. invented_field (VALUE_WITHOUT_CITATION) [UncitedValueError: Paper 1 (openai_o4_mini_2025_04_16_high): 1 field(s) carry a value with no evidence [mode=legacy]. invented_field (VALUE_WITHOUT_CITATION)]']
+  get_pending_papers: [1, 2] — paper 1 pending: True
+
+=== (C) control: no unexpected span
+  run_arm: returned
+  manifest (run_id, end_status, end_reason, ended): [(1, None, None, 0), (2, 'completed', None, 1)]
+  paper 1: cloud_extractions 1; cloud_evidence_spans 20 (invented_field 0); field_events 20 over 20 names, outside the codebook []; claim_inputs 1
+  extracted_data: keys ['fields'], fields 20, invented_field in it False
+  run_calls (outcome, detail, digest present): [('completed', None, 1)]
+  logged for paper 1: nothing
+  get_pending_papers: [] — paper 1 pending: False
+
+=== readers driven on (A)'s database (read-only)
+  census.load_spans: paper 1 openai_o4_mini_2025_04_16_high: 21 spans; invented_field among them 1; field_class('invented_field') = ''
+  judge_provenance.unjoined_summary's cloud count query: ('openai_o4_mini_2025_04_16_high', 1) -> 21 against 20 codebook fields
+  spanloss_autopsy.load_extractions: paper 1: spans_stored [21], spans_in_response [21], verdict ['EXTRACTION']; EXPECTED_SPANS 20
+=== the record
+SDK constructions recorded (FakeOpenAI, no client): 3, keywords [{'api_key': 'placeholder-not-a-credential', 'max_retries': 0}]; provider creates 6; sleeps []; httpx sends 0; socket connects 0; real openai.OpenAI never constructed (patched in every case)

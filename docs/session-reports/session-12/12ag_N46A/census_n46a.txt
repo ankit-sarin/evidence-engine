@@ -1,0 +1,283 @@
+
+-- (a) literals naming a cloud table: 103
+  engine/analysis/concordance.py:192 <module>.check_schema_parity | SELECT | SELECT DISTINCT codebook_hash FROM cloud_extractions WHERE arm = ?
+  engine/cloud/base.py:223 <module>.CloudExtractorBase.get_pending_papers | SELECT | SELECT p.id AS paper_id, p.title, p.authors, p.year FROM papers p WHERE {…} AND p.id NOT IN ( SELECT ce.paper_id FROM cloud_extractions ce WHERE ce.arm = ? ) ORDER BY p.i
+  engine/cloud/base.py:444 <module>.CloudExtractorBase.store_result | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_data, reasoning_trace, prompt_text, input_tokens, output_tokens, reasoning_tokens, cost_usd, extract
+  engine/cloud/base.py:463 <module>.CloudExtractorBase.store_result | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier, notes) VALUES (?, ?, ?, ?, ?, ?, ?)
+  engine/cloud/base.py:591 <module>.CloudExtractorBase.get_progress | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?
+  engine/cloud/base.py:596 <module>.CloudExtractorBase.get_progress | SELECT | SELECT COALESCE(SUM(cost_usd), 0) FROM cloud_extractions WHERE arm = ?
+  engine/cloud/schema.py:60 <module>.init_cloud_tables | ALTER | ALTER TABLE cloud_extractions ADD COLUMN {…} TEXT
+  engine/cloud/schema.py:5 <module> | CREATE | CREATE TABLE IF NOT EXISTS cloud_extractions ( id INTEGER PRIMARY KEY, paper_id INTEGER NOT NULL REFERENCES papers(id), arm TEXT NOT NULL, model_string TEXT NOT NULL, ext
+  engine/cloud/schema.py:51 <module>.init_cloud_tables | ALTER | ALTER TABLE cloud_evidence_spans ADD COLUMN notes TEXT
+  engine/cloud/schema.py:69 <module>.init_cloud_tables | UPDATE | UPDATE cloud_evidence_spans SET confidence = 0.0 WHERE confidence IS NULL
+  engine/cloud/schema.py:70 <module>.init_cloud_tables | UPDATE | UPDATE cloud_evidence_spans SET tier = 1 WHERE tier IS NULL
+  engine/cloud/schema.py:72 <module>.init_cloud_tables | ALTER | ALTER TABLE cloud_evidence_spans RENAME TO _cloud_evidence_spans_old; CREATE TABLE cloud_evidence_spans ( id INTEGER PRIMARY KEY, cloud_extraction_id INTEGER NOT NULL REF
+  engine/cloud/schema.py:63 <module>.init_cloud_tables | PRAGMA | PRAGMA table_info(cloud_evidence_spans)
+  engine/cloud/schema.py:49 <module>.init_cloud_tables | PRAGMA | PRAGMA table_info(cloud_evidence_spans)
+  engine/cloud/schema.py:57 <module>.init_cloud_tables | PRAGMA | PRAGMA table_info(cloud_extractions)
+  scripts/_pass2_eyeball.py:54 <module>.load_arm_value | SELECT | SELECT extracted_data FROM cloud_extractions WHERE paper_id=? AND arm=?
+  scripts/backfill_cloud_spans.py:50 <module>.main | SELECT | SELECT ce.id, ce.paper_id, ce.arm, ce.extracted_data FROM cloud_extractions ce WHERE ce.id NOT IN (SELECT DISTINCT cloud_extraction_id FROM cloud_evidence_spans)
+  scripts/backfill_cloud_spans.py:106 <module>.main | SELECT | SELECT arm, COUNT(DISTINCT ce.paper_id) FROM cloud_evidence_spans ces JOIN cloud_extractions ce ON ces.cloud_extraction_id = ce.id GROUP BY ce.arm
+  scripts/backfill_cloud_spans.py:76 <module>.main | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier, notes) VALUES (?, ?, ?, ?, ?, ?, ?)
+  scripts/reparse_cloud_spans.py:44 <module>.main | SELECT | SELECT ce.id, ce.paper_id, ce.arm, ce.model_string, ce.extracted_data FROM cloud_extractions ce WHERE ce.extracted_data IS NOT NULL AND (SELECT COUNT(*) FROM cloud_eviden
+  scripts/reparse_cloud_spans.py:75 <module>.main | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier) VALUES (?, ?, ?, ?, ?, ?)
+  scripts/run_cloud_extraction.py:63 <module>._cloud_arm_names | SELECT | SELECT DISTINCT arm FROM cloud_extractions
+  analysis/eval/analyze_schema_eval.py:118 <module>.agreement_vs_run6 | SELECT | SELECT c.paper_id, s.field_name, s.value FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s.cloud_extraction_id WHERE c.arm = ?
+  analysis/eval/parse01/sweep.py:114 <module>.main | SELECT | SELECT paper_id, arm, input_tokens FROM cloud_extractions
+  analysis/paper1/adjudication.py:60 <module>._get_cloud_snippet | SELECT | SELECT cs.source_snippet FROM cloud_evidence_spans cs JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id WHERE ce.paper_id = ? AND cs.field_name = ? AND ce.arm =
+  analysis/paper1/judge_provenance.py:306 <module>.unjoined_summary | SELECT | SELECT c.arm, c.paper_id, COUNT(*) FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s.cloud_extraction_id GROUP BY 1,2
+  analysis/paper1/pi_audit_sampler.py:272 <module>._fetch_arm_value_and_snippet | SELECT | SELECT value, source_snippet FROM cloud_evidence_spans WHERE cloud_extraction_id IN ( SELECT id FROM cloud_extractions WHERE paper_id = ? AND arm = ? ) AND field_name = ?
+  analysis/paper1/spanloss_autopsy.py:176 <module>.surviving_fields | SELECT | SELECT s.field_name FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s.cloud_extraction_id WHERE c.paper_id = ? AND c.arm = ?
+  analysis/paper1/spanloss_autopsy.py:137 <module>.load_extractions | SELECT | SELECT c.paper_id, c.arm, c.extracted_data, c.extracted_at, c.input_tokens, c.output_tokens, c.reasoning_tokens, (SELECT COUNT(*) FROM cloud_evidence_spans s WHERE s.clou
+  analysis/provenance/census.py:75 <module>.load_spans | SELECT | SELECT c.paper_id AS paper_id, c.arm AS arm, s.id AS span_row_id, s.field_name, s.value, s.source_snippet FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s
+  analysis/provenance/census.py:81 <module>.load_spans | name only | cloud_evidence_spans
+  tests/_corpus_fixture.py:49 <module> | CREATE | CREATE TABLE papers ( id INTEGER PRIMARY KEY, title TEXT NOT NULL, status TEXT NOT NULL, authors TEXT, year INTEGER, source TEXT NOT NULL, created_at TEXT NOT NULL, updat
+  tests/_corpus_fixture.py:124 <module>.build_fixture | INSERT | INSERT INTO cloud_extractions (paper_id, arm, cost_usd) VALUES (?, 'openai', 1.5)
+  tests/analysis/paper1/test_judge_cli.py:112 <module>.setup_review._add_cloud | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_data, extraction_schema_hash, extracted_at) VALUES (?, ?, 'm', '{}', '', ?)
+  tests/analysis/paper1/test_judge_cli.py:120 <module>.setup_review._add_cloud | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier) VALUES (?, ?, ?, ?, 0.9, 1)
+  tests/analysis/paper1/test_judge_loader.py:232 <module>.seeded_db._add_cloud_extraction | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_data, extraction_schema_hash, extracted_at) VALUES (?, ?, 'm', '{}', '', ?)
+  tests/analysis/paper1/test_judge_loader.py:240 <module>.seeded_db._add_cloud_extraction | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier) VALUES (?, ?, ?, ?, 0.9, 1)
+  tests/analysis/paper1/test_judge_loader.py:302 <module>._mirror_spans_into_events | SELECT | SELECT ce.arm, ce.paper_id, cs.field_name, cs.value, cs.source_snippet FROM cloud_evidence_spans cs JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
+  tests/analysis/paper1/test_pi_audit_sampler.py:88 <module>._build_fixture_db | CREATE | CREATE TABLE IF NOT EXISTS cloud_extractions ( id INTEGER PRIMARY KEY, paper_id INTEGER, arm TEXT )
+  tests/analysis/paper1/test_pi_audit_sampler.py:95 <module>._build_fixture_db | CREATE | CREATE TABLE IF NOT EXISTS cloud_evidence_spans ( id INTEGER PRIMARY KEY, cloud_extraction_id INTEGER, field_name TEXT, value TEXT, source_snippet TEXT )
+  tests/analysis/paper1/test_pi_audit_sampler.py:188 <module>._build_fixture_db | INSERT | INSERT INTO cloud_extractions (id, paper_id, arm) VALUES (?, ?, ?)
+  tests/analysis/paper1/test_pi_audit_sampler.py:193 <module>._build_fixture_db | INSERT | INSERT INTO cloud_evidence_spans (id, cloud_extraction_id, field_name, value, source_snippet) VALUES (?, ?, ?, ?, ?)
+  tests/test_adjudication_pairs.py:43 <module>._make_review_db | CREATE | CREATE TABLE papers (id INTEGER PRIMARY KEY, title TEXT); INSERT INTO papers VALUES (1, 'Paper 1'); INSERT INTO papers VALUES (2, 'Paper 2'); CREATE TABLE extractions ( i
+  tests/test_adjudication_pairs.py:332 <module>.TestExportAmbiguousPairs.test_multiple_arm_pairs | INSERT | INSERT INTO cloud_extractions VALUES (3, 1, 'anthropic_sonnet', 'test', 'abc', '2026-01-01'); INSERT INTO cloud_extractions VALUES (4, 2, 'anthropic_sonnet', 'test', 'abc
+  tests/test_adjudication_pairs.py:120 <module>._mirror | SELECT | SELECT ce.arm, ce.paper_id, cs.field_name, cs.value, cs.source_snippet FROM cloud_evidence_spans cs JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
+  tests/test_cloud_extraction.py:218 <module>.TestInitCloudTables.test_creates_tables | name only | cloud_extractions
+  tests/test_cloud_extraction.py:219 <module>.TestInitCloudTables.test_creates_tables | name only | cloud_evidence_spans
+  tests/test_cloud_extraction.py:365 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = 'test_arm'
+  tests/test_cloud_extraction.py:398 <module>.TestCloudExtractorBase.test_store_result_atomic | SELECT | SELECT * FROM cloud_extractions WHERE id = ?
+  tests/test_cloud_extraction.py:406 <module>.TestCloudExtractorBase.test_store_result_atomic | SELECT | SELECT * FROM cloud_evidence_spans WHERE cloud_extraction_id = ?
+  tests/test_cloud_extraction.py:249 <module>.TestInitCloudTables.test_idempotent | SELECT | SELECT COUNT(*) FROM sqlite_master WHERE name='cloud_extractions'
+  tests/test_cloud_extraction.py:226 <module>.TestInitCloudTables.test_tables_have_expected_columns | PRAGMA | PRAGMA table_info(cloud_extractions)
+  tests/test_cloud_extraction.py:229 <module>.TestInitCloudTables.test_tables_have_expected_columns | PRAGMA | PRAGMA table_info(cloud_evidence_spans)
+  tests/test_cloud_extraction.py:678 <module>.TestSonnetEmptyStringNormalization.test_an_empty_value_is_refused_at_the_write_boundary | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = ?
+  tests/test_codebook_provenance.py:91 <module>.test_migration_adds_the_full_set_to_a_database_that_lacks_them | CREATE | CREATE TABLE extractions (id INTEGER PRIMARY KEY, extraction_schema_hash TEXT); CREATE TABLE cloud_extractions (id INTEGER PRIMARY KEY, arm TEXT); CREATE TABLE review_run
+  tests/test_codebook_provenance.py:200 <module>.test_cloud_tables_gain_the_columns_when_they_predate_them | CREATE | CREATE TABLE papers (id INTEGER PRIMARY KEY); CREATE TABLE cloud_extractions ( id INTEGER PRIMARY KEY, paper_id INTEGER, arm TEXT, model_string TEXT, extracted_at TEXT NO
+  tests/test_codebook_provenance.py:116 <module>.test_missing_target_table_is_skipped_not_created | name only | cloud_extractions
+  tests/test_codebook_provenance.py:189 <module>.test_cloud_tables_carry_the_columns_when_created_fresh | PRAGMA | PRAGMA table_info(cloud_extractions)
+  tests/test_codebook_provenance.py:212 <module>.test_cloud_tables_gain_the_columns_when_they_predate_them | PRAGMA | PRAGMA table_info(cloud_extractions)
+  tests/test_codebook_staleness.py:49 <module>.test_parity_reads_codebook_hash_and_warns_without_blocking | CREATE | CREATE TABLE extractions (id INTEGER PRIMARY KEY, paper_id INTEGER, codebook_hash TEXT); CREATE TABLE cloud_extractions (id INTEGER PRIMARY KEY, paper_id INTEGER, arm TEX
+  tests/test_codebook_staleness.py:74 <module>.test_parity_reports_null_as_none_recorded | CREATE | CREATE TABLE extractions (id INTEGER PRIMARY KEY, paper_id INTEGER, codebook_hash TEXT); CREATE TABLE cloud_extractions (id INTEGER PRIMARY KEY, paper_id INTEGER, arm TEX
+  tests/test_codebook_staleness.py:127 <module>.test_013_lifts_not_null_preserving_every_row | name only | cloud_extractions.extraction_schema_hash
+  tests/test_codebook_staleness.py:128 <module>.test_013_lifts_not_null_preserving_every_row | name only | cloud_extractions.extraction_schema_hash
+  tests/test_codebook_staleness.py:160 <module>.test_013_rebuilds_a_database_that_still_has_the_constraint | name only | cloud_extractions
+  tests/test_codebook_staleness.py:105 <module>._content | name only | cloud_extractions
+  tests/test_concordance_pipeline.py:334 <module>.TestCheckSchemaParity._make_db | CREATE | CREATE TABLE papers ( id INTEGER PRIMARY KEY, title TEXT, source TEXT, status TEXT, created_at TEXT, updated_at TEXT ); CREATE TABLE extractions ( id INTEGER PRIMARY KEY,
+  tests/test_concordance_pipeline.py:360 <module>.TestCheckSchemaParity.test_matching_hashes_no_warning | INSERT | INSERT INTO cloud_extractions (paper_id, arm, codebook_hash) VALUES (1, 'openai', 'abc123')
+  tests/test_concordance_pipeline.py:378 <module>.TestCheckSchemaParity.test_mismatched_hashes_warns | INSERT | INSERT INTO cloud_extractions (paper_id, arm, codebook_hash) VALUES (1, 'anthropic', 'hash_cloud')
+  tests/test_corpus_authority.py:167 <module>.test_cloud_get_pending_papers_now_reads_the_eligibility_axis | SELECT | SELECT paper_id FROM cloud_extractions WHERE arm = 'openai'
+  tests/test_database.py:424 <module>.test_cloud_null_confidence_raises_integrity_error | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_at) VALUES (?, 'test_arm', 'model', '2026-01-01')
+  tests/test_database.py:433 <module>.test_cloud_null_confidence_raises_integrity_error | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, confidence, tier) VALUES (?, 'f', 'v', NULL, 1)
+  tests/test_database.py:452 <module>.test_cloud_null_tier_raises_integrity_error | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_at) VALUES (?, 'test_arm', 'model', '2026-01-01')
+  tests/test_database.py:461 <module>.test_cloud_null_tier_raises_integrity_error | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, confidence, tier) VALUES (?, 'f', 'v', 0.9, NULL)
+  tests/test_distribution_monitor.py:35 <module>._make_db | CREATE | CREATE TABLE extractions ( id INTEGER PRIMARY KEY, paper_id INTEGER NOT NULL, extraction_schema_hash TEXT NOT NULL DEFAULT 'test', extracted_data TEXT NOT NULL DEFAULT '{
+  tests/test_migration_018_cloud_shape.py:26 <module> | CREATE | CREATE TABLE papers (id INTEGER PRIMARY KEY, title TEXT NOT NULL); CREATE TABLE evidence_spans (id INTEGER PRIMARY KEY); CREATE TABLE cloud_extractions ( id INTEGER PRIMA
+  tests/test_migration_018_cloud_shape.py:75 <module>._pre_018_db | INSERT | INSERT INTO cloud_extractions (id, paper_id, arm, model_string, extracted_at) VALUES (1, 1, 'openai_o4_mini_high', 'm', '2026-01-01'), (2, 2, 'anthropic_sonnet_4_6', 'm',
+  tests/test_migration_018_cloud_shape.py:80 <module>._pre_018_db | INSERT | INSERT INTO cloud_evidence_spans (id, cloud_extraction_id, field_name, value, source_snippet, confidence, tier, notes) VALUES (1, 1, 'study_type', 'RCT', 's', ?, ?, NULL)
+  tests/test_migration_018_cloud_shape.py:103 <module>.test_confidence_and_tier_become_not_null | name only | cloud_evidence_spans
+  tests/test_migration_018_cloud_shape.py:122 <module>.test_the_unique_paper_arm_constraint_is_gone | INSERT | INSERT INTO cloud_extractions (id, paper_id, arm, model_string, extracted_at) VALUES (3, 1, 'openai_o4_mini_high', 'm', '2026-02-02')
+  tests/test_migration_018_cloud_shape.py:242 <module>.test_a_fresh_review_database_reaches_the_post_018_shape | name only | cloud_evidence_spans
+  tests/test_migration_018_cloud_shape.py:243 <module>.test_a_fresh_review_database_reaches_the_post_018_shape | name only | cloud_evidence_spans
+  tests/test_migration_018_cloud_shape.py:182 <module>.test_the_unique_on_extraction_and_field_survives | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, confidence, tier) VALUES (1, 'study_type', 0.5, 1)
+  tests/test_migration_018_cloud_shape.py:101 <module>.test_confidence_and_tier_become_not_null | name only | cloud_evidence_spans
+  tests/test_migration_018_cloud_shape.py:157 <module>.test_no_row_content_changes.snapshot | name only | cloud_evidence_spans
+  tests/test_migration_018_cloud_shape.py:158 <module>.test_no_row_content_changes.snapshot | name only | cloud_extractions
+  tests/test_migration_018_cloud_shape.py:198 <module>.test_a_null_confidence_stops_the_migration_rather_than_being_backfilled | name only | cloud_evidence_spans
+  tests/test_migration_018_cloud_shape.py:222 <module>.test_a_mid_rebuild_failure_leaves_everything_as_it_was | name only | cloud_evidence_spans
+  tests/test_migration_runner.py:205 <module>.test_cloud_tables_are_in_the_schema_a_fresh_database_builds | name only | cloud_extractions
+  tests/test_migration_runner.py:205 <module>.test_cloud_tables_are_in_the_schema_a_fresh_database_builds | name only | cloud_evidence_spans
+  tests/test_readers_on_the_reader.py:373 <module>.test_no_migrated_reader_still_selects_the_latest_extraction | name only | ORDER BY id DESC LIMIT 1|MAX\(e2\.id\)|MAX\(ce2\.id\)|FROM\s+evidence_spans|FROM\s+cloud_evidence_spans|FROM\s+human_extractions
+  tests/test_u27_cloud_run_faults.py:90 <module>._FailingConn.execute | INSERT | INSERT INTO cloud_extractions
+  tests/test_u27_cloud_run_faults.py:197 <module>.test_run_faults_leave_the_cloud_handlers_as_themselves | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?
+  tests/test_u28_cloud_gate_and_boundary.py:128 <module>._rows | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ? AND paper_id = ?
+  tests/test_u28_cloud_gate_and_boundary.py:127 <module>._rows | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?
+  tests/test_u40_cloud_claim_events.py:145 <module>._counts | SELECT | SELECT COUNT(*) FROM cloud_extractions WHERE {…}
+  tests/test_u40_cloud_claim_events.py:147 <module>._counts | SELECT | SELECT COUNT(*) FROM cloud_evidence_spans s JOIN cloud_extractions e ON e.id = s.cloud_extraction_id WHERE e.{…}
+  tests/test_u40_cloud_claim_events.py:145 <module>._counts | name only | cloud_extractions
+  tests/test_u40_cloud_claim_events.py:146 <module>._counts | name only | cloud_evidence_spans
+  tests/test_u40_cloud_claim_events.py:176 <module>.test_cloud_gate_sees_what_store_result_wrote | name only | cloud_extractions
+  tests/test_u40_cloud_claim_events.py:206 <module>.test_the_processing_axis_is_untouched_by_cloud_stores | name only | cloud_extractions
+  tests/test_u40_cloud_claim_events.py:243 <module>.test_a_refused_cloud_store_leaves_nothing_in_either_store | name only | cloud_extractions
+  tests/test_u40_cloud_claim_events.py:243 <module>.test_a_refused_cloud_store_leaves_nothing_in_either_store | name only | cloud_evidence_spans
+  tests/test_u40_cloud_claim_events.py:256 <module>.test_the_legacy_rows_and_the_claims_agree | SELECT | SELECT s.field_name, s.value, s.source_snippet FROM cloud_evidence_spans s JOIN cloud_extractions e ON e.id = s.cloud_extraction_id WHERE e.arm = ? AND e.paper_id = ?
+
+-- (a) literals naming a cloud table — engine/migrations/: 20
+  engine/migrations/010_add_provenance_classifications.py:33 <module> | CREATE | BEGIN; CREATE TABLE IF NOT EXISTS provenance_census_runs ( census_run_id TEXT PRIMARY KEY, review_name TEXT NOT NULL, created_at TEXT NOT NULL, definitions_sha256 TEXT NO
+  engine/migrations/011_add_absence_claim_class.py:34 <module> | CREATE | CREATE TABLE provenance_classifications_new ( id INTEGER PRIMARY KEY AUTOINCREMENT, census_run_id TEXT NOT NULL REFERENCES provenance_census_runs(census_run_id) ON DELETE
+  engine/migrations/012_codebook_provenance.py:42 <module> | name only | cloud_extractions
+  engine/migrations/013_drop_schema_hash_not_null.py:40 <module> | name only | cloud_extractions
+  engine/migrations/014_cloud_tables.py:49 <module>.run_migration | name only | cloud_extractions
+  engine/migrations/014_cloud_tables.py:49 <module>.run_migration | name only | cloud_evidence_spans
+  engine/migrations/014_cloud_tables.py:55 <module>.run_migration | name only | cloud_extractions
+  engine/migrations/014_cloud_tables.py:55 <module>.run_migration | name only | cloud_evidence_spans
+  engine/migrations/014_cloud_tables.py:57 <module>.run_migration | name only | cloud_extractions
+  engine/migrations/014_cloud_tables.py:57 <module>.run_migration | name only | cloud_evidence_spans
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:97 <module>.cloud_evidence_spans_sql | CREATE | CREATE TABLE {…} ( id INTEGER PRIMARY KEY, cloud_extraction_id INTEGER NOT NULL REFERENCES cloud_extractions(id), field_name TEXT NOT NULL, value TEXT, source_snippet TEX
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:161 <module>._refuse_nulls | name only | 018 refuses: {…} cloud_evidence_spans rows have a NULL confidence or tier, which cannot be carried into a NOT NULL column. A value for them is not derivable from the reco
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:72 <module>.cloud_extractions_sql | name only | cloud_extractions
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:95 <module>.cloud_evidence_spans_sql | name only | cloud_evidence_spans
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:127 <module>._has_unique_paper_arm | PRAGMA | PRAGMA index_list(cloud_extractions)
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:142 <module>.already_applied | name only | cloud_evidence_spans
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:143 <module>.already_applied | name only | cloud_evidence_spans
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:203 <module>.run_migration | name only | cloud_evidence_spans
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:205 <module>.run_migration | name only | cloud_extractions
+  engine/migrations/018_cloud_shape_and_audit_adjudication.py:156 <module>._refuse_nulls | SELECT | SELECT COUNT(*) FROM cloud_evidence_spans WHERE confidence IS NULL OR tier IS NULL
+
+-- (b) reads (SELECT / WITH): 31
+  engine/analysis/concordance.py:192 <module>.check_schema_parity | - | SELECT DISTINCT codebook_hash FROM cloud_extractions WHERE arm = ?
+  engine/cloud/base.py:223 <module>.CloudExtractorBase.get_pending_papers | - | SELECT p.id AS paper_id, p.title, p.authors, p.year FROM papers p WHERE {…} AND p.id NOT IN ( SELECT ce.paper_id FROM cloud_extractions ce WHERE ce.arm = ? ) ORDER BY p.i
+  engine/cloud/base.py:591 <module>.CloudExtractorBase.get_progress | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?
+  engine/cloud/base.py:596 <module>.CloudExtractorBase.get_progress | - | SELECT COALESCE(SUM(cost_usd), 0) FROM cloud_extractions WHERE arm = ?
+  scripts/_pass2_eyeball.py:54 <module>.load_arm_value | extracted_data | SELECT extracted_data FROM cloud_extractions WHERE paper_id=? AND arm=?
+  scripts/backfill_cloud_spans.py:50 <module>.main | spans, extracted_data | SELECT ce.id, ce.paper_id, ce.arm, ce.extracted_data FROM cloud_extractions ce WHERE ce.id NOT IN (SELECT DISTINCT cloud_extraction_id FROM cloud_evidence_spans)
+  scripts/backfill_cloud_spans.py:106 <module>.main | spans, aggregates | SELECT arm, COUNT(DISTINCT ce.paper_id) FROM cloud_evidence_spans ces JOIN cloud_extractions ce ON ces.cloud_extraction_id = ce.id GROUP BY ce.arm
+  scripts/reparse_cloud_spans.py:44 <module>.main | spans, extracted_data, aggregates | SELECT ce.id, ce.paper_id, ce.arm, ce.model_string, ce.extracted_data FROM cloud_extractions ce WHERE ce.extracted_data IS NOT NULL AND (SELECT COUNT(*) FROM cloud_eviden
+  scripts/run_cloud_extraction.py:63 <module>._cloud_arm_names | - | SELECT DISTINCT arm FROM cloud_extractions
+  analysis/eval/analyze_schema_eval.py:118 <module>.agreement_vs_run6 | spans | SELECT c.paper_id, s.field_name, s.value FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s.cloud_extraction_id WHERE c.arm = ?
+  analysis/eval/parse01/sweep.py:114 <module>.main | - | SELECT paper_id, arm, input_tokens FROM cloud_extractions
+  analysis/paper1/adjudication.py:60 <module>._get_cloud_snippet | spans, by field_name | SELECT cs.source_snippet FROM cloud_evidence_spans cs JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id WHERE ce.paper_id = ? AND cs.field_name = ? AND ce.arm =
+  analysis/paper1/judge_provenance.py:306 <module>.unjoined_summary | spans, aggregates | SELECT c.arm, c.paper_id, COUNT(*) FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s.cloud_extraction_id GROUP BY 1,2
+  analysis/paper1/pi_audit_sampler.py:272 <module>._fetch_arm_value_and_snippet | spans, by field_name | SELECT value, source_snippet FROM cloud_evidence_spans WHERE cloud_extraction_id IN ( SELECT id FROM cloud_extractions WHERE paper_id = ? AND arm = ? ) AND field_name = ?
+  analysis/paper1/spanloss_autopsy.py:176 <module>.surviving_fields | spans | SELECT s.field_name FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s.cloud_extraction_id WHERE c.paper_id = ? AND c.arm = ?
+  analysis/paper1/spanloss_autopsy.py:137 <module>.load_extractions | spans, extracted_data, aggregates | SELECT c.paper_id, c.arm, c.extracted_data, c.extracted_at, c.input_tokens, c.output_tokens, c.reasoning_tokens, (SELECT COUNT(*) FROM cloud_evidence_spans s WHERE s.clou
+  analysis/provenance/census.py:75 <module>.load_spans | spans | SELECT c.paper_id AS paper_id, c.arm AS arm, s.id AS span_row_id, s.field_name, s.value, s.source_snippet FROM cloud_evidence_spans s JOIN cloud_extractions c ON c.id = s
+  tests/analysis/paper1/test_judge_loader.py:302 <module>._mirror_spans_into_events | spans | SELECT ce.arm, ce.paper_id, cs.field_name, cs.value, cs.source_snippet FROM cloud_evidence_spans cs JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
+  tests/test_adjudication_pairs.py:120 <module>._mirror | spans | SELECT ce.arm, ce.paper_id, cs.field_name, cs.value, cs.source_snippet FROM cloud_evidence_spans cs JOIN cloud_extractions ce ON ce.id = cs.cloud_extraction_id
+  tests/test_cloud_extraction.py:365 <module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = 'test_arm'
+  tests/test_cloud_extraction.py:398 <module>.TestCloudExtractorBase.test_store_result_atomic | - | SELECT * FROM cloud_extractions WHERE id = ?
+  tests/test_cloud_extraction.py:406 <module>.TestCloudExtractorBase.test_store_result_atomic | spans | SELECT * FROM cloud_evidence_spans WHERE cloud_extraction_id = ?
+  tests/test_cloud_extraction.py:249 <module>.TestInitCloudTables.test_idempotent | aggregates | SELECT COUNT(*) FROM sqlite_master WHERE name='cloud_extractions'
+  tests/test_cloud_extraction.py:678 <module>.TestSonnetEmptyStringNormalization.test_an_empty_value_is_refused_at_the_write_boundary | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = ?
+  tests/test_corpus_authority.py:167 <module>.test_cloud_get_pending_papers_now_reads_the_eligibility_axis | - | SELECT paper_id FROM cloud_extractions WHERE arm = 'openai'
+  tests/test_u27_cloud_run_faults.py:197 <module>.test_run_faults_leave_the_cloud_handlers_as_themselves | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?
+  tests/test_u28_cloud_gate_and_boundary.py:128 <module>._rows | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ? AND paper_id = ?
+  tests/test_u28_cloud_gate_and_boundary.py:127 <module>._rows | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE arm = ?
+  tests/test_u40_cloud_claim_events.py:145 <module>._counts | aggregates | SELECT COUNT(*) FROM cloud_extractions WHERE {…}
+  tests/test_u40_cloud_claim_events.py:147 <module>._counts | spans, aggregates | SELECT COUNT(*) FROM cloud_evidence_spans s JOIN cloud_extractions e ON e.id = s.cloud_extraction_id WHERE e.{…}
+  tests/test_u40_cloud_claim_events.py:256 <module>.test_the_legacy_rows_and_the_claims_agree | spans | SELECT s.field_name, s.value, s.source_snippet FROM cloud_evidence_spans s JOIN cloud_extractions e ON e.id = s.cloud_extraction_id WHERE e.arm = ? AND e.paper_id = ?
+
+-- (c) writes outside engine/cloud/: 2
+  scripts/backfill_cloud_spans.py:76 <module>.main | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier, notes) VALUES (?, ?, ?, ?, ?, ?, ?)
+  scripts/reparse_cloud_spans.py:75 <module>.main | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier) VALUES (?, ?, ?, ?, ?, ?)
+
+-- (c) writes outside engine/cloud/ — tests/: 19
+  tests/_corpus_fixture.py:124 <module>.build_fixture | INSERT | INSERT INTO cloud_extractions (paper_id, arm, cost_usd) VALUES (?, 'openai', 1.5)
+  tests/analysis/paper1/test_judge_cli.py:112 <module>.setup_review._add_cloud | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_data, extraction_schema_hash, extracted_at) VALUES (?, ?, 'm', '{}', '', ?)
+  tests/analysis/paper1/test_judge_cli.py:120 <module>.setup_review._add_cloud | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier) VALUES (?, ?, ?, ?, 0.9, 1)
+  tests/analysis/paper1/test_judge_loader.py:232 <module>.seeded_db._add_cloud_extraction | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_data, extraction_schema_hash, extracted_at) VALUES (?, ?, 'm', '{}', '', ?)
+  tests/analysis/paper1/test_judge_loader.py:240 <module>.seeded_db._add_cloud_extraction | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, source_snippet, confidence, tier) VALUES (?, ?, ?, ?, 0.9, 1)
+  tests/analysis/paper1/test_pi_audit_sampler.py:188 <module>._build_fixture_db | INSERT | INSERT INTO cloud_extractions (id, paper_id, arm) VALUES (?, ?, ?)
+  tests/analysis/paper1/test_pi_audit_sampler.py:193 <module>._build_fixture_db | INSERT | INSERT INTO cloud_evidence_spans (id, cloud_extraction_id, field_name, value, source_snippet) VALUES (?, ?, ?, ?, ?)
+  tests/test_adjudication_pairs.py:332 <module>.TestExportAmbiguousPairs.test_multiple_arm_pairs | INSERT | INSERT INTO cloud_extractions VALUES (3, 1, 'anthropic_sonnet', 'test', 'abc', '2026-01-01'); INSERT INTO cloud_extractions VALUES (4, 2, 'anthropic_sonnet', 'test', 'abc
+  tests/test_concordance_pipeline.py:360 <module>.TestCheckSchemaParity.test_matching_hashes_no_warning | INSERT | INSERT INTO cloud_extractions (paper_id, arm, codebook_hash) VALUES (1, 'openai', 'abc123')
+  tests/test_concordance_pipeline.py:378 <module>.TestCheckSchemaParity.test_mismatched_hashes_warns | INSERT | INSERT INTO cloud_extractions (paper_id, arm, codebook_hash) VALUES (1, 'anthropic', 'hash_cloud')
+  tests/test_database.py:424 <module>.test_cloud_null_confidence_raises_integrity_error | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_at) VALUES (?, 'test_arm', 'model', '2026-01-01')
+  tests/test_database.py:433 <module>.test_cloud_null_confidence_raises_integrity_error | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, confidence, tier) VALUES (?, 'f', 'v', NULL, 1)
+  tests/test_database.py:452 <module>.test_cloud_null_tier_raises_integrity_error | INSERT | INSERT INTO cloud_extractions (paper_id, arm, model_string, extracted_at) VALUES (?, 'test_arm', 'model', '2026-01-01')
+  tests/test_database.py:461 <module>.test_cloud_null_tier_raises_integrity_error | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, value, confidence, tier) VALUES (?, 'f', 'v', 0.9, NULL)
+  tests/test_migration_018_cloud_shape.py:75 <module>._pre_018_db | INSERT | INSERT INTO cloud_extractions (id, paper_id, arm, model_string, extracted_at) VALUES (1, 1, 'openai_o4_mini_high', 'm', '2026-01-01'), (2, 2, 'anthropic_sonnet_4_6', 'm',
+  tests/test_migration_018_cloud_shape.py:80 <module>._pre_018_db | INSERT | INSERT INTO cloud_evidence_spans (id, cloud_extraction_id, field_name, value, source_snippet, confidence, tier, notes) VALUES (1, 1, 'study_type', 'RCT', 's', ?, ?, NULL)
+  tests/test_migration_018_cloud_shape.py:122 <module>.test_the_unique_paper_arm_constraint_is_gone | INSERT | INSERT INTO cloud_extractions (id, paper_id, arm, model_string, extracted_at) VALUES (3, 1, 'openai_o4_mini_high', 'm', '2026-02-02')
+  tests/test_migration_018_cloud_shape.py:182 <module>.test_the_unique_on_extraction_and_field_survives | INSERT | INSERT INTO cloud_evidence_spans (cloud_extraction_id, field_name, confidence, tier) VALUES (1, 'study_type', 0.5, 1)
+  tests/test_u27_cloud_run_faults.py:90 <module>._FailingConn.execute | INSERT | INSERT INTO cloud_extractions
+
+-- (d) value reads of 'extracted_data': 11
+  engine/cloud/anthropic_extractor.py:257 <module>.AnthropicExtractor.run | subscript | json.loads in function: False | extracted_data=result["extracted_data"],
+  engine/cloud/openai_extractor.py:234 <module>.OpenAIExtractor.run | subscript | json.loads in function: False | extracted_data=result["extracted_data"],
+  scripts/backfill_cloud_spans.py:65 <module>.main | subscript | json.loads in function: True | data = json.loads(row["extracted_data"])
+  scripts/reparse_cloud_spans.py:68 <module>.main | subscript | json.loads in function: True | raw_data = json.loads(row["extracted_data"])
+  analysis/paper1/spanloss_autopsy.py:147 <module>.load_extractions | subscript | json.loads in function: False | r["shape"], r["spans_in_response"] = response_shape(r["extracted_data"])
+  analysis/paper1/spanloss_autopsy.py:112 <module>.load_extractions | subscript | json.loads in function: False | "extracted_data": r["extracted_data"],
+  analysis/paper1/spanloss_autopsy.py:129 <module>.load_extractions | subscript | json.loads in function: False | "extracted_data": r["extracted_data"],
+  tests/test_cloud_extraction.py:577 <module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks | subscript | json.loads in function: False | assert "fields" in result["extracted_data"]
+  tests/test_cloud_extraction.py:578 <module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks | subscript | json.loads in function: False | assert len(result["extracted_data"]["fields"]) == len(COMPLETE_FIELDS)
+  tests/test_u29_cloud_call_record.py:248 <module>.test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row | subscript | json.loads in function: True | i.store_result(paper_id=pid, arm=i.arm_name, model_string=i.model_string, extracted_data=r["extracted_data"],
+  tests/test_u40_cloud_claim_events.py:135 <module>._store | subscript | json.loads in function: False | extracted_data=result["extracted_data"], reasoning_trace=result["reasoning_trace"],
+
+-- (f) tests coupled to the seam: 48
+  tests/test_adjudication_pairs.py:327 test_multiple_arm_pairs | ['cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:207 test_creates_tables | ['cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:221 test_tables_have_expected_columns | ['cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:243 test_idempotent | ['cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:268 test_get_pending_excludes_completed | ['store_result'] | extra name: -
+  tests/test_cloud_extraction.py:340 test_store_result_rejects_empty_spans | ['store_result', 'cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:371 test_store_result_atomic | ['store_result', 'cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:648 test_an_empty_value_is_refused_at_the_write_boundary | ['cloud table literal'] | extra name: -
+  tests/test_cloud_extraction.py:853 test_openai_store_failure_continues_run | ['store_result'] | extra name: -
+  tests/test_codebook_provenance.py:81 test_migration_adds_the_full_set_to_a_database_that_lacks_them | ['cloud table literal'] | extra name: -
+  tests/test_codebook_provenance.py:106 test_missing_target_table_is_skipped_not_created | ['cloud table literal'] | extra name: -
+  tests/test_codebook_provenance.py:176 test_cloud_tables_carry_the_columns_when_created_fresh | ['cloud table literal'] | extra name: -
+  tests/test_codebook_provenance.py:195 test_cloud_tables_gain_the_columns_when_they_predate_them | ['cloud table literal'] | extra name: -
+  tests/test_codebook_review_at_open.py:129 test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send | ['run_arm'] | extra name: -
+  tests/test_codebook_staleness.py:42 test_parity_reads_codebook_hash_and_warns_without_blocking | ['cloud table literal'] | extra name: -
+  tests/test_codebook_staleness.py:68 test_parity_reports_null_as_none_recorded | ['cloud table literal'] | extra name: -
+  tests/test_codebook_staleness.py:111 test_013_lifts_not_null_preserving_every_row | ['cloud table literal'] | extra name: -
+  tests/test_codebook_staleness.py:133 test_013_rebuilds_a_database_that_still_has_the_constraint | ['cloud table literal'] | extra name: -
+  tests/test_completeness_guard.py:96 test_complete_set_passes | ['check_completeness'] | extra name: -
+  tests/test_completeness_guard.py:103 test_missing_fields_are_named | ['check_completeness'] | extra name: -
+  tests/test_completeness_guard.py:110 test_single_span_is_incomplete | ['check_completeness'] | extra name: -
+  tests/test_completeness_guard.py:117 test_empty_is_incomplete | ['check_completeness'] | extra name: -
+  tests/test_completeness_guard.py:122 test_unexpected_fields_are_dropped_and_duplicates_are_retryable | ['check_completeness', 'drop_unexpected', 'enforce_completeness'] | extra name: ['Title', 'junk']
+  tests/test_completeness_guard.py:148 test_accepts_objects_as_well_as_dicts | ['check_completeness'] | extra name: -
+  tests/test_completeness_guard.py:156 test_enforce_passes_complete | ['enforce_completeness'] | extra name: -
+  tests/test_completeness_guard.py:161 test_enforce_raises_on_the_paper_277_shape | ['enforce_completeness'] | extra name: -
+  tests/test_concordance_pipeline.py:354 test_matching_hashes_no_warning | ['cloud table literal'] | extra name: -
+  tests/test_concordance_pipeline.py:372 test_mismatched_hashes_warns | ['cloud table literal'] | extra name: -
+  tests/test_corpus_authority.py:151 test_cloud_get_pending_papers_now_reads_the_eligibility_axis | ['cloud table literal'] | extra name: -
+  tests/test_database.py:412 test_cloud_null_confidence_raises_integrity_error | ['cloud table literal'] | extra name: -
+  tests/test_database.py:441 test_cloud_null_tier_raises_integrity_error | ['cloud table literal'] | extra name: -
+  tests/test_distribution_monitor.py:354 test_cloud_arm | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:99 test_confidence_and_tier_become_not_null | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:108 test_the_unique_paper_arm_constraint_is_gone | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:147 test_no_row_content_changes | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:175 test_the_unique_on_extraction_and_field_survives | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:191 test_a_null_confidence_stops_the_migration_rather_than_being_backfilled | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:208 test_a_mid_rebuild_failure_leaves_everything_as_it_was | ['cloud table literal'] | extra name: -
+  tests/test_migration_018_cloud_shape.py:233 test_a_fresh_review_database_reaches_the_post_018_shape | ['cloud table literal'] | extra name: -
+  tests/test_migration_runner.py:200 test_cloud_tables_are_in_the_schema_a_fresh_database_builds | ['cloud table literal'] | extra name: -
+  tests/test_readers_on_the_reader.py:125 test_query_values_and_load_arm_agree_on_a_human_arm | ['cloud table literal'] | extra name: -
+  tests/test_readers_on_the_reader.py:338 test_no_migrated_reader_still_selects_the_latest_extraction | ['cloud table literal'] | extra name: -
+  tests/test_u27_cloud_run_faults.py:99 test_run_faults_leave_the_cloud_handlers_as_themselves | ['run_arm', 'cloud table literal'] | extra name: -
+  tests/test_u29_cloud_call_record.py:236 test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row | ['store_result'] | extra name: -
+  tests/test_u40_cloud_claim_events.py:164 test_cloud_gate_sees_what_store_result_wrote | ['cloud table literal'] | extra name: -
+  tests/test_u40_cloud_claim_events.py:198 test_the_processing_axis_is_untouched_by_cloud_stores | ['cloud table literal'] | extra name: -
+  tests/test_u40_cloud_claim_events.py:217 test_a_refused_cloud_store_leaves_nothing_in_either_store | ['cloud table literal'] | extra name: -
+  tests/test_u40_cloud_claim_events.py:246 test_the_legacy_rows_and_the_claims_agree | ['cloud table literal'] | extra name: -
+
+-- (e) reader functions by file (from (b) and (d))
+  analysis/eval/analyze_schema_eval.py: ['<module>.agreement_vs_run6']
+  analysis/eval/parse01/sweep.py: ['<module>.main']
+  analysis/paper1/adjudication.py: ['<module>._get_cloud_snippet']
+  analysis/paper1/judge_provenance.py: ['<module>.unjoined_summary']
+  analysis/paper1/pi_audit_sampler.py: ['<module>._fetch_arm_value_and_snippet']
+  analysis/paper1/spanloss_autopsy.py: ['<module>.load_extractions', '<module>.surviving_fields']
+  analysis/provenance/census.py: ['<module>.load_spans']
+  engine/analysis/concordance.py: ['<module>.check_schema_parity']
+  engine/cloud/anthropic_extractor.py: ['<module>.AnthropicExtractor.run']
+  engine/cloud/base.py: ['<module>.CloudExtractorBase.get_pending_papers', '<module>.CloudExtractorBase.get_progress']
+  engine/cloud/openai_extractor.py: ['<module>.OpenAIExtractor.run']
+  scripts/_pass2_eyeball.py: ['<module>.load_arm_value']
+  scripts/backfill_cloud_spans.py: ['<module>.main']
+  scripts/reparse_cloud_spans.py: ['<module>.main']
+  scripts/run_cloud_extraction.py: ['<module>._cloud_arm_names']
+  tests/analysis/paper1/test_judge_loader.py: ['<module>._mirror_spans_into_events']
+  tests/test_adjudication_pairs.py: ['<module>._mirror']
+  tests/test_cloud_extraction.py: ['<module>.TestAnthropicExtractor.test_json_extracted_from_text_blocks', '<module>.TestCloudExtractorBase.test_store_result_atomic', '<module>.TestCloudExtractorBase.test_store_result_rejects_empty_spans', '<module>.TestInitCloudTables.test_idempotent', '<module>.TestSonnetEmptyStringNormalization.test_an_empty_value_is_refused_at_the_write_boundary']
+  tests/test_corpus_authority.py: ['<module>.test_cloud_get_pending_papers_now_reads_the_eligibility_axis']
+  tests/test_u27_cloud_run_faults.py: ['<module>.test_run_faults_leave_the_cloud_handlers_as_themselves']
+  tests/test_u28_cloud_gate_and_boundary.py: ['<module>._rows']
+  tests/test_u29_cloud_call_record.py: ['<module>.test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row']
+  tests/test_u40_cloud_claim_events.py: ['<module>._counts', '<module>._store', '<module>.test_the_legacy_rows_and_the_claims_agree']
+
+== counts
+(a) literals naming a cloud table: 103
+(a) literals naming a cloud table — engine/migrations/: 20
+(b) reads (SELECT / WITH): 31
+(c) writes outside engine/cloud/: 2
+(c) writes outside engine/cloud/ — tests/: 19
+(d) value reads of 'extracted_data': 11
+(f) tests coupled to the seam: 48
+(e) files with a reader: 23 (15 outside tests/, 8 in tests/); reader functions outside tests/: 17

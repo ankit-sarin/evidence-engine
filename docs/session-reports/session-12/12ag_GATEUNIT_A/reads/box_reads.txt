@@ -1,0 +1,1411 @@
+# captured 2026-11-14T20:41:46.896290643Z on spark-59e4
+
+$ systemctl --version
+systemd 255 (255.4-1ubuntu8.18)
++PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified
+[exit 0]
+
+$ systemctl --user is-system-running
+degraded
+[exit 1]
+
+$ systemctl --user status --no-pager
+● spark-59e4
+    State: degraded
+    Units: 546 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 2 units
+    Since: Sat 2026-10-17 23:04:05 UTC; 3 weeks 6 days ago
+  systemd: 255.4-1ubuntu8.18
+   CGroup: /user.slice/user-1000.slice/user@1000.service
+           ├─app.slice
+           │ ├─app-gnome-org.gnome.Evolution\x2dalarm\x2dnotify-23590.scope
+           │ │ └─23590 /usr/libexec/evolution-data-server/evolution-alarm-notify
+           │ ├─app-gnome-org.gnome.SettingsDaemon.DiskUtilityNotify-23501.scope
+           │ │ └─23501 /usr/libexec/gsd-disk-utility-notify
+           │ ├─app-gnome-org.gnome.Software-23517.scope
+           │ │ └─23517 /usr/bin/gnome-software --gapplication-service
+           │ ├─app-gnome\x2dsession\x2dmanager.slice
+           │ │ └─gnome-session-manager@ubuntu.service
+           │ │   └─22699 /usr/libexec/gnome-session-binary --systemd-service --session=ubuntu
+           │ ├─dconf.service
+           │ │ └─23362 /usr/libexec/dconf-service
+           │ ├─evolution-addressbook-factory.service
+           │ │ └─23909 /usr/libexec/evolution-addressbook-factory
+           │ ├─evolution-calendar-factory.service
+           │ │ └─23829 /usr/libexec/evolution-calendar-factory
+           │ ├─evolution-source-registry.service
+           │ │ └─23358 /usr/libexec/evolution-source-registry
+           │ ├─gcr-ssh-agent.service
+           │ │ └─22646 /usr/libexec/gcr-ssh-agent --base-dir /run/user/1000/gcr
+           │ ├─gnome-keyring-daemon.service
+           │ │ └─21821 /usr/bin/gnome-keyring-daemon --foreground --components=pkcs11,secrets --control-directory=/run/user/1000/keyring
+           │ ├─gnome-session-monitor.service
+           │ │ └─22666 /usr/libexec/gnome-session-ctl --monitor
+           │ ├─snap.firmware-updater.firmware-notifier.service
+           │ │ └─53160 /snap/firmware-updater/263/bin/firmware-notifier
+           │ ├─snap.snapd-desktop-integration.snapd-desktop-integration.service
+           │ │ ├─27519 /snap/snapd-desktop-integration/396/usr/bin/user-session-helper /snap/snapd-desktop-integration/396/usr/bin/snapd-desktop-integration
+           │ │ └─27808 /snap/snapd-desktop-integration/396/usr/bin/snapd-desktop-integration
+           │ ├─xdg-desktop-portal-gnome.service
+           │ │ └─24142 /usr/libexec/xdg-desktop-portal-gnome
+           │ └─xdg-desktop-portal-gtk.service
+           │   └─24440 /usr/libexec/xdg-desktop-portal-gtk
+           ├─background.slice
+           │ └─tracker-miner-fs-3.service
+           │   └─24123 /usr/libexec/tracker-miner-fs-3
+           ├─init.scope
+           │ ├─2694 /usr/lib/systemd/systemd --user
+           │ └─2740 "(sd-pam)"
+           └─session.slice
+             ├─at-spi-dbus-bus.service
+             │ ├─22628 /usr/libexec/at-spi-bus-launcher
+             │ ├─22635 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 11 --address=unix:path=/run/user/1000/at-spi/bus_1
+             │ └─23121 /usr/libexec/at-spi2-registryd --use-gnome-session
+             ├─dbus.service
+             │ ├─ 3027 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+             │ ├─23323 /usr/libexec/gnome-shell-calendar-server
+             │ ├─23399 /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.Shell.Notifications
+             │ ├─23618 /usr/libexec/ibus-portal
+             │ ├─23714 /usr/libexec/goa-daemon
+             │ ├─23780 /usr/libexec/goa-identity-service
+             │ ├─23983 /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.ScreenSaver
+             │ └─42464 /snap/snapd/current/usr/bin/snap userd
+             ├─filter-chain.service
+             │ └─3018 /usr/bin/pipewire -c filter-chain.conf
+             ├─gvfs-afc-volume-monitor.service
+             │ └─23860 /usr/libexec/gvfs-afc-volume-monitor
+             ├─gvfs-daemon.service
+             │ ├─22688 /usr/libexec/gvfsd
+             │ ├─22697 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f
+             │ ├─24338 /usr/libexec/gvfsd-trash --spawner :1.26 /org/gtk/gvfs/exec_spaw/0
+             │ └─42135 /usr/libexec/gvfsd-http --spawner :1.26 /org/gtk/gvfs/exec_spaw/1
+             ├─gvfs-goa-volume-monitor.service
+             │ └─23843 /usr/libexec/gvfs-goa-volume-monitor
+             ├─gvfs-gphoto2-volume-monitor.service
+             │ └─23705 /usr/libexec/gvfs-gphoto2-volume-monitor
+             ├─gvfs-metadata.service
+             │ └─23698 /usr/libexec/gvfsd-metadata
+             ├─gvfs-mtp-volume-monitor.service
+             │ └─23784 /usr/libexec/gvfs-mtp-volume-monitor
+             ├─gvfs-udisks2-volume-monitor.service
+             │ └─23516 /usr/libexec/gvfs-udisks2-volume-monitor
+             ├─org.freedesktop.IBus.session.GNOME.service
+             │ ├─23444 /usr/bin/ibus-daemon --panel disable --xim
+             │ ├─23588 /usr/libexec/ibus-dconf
+             │ ├─23602 /usr/libexec/ibus-extension-gtk3
+             │ ├─23611 /usr/libexec/ibus-x11 --kill-daemon
+             │ └─24080 /usr/libexec/ibus-engine-simple
+             ├─org.gnome.SettingsDaemon.A11ySettings.service
+             │ └─23445 /usr/libexec/gsd-a11y-settings
+             ├─org.gnome.SettingsDaemon.Color.service
+             │ └─23446 /usr/libexec/gsd-color
+             ├─org.gnome.SettingsDaemon.Datetime.service
+             │ └─23450 /usr/libexec/gsd-datetime
+             ├─org.gnome.SettingsDaemon.Housekeeping.service
+             │ └─23452 /usr/libexec/gsd-housekeeping
+             ├─org.gnome.SettingsDaemon.Keyboard.service
+             │ └─23454 /usr/libexec/gsd-keyboard
+             ├─org.gnome.SettingsDaemon.MediaKeys.service
+             │ └─23458 /usr/libexec/gsd-media-keys
+             ├─org.gnome.SettingsDaemon.Power.service
+             │ └─23462 /usr/libexec/gsd-power
+             ├─org.gnome.SettingsDaemon.PrintNotifications.service
+             │ ├─23470 /usr/libexec/gsd-print-notifications
+             │ └─24121 /usr/libexec/gsd-printer
+             ├─org.gnome.SettingsDaemon.Rfkill.service
+             │ └─23475 /usr/libexec/gsd-rfkill
+             ├─org.gnome.SettingsDaemon.ScreensaverProxy.service
+             │ └─23479 /usr/libexec/gsd-screensaver-proxy
+             ├─org.gnome.SettingsDaemon.Sharing.service
+             │ └─23481 /usr/libexec/gsd-sharing
+             ├─org.gnome.SettingsDaemon.Smartcard.service
+             │ └─23484 /usr/libexec/gsd-smartcard
+             ├─org.gnome.SettingsDaemon.Sound.service
+             │ └─23488 /usr/libexec/gsd-sound
+             ├─org.gnome.SettingsDaemon.Wacom.service
+             │ └─23492 /usr/libexec/gsd-wacom
+             ├─org.gnome.SettingsDaemon.XSettings.service
+             │ └─23495 /usr/libexec/gsd-xsettings
+             ├─org.gnome.Shell@x11.service
+             │ ├─22745 /usr/bin/gnome-shell
+             │ └─23105 /usr/libexec/mutter-x11-frames
+             ├─pipewire-pulse.service
+             │ └─3021 /usr/bin/pipewire-pulse
+             ├─pipewire.service
+             │ └─3017 /usr/bin/pipewire
+             ├─wireplumber.service
+             │ └─3020 /usr/bin/wireplumber
+             ├─xdg-desktop-portal.service
+             │ └─23861 /usr/libexec/xdg-desktop-portal
+             ├─xdg-document-portal.service
+             │ ├─3207 /usr/libexec/xdg-document-portal
+             │ └─3239 fusermount3 -o rw,nosuid,nodev,fsname=portal,auto_unmount,subtype=portal -- /run/user/1000/doc
+             └─xdg-permission-store.service
+               └─3220 /usr/libexec/xdg-permission-store
+[exit 0]
+
+$ loginctl show-user ankitsarin
+UID=1000
+GID=1000
+Name=ankitsarin
+Timestamp=Sat 2026-10-17 23:04:02 UTC
+TimestampMonotonic=10507057
+RuntimePath=/run/user/1000
+Service=user@1000.service
+Slice=user-1000.slice
+Display=3
+State=active
+Sessions=5534 c382 4761 c2 3
+IdleHint=no
+IdleSinceHint=0
+IdleSinceHintMonotonic=0
+Linger=yes
+[exit 0]
+
+$ loginctl list-sessions --no-pager
+SESSION  UID USER       SEAT  TTY   STATE   IDLE SINCE
+      3 1000 ankitsarin seat0 tty2  active  yes  1 week 5 days ago
+   4761 1000 ankitsarin -     pts/0 active  yes  2 days ago
+   5534 1000 ankitsarin -     pts/3 active  no   -
+     c2 1000 ankitsarin -     pts/0 closing yes  2 days ago
+   c382 1000 ankitsarin -     -     active  no   -
+
+5 sessions listed.
+[exit 0]
+
+$ systemctl --user show-environment | (allow-list filter)
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+DEBUGINFOD_URLS=<value withheld>
+DESKTOP_SESSION=<value withheld>
+DISPLAY=<value withheld>
+GDMSESSION=<value withheld>
+GNOME_DESKTOP_SESSION_ID=<value withheld>
+GNOME_SHELL_SESSION_MODE=<value withheld>
+GPG_AGENT_INFO=<value withheld>
+GSM_SKIP_SSH_AGENT_WORKAROUND=<value withheld>
+GTK_MODULES=<value withheld>
+HOME=/home/ankitsarin
+LANG=en_US.utf8
+LOGNAME=ankitsarin
+PATH=/home/ankitsarin/.local/bin:/usr/local/cuda/bin:/opt/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/ankitsarin/.local/bin
+PWD=/home/ankitsarin
+QT_ACCESSIBILITY=<value withheld>
+QT_IM_MODULE=<value withheld>
+SESSION_MANAGER=<value withheld>
+SHELL=/bin/bash
+SHLVL=<value withheld>
+SSH_AUTH_SOCK=<value withheld>
+USER=ankitsarin
+USERNAME=<value withheld>
+WINDOWPATH=<value withheld>
+XAUTHORITY=<value withheld>
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+XDG_CURRENT_DESKTOP=ubuntu:GNOME
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/home/ankitsarin/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+XDG_MENU_PREFIX=gnome-
+XDG_RUNTIME_DIR=/run/user/1000
+XDG_SESSION_CLASS=user
+XDG_SESSION_DESKTOP=ubuntu
+XDG_SESSION_TYPE=x11
+XMODIFIERS=<value withheld>
+[exit 0]
+
+$ env | (allow-list filter)   # this Claude Code session's Bash tool
+AI_AGENT=<value withheld>
+ANTHROPIC_API_KEY=<value withheld>
+BROWSER=<value withheld>
+CLAUDECODE=<value withheld>
+CLAUDE_CODE_BRIDGE_SESSION_ID=<value withheld>
+CLAUDE_CODE_CHILD_SESSION=<value withheld>
+CLAUDE_CODE_ENTRYPOINT=<value withheld>
+CLAUDE_CODE_EXECPATH=<value withheld>
+CLAUDE_CODE_MESSAGING_SOCKET=<value withheld>
+CLAUDE_CODE_MESSAGING_TOKEN=<value withheld>
+CLAUDE_CODE_SESSION_ATTENDED=<value withheld>
+CLAUDE_CODE_SESSION_ID=<value withheld>
+CLAUDE_CODE_SSE_PORT=<value withheld>
+CLAUDE_EFFORT=<value withheld>
+CLAUDE_PID=<value withheld>
+COLORTERM=<value withheld>
+COPILOT_DEBUG_NONCE=<value withheld>
+COREPACK_ENABLE_AUTO_PIN=<value withheld>
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+DEBUGINFOD_URLS=<value withheld>
+GIT_ASKPASS=<value withheld>
+GIT_EDITOR=<value withheld>
+HOME=/home/ankitsarin
+LANG=C.UTF-8
+LESSCLOSE=<value withheld>
+LESSOPEN=<value withheld>
+LLM_COUNCIL_PASSWORD=<value withheld>
+LLM_COUNCIL_USER=<value withheld>
+LOGNAME=ankitsarin
+LS_COLORS=<value withheld>
+NoDefaultCurrentDirectoryInExePath=<value withheld>
+OPENAI_API_KEY=<value withheld>
+PATH=/home/ankitsarin/projects/evidence-engine/.venv/bin:/home/ankitsarin/.vscode-server/cli/servers/Stable-69047191fc427f2f92828279aae1d90d8eeda7ab/server/bin/remote-cli:/home/ankitsarin/.local/bin:/usr/local/cuda/bin:/opt/bin/:/home/ankitsarin/.local/bin:/usr/local/cuda/bin:/opt/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ankitsarin/.local/bin:/home/ankitsarin/.local/bin:/home/ankitsarin/.local/bin:/home/ankitsarin/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/home/ankitsarin/.vscode-server/cli/servers/Stable-69047191fc427f2f92828279aae1d90d8eeda7ab/server/bin/copilot-shim:/home/ankitsarin/.local/bin
+PWD=/home/ankitsarin/projects/evidence-engine
+PYTHONSTARTUP=/home/ankitsarin/.vscode-server/data/User/workspaceStorage/a15707fe97051fbfec9159db426a2fb9/ms-python.python/pythonrc.py
+SHELL=/bin/bash
+SHLVL=<value withheld>
+SSH_CLIENT=<value withheld>
+SSH_CONNECTION=<value withheld>
+TERM=xterm-256color
+TERM_PROGRAM=<value withheld>
+TERM_PROGRAM_VERSION=<value withheld>
+USER=ankitsarin
+VIRTUAL_ENV=/home/ankitsarin/projects/evidence-engine/.venv
+VIRTUAL_ENV_PROMPT=<value withheld>
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=<value withheld>
+VSCODE_GIT_ASKPASS_MAIN=<value withheld>
+VSCODE_GIT_ASKPASS_NODE=<value withheld>
+VSCODE_GIT_IPC_HANDLE=<value withheld>
+VSCODE_IPC_HOOK_CLI=<value withheld>
+VSCODE_PYTHON_AUTOACTIVATE_GUARD=<value withheld>
+XDG_DATA_DIRS=/usr/share/gnome:/home/ankitsarin/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+_=<value withheld>
+
+$ systemctl --user show -p DefaultLimitNOFILE -p DefaultLimitNOFILESoft -p DefaultTasksMax -p DefaultMemoryAccounting -p DefaultCPUAccounting -p DefaultIOAccounting -p DefaultTimeoutStopUSec -p DefaultStandardOutput -p DefaultStandardError -p Environment
+Environment=HOME=/home/ankitsarin LANG=en_US.utf8 LOGNAME=ankitsarin PATH=/home/ankitsarin/.local/bin:/usr/local/cuda/bin:/opt/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/ankitsarin/.local/bin SHELL=/bin/bash USER=ankitsarin XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/home/ankitsarin/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop XDG_RUNTIME_DIR=/run/user/1000 GTK_MODULES=gail:atk-bridge QT_ACCESSIBILITY=1 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus "DEBUGINFOD_URLS=https://debuginfod.ubuntu.com " DESKTOP_SESSION=ubuntu DISPLAY=:1 GDMSESSION=ubuntu GNOME_DESKTOP_SESSION_ID=this-is-deprecated GNOME_SHELL_SESSION_MODE=ubuntu GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1 GSM_SKIP_SSH_AGENT_WORKAROUND=true PWD=/home/ankitsarin QT_IM_MODULE=ibus SESSION_MANAGER=local/spark-59e4:@/tmp/.ICE-unix/22699,unix/spark-59e4:/tmp/.ICE-unix/22699 SHLVL=0 SSH_AUTH_SOCK=/run/user/1000/keyring/ssh USERNAME=ankitsarin WINDOWPATH=2 XAUTHORITY=/run/user/1000/gdm/Xauthority XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg XDG_CURRENT_DESKTOP=ubuntu:GNOME XDG_MENU_PREFIX=gnome- XDG_SESSION_CLASS=user XDG_SESSION_DESKTOP=ubuntu XDG_SESSION_TYPE=x11 XMODIFIERS=@im=ibus
+DefaultStandardOutput=journal
+DefaultStandardError=inherit
+DefaultTimeoutStopUSec=1min 30s
+DefaultCPUAccounting=yes
+DefaultIOAccounting=no
+DefaultMemoryAccounting=yes
+DefaultLimitNOFILE=500000
+DefaultLimitNOFILESoft=1024
+DefaultTasksMax=153552
+[exit 0]
+
+$ systemctl show user@1000.service -p MemoryMax -p MemoryHigh -p CPUWeight -p IOWeight -p TasksMax -p Delegate -p OOMScoreAdjust -p ManagedOOMMemoryPressure -p LimitNOFILE -p Slice -p ControlGroup
+Slice=user-1000.slice
+ControlGroup=/user.slice/user-1000.slice/user@1000.service
+Delegate=yes
+CPUWeight=[not set]
+IOWeight=[not set]
+MemoryHigh=infinity
+MemoryMax=infinity
+TasksMax=infinity
+ManagedOOMMemoryPressure=auto
+LimitNOFILE=524288
+OOMScoreAdjust=100
+[exit 0]
+
+$ systemctl show user-1000.slice -p MemoryMax -p MemoryHigh -p CPUWeight -p IOWeight -p TasksMax
+CPUWeight=[not set]
+IOWeight=[not set]
+MemoryHigh=infinity
+MemoryMax=infinity
+TasksMax=337815
+[exit 0]
+
+$ systemctl --user show app.slice -p MemoryMax -p MemoryHigh -p CPUWeight -p IOWeight -p TasksMax -p ControlGroup
+ControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice
+CPUWeight=100
+IOWeight=[not set]
+MemoryHigh=infinity
+MemoryMax=infinity
+TasksMax=infinity
+[exit 0]
+
+$ systemctl --user show background.slice -p MemoryMax -p CPUWeight -p IOWeight -p ControlGroup
+ControlGroup=/user.slice/user-1000.slice/user@1000.service/background.slice
+CPUWeight=30
+IOWeight=[not set]
+MemoryMax=infinity
+[exit 0]
+
+$ systemctl --user list-units --all --no-pager
+  UNIT                                                                                                                          LOAD      ACTIVE   SUB       DESCRIPTION
+  dev-disk-by\x2ddiskseq-10.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/10
+  dev-disk-by\x2ddiskseq-13.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/13
+  dev-disk-by\x2ddiskseq-15.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/15
+  dev-disk-by\x2ddiskseq-16.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/16
+  dev-disk-by\x2ddiskseq-17.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/17
+  dev-disk-by\x2ddiskseq-25.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/25
+  dev-disk-by\x2ddiskseq-27.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/27
+  dev-disk-by\x2ddiskseq-29.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/29
+  dev-disk-by\x2ddiskseq-31.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/31
+  dev-disk-by\x2ddiskseq-33.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/33
+  dev-disk-by\x2ddiskseq-36.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/36
+  dev-disk-by\x2ddiskseq-39.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/39
+  dev-disk-by\x2ddiskseq-41.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/41
+  dev-disk-by\x2ddiskseq-45.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/45
+  dev-disk-by\x2ddiskseq-47.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/47
+  dev-disk-by\x2ddiskseq-52.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/52
+  dev-disk-by\x2ddiskseq-53.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/53
+  dev-disk-by\x2ddiskseq-56.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/56
+  dev-disk-by\x2ddiskseq-57.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/57
+  dev-disk-by\x2ddiskseq-67.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/67
+  dev-disk-by\x2ddiskseq-69.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/69
+  dev-disk-by\x2ddiskseq-71.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/71
+  dev-disk-by\x2ddiskseq-73.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/73
+  dev-disk-by\x2ddiskseq-75.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/75
+  dev-disk-by\x2ddiskseq-78.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/78
+  dev-disk-by\x2ddiskseq-80.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/80
+  dev-disk-by\x2ddiskseq-82.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/82
+  dev-disk-by\x2ddiskseq-86.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/86
+  dev-disk-by\x2ddiskseq-88.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/88
+  dev-disk-by\x2ddiskseq-9.device                                                                                               loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  dev-disk-by\x2ddiskseq-90.device                                                                                              loaded    active   plugged   /dev/disk/by-diskseq/90
+  dev-disk-by\x2ddiskseq-9\x2dpart1.device                                                                                      loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2ddiskseq-9\x2dpart2.device                                                                                      loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2did-nvme\x2deui.002538c851501c17.device                                                                         loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  dev-disk-by\x2did-nvme\x2deui.002538c851501c17\x2dpart1.device                                                                loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2did-nvme\x2deui.002538c851501c17\x2dpart2.device                                                                loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2did-nvme\x2dSAMSUNG_MZALC4T0HBL1\x2d00B07_S8C2NG0Y805183.device                                                 loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  dev-disk-by\x2did-nvme\x2dSAMSUNG_MZALC4T0HBL1\x2d00B07_S8C2NG0Y805183\x2dpart1.device                                        loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2did-nvme\x2dSAMSUNG_MZALC4T0HBL1\x2d00B07_S8C2NG0Y805183\x2dpart2.device                                        loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2did-nvme\x2dSAMSUNG_MZALC4T0HBL1\x2d00B07_S8C2NG0Y805183_1.device                                               loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  dev-disk-by\x2did-nvme\x2dSAMSUNG_MZALC4T0HBL1\x2d00B07_S8C2NG0Y805183_1\x2dpart1.device                                      loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2did-nvme\x2dSAMSUNG_MZALC4T0HBL1\x2d00B07_S8C2NG0Y805183_1\x2dpart2.device                                      loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2dlabel-EFI.device                                                                                               loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2dlabel-root.device                                                                                              loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441878.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441878
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441887.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441887
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441915.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441915
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441922.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441922
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441923.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441923
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441928.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441928
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441933.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441933
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441934.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441934
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441960.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441960
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441962.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441962
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441981.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441981
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441992.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441992
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441997.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441997
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1441998.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1441998
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442014.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442014
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442205.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442205
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442224.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442224
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442261.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442261
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442275.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442275
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442316.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442316
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442323.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442323
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442324.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442324
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442351.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442351
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442356.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442356
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442521.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442521
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1442675.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1442675
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1443159.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1443159
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1444149.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1444149
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1447594.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1447594
+  dev-disk-by\x2dloop\x2dinode-259:2\x2d1447596.device                                                                          loaded    active   plugged   /dev/disk/by-loop-inode/259:2-1447596
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fbare_5.snap.device                              loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fbare_5.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fchromium_3572.snap.device                       loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fchromium_3572.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fchromium_3584.snap.device                       loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fchromium_3584.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcore22_2956.snap.device                         loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcore22_2956.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcore22_2988.snap.device                         loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcore22_2988.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcore24_1644.snap.device                         loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcore24_1644.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcore24_2125.snap.device                         loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcore24_2125.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcore26_649.snap.device                          loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcore26_649.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcore26_751.snap.device                          loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcore26_751.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcups_1261.snap.device                           loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcups_1261.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fcups_1274.snap.device                           loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fcups_1274.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2ffirefox_9056.snap.device                        loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2ffirefox_9056.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2ffirefox_9112.snap.device                        loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2ffirefox_9112.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2ffirmware\x2dupdater_259.snap.device             loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2ffirmware-updater_259.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2ffirmware\x2dupdater_263.snap.device             loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2ffirmware-updater_263.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fgnome\x2d42\x2d2204_245.snap.device             loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fgnome-42-2204_245.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fgnome\x2d42\x2d2204_264.snap.device             loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fgnome-42-2204_264.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fgnome\x2d46\x2d2404_169.snap.device             loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fgnome-46-2404_169.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fgnome\x2d46\x2d2404_176.snap.device             loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fgnome-46-2404_176.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fgtk\x2dcommon\x2dthemes_1535.snap.device        loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fgtk-common-themes_1535.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fmesa\x2d2404_1166.snap.device                   loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fmesa-2404_1166.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fmesa\x2d2404_1836.snap.device                   loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fmesa-2404_1836.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fsnap\x2dstore_1448.snap.device                  loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fsnap-store_1448.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fsnap\x2dstore_1469.snap.device                  loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fsnap-store_1469.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fsnapd\x2ddesktop\x2dintegration_388.snap.device loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fsnapd-desktop-integration_388.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fsnapd\x2ddesktop\x2dintegration_396.snap.device loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fsnapd-desktop-integration_396.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fsnapd_28255.snap.device                         loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fsnapd_28255.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fsnapd_28331.snap.device                         loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fsnapd_28331.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fthunderbird_1300.snap.device                    loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fthunderbird_1300.snap
+  dev-disk-by\x2dloop\x2dref-\x5cx2fvar\x5cx2flib\x5cx2fsnapd\x5cx2fsnaps\x5cx2fthunderbird_1313.snap.device                    loaded    active   plugged   /dev/disk/by-loop-ref/\x2fvar\x2flib\x2fsnapd\x2fsnaps\x2fthunderbird_1313.snap
+  dev-disk-by\x2dpartuuid-49c2c0c1\x2d9a21\x2d4a53\x2da43a\x2d95ab7d996027.device                                               loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2dpartuuid-7c2b24e9\x2d0ceb\x2d4ad7\x2da401\x2d9bf3c92c26ee.device                                               loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2dpath-pci\x2d0004:01:00.0\x2dnvme\x2d1.device                                                                   loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  dev-disk-by\x2dpath-pci\x2d0004:01:00.0\x2dnvme\x2d1\x2dpart1.device                                                          loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2dpath-pci\x2d0004:01:00.0\x2dnvme\x2d1\x2dpart2.device                                                          loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-disk-by\x2duuid-9DA2\x2d3597.device                                                                                       loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-disk-by\x2duuid-d27bfd26\x2dff30\x2d400e\x2d9eca\x2d9cdf73de9406.device                                                   loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-infiniband-umad0.device                                                                                                   loaded    active   plugged   /dev/infiniband/umad0
+  dev-infiniband-umad1.device                                                                                                   loaded    active   plugged   /dev/infiniband/umad1
+  dev-infiniband-umad2.device                                                                                                   loaded    active   plugged   /dev/infiniband/umad2
+  dev-infiniband-umad3.device                                                                                                   loaded    active   plugged   /dev/infiniband/umad3
+  dev-loop0.device                                                                                                              loaded    active   plugged   /dev/loop0
+  dev-loop1.device                                                                                                              loaded    active   plugged   /dev/loop1
+  dev-loop10.device                                                                                                             loaded    active   plugged   /dev/loop10
+  dev-loop11.device                                                                                                             loaded    active   plugged   /dev/loop11
+  dev-loop12.device                                                                                                             loaded    active   plugged   /dev/loop12
+  dev-loop13.device                                                                                                             loaded    active   plugged   /dev/loop13
+  dev-loop14.device                                                                                                             loaded    active   plugged   /dev/loop14
+  dev-loop15.device                                                                                                             loaded    active   plugged   /dev/loop15
+  dev-loop16.device                                                                                                             loaded    active   plugged   /dev/loop16
+  dev-loop17.device                                                                                                             loaded    active   plugged   /dev/loop17
+  dev-loop18.device                                                                                                             loaded    active   plugged   /dev/loop18
+  dev-loop19.device                                                                                                             loaded    active   plugged   /dev/loop19
+  dev-loop2.device                                                                                                              loaded    active   plugged   /dev/loop2
+  dev-loop20.device                                                                                                             loaded    active   plugged   /dev/loop20
+  dev-loop21.device                                                                                                             loaded    active   plugged   /dev/loop21
+  dev-loop22.device                                                                                                             loaded    active   plugged   /dev/loop22
+  dev-loop23.device                                                                                                             loaded    active   plugged   /dev/loop23
+  dev-loop24.device                                                                                                             loaded    active   plugged   /dev/loop24
+  dev-loop25.device                                                                                                             loaded    active   plugged   /dev/loop25
+  dev-loop26.device                                                                                                             loaded    active   plugged   /dev/loop26
+  dev-loop27.device                                                                                                             loaded    active   plugged   /dev/loop27
+  dev-loop29.device                                                                                                             loaded    active   plugged   /dev/loop29
+  dev-loop3.device                                                                                                              loaded    active   plugged   /dev/loop3
+  dev-loop31.device                                                                                                             loaded    active   plugged   /dev/loop31
+  dev-loop4.device                                                                                                              loaded    active   plugged   /dev/loop4
+  dev-loop5.device                                                                                                              loaded    active   plugged   /dev/loop5
+  dev-loop6.device                                                                                                              loaded    active   plugged   /dev/loop6
+  dev-loop7.device                                                                                                              loaded    active   plugged   /dev/loop7
+  dev-loop8.device                                                                                                              loaded    active   plugged   /dev/loop8
+  dev-loop9.device                                                                                                              loaded    active   plugged   /dev/loop9
+  dev-nvme0n1.device                                                                                                            loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  dev-nvme0n1p1.device                                                                                                          loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  dev-nvme0n1p2.device                                                                                                          loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  dev-ptp0.device                                                                                                               loaded    active   plugged   /dev/ptp0
+  dev-ptp1.device                                                                                                               loaded    active   plugged   /dev/ptp1
+  dev-ptp2.device                                                                                                               loaded    active   plugged   /dev/ptp2
+  dev-ptp3.device                                                                                                               loaded    active   plugged   /dev/ptp3
+  dev-rfkill.device                                                                                                             loaded    active   plugged   /dev/rfkill
+  dev-snd-by\x2dpath-platform\x2dNVDA2014:00.device                                                                             loaded    active   plugged   /dev/snd/by-path/platform-NVDA2014:00
+  dev-snd-controlC0.device                                                                                                      loaded    active   plugged   /dev/snd/controlC0
+  dev-ttyprintk.device                                                                                                          loaded    active   plugged   /dev/ttyprintk
+  dev-ttyS0.device                                                                                                              loaded    active   plugged   /dev/ttyS0
+  dev-ttyS1.device                                                                                                              loaded    active   plugged   /dev/ttyS1
+  dev-ttyS10.device                                                                                                             loaded    active   plugged   /dev/ttyS10
+  dev-ttyS11.device                                                                                                             loaded    active   plugged   /dev/ttyS11
+  dev-ttyS12.device                                                                                                             loaded    active   plugged   /dev/ttyS12
+  dev-ttyS13.device                                                                                                             loaded    active   plugged   /dev/ttyS13
+  dev-ttyS14.device                                                                                                             loaded    active   plugged   /dev/ttyS14
+  dev-ttyS15.device                                                                                                             loaded    active   plugged   /dev/ttyS15
+  dev-ttyS16.device                                                                                                             loaded    active   plugged   /dev/ttyS16
+  dev-ttyS17.device                                                                                                             loaded    active   plugged   /dev/ttyS17
+  dev-ttyS18.device                                                                                                             loaded    active   plugged   /dev/ttyS18
+  dev-ttyS19.device                                                                                                             loaded    active   plugged   /dev/ttyS19
+  dev-ttyS2.device                                                                                                              loaded    active   plugged   /dev/ttyS2
+  dev-ttyS20.device                                                                                                             loaded    active   plugged   /dev/ttyS20
+  dev-ttyS21.device                                                                                                             loaded    active   plugged   /dev/ttyS21
+  dev-ttyS22.device                                                                                                             loaded    active   plugged   /dev/ttyS22
+  dev-ttyS23.device                                                                                                             loaded    active   plugged   /dev/ttyS23
+  dev-ttyS24.device                                                                                                             loaded    active   plugged   /dev/ttyS24
+  dev-ttyS25.device                                                                                                             loaded    active   plugged   /dev/ttyS25
+  dev-ttyS26.device                                                                                                             loaded    active   plugged   /dev/ttyS26
+  dev-ttyS27.device                                                                                                             loaded    active   plugged   /dev/ttyS27
+  dev-ttyS28.device                                                                                                             loaded    active   plugged   /dev/ttyS28
+  dev-ttyS29.device                                                                                                             loaded    active   plugged   /dev/ttyS29
+  dev-ttyS3.device                                                                                                              loaded    active   plugged   /dev/ttyS3
+  dev-ttyS30.device                                                                                                             loaded    active   plugged   /dev/ttyS30
+  dev-ttyS31.device                                                                                                             loaded    active   plugged   /dev/ttyS31
+  dev-ttyS4.device                                                                                                              loaded    active   plugged   /dev/ttyS4
+  dev-ttyS5.device                                                                                                              loaded    active   plugged   /dev/ttyS5
+  dev-ttyS6.device                                                                                                              loaded    active   plugged   /dev/ttyS6
+  dev-ttyS7.device                                                                                                              loaded    active   plugged   /dev/ttyS7
+  dev-ttyS8.device                                                                                                              loaded    active   plugged   /dev/ttyS8
+  dev-ttyS9.device                                                                                                              loaded    active   plugged   /dev/ttyS9
+  sys-bus-pci-drivers-nvidia.device                                                                                             loaded    active   plugged   /sys/bus/pci/drivers/nvidia
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.0-infiniband-rocep1s0f0.device                                                 loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.0-infiniband_mad-umad0.device                                                  loaded    active   plugged   /sys/devices/pci0000:00/0000:00:00.0/0000:01:00.0/infiniband_mad/umad0
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.0-net-enp1s0f0np0.device                                                       loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.0-ptp-ptp0.device                                                              loaded    active   plugged   /sys/devices/pci0000:00/0000:00:00.0/0000:01:00.0/ptp/ptp0
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.1-infiniband-rocep1s0f1.device                                                 loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.1-infiniband_mad-umad1.device                                                  loaded    active   plugged   /sys/devices/pci0000:00/0000:00:00.0/0000:01:00.1/infiniband_mad/umad1
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.1-net-enp1s0f1np1.device                                                       loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0000:00-0000:00:00.0-0000:01:00.1-ptp-ptp1.device                                                              loaded    active   plugged   /sys/devices/pci0000:00/0000:00:00.0/0000:01:00.1/ptp/ptp1
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.0-infiniband-roceP2p1s0f0.device                                               loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.0-infiniband_mad-umad2.device                                                  loaded    active   plugged   /sys/devices/pci0002:00/0002:00:00.0/0002:01:00.0/infiniband_mad/umad2
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.0-net-enP2p1s0f0np0.device                                                     loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.0-ptp-ptp2.device                                                              loaded    active   plugged   /sys/devices/pci0002:00/0002:00:00.0/0002:01:00.0/ptp/ptp2
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.1-infiniband-roceP2p1s0f1.device                                               loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.1-infiniband_mad-umad3.device                                                  loaded    active   plugged   /sys/devices/pci0002:00/0002:00:00.0/0002:01:00.1/infiniband_mad/umad3
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.1-net-enP2p1s0f1np1.device                                                     loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-devices-pci0002:00-0002:00:00.0-0002:01:00.1-ptp-ptp3.device                                                              loaded    active   plugged   /sys/devices/pci0002:00/0002:00:00.0/0002:01:00.1/ptp/ptp3
+  sys-devices-pci0004:00-0004:00:00.0-0004:01:00.0-nvme-nvme0-nvme0n1-nvme0n1p1.device                                          loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 EFI
+  sys-devices-pci0004:00-0004:00:00.0-0004:01:00.0-nvme-nvme0-nvme0n1-nvme0n1p2.device                                          loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07 root
+  sys-devices-pci0004:00-0004:00:00.0-0004:01:00.0-nvme-nvme0-nvme0n1.device                                                    loaded    active   plugged   SAMSUNG MZALC4T0HBL1-00B07
+  sys-devices-pci0007:00-0007:00:00.0-0007:01:00.0-net-enP7s7.device                                                            loaded    active   plugged   /sys/devices/pci0007:00/0007:00:00.0/0007:01:00.0/net/enP7s7
+  sys-devices-pci0009:00-0009:00:00.0-0009:01:00.0-net-wlP9s9.device                                                            loaded    active   plugged   /sys/devices/pci0009:00/0009:00:00.0/0009:01:00.0/net/wlP9s9
+  sys-devices-platform-MTKI0511:00-MTKI0511:00:0-MTKI0511:00:0.0-tty-ttyS0.device                                               loaded    active   plugged   /sys/devices/platform/MTKI0511:00/MTKI0511:00:0/MTKI0511:00:0.0/tty/ttyS0
+  sys-devices-platform-NVDA2014:00-sound-card0-controlC0.device                                                                 loaded    active   plugged   /sys/devices/platform/NVDA2014:00/sound/card0/controlC0
+  sys-devices-platform-NVDA8000:02-usb6-6\x2d1-6\x2d1:2.0-net-enx9c69d3309a38.device                                            loaded    active   plugged   AX88179 Gigabit Ethernet
+  sys-devices-platform-NVDA8000:04-usb11-11\x2d2-11\x2d2:1.0-bluetooth-hci0.device                                              loaded    active   plugged   /sys/devices/platform/NVDA8000:04/usb11/11-2/11-2:1.0/bluetooth/hci0
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.1-tty-ttyS1.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.1/tty/ttyS1
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.10-tty-ttyS10.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.10/tty/ttyS10
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.11-tty-ttyS11.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.11/tty/ttyS11
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.12-tty-ttyS12.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.12/tty/ttyS12
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.13-tty-ttyS13.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.13/tty/ttyS13
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.14-tty-ttyS14.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.14/tty/ttyS14
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.15-tty-ttyS15.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.15/tty/ttyS15
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.16-tty-ttyS16.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.16/tty/ttyS16
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.17-tty-ttyS17.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.17/tty/ttyS17
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.18-tty-ttyS18.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.18/tty/ttyS18
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.19-tty-ttyS19.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.19/tty/ttyS19
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.2-tty-ttyS2.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.2/tty/ttyS2
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.20-tty-ttyS20.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.20/tty/ttyS20
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.21-tty-ttyS21.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.21/tty/ttyS21
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.22-tty-ttyS22.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.22/tty/ttyS22
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.23-tty-ttyS23.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.23/tty/ttyS23
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.24-tty-ttyS24.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.24/tty/ttyS24
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.25-tty-ttyS25.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.25/tty/ttyS25
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.26-tty-ttyS26.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.26/tty/ttyS26
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.27-tty-ttyS27.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.27/tty/ttyS27
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.28-tty-ttyS28.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.28/tty/ttyS28
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.29-tty-ttyS29.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.29/tty/ttyS29
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.3-tty-ttyS3.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.3/tty/ttyS3
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.30-tty-ttyS30.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.30/tty/ttyS30
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.31-tty-ttyS31.device                                                loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.31/tty/ttyS31
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.4-tty-ttyS4.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.4/tty/ttyS4
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.5-tty-ttyS5.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.5/tty/ttyS5
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.6-tty-ttyS6.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.6/tty/ttyS6
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.7-tty-ttyS7.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.7/tty/ttyS7
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.8-tty-ttyS8.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.8/tty/ttyS8
+  sys-devices-platform-serial8250-serial8250:0-serial8250:0.9-tty-ttyS9.device                                                  loaded    active   plugged   /sys/devices/platform/serial8250/serial8250:0/serial8250:0.9/tty/ttyS9
+  sys-devices-virtual-block-loop0.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop0
+  sys-devices-virtual-block-loop1.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop1
+  sys-devices-virtual-block-loop10.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop10
+  sys-devices-virtual-block-loop11.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop11
+  sys-devices-virtual-block-loop12.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop12
+  sys-devices-virtual-block-loop13.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop13
+  sys-devices-virtual-block-loop14.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop14
+  sys-devices-virtual-block-loop15.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop15
+  sys-devices-virtual-block-loop16.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop16
+  sys-devices-virtual-block-loop17.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop17
+  sys-devices-virtual-block-loop18.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop18
+  sys-devices-virtual-block-loop19.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop19
+  sys-devices-virtual-block-loop2.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop2
+  sys-devices-virtual-block-loop20.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop20
+  sys-devices-virtual-block-loop21.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop21
+  sys-devices-virtual-block-loop22.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop22
+  sys-devices-virtual-block-loop23.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop23
+  sys-devices-virtual-block-loop24.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop24
+  sys-devices-virtual-block-loop25.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop25
+  sys-devices-virtual-block-loop26.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop26
+  sys-devices-virtual-block-loop27.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop27
+  sys-devices-virtual-block-loop29.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop29
+  sys-devices-virtual-block-loop3.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop3
+  sys-devices-virtual-block-loop31.device                                                                                       loaded    active   plugged   /sys/devices/virtual/block/loop31
+  sys-devices-virtual-block-loop4.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop4
+  sys-devices-virtual-block-loop5.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop5
+  sys-devices-virtual-block-loop6.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop6
+  sys-devices-virtual-block-loop7.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop7
+  sys-devices-virtual-block-loop8.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop8
+  sys-devices-virtual-block-loop9.device                                                                                        loaded    active   plugged   /sys/devices/virtual/block/loop9
+  sys-devices-virtual-misc-rfkill.device                                                                                        loaded    active   plugged   /sys/devices/virtual/misc/rfkill
+  sys-devices-virtual-net-docker0.device                                                                                        loaded    active   plugged   /sys/devices/virtual/net/docker0
+  sys-devices-virtual-net-tailscale0.device                                                                                     loaded    active   plugged   /sys/devices/virtual/net/tailscale0
+  sys-devices-virtual-tty-ttyprintk.device                                                                                      loaded    active   plugged   /sys/devices/virtual/tty/ttyprintk
+  sys-module-configfs.device                                                                                                    loaded    active   plugged   /sys/module/configfs
+  sys-module-fuse.device                                                                                                        loaded    active   plugged   /sys/module/fuse
+  sys-module-nvidia.device                                                                                                      loaded    active   plugged   /sys/module/nvidia
+  sys-subsystem-bluetooth-devices-hci0.device                                                                                   loaded    active   plugged   /sys/subsystem/bluetooth/devices/hci0
+  sys-subsystem-net-devices-docker0.device                                                                                      loaded    active   plugged   /sys/subsystem/net/devices/docker0
+  sys-subsystem-net-devices-enp1s0f0np0.device                                                                                  loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-subsystem-net-devices-enp1s0f1np1.device                                                                                  loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-subsystem-net-devices-enP2p1s0f0np0.device                                                                                loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-subsystem-net-devices-enP2p1s0f1np1.device                                                                                loaded    active   plugged   MT2910 Family [ConnectX-7]
+  sys-subsystem-net-devices-enP7s7.device                                                                                       loaded    active   plugged   /sys/subsystem/net/devices/enP7s7
+  sys-subsystem-net-devices-enx9c69d3309a38.device                                                                              loaded    active   plugged   AX88179 Gigabit Ethernet
+  sys-subsystem-net-devices-tailscale0.device                                                                                   loaded    active   plugged   /sys/subsystem/net/devices/tailscale0
+  sys-subsystem-net-devices-wlP9s9.device                                                                                       loaded    active   plugged   /sys/subsystem/net/devices/wlP9s9
+  sys-subsystem-rdma-devices-rocep1s0f0:1-umad.device                                                                           loaded    active   plugged   /sys/subsystem/rdma/devices/rocep1s0f0:1/umad
+  sys-subsystem-rdma-devices-rocep1s0f1:1-umad.device                                                                           loaded    active   plugged   /sys/subsystem/rdma/devices/rocep1s0f1:1/umad
+  sys-subsystem-rdma-devices-roceP2p1s0f0:1-umad.device                                                                         loaded    active   plugged   /sys/subsystem/rdma/devices/roceP2p1s0f0:1/umad
+  sys-subsystem-rdma-devices-roceP2p1s0f1:1-umad.device                                                                         loaded    active   plugged   /sys/subsystem/rdma/devices/roceP2p1s0f1:1/umad
+  -.mount                                                                                                                       loaded    active   mounted   Root Mount
+  boot-efi.mount                                                                                                                loaded    active   mounted   /boot/efi
+  dev-hugepages.mount                                                                                                           loaded    active   mounted   /dev/hugepages
+  dev-mqueue.mount                                                                                                              loaded    active   mounted   /dev/mqueue
+  mnt-nas-deid\x2danaut.mount                                                                                                   loaded    active   mounted   /mnt/nas/deid-anaut
+  mnt-nas-deid\x2dflynn.mount                                                                                                   loaded    active   mounted   /mnt/nas/deid-flynn
+  mnt-nas-deid\x2dkucejko.mount                                                                                                 loaded    active   mounted   /mnt/nas/deid-kucejko
+  mnt-nas-deid\x2dmiller.mount                                                                                                  loaded    active   mounted   /mnt/nas/deid-miller
+  mnt-nas-deid\x2dnoren.mount                                                                                                   loaded    active   mounted   /mnt/nas/deid-noren
+  mnt-nas-deid\x2dplum.mount                                                                                                    loaded    active   mounted   /mnt/nas/deid-plum
+  mnt-nas-deid\x2dsarin.mount                                                                                                   loaded    active   mounted   /mnt/nas/deid-sarin
+  mnt-nas-deid\x2dshared.mount                                                                                                  loaded    active   mounted   /mnt/nas/deid-shared
+  mnt-nas-miscellaneous.mount                                                                                                   loaded    active   mounted   /mnt/nas/miscellaneous
+  mnt-nas-or\x2draw.mount                                                                                                       loaded    active   mounted   /mnt/nas/or-raw
+  mnt-nas-raw\x2dflynn.mount                                                                                                    loaded    active   mounted   /mnt/nas/raw-flynn
+  mnt-nas-raw\x2dkucejko.mount                                                                                                  loaded    active   mounted   /mnt/nas/raw-kucejko
+  mnt-nas-raw\x2dmiller.mount                                                                                                   loaded    active   mounted   /mnt/nas/raw-miller
+  mnt-nas-raw\x2dnoren.mount                                                                                                    loaded    active   mounted   /mnt/nas/raw-noren
+  mnt-nas-raw\x2dsarin.mount                                                                                                    loaded    active   mounted   /mnt/nas/raw-sarin
+  mnt-nas-research\x2ddatasets.mount                                                                                            loaded    active   mounted   /mnt/nas/research-datasets
+  proc-sys-fs-binfmt_misc.mount                                                                                                 loaded    active   mounted   /proc/sys/fs/binfmt_misc
+  run-rpc_pipefs.mount                                                                                                          loaded    active   mounted   /run/rpc_pipefs
+  run-snapd-ns-chromium.mnt.mount                                                                                               loaded    active   mounted   /run/snapd/ns/chromium.mnt
+  run-snapd-ns-cups.mnt.mount                                                                                                   loaded    active   mounted   /run/snapd/ns/cups.mnt
+  run-snapd-ns-firmware\x2dupdater.mnt.mount                                                                                    loaded    active   mounted   /run/snapd/ns/firmware-updater.mnt
+  run-snapd-ns-snapd\x2ddesktop\x2dintegration.mnt.mount                                                                        loaded    active   mounted   /run/snapd/ns/snapd-desktop-integration.mnt
+  run-snapd-ns-thunderbird.mnt.mount                                                                                            loaded    active   mounted   /run/snapd/ns/thunderbird.mnt
+  run-snapd-ns.mount                                                                                                            loaded    active   mounted   /run/snapd/ns
+  run-user-1000-doc.mount                                                                                                       loaded    active   mounted   /run/user/1000/doc
+  run-user-1000-gvfs.mount                                                                                                      loaded    active   mounted   /run/user/1000/gvfs
+  run-user-1000.mount                                                                                                           loaded    active   mounted   /run/user/1000
+  snap-bare-5.mount                                                                                                             loaded    active   mounted   /snap/bare/5
+  snap-chromium-3572.mount                                                                                                      loaded    active   mounted   /snap/chromium/3572
+  snap-chromium-3584.mount                                                                                                      loaded    active   mounted   /snap/chromium/3584
+  snap-core22-2956.mount                                                                                                        loaded    active   mounted   /snap/core22/2956
+  snap-core22-2988.mount                                                                                                        loaded    active   mounted   /snap/core22/2988
+  snap-core24-1644.mount                                                                                                        loaded    active   mounted   /snap/core24/1644
+  snap-core24-2125.mount                                                                                                        loaded    active   mounted   /snap/core24/2125
+  snap-core26-649.mount                                                                                                         loaded    active   mounted   /snap/core26/649
+  snap-core26-751.mount                                                                                                         loaded    active   mounted   /snap/core26/751
+  snap-cups-1261.mount                                                                                                          loaded    active   mounted   /snap/cups/1261
+  snap-cups-1274.mount                                                                                                          loaded    active   mounted   /snap/cups/1274
+  snap-firefox-9056.mount                                                                                                       loaded    active   mounted   /snap/firefox/9056
+  snap-firefox-9112.mount                                                                                                       loaded    active   mounted   /snap/firefox/9112
+  snap-firmware\x2dupdater-259.mount                                                                                            loaded    active   mounted   /snap/firmware-updater/259
+  snap-firmware\x2dupdater-263.mount                                                                                            loaded    active   mounted   /snap/firmware-updater/263
+  snap-gnome\x2d42\x2d2204-245.mount                                                                                            loaded    active   mounted   /snap/gnome-42-2204/245
+  snap-gnome\x2d42\x2d2204-264.mount                                                                                            loaded    active   mounted   /snap/gnome-42-2204/264
+  snap-gnome\x2d46\x2d2404-169.mount                                                                                            loaded    active   mounted   /snap/gnome-46-2404/169
+  snap-gnome\x2d46\x2d2404-176.mount                                                                                            loaded    active   mounted   /snap/gnome-46-2404/176
+  snap-gtk\x2dcommon\x2dthemes-1535.mount                                                                                       loaded    active   mounted   /snap/gtk-common-themes/1535
+  snap-mesa\x2d2404-1166.mount                                                                                                  loaded    active   mounted   /snap/mesa-2404/1166
+  snap-mesa\x2d2404-1836.mount                                                                                                  loaded    active   mounted   /snap/mesa-2404/1836
+  snap-snap\x2dstore-1448.mount                                                                                                 loaded    active   mounted   /snap/snap-store/1448
+  snap-snap\x2dstore-1469.mount                                                                                                 loaded    active   mounted   /snap/snap-store/1469
+  snap-snapd-28255.mount                                                                                                        loaded    active   mounted   /snap/snapd/28255
+  snap-snapd-28331.mount                                                                                                        loaded    active   mounted   /snap/snapd/28331
+  snap-snapd\x2ddesktop\x2dintegration-388.mount                                                                                loaded    active   mounted   /snap/snapd-desktop-integration/388
+  snap-snapd\x2ddesktop\x2dintegration-396.mount                                                                                loaded    active   mounted   /snap/snapd-desktop-integration/396
+  snap-thunderbird-1300.mount                                                                                                   loaded    active   mounted   /snap/thunderbird/1300
+  snap-thunderbird-1313.mount                                                                                                   loaded    active   mounted   /snap/thunderbird/1313
+  sys-fs-fuse-connections.mount                                                                                                 loaded    active   mounted   /sys/fs/fuse/connections
+  sys-kernel-config.mount                                                                                                       loaded    active   mounted   /sys/kernel/config
+  sys-kernel-debug-tracing.mount                                                                                                loaded    active   mounted   /sys/kernel/debug/tracing
+  sys-kernel-debug.mount                                                                                                        loaded    active   mounted   /sys/kernel/debug
+  sys-kernel-tracing.mount                                                                                                      loaded    active   mounted   /sys/kernel/tracing
+  ubuntu-report.path                                                                                                            loaded    active   waiting   Pending report trigger for Ubuntu Report
+  update-notifier-crash.path                                                                                                    loaded    active   waiting   Path trigger for Apport crash notifications
+  update-notifier-release.path                                                                                                  loaded    active   waiting   Path trigger for new release of Ubuntu notifications
+  app-gnome-org.gnome.Evolution\x2dalarm\x2dnotify-23590.scope                                                                  loaded    active   running   Application launched by gnome-session-binary
+  app-gnome-org.gnome.SettingsDaemon.DiskUtilityNotify-23501.scope                                                              loaded    active   running   Application launched by gnome-session-binary
+  app-gnome-org.gnome.Software-23517.scope                                                                                      loaded    active   running   Application launched by gnome-session-binary
+  init.scope                                                                                                                    loaded    active   running   System and Service Manager
+● run-u134.scope                                                                                                                loaded    failed   failed    /usr/bin/python3 -I -c "b=bytearray(400*1024*1024); print('survived', len(b))"
+  at-spi-dbus-bus.service                                                                                                       loaded    active   running   Accessibility services bus
+  dbus.service                                                                                                                  loaded    active   running   D-Bus User Message Bus
+  dconf.service                                                                                                                 loaded    active   running   User preferences database
+  dirmngr.service                                                                                                               loaded    inactive dead      GnuPG network certificate management daemon
+  evolution-addressbook-factory.service                                                                                         loaded    active   running   Evolution address book service
+  evolution-calendar-factory.service                                                                                            loaded    active   running   Evolution calendar service
+  evolution-source-registry.service                                                                                             loaded    active   running   Evolution source registry
+  filter-chain.service                                                                                                          loaded    active   running   PipeWire filter chain daemon
+  gcr-ssh-agent.service                                                                                                         loaded    active   running   GCR ssh-agent wrapper
+  gnome-initial-setup-copy-worker.service                                                                                       loaded    inactive dead      GNOME Initial Setup Copy Worker
+  gnome-initial-setup-first-login.service                                                                                       loaded    inactive dead      GNOME Initial Setup
+● gnome-initial-setup.service                                                                                                   not-found inactive dead      gnome-initial-setup.service
+  gnome-keyring-daemon.service                                                                                                  loaded    active   running   GNOME Keyring daemon
+  gnome-session-failed.service                                                                                                  loaded    inactive dead      GNOME Session Failed lockdown screen (user)
+  gnome-session-manager@gnome-initial-setup.service                                                                             loaded    inactive dead      GNOME Session Manager (session: gnome-initial-setup)
+  gnome-session-manager@gnome-login.service                                                                                     loaded    inactive dead      GNOME Session Manager (session: gnome-login)
+  gnome-session-manager@ubuntu.service                                                                                          loaded    active   running   GNOME Session Manager (session: ubuntu)
+  gnome-session-monitor.service                                                                                                 loaded    active   running   Monitor Session leader for GNOME Session
+  gnome-session-restart-dbus.service                                                                                            loaded    inactive dead      Restart DBus after GNOME Session shutdown
+  gnome-session-signal-init.service                                                                                             loaded    inactive dead      Signal initialization done to GNOME Session Manager
+  gpg-agent.service                                                                                                             loaded    inactive dead      GnuPG cryptographic agent and passphrase cache
+  gvfs-afc-volume-monitor.service                                                                                               loaded    active   running   Virtual filesystem service - Apple File Conduit monitor
+  gvfs-daemon.service                                                                                                           loaded    active   running   Virtual filesystem service
+  gvfs-goa-volume-monitor.service                                                                                               loaded    active   running   Virtual filesystem service - GNOME Online Accounts monitor
+  gvfs-gphoto2-volume-monitor.service                                                                                           loaded    active   running   Virtual filesystem service - digital camera monitor
+  gvfs-metadata.service                                                                                                         loaded    active   running   Virtual filesystem metadata service
+  gvfs-mtp-volume-monitor.service                                                                                               loaded    active   running   Virtual filesystem service - Media Transfer Protocol monitor
+  gvfs-udisks2-volume-monitor.service                                                                                           loaded    active   running   Virtual filesystem service - disk device monitor
+  keyboxd.service                                                                                                               loaded    inactive dead      GnuPG public key management service
+  launchpadlib-cache-clean.service                                                                                              loaded    inactive dead      Clean up old files in the Launchpadlib cache
+  org.freedesktop.IBus.session.GNOME.service                                                                                    loaded    active   running   IBus Daemon for GNOME
+  org.gnome.SettingsDaemon.A11ySettings.service                                                                                 loaded    active   running   GNOME accessibility service
+  org.gnome.SettingsDaemon.Color.service                                                                                        loaded    active   running   GNOME color management service
+  org.gnome.SettingsDaemon.Datetime.service                                                                                     loaded    active   running   GNOME date & time service
+  org.gnome.SettingsDaemon.Housekeeping.service                                                                                 loaded    active   running   GNOME maintenance of expirable data service
+  org.gnome.SettingsDaemon.Keyboard.service                                                                                     loaded    active   running   GNOME keyboard configuration service
+  org.gnome.SettingsDaemon.MediaKeys.service                                                                                    loaded    active   running   GNOME keyboard shortcuts service
+  org.gnome.SettingsDaemon.Power.service                                                                                        loaded    active   running   GNOME power management service
+  org.gnome.SettingsDaemon.PrintNotifications.service                                                                           loaded    active   running   GNOME printer notifications service
+  org.gnome.SettingsDaemon.Rfkill.service                                                                                       loaded    active   running   GNOME RFKill support service
+  org.gnome.SettingsDaemon.ScreensaverProxy.service                                                                             loaded    active   running   GNOME FreeDesktop screensaver service
+  org.gnome.SettingsDaemon.Sharing.service                                                                                      loaded    active   running   GNOME file sharing service
+  org.gnome.SettingsDaemon.Smartcard.service                                                                                    loaded    active   running   GNOME smartcard service
+  org.gnome.SettingsDaemon.Sound.service                                                                                        loaded    active   running   GNOME sound sample caching service
+  org.gnome.SettingsDaemon.UsbProtection.service                                                                                loaded    inactive dead      GNOME USB protection service
+  org.gnome.SettingsDaemon.Wacom.service                                                                                        loaded    active   running   GNOME Wacom tablet support service
+  org.gnome.SettingsDaemon.XSettings.service                                                                                    loaded    active   running   GNOME XSettings service
+  org.gnome.Shell-disable-extensions.service                                                                                    loaded    inactive dead      Disable GNOME Shell extensions after failure
+  org.gnome.Shell@wayland.service                                                                                               loaded    inactive dead      GNOME Shell on Wayland
+  org.gnome.Shell@x11.service                                                                                                   loaded    active   running   GNOME Shell on X11
+● pipewire-media-session.service                                                                                                not-found inactive dead      pipewire-media-session.service
+  pipewire-pulse.service                                                                                                        loaded    active   running   PipeWire PulseAudio
+● pipewire-session-manager.service                                                                                              not-found inactive dead      pipewire-session-manager.service
+  pipewire.service                                                                                                              loaded    active   running   PipeWire Multimedia Service
+  pk-debconf-helper.service                                                                                                     loaded    inactive dead      debconf communication service
+● pulseaudio.service                                                                                                            not-found inactive dead      pulseaudio.service
+  session-migration.service                                                                                                     loaded    inactive dead      Session Migration
+  snap.firmware-updater.firmware-notifier.service                                                                               loaded    active   running   Service for snap application firmware-updater.firmware-notifier
+  snap.snapd-desktop-integration.snapd-desktop-integration.service                                                              loaded    active   running   Service for snap application snapd-desktop-integration.snapd-desktop-integration
+  snapd.session-agent.service                                                                                                   loaded    inactive dead      snapd user session agent
+  speech-dispatcher.service                                                                                                     loaded    inactive dead      Common interface to speech synthesizers
+  ssh-agent.service                                                                                                             loaded    inactive dead      OpenSSH Agent
+  surgical-cv-backup.service                                                                                                    loaded    inactive dead      Surgical-CV state-store backup (verified snapshot + retention)
+  surgical-cv-health.service                                                                                                    loaded    inactive dead      Surgical-CV system health monitor (one observation round)
+  surgical-cv-worker.service                                                                                                    loaded    inactive dead      Surgical-CV Q3 decoupled worker (single iteration)
+● systemd-remount-fs.service                                                                                                    not-found inactive dead      systemd-remount-fs.service
+  tracker-miner-fs-3.service                                                                                                    loaded    active   running   Tracker file system data miner
+  ubuntu-report.service                                                                                                         loaded    inactive dead      Ubuntu report sends pending metrics data
+● update-notifier-crash.service                                                                                                 loaded    failed   failed    Notification regarding a crash report
+  update-notifier-release.service                                                                                               loaded    inactive dead      Notification regarding a new release of Ubuntu
+  user-session-migration.service                                                                                                loaded    inactive dead      User Session Migration
+  wireplumber.service                                                                                                           loaded    active   running   Multimedia Service Session Manager
+  xdg-desktop-portal-gnome.service                                                                                              loaded    active   running   Portal service (GNOME implementation)
+  xdg-desktop-portal-gtk.service                                                                                                loaded    active   running   Portal service (GTK/GNOME implementation)
+  xdg-desktop-portal-rewrite-launchers.service                                                                                  loaded    inactive dead      Rewrite dynamic launcher portal entries
+  xdg-desktop-portal.service                                                                                                    loaded    active   running   Portal service
+  xdg-document-portal.service                                                                                                   loaded    active   running   flatpak document portal service
+  xdg-permission-store.service                                                                                                  loaded    active   running   sandboxed app permission store
+  -.slice                                                                                                                       loaded    active   active    Root Slice
+  app-gnome\x2dsession\x2dmanager.slice                                                                                         loaded    active   active    Slice /app/gnome-session-manager
+  app.slice                                                                                                                     loaded    active   active    User Application Slice
+  background.slice                                                                                                              loaded    active   active    User Background Tasks Slice
+  session.slice                                                                                                                 loaded    active   active    User Core Session Slice
+  dbus.socket                                                                                                                   loaded    active   running   D-Bus User Message Bus Socket
+  dirmngr.socket                                                                                                                loaded    active   listening GnuPG network certificate management daemon
+  gcr-ssh-agent.socket                                                                                                          loaded    active   running   GCR ssh-agent wrapper
+  gnome-keyring-daemon.socket                                                                                                   loaded    active   running   GNOME Keyring daemon
+  gpg-agent-browser.socket                                                                                                      loaded    active   listening GnuPG cryptographic agent and passphrase cache (access for web browsers)
+  gpg-agent-extra.socket                                                                                                        loaded    active   listening GnuPG cryptographic agent and passphrase cache (restricted)
+  gpg-agent-ssh.socket                                                                                                          loaded    active   listening GnuPG cryptographic agent (ssh-agent emulation)
+  gpg-agent.socket                                                                                                              loaded    active   listening GnuPG cryptographic agent and passphrase cache
+  keyboxd.socket                                                                                                                loaded    active   listening GnuPG public key management service
+  pipewire-pulse.socket                                                                                                         loaded    active   running   PipeWire PulseAudio
+  pipewire.socket                                                                                                               loaded    active   running   PipeWire Multimedia System Sockets
+  pk-debconf-helper.socket                                                                                                      loaded    active   listening debconf communication socket
+● pulseaudio.socket                                                                                                             not-found inactive dead      pulseaudio.socket
+  snapd.session-agent.socket                                                                                                    loaded    active   listening REST API socket for snapd user session agent
+  speech-dispatcher.socket                                                                                                      loaded    active   listening Speech Dispatcher Socket
+  swap.img.swap                                                                                                                 loaded    active   active    /swap.img
+  basic.target                                                                                                                  loaded    active   active    Basic System
+● blockdev@dev-loop0.target                                                                                                     not-found inactive dead      blockdev@dev-loop0.target
+● blockdev@dev-loop1.target                                                                                                     not-found inactive dead      blockdev@dev-loop1.target
+● blockdev@dev-loop10.target                                                                                                    not-found inactive dead      blockdev@dev-loop10.target
+● blockdev@dev-loop11.target                                                                                                    not-found inactive dead      blockdev@dev-loop11.target
+● blockdev@dev-loop12.target                                                                                                    not-found inactive dead      blockdev@dev-loop12.target
+● blockdev@dev-loop13.target                                                                                                    not-found inactive dead      blockdev@dev-loop13.target
+● blockdev@dev-loop14.target                                                                                                    not-found inactive dead      blockdev@dev-loop14.target
+● blockdev@dev-loop15.target                                                                                                    not-found inactive dead      blockdev@dev-loop15.target
+● blockdev@dev-loop16.target                                                                                                    not-found inactive dead      blockdev@dev-loop16.target
+● blockdev@dev-loop17.target                                                                                                    not-found inactive dead      blockdev@dev-loop17.target
+● blockdev@dev-loop18.target                                                                                                    not-found inactive dead      blockdev@dev-loop18.target
+● blockdev@dev-loop19.target                                                                                                    not-found inactive dead      blockdev@dev-loop19.target
+● blockdev@dev-loop2.target                                                                                                     not-found inactive dead      blockdev@dev-loop2.target
+● blockdev@dev-loop20.target                                                                                                    not-found inactive dead      blockdev@dev-loop20.target
+● blockdev@dev-loop21.target                                                                                                    not-found inactive dead      blockdev@dev-loop21.target
+● blockdev@dev-loop22.target                                                                                                    not-found inactive dead      blockdev@dev-loop22.target
+● blockdev@dev-loop23.target                                                                                                    not-found inactive dead      blockdev@dev-loop23.target
+● blockdev@dev-loop24.target                                                                                                    not-found inactive dead      blockdev@dev-loop24.target
+● blockdev@dev-loop25.target                                                                                                    not-found inactive dead      blockdev@dev-loop25.target
+● blockdev@dev-loop26.target                                                                                                    not-found inactive dead      blockdev@dev-loop26.target
+● blockdev@dev-loop27.target                                                                                                    not-found inactive dead      blockdev@dev-loop27.target
+● blockdev@dev-loop29.target                                                                                                    not-found inactive dead      blockdev@dev-loop29.target
+● blockdev@dev-loop3.target                                                                                                     not-found inactive dead      blockdev@dev-loop3.target
+● blockdev@dev-loop31.target                                                                                                    not-found inactive dead      blockdev@dev-loop31.target
+● blockdev@dev-loop4.target                                                                                                     not-found inactive dead      blockdev@dev-loop4.target
+● blockdev@dev-loop5.target                                                                                                     not-found inactive dead      blockdev@dev-loop5.target
+● blockdev@dev-loop6.target                                                                                                     not-found inactive dead      blockdev@dev-loop6.target
+● blockdev@dev-loop7.target                                                                                                     not-found inactive dead      blockdev@dev-loop7.target
+● blockdev@dev-loop8.target                                                                                                     not-found inactive dead      blockdev@dev-loop8.target
+● blockdev@dev-loop9.target                                                                                                     not-found inactive dead      blockdev@dev-loop9.target
+● blockdev@dev-nvme0n1p1.target                                                                                                 not-found inactive dead      blockdev@dev-nvme0n1p1.target
+  bluetooth.target                                                                                                              loaded    active   active    Bluetooth
+  default.target                                                                                                                loaded    active   active    Main User Target
+  gnome-session-failed.target                                                                                                   loaded    inactive dead      GNOME Session Failed
+  gnome-session-initialized.target                                                                                              loaded    active   active    GNOME Session is initialized
+  gnome-session-manager.target                                                                                                  loaded    active   active    GNOME Session Manager is ready
+  gnome-session-pre.target                                                                                                      loaded    active   active    Tasks to be run before GNOME Session starts
+  gnome-session-shutdown.target                                                                                                 loaded    inactive dead      Shutdown running GNOME Session
+  gnome-session-x11-services-ready.target                                                                                       loaded    inactive dead      GNOME session X11 services
+  gnome-session-x11-services.target                                                                                             loaded    active   active    GNOME session X11 services
+  gnome-session-x11.target                                                                                                      loaded    active   active    GNOME X11 Session
+  gnome-session-x11@ubuntu.target                                                                                               loaded    active   active    GNOME X11 Session (session: ubuntu)
+  gnome-session.target                                                                                                          loaded    active   active    GNOME Session
+  gnome-session@gnome-initial-setup.target                                                                                      loaded    inactive dead      GNOME Session (session: gnome-initial-setup)
+  gnome-session@gnome-login.target                                                                                              loaded    inactive dead      GNOME Session (session: gnome-login)
+  gnome-session@ubuntu.target                                                                                                   loaded    active   active    GNOME Session (session: ubuntu)
+  graphical-session-pre.target                                                                                                  loaded    active   active    Session services which should run early before the graphical session is brought up
+  graphical-session.target                                                                                                      loaded    active   active    Current graphical user session
+● network-online.target                                                                                                         not-found inactive dead      network-online.target
+  org.gnome.SettingsDaemon.A11ySettings.target                                                                                  loaded    active   active    GNOME accessibility target
+  org.gnome.SettingsDaemon.Color.target                                                                                         loaded    active   active    GNOME color management target
+  org.gnome.SettingsDaemon.Datetime.target                                                                                      loaded    active   active    GNOME date & time target
+  org.gnome.SettingsDaemon.Housekeeping.target                                                                                  loaded    active   active    GNOME maintenance of expirable data target
+  org.gnome.SettingsDaemon.Keyboard.target                                                                                      loaded    active   active    GNOME keyboard configuration target
+  org.gnome.SettingsDaemon.MediaKeys.target                                                                                     loaded    active   active    GNOME keyboard shortcuts target
+  org.gnome.SettingsDaemon.Power.target                                                                                         loaded    active   active    GNOME power management target
+  org.gnome.SettingsDaemon.PrintNotifications.target                                                                            loaded    active   active    GNOME printer notifications target
+  org.gnome.SettingsDaemon.Rfkill.target                                                                                        loaded    active   active    GNOME RFKill support target
+  org.gnome.SettingsDaemon.ScreensaverProxy.target                                                                              loaded    active   active    GNOME FreeDesktop screensaver target
+  org.gnome.SettingsDaemon.Sharing.target                                                                                       loaded    active   active    GNOME file sharing target
+  org.gnome.SettingsDaemon.Smartcard.target                                                                                     loaded    active   active    GNOME smartcard target
+  org.gnome.SettingsDaemon.Sound.target                                                                                         loaded    active   active    GNOME sound sample caching target
+  org.gnome.SettingsDaemon.UsbProtection.target                                                                                 loaded    inactive dead      GNOME USB protection target
+  org.gnome.SettingsDaemon.Wacom.target                                                                                         loaded    active   active    GNOME Wacom tablet support target
+  org.gnome.SettingsDaemon.XSettings.target                                                                                     loaded    active   active    GNOME XSettings target
+  org.gnome.Shell.target                                                                                                        loaded    active   active    GNOME Shell
+  paths.target                                                                                                                  loaded    active   active    Paths
+  shutdown.target                                                                                                               loaded    inactive dead      Shutdown
+  sockets.target                                                                                                                loaded    active   active    Sockets
+  sound.target                                                                                                                  loaded    active   active    Sound Card
+  timers.target                                                                                                                 loaded    active   active    Timers
+  launchpadlib-cache-clean.timer                                                                                                loaded    active   waiting   Clean up old files in the Launchpadlib cache
+  snap.firmware-updater.firmware-notifier.timer                                                                                 loaded    active   running   Timer firmware-notifier for snap application firmware-updater.firmware-notifier
+  surgical-cv-backup.timer                                                                                                      loaded    active   waiting   Surgical-CV state backup — daily verified snapshot
+  surgical-cv-health.timer                                                                                                      loaded    active   waiting   Surgical-CV health monitor — observe every 5 minutes
+  surgical-cv-worker.timer                                                                                                      loaded    active   waiting   Surgical-CV worker — fire one iteration every 5 minutes
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+546 loaded units listed.
+To show all installed unit files use 'systemctl list-unit-files'.
+[exit 0]
+
+$ systemctl --user list-unit-files --no-pager
+UNIT FILE                                                         STATE     PRESET
+ubuntu-report.path                                                enabled   enabled
+update-notifier-crash.path                                        static    -
+update-notifier-livepatch.path                                    static    -
+update-notifier-release.path                                      static    -
+app-gnome-org.gnome.Evolution\x2dalarm\x2dnotify-23590.scope      transient -
+app-gnome-org.gnome.SettingsDaemon.DiskUtilityNotify-23501.scope  transient -
+app-gnome-org.gnome.Software-23517.scope                          transient -
+run-u134.scope                                                    transient -
+app-at\x2dspi\x2ddbus\x2dbus@autostart.service                    generated -
+app-dgx\x2ddashboard\x2dnotify@autostart.service                  generated -
+app-geoclue\x2ddemo\x2dagent@autostart.service                    generated -
+app-gnome\x2dinitial\x2dsetup\x2dfirst\x2dlogin@autostart.service generated -
+app-gnome\x2dkeyring\x2dpkcs11@autostart.service                  generated -
+app-gnome\x2dkeyring\x2dsecrets@autostart.service                 generated -
+app-gnome\x2dkeyring\x2dssh@autostart.service                     generated -
+app-ibus\x2dmozc\x2dgnome\x2dinitial\x2dsetup@autostart.service   generated -
+app-ibus\x2dmozc\x2dlaunch\x2dxwayland@autostart.service          generated -
+app-nm\x2dapplet@autostart.service                                generated -
+app-nvidia\x2dsettings\x2dautostart@autostart.service             generated -
+app-orca\x2dautostart@autostart.service                           generated -
+app-org.gnome.DejaDup.Monitor@autostart.service                   generated -
+app-org.gnome.Evolution\x2dalarm\x2dnotify@autostart.service      generated -
+app-org.gnome.SettingsDaemon.DiskUtilityNotify@autostart.service  generated -
+app-org.gnome.Software@autostart.service                          generated -
+app-snap\x2duserd\x2dautostart@autostart.service                  generated -
+app-spice\x2dvdagent@autostart.service                            generated -
+app-ubuntu\x2dadvantage\x2dnotification@autostart.service         generated -
+app-ubuntu\x2dreport\x2don\x2dupgrade@autostart.service           generated -
+app-user\x2ddirs\x2dupdate\x2dgtk@autostart.service               generated -
+app-xdg\x2duser\x2ddirs@autostart.service                         generated -
+at-spi-dbus-bus.service                                           static    -
+colord-session.service                                            static    -
+dbus-org.bluez.obex.service                                       alias     -
+dbus.service                                                      static    -
+dconf.service                                                     static    -
+dirmngr.service                                                   static    -
+evolution-addressbook-factory.service                             static    -
+evolution-calendar-factory.service                                static    -
+evolution-source-registry.service                                 static    -
+evolution-user-prompter.service                                   static    -
+filter-chain.service                                              enabled   enabled
+flatpak-oci-authenticator.service                                 static    -
+flatpak-portal.service                                            static    -
+flatpak-session-helper.service                                    static    -
+gamemoded.service                                                 disabled  enabled
+gcr-ssh-agent.service                                             enabled   enabled
+glib-pacrunner.service                                            static    -
+gnome-initial-setup-copy-worker.service                           static    -
+gnome-initial-setup-first-login.service                           static    -
+gnome-keyring-daemon.service                                      enabled   enabled
+gnome-remote-desktop-handover.service                             disabled  enabled
+gnome-remote-desktop-headless.service                             disabled  enabled
+gnome-remote-desktop.service                                      disabled  enabled
+gnome-session-failed.service                                      static    -
+gnome-session-manager@.service                                    static    -
+gnome-session-monitor.service                                     static    -
+gnome-session-restart-dbus.service                                static    -
+gnome-session-signal-init.service                                 static    -
+gnome-terminal-server.service                                     static    -
+gnome-user-share-webdav.service                                   static    -
+gpg-agent.service                                                 static    -
+gvfs-afc-volume-monitor.service                                   static    -
+gvfs-daemon.service                                               static    -
+gvfs-goa-volume-monitor.service                                   static    -
+gvfs-gphoto2-volume-monitor.service                               static    -
+gvfs-metadata.service                                             static    -
+gvfs-mtp-volume-monitor.service                                   static    -
+gvfs-udisks2-volume-monitor.service                               static    -
+keyboxd.service                                                   static    -
+launchpadlib-cache-clean.service                                  static    -
+obex.service                                                      enabled   enabled
+org.freedesktop.IBus.session.generic.service                      static    -
+org.freedesktop.IBus.session.GNOME.service                        enabled   enabled
+org.gnome.Evince.service                                          static    -
+org.gnome.SettingsDaemon.A11ySettings.service                     static    -
+org.gnome.SettingsDaemon.Color.service                            static    -
+org.gnome.SettingsDaemon.Datetime.service                         static    -
+org.gnome.SettingsDaemon.Housekeeping.service                     static    -
+org.gnome.SettingsDaemon.Keyboard.service                         static    -
+org.gnome.SettingsDaemon.MediaKeys.service                        static    -
+org.gnome.SettingsDaemon.Power.service                            static    -
+org.gnome.SettingsDaemon.PrintNotifications.service               static    -
+org.gnome.SettingsDaemon.Rfkill.service                           static    -
+org.gnome.SettingsDaemon.ScreensaverProxy.service                 static    -
+org.gnome.SettingsDaemon.Sharing.service                          static    -
+org.gnome.SettingsDaemon.Smartcard.service                        static    -
+org.gnome.SettingsDaemon.Sound.service                            static    -
+org.gnome.SettingsDaemon.UsbProtection.service                    static    -
+org.gnome.SettingsDaemon.Wacom.service                            static    -
+org.gnome.SettingsDaemon.Wwan.service                             static    -
+org.gnome.SettingsDaemon.XSettings.service                        static    -
+org.gnome.Shell-disable-extensions.service                        static    -
+org.gnome.Shell@wayland.service                                   static    -
+org.gnome.Shell@x11.service                                       static    -
+pipewire-pulse.service                                            enabled   enabled
+pipewire.service                                                  enabled   enabled
+pk-debconf-helper.service                                         static    -
+rygel.service                                                     disabled  enabled
+session-migration.service                                         enabled   enabled
+snap.firmware-updater.firmware-notifier.service                   static    -
+snap.firmware-updater.firmware-updater-app.service                static    -
+snap.snap-store.packagekit-session-installer.service              static    -
+snap.snapd-desktop-integration.snapd-desktop-integration.service  enabled   enabled
+snapd.session-agent.service                                       static    -
+speech-dispatcher.service                                         static    -
+spice-vdagent.service                                             static    -
+ssh-agent.service                                                 static    -
+surgical-cv-backup.service                                        disabled  enabled
+surgical-cv-health.service                                        disabled  enabled
+surgical-cv-worker.service                                        disabled  enabled
+systemd-exit.service                                              static    -
+systemd-tmpfiles-clean.service                                    static    -
+systemd-tmpfiles-setup.service                                    disabled  enabled
+tracker-miner-fs-3.service                                        enabled   enabled
+tracker-miner-fs-control-3.service                                static    -
+tracker-writeback-3.service                                       static    -
+tracker-xdg-portal-3.service                                      static    -
+ubuntu-report.service                                             static    -
+update-notifier-crash.service                                     static    -
+update-notifier-livepatch.service                                 static    -
+update-notifier-release.service                                   static    -
+user-session-migration.service                                    enabled   enabled
+vino-server.service                                               static    -
+wireplumber.service                                               enabled   enabled
+wireplumber@.service                                              disabled  enabled
+xdg-desktop-portal-gnome.service                                  static    -
+xdg-desktop-portal-gtk.service                                    static    -
+xdg-desktop-portal-rewrite-launchers.service                      enabled   enabled
+xdg-desktop-portal.service                                        static    -
+xdg-document-portal.service                                       static    -
+xdg-permission-store.service                                      static    -
+app.slice                                                         static    -
+background.slice                                                  static    -
+session.slice                                                     static    -
+dbus.socket                                                       static    -
+dirmngr.socket                                                    enabled   enabled
+gcr-ssh-agent.socket                                              enabled   enabled
+gnome-keyring-daemon.socket                                       enabled   enabled
+gpg-agent-browser.socket                                          enabled   enabled
+gpg-agent-extra.socket                                            enabled   enabled
+gpg-agent-ssh.socket                                              enabled   enabled
+gpg-agent.socket                                                  enabled   enabled
+keyboxd.socket                                                    enabled   enabled
+pipewire-pulse.socket                                             enabled   enabled
+pipewire.socket                                                   enabled   enabled
+pk-debconf-helper.socket                                          enabled   enabled
+snapd.session-agent.socket                                        disabled  enabled
+speech-dispatcher.socket                                          enabled   enabled
+basic.target                                                      static    -
+bluetooth.target                                                  static    -
+default.target                                                    static    -
+exit.target                                                       static    -
+gnome-session-failed.target                                       static    -
+gnome-session-initialized.target                                  static    -
+gnome-session-manager.target                                      static    -
+gnome-session-pre.target                                          static    -
+gnome-session-shutdown.target                                     static    -
+gnome-session-wayland.target                                      static    -
+gnome-session-wayland@.target                                     static    -
+gnome-session-x11-services-ready.target                           static    -
+gnome-session-x11-services.target                                 static    -
+gnome-session-x11.target                                          static    -
+gnome-session-x11@.target                                         static    -
+gnome-session.target                                              static    -
+gnome-session@.target                                             static    -
+graphical-session-pre.target                                      static    -
+graphical-session.target                                          static    -
+org.gnome.SettingsDaemon.A11ySettings.target                      static    -
+org.gnome.SettingsDaemon.Color.target                             static    -
+org.gnome.SettingsDaemon.Datetime.target                          static    -
+org.gnome.SettingsDaemon.Housekeeping.target                      static    -
+org.gnome.SettingsDaemon.Keyboard.target                          static    -
+org.gnome.SettingsDaemon.MediaKeys.target                         static    -
+org.gnome.SettingsDaemon.Power.target                             static    -
+org.gnome.SettingsDaemon.PrintNotifications.target                static    -
+org.gnome.SettingsDaemon.Rfkill.target                            static    -
+org.gnome.SettingsDaemon.ScreensaverProxy.target                  static    -
+org.gnome.SettingsDaemon.Sharing.target                           static    -
+org.gnome.SettingsDaemon.Smartcard.target                         static    -
+org.gnome.SettingsDaemon.Sound.target                             static    -
+org.gnome.SettingsDaemon.UsbProtection.target                     static    -
+org.gnome.SettingsDaemon.Wacom.target                             static    -
+org.gnome.SettingsDaemon.Wwan.target                              static    -
+org.gnome.SettingsDaemon.XSettings.target                         static    -
+org.gnome.Shell.target                                            static    -
+paths.target                                                      static    -
+printer.target                                                    static    -
+shutdown.target                                                   static    -
+smartcard.target                                                  static    -
+sockets.target                                                    static    -
+sound.target                                                      static    -
+timers.target                                                     static    -
+xdg-desktop-autostart.target                                      static    -
+launchpadlib-cache-clean.timer                                    enabled   enabled
+snap.firmware-updater.firmware-notifier.timer                     enabled   enabled
+surgical-cv-backup.timer                                          enabled   enabled
+surgical-cv-health.timer                                          enabled   enabled
+surgical-cv-worker.timer                                          enabled   enabled
+systemd-tmpfiles-clean.timer                                      disabled  enabled
+
+199 unit files listed.
+[exit 0]
+
+$ systemctl --user list-timers --all --no-pager
+NEXT                            LEFT LAST                                    PASSED UNIT                                          ACTIVATES
+Sat 2026-11-14 20:42:45 UTC      58s Sat 2026-11-14 20:37:45 UTC        4min 1s ago surgical-cv-health.timer                      surgical-cv-health.service
+Sat 2026-11-14 20:42:45 UTC      58s Sat 2026-11-14 20:37:45 UTC        4min 1s ago surgical-cv-worker.timer                      surgical-cv-worker.service
+Sat 2026-11-14 23:27:45 UTC 2h 45min Fri 2026-11-13 23:27:45 UTC            21h ago launchpadlib-cache-clean.timer                launchpadlib-cache-clean.service
+Sun 2026-11-15 03:17:00 UTC       6h Sat 2026-11-14 03:17:52 UTC            17h ago surgical-cv-backup.timer                      surgical-cv-backup.service
+-                                  - Sun 2026-10-18 00:00:00 UTC 3 weeks 6 days ago snap.firmware-updater.firmware-notifier.timer snap.firmware-updater.firmware-notifier.service
+
+5 timers listed.
+[exit 0]
+
+$ systemctl list-timers --all --no-pager
+NEXT                            LEFT LAST                              PASSED UNIT                           ACTIVATES
+Sat 2026-11-14 20:42:00 UTC      12s Sat 2026-11-14 20:41:05 UTC      41s ago sysstat-collect.timer          sysstat-collect.service
+Sat 2026-11-14 21:13:25 UTC    31min Sat 2026-11-14 20:10:52 UTC    30min ago fwupd-refresh.timer            fwupd-refresh.service
+Sat 2026-11-14 21:30:38 UTC    48min Sat 2026-11-14 20:33:19 UTC     8min ago anacron.timer                  anacron.service
+Sat 2026-11-14 21:53:42 UTC 1h 11min Sat 2026-11-14 10:19:52 UTC      10h ago apt-daily.timer                apt-daily.service
+Sat 2026-11-14 23:15:26 UTC 2h 33min Fri 2026-11-13 23:15:26 UTC      21h ago update-notifier-download.timer update-notifier-download.service
+Sat 2026-11-14 23:24:13 UTC 2h 42min Fri 2026-11-13 23:24:13 UTC      21h ago etckeeper.timer                etckeeper.service
+Sat 2026-11-14 23:24:13 UTC 2h 42min Fri 2026-11-13 23:24:13 UTC      21h ago systemd-tmpfiles-clean.timer   systemd-tmpfiles-clean.service
+Sun 2026-11-15 00:00:00 UTC 3h 18min Sat 2026-11-14 00:00:01 UTC      20h ago atop-rotate.timer              atop-rotate.service
+Sun 2026-11-15 00:00:00 UTC 3h 18min Sat 2026-11-14 00:00:01 UTC      20h ago dpkg-db-backup.timer           dpkg-db-backup.service
+Sun 2026-11-15 00:00:00 UTC 3h 18min Sat 2026-11-14 00:00:01 UTC      20h ago logrotate.timer                logrotate.service
+Sun 2026-11-15 00:07:00 UTC 3h 25min Sat 2026-11-14 00:07:15 UTC      20h ago sysstat-summary.timer          sysstat-summary.service
+Sun 2026-11-15 00:34:26 UTC 3h 52min Sat 2026-11-14 13:55:36 UTC       6h ago motd-news.timer                motd-news.service
+Sun 2026-11-15 00:40:54 UTC 3h 59min Sat 2026-11-14 18:00:55 UTC 2h 40min ago ua-timer.timer                 ua-timer.service
+Sun 2026-11-15 01:06:48 UTC 4h 25min Sat 2026-11-14 05:53:35 UTC      14h ago man-db.timer                   man-db.service
+Sun 2026-11-15 03:10:55 UTC       6h Sun 2026-11-08 03:10:45 UTC   6 days ago e2scrub_all.timer              e2scrub_all.service
+Sun 2026-11-15 06:37:05 UTC       9h Sat 2026-11-14 06:57:52 UTC      13h ago apt-daily-upgrade.timer        apt-daily-upgrade.service
+Sun 2026-11-15 10:31:43 UTC      13h Sat 2026-11-14 10:31:32 UTC      10h ago dgx-snapshot-user.timer        dgx-snapshot-user.service
+Sun 2026-11-15 10:46:25 UTC      14h Sat 2026-11-14 10:46:02 UTC       9h ago dgx-snapshot-root.timer        dgx-snapshot-root.service
+Sun 2026-11-15 11:16:45 UTC      14h Sat 2026-11-14 11:16:49 UTC       9h ago dgx-snapshot-upload.timer      dgx-snapshot-upload.service
+Sun 2026-11-15 12:31:36 UTC      15h Sat 2026-11-14 12:31:45 UTC       8h ago dgx-backup-monitor.timer       dgx-backup-monitor.service
+Mon 2026-11-16 00:20:13 UTC 1 day 3h Mon 2026-11-09 00:59:15 UTC   5 days ago fstrim.timer                   fstrim.service
+Wed 2026-11-18 03:29:40 UTC   3 days Mon 2026-11-09 15:49:34 UTC   5 days ago update-notifier-motd.timer     update-notifier-motd.service
+-                                  - -                                      - apport-autoreport.timer        apport-autoreport.service
+-                                  - -                                      - snapd.snap-repair.timer        snapd.snap-repair.service
+
+24 timers listed.
+[exit 0]
+
+$ crontab -l
+0 9 * * * /bin/bash /home/ankitsarin/projects/evidence-engine/scripts/nightly_tests.sh
+30 13 * * * /bin/bash /home/ankitsarin/scripts/morning_digest.sh >> /home/ankitsarin/logs/morning_digest_cron.log 2>&1
+# service health: self-logs to date-stamped service_health_*.log; on ALERT it
+# emails (same Gmail creds as morning_digest) and writes syslog. R2-4: output is
+# no longer discarded — it appends here, matching the other jobs' convention.
+0 */6 * * * /bin/bash /home/ankitsarin/scripts/service_health_check.sh >> /home/ankitsarin/logs/service_health_cron.log 2>&1
+0 7 * * * /bin/bash /home/ankitsarin/scripts/ollama_health_check.sh >> /home/ankitsarin/logs/ollama_health_cron.log 2>&1
+30 9 * * *  /bin/bash /home/ankitsarin/projects/citation-mcp/harness/run_nightly.sh >> /home/ankitsarin/logs/citation_mcp_cron.log 2>&1
+[exit 0]
+
+$ cat /proc/self/cgroup; cat /proc/$PPID/cgroup   # this shell and its parent
+0::/user.slice/user-1000.slice/session-c382.scope
+0::/user.slice/user-1000.slice/session-c382.scope
+
+$ ulimit -a   # this shell
+real-time non-blocking time  (microseconds, -R) unlimited
+core file size              (blocks, -c) 0
+data seg size               (kbytes, -d) unlimited
+scheduling priority                 (-e) 0
+file size                   (blocks, -f) unlimited
+pending signals                     (-i) 511842
+max locked memory           (kbytes, -l) 8192
+max memory size             (kbytes, -m) unlimited
+open files                          (-n) 524288
+pipe size                (512 bytes, -p) 8
+POSIX message queues         (bytes, -q) 819200
+real-time priority                  (-r) 0
+stack size                  (kbytes, -s) 8192
+cpu time                   (seconds, -t) unlimited
+max user processes                  (-u) 511842
+virtual memory              (kbytes, -v) unlimited
+file locks                          (-x) unlimited
+
+$ cat /proc/self/oom_score_adj; nice
+0
+0
+
+$ ps -o pid=,args= -C earlyoom
+ 297041 /usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+[exit 0]
+
+$ systemctl cat earlyoom --no-pager
+# /usr/lib/systemd/system/earlyoom.service
+[Unit]
+Description=Early OOM Daemon
+Documentation=man:earlyoom(1) https://github.com/rfjakob/earlyoom
+
+[Service]
+EnvironmentFile=-/etc/default/earlyoom
+ExecStart=/usr/bin/earlyoom $EARLYOOM_ARGS
+# Run as an unprivileged user with random user id
+DynamicUser=true
+# Allow killing processes and calling mlockall()
+AmbientCapabilities=CAP_KILL CAP_IPC_LOCK
+# We don't need write access anywhere
+ProtectSystem=strict
+# We don't need /home at all, make it inaccessible
+ProtectHome=true
+# earlyoom never exits on it's own, so have systemd
+# restart it should it get killed for some reason.
+Restart=always
+# set memory limits and max tasks number
+TasksMax=10
+MemoryMax=50M
+
+[Install]
+WantedBy=multi-user.target
+[exit 0]
+
+$ cat /etc/default/earlyoom
+# DGX memory safeguards (ruling 4A, design accepted by PI 2026-10-18; staged by MS-S1).
+# Memory-only trigger: SIGTERM at <= 6% available, SIGKILL at <= 3% (earlyoom's
+# default KILL_PERCENT = PERCENT/2). Swap is ignored at both stages: "-s 100,100"
+# (plain "-s 100" leaves the swap SIGKILL threshold at 50%, so a SIGKILL would also
+# need half the swap used; see earlyoom(1), -m and -s).
+# --avoid / --prefer match /proc/PID/comm and shift oom_score by -300 / +300;
+# they do not exempt a process. ffmpeg is deliberately neutral.
+# -r 3600 keeps the package's hourly "mem avail" report line in the journal.
+# Rollback: restore the package default (EARLYOOM_ARGS="-r 3600") and restart earlyoom.
+#
+# Default settings for earlyoom. This file is sourced by /bin/sh from
+# /etc/init.d/earlyoom or by systemd from earlyoom.service.
+
+# Options to pass to earlyoom
+EARLYOOM_ARGS="-r 3600 -m 6 -s 100,100 --avoid '^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$' --prefer '^ollama$'"
+
+# Examples:
+
+# Print memory report every second instead of every minute
+# EARLYOOM_ARGS="-r 1"
+
+# Available minimum memory 5%
+# EARLYOOM_ARGS="-m 5"
+
+# Available minimum memory 15% and free minimum swap 5%
+# EARLYOOM_ARGS="-m 15 -s 5"
+
+# Avoid killing processes whose name matches this regexp
+# EARLYOOM_ARGS="--avoid '(^|/)(init|X|sshd|firefox)$'"
+
+# See more at `earlyoom -h'
+[exit 0]
+
+$ tmux list-sessions; for each tmux server pid: its cgroup   # read only
+no server running on /tmp/tmux-1000/default
+
+$ grep -rn 'systemd-run' over ~/projects ~/claude-config ~/scripts/ (*.sh *.py *.md *.service, docs/session-reports excluded)
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:18812:    a transient systemd-run --user unit."; "If the PI may need to watch it or answer prompts
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:18819:  the text sends an unattended job a later step depends on to a systemd-run --user unit. The
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:18847:| 2026-11-14 | R804(a) — The stop before step 3e is correct and is the architect's: the brief's E7 expected the global rule to allow a tmux home for a test gate, written without the rule's text, and the text sends an
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:18910:  launch a gate as a systemd-run --user unit (R804(b)), two-phase; then U30's build, one
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:18919:| 2026-11-14 | R805(a) — The 12ag-OPEN-R1 final report is accepted as printed: the gate at the 12ag block's counts, ids 0 / 0, no load in its window; step 3f matched; the evidence commit 60a6331 (nineteen gate files,
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:19033:  launch as a systemd-run --user unit, and nothing else. The other tools items carried in the
+/home/ankitsarin/projects/evidence-engine/docs/plan/ENGINE_REFACTOR_PLAN.md:19041:| 2026-11-14 | R807(a) — The 12ag-N46A-R1 final report is accepted as printed: item 0 dcf623e (Blocks 202 and 203; "A R805(c)" and "A R805(f)" on the list, the file regenerated, every changed line of R766(b)'s three 
+/home/ankitsarin/projects/dgx-infra/tools/r4b_replica.py:14:           and writes a `systemd-run` script carrying the sandbox-relevant
+/home/ankitsarin/projects/dgx-infra/tools/r4b_replica.py:24:IT RUNS NOTHING ITSELF. The generated script needs root (systemd-run), which on
+/home/ankitsarin/projects/dgx-infra/tools/r4b_replica.py:221:    cmd = ["systemd-run", f"--unit={unit}", "--no-block", "--collect",
+/home/ankitsarin/projects/surgical-cv/bench/o21_gate.py:15:systemd-run, every root under OUT. Seeds are synthetic, through the tree's own
+/home/ankitsarin/projects/surgical-cv/CLAUDE.md:91:  (`bash -n`, argv equality, one `systemd-run`).
+/home/ankitsarin/projects/surgical-cv/primer.md:22:- O21 gate: bench/o21_gate.py + bench/o21_summary.py (committed). One fresh 127.0.0.1 dev instance per cell (O21-A §3 adapted eb4-dev env, flag on, roots under /tmp), 8 headless chromium sessions, CDP mouse / keyboard / touch, 1400/1024/768 + 390 p
+/home/ankitsarin/projects/surgical-cv/tests/test_health_probes.py:11:(``systemd-run --user --no-block --service-type=oneshot /bin/sleep 20``)
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-14/primer.md:13:- O21 gate: bench/o21_gate.py + bench/o21_summary.py (committed). One fresh 127.0.0.1 dev instance per cell (O21-A §3 adapted eb4-dev env, flag on, roots under /tmp), 8 headless chromium sessions, CDP mouse / keyboard / to
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-31-UI1b/primer.md:168:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-31-UI1b/primer.md:553:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-01-UI3/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-01-UI3/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-20/primer.md:116:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-18-2/primer.md:61:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-25/primer.md:340:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-A48/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-A48/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-19/primer.md:116:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-23/primer.md:271:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-A4749/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-A4749/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-13/primer.md:4:- O21 gate: bench/o21_gate.py + bench/o21_summary.py (committed). One fresh 127.0.0.1 dev instance per cell (O21-A §3 adapted eb4-dev env, flag on, roots under /tmp), 8 headless chromium sessions, CDP mouse / keyboard / tou
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-28/primer.md:382:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-30/primer.md:56:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-30/primer.md:448:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-26/primer.md:382:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-22/primer.md:128:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-30-CR1/primer.md:70:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-30-CR1/primer.md:462:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-R51F/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-R51F/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-06/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-06/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-03-UI5/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-03-UI5/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-31-UI1a/primer.md:139:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-31-UI1a/primer.md:524:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-30-UI0/primer.md:104:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-30-UI0/primer.md:489:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-R51/primer.md:204:  in a capped `systemd-run --user --scope`. All of G1–G5 PASS.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-04-R51/primer.md:589:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-22-3/primer.md:243:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-11-14-2/primer.md:19:- O21 gate: bench/o21_gate.py + bench/o21_summary.py (committed). One fresh 127.0.0.1 dev instance per cell (O21-A §3 adapted eb4-dev env, flag on, roots under /tmp), 8 headless chromium sessions, CDP mouse / keyboard / 
+/home/ankitsarin/projects/surgical-cv/primer-history/2026-10-22-2/primer.md:192:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B2_check.md:201:- no systemd-run and no SCOPE in the code lines;
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B2_check.md:208:A first pass used the v1 checker's whole-file test and flagged the word "systemd-run" in
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B2_check.md:260:# no systemd-run, reads only. Run after 13a-stop-devserver.sh, INSTEAD of 13b-reconcile.sh.
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:91:- One `systemd-run` scope `ui4-dev-7866` (24G/32G, RL7) runs the v2 PID-file shell to bind uvicorn on 100.80.93.82:7866.
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:157:`check/check_scripts-v2.py`: **169 of 169 held**. Every script passed `bash -n`; begins `set -euo pipefail` / `set +H` / `set -o noclobber` / sources the env by absolute path; carries no NAS literal; writes its exit line to `logs/<
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:159:- **Pure check scripts, with no systemd-run:** `13a-stop-devserver.sh` and `13b-reconcile.sh`.
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:161:- **Checker v1 defect:** `check/check_scripts.py` reported 167/169 because it matched the word "systemd-run" inside the two check scripts' own comments. v2 reads non-comment lines and prints every full argv. v1 is kept.
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:233:SCOPE=(systemd-run --user --scope --expand-environment=no
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:1598:# no systemd-run. It signals only the PID in logs/server.pid, and only if that process's
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:1639:# cmd/expected_ledger.tsv. A pure check script: no systemd-run, reads only. Run after
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2211:"""UI-4B1 C10 (v2: systemd-run/SCOPE tests read non-comment lines only; full argv printed): byte checks for every ~/ui4-dev/cmd/*.sh. Runs nothing from a script:
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2236:SCOPE = ["systemd-run", "--user", "--scope", "--expand-environment=no", "-p",
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2303:        rec(stem, "check script: no systemd-run, no SCOPE",
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2304:            "systemd-run" not in code and "SCOPE[@]" not in code)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2309:    rec(stem, "no literal systemd-run in the script code (only via SCOPE)", "systemd-run" not in code)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2319:    rec(stem, "exactly one systemd-run in the evaluated argv", argv.count("systemd-run") == 1)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2376:SCOPE = ["systemd-run", "--user", "--scope", "--expand-environment=no", "-p",
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2442:        rec(stem, "check script: no systemd-run, no SCOPE",
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2443:            "systemd-run" not in text and "SCOPE[@]" not in text)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2448:    rec(stem, "no literal systemd-run in the script (only via SCOPE)", "systemd-run" not in text)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2458:    rec(stem, "exactly one systemd-run in the evaluated argv", argv.count("systemd-run") == 1)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2500:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2503:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2513:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2516:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2518:      argv: env | -u | NAS_DSM_URL | -u | DSM_TLS_VERIFY | -u | NOTIFIER_ADMIN_URL | -u | NOTIFIER_CREDS_PATH | -u | NOTIFIER_EMAIL_TO | -u | NOTIFIER_SMTP_TIMEOUT_S | -u | PIPELINE_PICKLIST_DIR | -u | PIPELINE_OOB_DROP_POLICY_PAT
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2526:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2529:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2539:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2542:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2552:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2555:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2565:  ok   check script: no systemd-run, no SCOPE
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2572:  ok   check script: no systemd-run, no SCOPE
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2580:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2583:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2593:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2596:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2606:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2609:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2619:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2622:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2632:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2635:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2645:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2648:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2658:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2661:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2671:  ok   no literal systemd-run in the script code (only via SCOPE)
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4B1_report.md:2674:  ok   exactly one systemd-run in the evaluated argv
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4A_readout.md:29:| host | `100.80.93.82` present once on an interface; 20 CPUs; 119 GiB RAM total, 108 GiB available at read time; systemd 255, and its `systemd-run --help` lists `--expand-environment` |
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4A_readout.md:223:**Carried over from v2:** `set -euo pipefail`, `set +H`, `refuse()`, the IP/port/pid checks, the unset block, the in-script session secret, `systemd-run --user --scope --unit=… -p MemoryHigh=4G -p MemoryMax=8G -p MemorySwapMax=0`
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4A_readout.md:233:- `--expand-environment=no` and `< /dev/null` on the systemd-run, per design :902;
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4A_readout.md:255:- **Scope:** `systemd-run --user --scope --unit=ui4-copy-015 --expand-environment=no -p MemoryHigh=2G -p MemoryMax=4G -p MemorySwapMax=0 … < /dev/null`, with `timeout 3600` on the child. Page cache is not charged usefully here, s
+/home/ankitsarin/projects/surgical-cv/audit/ui4/UI-4A_readout.md:275:systemd-run --user --scope --unit=ui4-<step> --expand-environment=no -p MemoryHigh=<H> -p MemoryMax=<M> -p MemorySwapMax=0 /bin/sh -c 'cd "$1"; "$2" -m <module> <args>; echo "EXIT=$?" > "$3"' _ "$WT" "$PY" "$EXITFILE" < /dev/null
+/home/ankitsarin/projects/surgical-cv/audit/MB-D3_h6_confirm.md:76:- Every run was wrapped as `systemd-run --user --scope -q -p MemoryMax=16G -p MemorySwapMax=0 /usr/bin/time -v -o <tv> timeout 600 <argv>`.
+/home/ankitsarin/projects/surgical-cv/audit/MB-D2c_h5_test.md:27:| I4: scope kills at the cap | `systemd-run --user --scope -p MemoryMax=64M -p MemorySwapMax=0` running a 400 MB allocation was killed with rc 137. The user manager's `cgroup.subtree_control` includes `memory` (MEASURED). This was chec
+/home/ankitsarin/projects/surgical-cv/audit/MB-D2c_h5_test.md:70:Each run was sequential, in its own `systemd-run --user --scope -p MemoryMax=16G -p MemorySwapMax=0`
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-C-A_readout.md:103:2. A child that is itself started through `systemd-run --scope` is moved into that new scope's cgroup, so it reads the scope's name, not the parent unit's.
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-C-A_readout.md:259:3. **Unit identification.** If the design identifies a unit from `/proc/self/cgroup`, should it match the last path component only (independent of the slice), and how should a runner launched in its own `systemd-run --scope` be tol
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-A_readout.md:175:- **Search 1 (grep):** `grep -rnE "subprocess\.(run|Popen|check_output|check_call|call|getoutput|getstatusoutput)\b|os\.(spawn[a-z]*|system|popen|exec[a-z]*|fork)\b|multiprocessing|ProcessPoolExecutor|systemd-run|pty\.spawn|asyncio\.
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-A_readout.md:177:- **Equal: 24 = 24**, site for site. **Negative control:** both searches find `app/worker/dispatch.py:136` (the stage driver). No `os.system`, `os.spawn*`, `multiprocessing`, `asyncio` subprocess or `systemd-run` call exists in the t
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-A_readout.md:226:| edit runners, their ffprobe children (18, 20–23), the deleter child (24) and the edit encode (19) | whatever launched the runner; per v7 §5.0 and the dev recipes, a transient `systemd-run --user --scope` (e.g. `--unit=ui1b-delet
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-A_readout.md:244:- **No launch script in the repo.** `git grep -n systemd-run -- ':!*.md'` → only `bench/o21_gate.py:15` (a comment) and `tests/test_health_probes.py:11` (a comment) (COMPUTED). The cap is written only in the design: "`systemd-run -
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-A_readout.md:245:- **Dev recipes outside the repo** (QUOTED, `~/ui1b-dev/cmd/2-delete-run.sh` and `1-delete-plan.sh`): `export APP_DEV_MODE=1`, sandbox `PIPELINE_NAS_ROOT` / `APP_DB_PATH` / `APP_EDIT_SCRATCH_DIR` / `APP_EDIT_PUBLISH_ROOT`, `PYTHONDON
+/home/ankitsarin/projects/surgical-cv/audit/ww/WW-A_readout.md:379:- **JUDGED:** a second unit (a separate edit worker unit, or a per-launch `systemd-run` scope) would be covered by none of the four: they name one service and one timer by constant, and one-open-row-per-subtype means a second unit wo
+/home/ankitsarin/projects/surgical-cv/audit/ES-1b_encoder.md:21:3. Definition: "a batch or timed job running" = pytest; `python -m pipeline`; ffmpeg; a systemd-run user
+/home/ankitsarin/projects/surgical-cv/audit/ES-1b_encoder.md:44:| tmux / jobs | no batch or timed job (ruling item 3) | `cc-box`, `cc-d3`, `mask`: bash, 0 children; `ee-12v-u37b-gate` gone. A `/proc` scan for pytest, `-m pipeline`, ffmpeg, systemd-run and evidence-engine found **nothing**. Running u
+/home/ankitsarin/projects/surgical-cv/audit/ES-1b_encoder.md:107:| `es1b_run.sh` | New. `ES1B_NO_WAIT=1` (added for the 015 ruling) records the busy state with `busy.py --once` instead of waiting; default behaviour is unchanged. busy-wait → memwatch + job watcher → `systemd-run --user --scope --
+/home/ankitsarin/projects/surgical-cv/audit/ES-1b_encoder.md:490:- `es1b_run.sh` invokes only `busy.py` (`:21`, `:24`, `:34`), `memwatch.py` (`:32`) and `preview.py` (`:44`, under `systemd-run`).
+/home/ankitsarin/projects/surgical-cv/audit/FR-R1_readout.md:291:  `systemd-run --user --scope --expand-environment=no --unit=fr-r1-test -p MemoryHigh=4G -p MemoryMax=6G
+/home/ankitsarin/projects/surgical-cv/audit/ui3/UI-3A_readout.md:379:70  systemd-run --user --scope --unit="$UNIT" \
+/home/ankitsarin/projects/surgical-cv/audit/primer.pre-MB-F1-L_2026-10-18.md:61:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/audit/o21/O21-A_readout.md:76:    - **no `systemd-run`** (task guard: no systemd);
+/home/ankitsarin/projects/surgical-cv/audit/o21/O21-B2_report.md:67:- Dev instances: the O21-A §3 adapted eb4-dev recipe, flag on, 127.0.0.1, no `systemd-run`, roots under `/tmp/o21b2/`, a fresh instance per cell. `dev_guard` passed at every start.
+/home/ankitsarin/projects/surgical-cv/audit/o21/O21-B4_report.md:75:- Dev instances: the O21-A §3 adapted eb4-dev recipe, flag on, 127.0.0.1, no `systemd-run`, roots under `/tmp/o21b4/`, a fresh instance per cell. `dev_guard` passed at every start.
+/home/ankitsarin/projects/surgical-cv/audit/o21/O21-B_report.md:114:  - 127.0.0.1, no `systemd-run`, every root under `/tmp/o21b/<run>/`, a `git archive` of each tree under test.
+/home/ankitsarin/projects/surgical-cv/audit/o21/O21-B_report.md:302:- **D8. Long jobs.** A global rule landed mid-task (2026-11-11): jobs over about 15 minutes must not run as Claude Code background tasks. The brief forbids `systemd-run` for dev instances, so the matrix ran as **foreground chunks of
+/home/ankitsarin/projects/surgical-cv/audit/o21/O21-B3_report.md:112:- Dev instances: the O21-A §3 adapted eb4-dev recipe, flag on, 127.0.0.1, no `systemd-run`, roots under `/tmp/o21b3/`, a fresh instance per cell. `dev_guard` passed at every start.
+/home/ankitsarin/projects/surgical-cv/audit/ui1b/UI-1bC_ready.md:120:  systemd-run --user --scope --expand-environment=no --unit=ui1b-delete-plan -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0 \
+/home/ankitsarin/projects/surgical-cv/audit/ui1b/UI-1bC_ready.md:142:<   systemd-run ... --unit=ui1b-delete-plan -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0 \
+/home/ankitsarin/projects/surgical-cv/audit/ui1b/UI-1bC_ready.md:144:>   systemd-run ... --unit=ui1b-delete-run -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0 \
+/home/ankitsarin/projects/surgical-cv/audit/ui1b/UI-1bC_ready.md:158:| Exactly one `systemd-run` | text count | pass |
+/home/ankitsarin/projects/surgical-cv/audit/ui1b/UI-1bC_ready.md:166:`systemd-run` 255 lists `--expand-environment` in `--help`; the flag has not been exercised by these scripts.
+/home/ankitsarin/projects/surgical-cv/audit/ES-1_spike.md:34:- Copies ran in the capped scope (`systemd-run --user --scope … --unit=es1-stage -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0`),
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:20:**`--expand-environment=no` (READ, `man systemd-run`, systemd 255.4-1ubuntu8.18):**
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:21:- The installed systemd-run supports it.
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:22:- For `--scope`, expansion "is performed by systemd-run itself" and "the default is to enable this option in all cases, except for `--scope` where it is disabled by default … this will be changed in a future release."
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:108:systemd-run --user --scope --expand-environment=no --unit=mb-o1f -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0 bash -c 'for c in "$@"; do out=$(python -m pipeline mask --case UCD-FIL-$c < /dev/null 2>&1 | tee -a audi
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:119:- **Environment.** `--scope` runs the command as a child of `systemd-run` with the current environment and working directory, so the venv's `python` and the repo cwd carry in (INFERRED, as in MB-O1d).
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:120:- **Where the log goes.** `systemd-run rc` goes to the terminal only.
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1f_relaunch_commands.md:184:| cap kill | scope gone; the run file has no `exit:`/`STOPPED` line for the case; claim **stale**; terminal `systemd-run rc: 137` or `143`; OOM event in `journalctl --user -u mb-o1f.scope` | MB-O1d §0 step 3b (OOMPolicy=sto
+/home/ankitsarin/projects/surgical-cv/audit/FR-F1_build.md:255:- **Server:** the brief's exact `systemd-run --user --scope --expand-environment=no --unit=fr-f1-test -p
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1d_relaunch_commands.md:87:  - the tmux shell prints `systemd-run rc: 137` **or `143`** (SIGTERM), depending on which process was the OOM victim;
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1d_relaunch_commands.md:162:systemd-run --user --scope --unit=mb-o1d -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0 bash -c 'for c in "$@"; do out=$(python -m pipeline mask --case UCD-FIL-$c < /dev/null 2>&1 | tee -a audit/MB-O1d_batch_run.txt; 
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1d_relaunch_commands.md:167:systemd-run --user --scope --unit=mb-o1d -p MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0 bash -c 'for c in "$@"; do out=$(python -m pipeline mask --case UCD-FIL-$c < /dev/null 2>&1 | tee -a audit/MB-O1d_batch_run.txt; 
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1d_relaunch_commands.md:177:- **Environment.** `--scope` runs the command as a child of `systemd-run` with the current environment and working directory, so the venv's `python` and the repo cwd carry in (INFERRED from scope semantics).
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1d_relaunch_commands.md:178:- **Where the log goes.** `systemd-run rc` is printed to the terminal only. It is not written to the run file.
+/home/ankitsarin/projects/surgical-cv/audit/MB-O1d_relaunch_commands.md:224:| cap kill | **scope gone**; run file ends with no `exit:`/`STOPPED` line for the case; claim **stale**; a partial scratch encode may remain; terminal `systemd-run rc: 137` or `143`; OOM event in `journalctl --user -u mb-o1d
+/home/ankitsarin/projects/surgical-cv/audit/O15c-K50-long_cut.md:16:- Scripts `cmd/10-submit-E04.sh`, `11-plan-E04.sh`, `12-cut-E04.sh` (units `o15c-submit/plan/cut`) from the E03 scripts by single-occurrence replacements asserted in code; `check/sampler_e04.py` = `sampler_e03.py` with only `sampler
+/home/ankitsarin/projects/surgical-cv/audit/ui1a/UI-1aA_readout.md:71:| 70–73 | `systemd-run --user --scope --unit="$UNIT" …`; `set -C; echo $$ > "$0"` | CANNOT-TELL-WITHOUT-RUNNING (no such scope running; uvicorn present; log dir present) |
+/home/ankitsarin/projects/surgical-cv/audit/ui5/UI-5D_report-v2.md:79:- one `systemd-run`, `env -u` first, absolute paths;
+/home/ankitsarin/projects/surgical-cv/audit/ui5/UI-5D_report.md:150:- **Check-only scripts** (C0, C10a, C10b): no `systemd-run` and no SCOPE; every Python line is prefixed with `ENV_U_RUN` (`env -u`).
+/home/ankitsarin/projects/surgical-cv/audit/ui5/UI-5D_report.md:153:  - the evaluated argv has exactly one `systemd-run`, begins with `env -u`, and **equals the argv computed independently in the checker**, element by element (every argv is printed in the output file);
+/home/ankitsarin/projects/surgical-cv/audit/ui5/UI-5_phaseC_record.md:161:  - `RUN` once with `< /dev/null`, and no literal `systemd-run`;
+/home/ankitsarin/projects/surgical-cv/audit/ui5/UI-5_phaseC_record.md:162:  - the evaluated argv equals v2's evaluated argv with the two tokens swapped: exactly one `systemd-run`, `env -u` first, absolute paths;
+/home/ankitsarin/projects/surgical-cv/audit/EB-3R_first_cut.md:45:- Byte-level checks: every script passed `bash -n`, has exactly one `systemd-run`, has 0 `or-raw`/`deid-`/`/mnt` hits, and has no CR. In 1-submit, bash's own parse of `--ranges` MATCHES the 1.3 list (137 chars, no newline or CR). 3-cu
+/home/ankitsarin/projects/surgical-cv/audit/EB-3R_first_cut.md:54:systemd-run --user --scope --expand-environment=no --unit=eb3r-submit \
+/home/ankitsarin/projects/surgical-cv/audit/EB-3R_first_cut.md:76:systemd-run --user --scope --expand-environment=no --unit=eb3r-plan \
+/home/ankitsarin/projects/surgical-cv/audit/EB-3R_first_cut.md:96:systemd-run --user --scope --expand-environment=no --unit=eb3r-cut \
+/home/ankitsarin/projects/surgical-cv/audit/EB-4R_route_acceptance.md:29:- Information: systemd-run printed `Scope command line contains environment variable, which is not expanded by default for now…` — it refers to `$$`/`$0` in the inner `sh -c` string, deliberately left to the inner shell; th
+/home/ankitsarin/projects/surgical-cv/audit/EB-2R_first_preview.md:20:| I8 | man systemd-run (v255): "executed by systemd-run itself as parent process and will thus inherit the execution environment of the caller". | holds |
+/home/ankitsarin/projects/surgical-cv/audit/CR-1b_scripts_2026-10-30.md:20:| Secret, `.env`, `sudo`, `systemd-run` | none | none | none |
+/home/ankitsarin/projects/surgical-cv/audit/primer.pre-MB-O1V.md:103:- **A capped scope works for this user:** `systemd-run --user --scope -p MemoryMax=… -p MemorySwapMax=0`. The memory controller is delegated, and an over-cap probe was killed with rc 137.
+/home/ankitsarin/projects/surgical-cv/audit/MB-D2b_timestamp_scan.md:17:| I1: a capped scope works | `systemctl --user is-system-running` = running; `systemd-run --user --scope -p MemoryMax=8G -q true` succeeded | TRUE |
+/home/ankitsarin/projects/surgical-cv/audit/MB-D2b_timestamp_scan.md:23:  `systemd-run --user --scope -p MemoryMax=8G` scope.
+/home/ankitsarin/projects/surgical-cv/audit/O15-K30_cut.md:31:30 × 200 frames, Σ 6,000 (100.000 s), computed and asserted in `check/design_e02.py`: R01 0–199 (frame 0), R04 142,974 (keyframe I), R07 285,996 (non-key B), R15/R16 714,890–715,089 / 715,090–715,289 (adjacent), R30 1,429,780–1,
+/home/ankitsarin/projects/surgical-cv/audit/O15-K30_cut.md:75:8. My A4 byte-checker printed `--user: --scope` (it found systemd-run's own `--user` first); the full runner-argument line confirmed `--user asarin`.
+/home/ankitsarin/projects/surgical-cv/audit/v7c/inputs/Edit_Feature_Paper_Design_v7.md:249:- **Capped scope:** `systemd-run --user --scope --expand-environment=no … MemoryHigh=24G MemoryMax=32G MemorySwapMax=0`; variables by export.
+/home/ankitsarin/projects/surgical-cv/audit/v7c/inputs/Edit_Feature_Paper_Design_v7_draft_s5-12.md:77:  systemd-run --user --scope --expand-environment=no … MemoryHigh=24G MemoryMax=32G MemorySwapMax=0
+/home/ankitsarin/projects/surgical-cv/audit/v7c/V7C_conformance.md:144:    `/bin/sh -c 'set -C; echo $$ > "$0"; exec "$1/bin/uvicorn" …` with no `systemd-run`);
+/home/ankitsarin/projects/surgical-cv/audit/v7c/V7C_conformance.md:233:| `~/eb4-dev` `cmd/1-devserver-v2.sh` | `:19` `HOST=100.80.93.82`, `:20` `PORT=7866` (comment `:2` "the dev uvicorn on 100.80.93.82:7866") | `:68-69` `systemd-run --user --scope … -p MemoryHigh=4G -p MemoryMax=8G -p MemorySwapM
+/home/ankitsarin/projects/surgical-cv/audit/v7c/V7C_conformance.md:237:| `~/ui1b-dev` `cmd/1–3-*.sh` | **no server, no bind, no port** — deleter `--plan`/run/re-run | `:33` `systemd-run --user --scope --expand-environment=no … MemoryHigh=24G -p MemoryMax=32G -p MemorySwapMax=0` |
+/home/ankitsarin/projects/surgical-cv/audit/v7c/V7C_conformance.md:389:| g2-5.0-5 | s5-12 §5.0 | M: capped scope `systemd-run --user --scope --expand-environment=no … 24G/32G/0` | CONFIRMED | ~/ui1b-dev/cmd/1-delete-plan.sh:33 | |
+/home/ankitsarin/projects/surgical-cv/docs/Edit_Feature_Paper_Design_v6.md:265:- Runs in the capped user scope (`systemd-run --user --scope --expand-environment=no … MemoryHigh=24G MemoryMax=32G MemorySwapMax=0`).
+/home/ankitsarin/projects/surgical-cv/docs/Edit_Feature_Paper_Design_v7.md:249:- **Capped scope:** `systemd-run --user --scope --expand-environment=no … MemoryHigh=24G MemoryMax=32G MemorySwapMax=0`; variables by export.
+/home/ankitsarin/claude-config/CLAUDE.md:257:  benchmark and scheduled runs), it runs as a transient `systemd-run --user` unit. The brief
+/home/ankitsarin/claude-config/skills/synced/619a57e7-23b5-4770-9099-09ccc0d164fd_d0df0fd8-6c6e-47de-8b03-a0c5c3564c08/architect-handoff/SKILL.md:79:launches one names its home: the `systemd-run --user` unit and any memory cap, for an unattended job
+/home/ankitsarin/claude-config/skills/synced/619a57e7-23b5-4770-9099-09ccc0d164fd_d0df0fd8-6c6e-47de-8b03-a0c5c3564c08/architect-handoff/SKILL.md:347:16. A brief that launches a job over about 15 minutes names its `systemd-run --user` unit or its tmux
+[end]

@@ -1,0 +1,120 @@
+$ systemctl --user cat surgical-cv-worker.service surgical-cv-health.service --no-pager
+# /home/ankitsarin/.config/systemd/user/surgical-cv-worker.service
+[Unit]
+Description=Surgical-CV Q3 decoupled worker (single iteration)
+Documentation=https://github.com/ankit-sarin/surgical-cv
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# %h expands to the invoking user's $HOME when this is installed under
+# --user. For a system-scoped install, replace with absolute paths.
+WorkingDirectory=%h/projects/surgical-cv
+Environment=PYTHONUNBUFFERED=1
+# AR-F1 Phase 1 — the operational DB path is PINNED here, explicitly and
+# absolutely. Historically app/db/connection.py::db_path() fell back to
+# <repo>/app/db/app.db whenever APP_DB_PATH was unset, so anything run from
+# the repo silently selected production; that default is what let
+# test-originated rows reach the live DB (see audit AR-D1 / AR-C1). Phase 2
+# makes the resolver RAISE on an unset value, so this line is load-bearing:
+# without it the worker cannot open the database at all. The value is
+# deliberately the same absolute path the old default computed, so adding it
+# is a runtime no-op. Do not remove it and do not make it relative.
+Environment=APP_DB_PATH=/home/ankitsarin/projects/surgical-cv/app/db/app.db
+# Brief #4.3.B — match the web app's env handling pattern (no dotenv
+# in-process; systemd populates env at process-start). Today the .env
+# carries APP_SESSION_SECRET + NAS_DSM_URL which the worker ignores,
+# but pinning the worker to the same EnvironmentFile keeps the two
+# services symmetric and avoids env-drift if a future variable is
+# added that both need to read.
+EnvironmentFile=%h/projects/surgical-cv/.env
+# Per-host overrides (NAS root, picklist dir, etc.) still belong in a
+# drop-in so this unit file stays generic. Example drop-in:
+#   /etc/systemd/system/surgical-cv-worker.service.d/override.conf
+# with content:
+#   [Service]
+#   EnvironmentFile=/etc/surgical-cv/worker.env
+ExecStart=%h/projects/surgical-cv/.venv/bin/python -m app.worker --once
+
+# Per-CASE backstop for ONE concat+deid+verify activation. The worker now
+# processes exactly one case per activation (app/worker/main.py), so this is no
+# longer a cumulative backlog budget. OUTER bound of the timeout chain:
+#   inner deid 360min < driver 390min < unit 480min (per-case)
+# (recalibration 2026-06-25):
+#   inner ffmpeg/ffprobe timeouts (pipeline/ffmpeg.py)  <= 360min (deid)
+#   < worker per-stage driver timeout (WORKER_STAGE_TIMEOUT_S)  = 390min
+#   < this unit TimeoutStartSec                                  = 480min
+# 480min sits above the 390-min driver (so the driver's specific hard_fail fires
+# first) with margin for concat+verify. SINGLE SOURCE OF TRUTH — it lives in
+# this tracked unit (and the installed copy), NOT in a drop-in. Raised from
+# 240min when the worker moved to one-case-per-activation; see audit
+# timeout-recalibration-2026-06-25.
+TimeoutStartSec=480min
+
+# Don't restart on failure — the timer will fire again. Restart=on-failure
+# would create a tight loop if the manifest is misconfigured.
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
+
+# /home/ankitsarin/.config/systemd/user/surgical-cv-health.service
+[Unit]
+Description=Surgical-CV system health monitor (one observation round)
+Documentation=https://github.com/ankit-sarin/surgical-cv
+After=network-online.target
+Wants=network-online.target
+# NOT RequiresMountsFor: unlike the backup, a missing NAS mount is a condition
+# this unit exists to REPORT. Gating the monitor on the mount would silence the
+# alarm exactly when it matters.
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/projects/surgical-cv
+Environment=PYTHONUNBUFFERED=1
+# AR-F1 Phase 1 — the operational DB path is PINNED here, explicitly and
+# absolutely. Historically app/db/connection.py::db_path() fell back to
+# <repo>/app/db/app.db whenever APP_DB_PATH was unset, so anything run from
+# the repo silently selected production; that default is what let
+# test-originated rows reach the live DB (see audit AR-D1 / AR-C1). Phase 2
+# makes the resolver RAISE on an unset value, so this line is load-bearing:
+# without it the monitor cannot open the database at all. The value is
+# deliberately the same absolute path the old default computed, so adding it
+# is a runtime no-op. Do not remove it and do not make it relative.
+Environment=APP_DB_PATH=/home/ankitsarin/projects/surgical-cv/app/db/app.db
+EnvironmentFile=%h/projects/surgical-cv/.env
+ExecStart=%h/projects/surgical-cv/.venv/bin/python -m app.health
+
+# One round is a handful of systemctl calls, a quick_check and a few stats —
+# about a second. 5min is a backstop well inside the timer interval, so a
+# wedged round can never overlap the next one.
+TimeoutStartSec=5min
+
+# Deliberately no Restart: the timer fires again in five minutes. Restart would
+# spin against a persistent fault.
+Restart=no
+
+# The monitor exits 0 even when conditions are unhealthy (it succeeded at
+# monitoring), so a NONZERO exit means the MONITOR ITSELF broke. Stamp that
+# into the journal with a greppable marker for the "watching the watcher" check
+# in §13. Deliberately not OnFailure= to a mail unit: there is no unit to send
+# it, and a dangling OnFailure target would itself fail at load.
+ExecStopPost=/bin/sh -c 'test "$EXIT_STATUS" = "0" || echo "surgical-cv health MONITOR ITSELF FAILED: status=$EXIT_STATUS"'
+
+[Install]
+WantedBy=multi-user.target
+[exit 0]
+
+$ systemctl --user status run-u134.scope --no-pager
+× run-u134.scope - /usr/bin/python3 -I -c "b=bytearray(400*1024*1024); print('survived', len(b))"
+     Loaded: loaded (/run/user/1000/systemd/transient/run-u134.scope; transient)
+  Transient: yes
+     Active: failed since Sun 2026-10-18 00:44:43 UTC; 3 weeks 6 days ago
+   Duration: 33ms
+        CPU: 31ms
+
+Oct 18 00:44:43 spark-59e4 systemd[2694]: Started run-u134.scope - /usr/bin/python3 -I -c "b=bytearray(400*1024*1024); print('survived', len(b))".
+Oct 18 00:44:43 spark-59e4 systemd[2694]: run-u134.scope: A process of this unit has been killed by the OOM killer.
+Oct 18 00:44:43 spark-59e4 systemd[2694]: run-u134.scope: Failed with result 'oom-kill'.
+[exit]

@@ -1,0 +1,54 @@
+docs/session-reports/tools/README.md:10 [session-name] | `launch_gate.sh` | `<evidence_dir> <session_name> <ref_ids\|-> <ref_durations\|-> [selection...]`, run from the repository root | Dry run on `tests/test_u20_modelfile_num_ctx.py`: the nineteen files
+docs/session-reports/tools/README.md:10 [gate_launch] | `launch_gate.sh` | `<evidence_dir> <session_name> <ref_ids\|-> <ref_durations\|-> [selection...]`, run from the repository root | Dry run on `tests/test_u20_modelfile_num_ctx.py`: the nineteen files
+docs/session-reports/tools/README.md:11 [tmux] | `run_gate.sh` | as `launch_gate.sh`, which calls it inside tmux | The same dry run. It writes `gate_rc.txt` last, so a wait watches that file. No selection is the standard gate in the shared temp ro
+docs/session-reports/tools/README.md:11 [run_gate-proc] | `run_gate.sh` | as `launch_gate.sh`, which calls it inside tmux | The same dry run. It writes `gate_rc.txt` last, so a wait watches that file. No selection is the standard gate in the shared temp ro
+docs/session-reports/tools/README.md:13 [gate_launch] `transcribe_ruling.py`'s metadata keys are in its docstring. `launch_gate.sh` writes `host_snapshot.sh` and `ollama_reads.sh` into the evidence directory itself, so the set stays self-describing. One 
+docs/session-reports/tools/README.md:17 [run_gate-proc] *Dated 2026-10-31 (12ab-TOOLS, R750(b)):* `session_open_check.py`'s `cc_sessions` section counted every process of the user started in the window, so foreign processes read as this lane's leftovers (1
+docs/session-reports/tools/launch_gate.sh:3 [session-name] # usage: launch_gate.sh <evidence_dir> <session_name> <ref_ids|-> <ref_durations|-> [selection...]   (from the repository root)
+docs/session-reports/tools/launch_gate.sh:4 [run_gate-proc] # Wait on <evidence_dir>/gate_rc.txt, which run_gate.sh writes last.
+docs/session-reports/tools/launch_gate.sh:8 [tmux] tmux has-session -t "$SESSION" 2>/dev/null && { echo "REFUSED: tmux session $SESSION exists"; exit 2; }
+docs/session-reports/tools/launch_gate.sh:8 [session-name] tmux has-session -t "$SESSION" 2>/dev/null && { echo "REFUSED: tmux session $SESSION exists"; exit 2; }
+docs/session-reports/tools/launch_gate.sh:9 [run_gate-proc] cp "$HERE/run_gate.sh" "$E/run_gate.sh"
+docs/session-reports/tools/launch_gate.sh:36 [tmux] LINE="tmux new-session -d -s $SESSION \"bash $E/run_gate.sh $E $SESSION $REF $REFD $*\""
+docs/session-reports/tools/launch_gate.sh:36 [session-name] LINE="tmux new-session -d -s $SESSION \"bash $E/run_gate.sh $E $SESSION $REF $REFD $*\""
+docs/session-reports/tools/launch_gate.sh:36 [run_gate-proc] LINE="tmux new-session -d -s $SESSION \"bash $E/run_gate.sh $E $SESSION $REF $REFD $*\""
+docs/session-reports/tools/launch_gate.sh:37 [launch_line] { echo "$(date -u +%FT%T.%NZ) launched by the line below, written into the evidence directory at launch (R731(b), R738(c))"; echo "$LINE"; } > "$E/launch_line.txt"
+docs/session-reports/tools/launch_gate.sh:39 [launch_line] cat "$E/launch_line.txt"
+docs/session-reports/tools/run_gate.sh:2 [tmux] # The standard gate, run inside tmux by launch_gate.sh (R746(e)(iv)). usage: run_gate.sh <evidence_dir> <session> <ref_ids|-> <ref_durations|-> [selection...]
+docs/session-reports/tools/run_gate.sh:2 [run_gate-proc] # The standard gate, run inside tmux by launch_gate.sh (R746(e)(iv)). usage: run_gate.sh <evidence_dir> <session> <ref_ids|-> <ref_durations|-> [selection...]
+docs/session-reports/tools/run_gate.sh:8 [session-name] { date -u +%FT%T.%NZ; echo "run_gate.sh $E $SESSION $REF $REFD $*"; } > "$E/gate_launch.txt"; s=$(date +%s.%N)
+docs/session-reports/tools/run_gate.sh:8 [gate_launch] { date -u +%FT%T.%NZ; echo "run_gate.sh $E $SESSION $REF $REFD $*"; } > "$E/gate_launch.txt"; s=$(date +%s.%N)
+docs/session-reports/tools/run_gate.sh:8 [run_gate-proc] { date -u +%FT%T.%NZ; echo "run_gate.sh $E $SESSION $REF $REFD $*"; } > "$E/gate_launch.txt"; s=$(date +%s.%N)
+docs/session-reports/tools/run_gate.sh:13 [session-name] grep -E '^[0-9]+\.[0-9]+s (call|setup|teardown) ' "$E/gate.log" > "$E/durations_$SESSION.txt"
+docs/session-reports/tools/run_gate.sh:13 [durations-name] grep -E '^[0-9]+\.[0-9]+s (call|setup|teardown) ' "$E/gate.log" > "$E/durations_$SESSION.txt"
+docs/session-reports/tools/run_gate.sh:17 [session-name] python3 - "$E" "$SESSION" "$REF" "$REFD" > "$E/id_and_durations_compare.txt" 2>&1 <<'PY'
+docs/session-reports/tools/run_gate.sh:39 [durations-name] b = dur(G / f"durations_{session}.txt")
+docs/session-reports/tools/session_open_check.py:157 [run_gate-proc] lane = (str(Path(__file__).resolve().parents[3]), "pytest", "run_gate.sh")
+docs/plan/STANDING_RULES.md:948 [tmux] (R18). v97 corrects the plan's name. Finding F6: the 12y record carries no tmux launch line, so
+docs/plan/STANDING_RULES.md:950 [tmux] evidence directory records the complete launch line, tmux wrapper included, and the next
+docs/plan/STANDING_RULES.md:956 [tmux] Gloss (CC's, not ruled): Every gate's evidence directory records the complete launch line, tmux wrapper included.
+docs/plan/STANDING_RULES.md:1001 [launch_line] launch line. The copy under 12z_open/gate_12z_open/ gains one file, launch_line.txt, carrying
+docs/plan/STANDING_RULES.md:1002 [tmux] the tmux line as the 12z-OPEN report printed it, with one leading line stating that it was
+docs/plan/STANDING_RULES.md:1019 [launch_line] purpose stands; its source does not. launch_line.txt line 1 reads "Written at 12z-U19A item 0
+docs/plan/STANDING_RULES.md:1022 [tmux] the report tabled it: the assignment G=~/scratch/12z-open/gate, then the tmux line exactly as
+docs/plan/STANDING_RULES.md:1113 [launch_line] and that variable's value into launch_line.txt, then executes that variable, so the line
+docs/plan/STANDING_RULES.md:1119 [launch_line] Gloss (CC's, not ruled): The launch step holds the line in one variable, writes it to launch_line.txt, and runs that variable, so the two cannot differ.
+docs/plan/STANDING_RULES.md:1302 [tmux] process table and tmux for processes of the archived CC sessions it names, each inside a stated
+docs/plan/STANDING_RULES.md:1310 [tmux] Gloss (CC's, not ruled): The model-load stop is R696(b)'s, a closed pre-tag row is counted until P1 closes, and an open's pre-check reads the process table and tmux for the named archived sessions, st
+docs/plan/ENGINE_REFACTOR_PLAN.md (12ag expected-values block :5480–5515):5488 [run_gate-proc] - **The evidence set:** the nineteen files (R738(d)), by `docs/session-reports/tools/launch_gate.sh` and `run_gate.sh`, the launch line written at launch (R738(c)).
+
+== counts by pattern
+tmux: 11
+session-name: 7
+launch_line: 6
+gate_launch: 3
+run_gate-proc: 9
+durations-name: 2
+== counts by place
+docs/session-reports/tools/README.md: 6
+docs/session-reports/tools/launch_gate.sh: 10
+docs/session-reports/tools/run_gate.sh: 9
+docs/session-reports/tools/session_open_check.py: 1
+docs/plan/STANDING_RULES.md: 11
+docs/plan/ENGINE_REFACTOR_PLAN.md (12ag expected-values block :5480–5515): 1
+== places scanned: 9

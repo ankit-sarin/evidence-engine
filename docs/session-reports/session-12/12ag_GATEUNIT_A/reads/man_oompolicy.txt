@@ -1,0 +1,33 @@
+1014:       OOMPolicy=
+1015-	   Configure the out-of-memory (OOM) killing policy for the kernel and
+1016-	   the userspace OOM killer systemd-oomd.service(8). On Linux, when
+1017-	   memory becomes scarce to the point that the kernel has trouble
+1018-	   allocating memory for itself, it might decide to kill a running
+1019-	   process in order to free up memory and reduce memory pressure. Note
+1020-	   that systemd-oomd.service is a more flexible solution that aims to
+1021-	   prevent out-of-memory situations for the userspace too, not just
+1022-	   the kernel, by attempting to terminate services earlier, before the
+1023-	   kernel would have to act.
+1024-
+1025-	   This setting takes one of continue, stop or kill. If set to
+1026-	   continue and a process in the unit is killed by the OOM killer,
+	   continue and a process in the unit is killed by the OOM killer,
+	   this is logged but the unit continues running. If set to stop the
+	   event is logged but the unit is terminated cleanly by the service
+	   manager. If set to kill and one of the unit's processes is killed
+	   by the OOM killer the kernel is instructed to kill all remaining
+	   processes of the unit too, by setting the memory.oom.group
+	   attribute to 1; also see kernel page Control Group v2[3].
+
+	   Defaults to the setting DefaultOOMPolicy= in systemd-system.conf(5)
+	   is set to, except for units where Delegate= is turned on, where it
+	   defaults to continue.
+
+	   Use the OOMScoreAdjust= setting to configure whether processes of
+	   the unit shall be considered preferred or less preferred candidates
+	   for process termination by the Linux OOM killer logic. See
+	   systemd.exec(5) for details.
+
+	   This setting also applies to systemd-oomd.service(8). Similarly to
+	   the kernel OOM kills performed by the kernel, this setting
+	   determines the state of the unit after systemd-oomd kills a cgroup

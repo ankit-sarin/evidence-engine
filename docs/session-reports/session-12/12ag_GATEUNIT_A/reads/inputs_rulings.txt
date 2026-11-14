@@ -1,0 +1,63 @@
+== R731(b) at plan :12898
+R731(b) — Finding F4 is the architect's: the brief named the 12y-U18C gate directory from unified
+  plan v96's summary ("gate/") instead of having CC list it; the record's "gate_round1/" governed
+  (R18). v97 corrects the plan's name. Finding F6: the 12y record carries no tmux launch line, so
+  the "standard detached form" CC used is accepted as the gate's launch; from here every gate's
+  evidence directory records the complete launch line, tmux wrapper included, and the next
+  brief's I3 quotes it from there. No row.
+== R732(d) at plan :12988
+R732(d) — Finding 3: the 12z-OPEN gate ran before R731(b) set the rule, so its evidence carries no
+  launch line. The copy under 12z_open/gate_12z_open/ gains one file, launch_line.txt, carrying
+  the tmux line as the 12z-OPEN report printed it, with one leading line stating that it was
+  written at 12z-U19A's item 0 from that report and not captured at launch. It is not one of the
+  16 copied files and is listed apart from them in the report. From here the gate's own wrapper
+  writes the launch line into the evidence directory at launch (R731(b)'s rule, made concrete).
+== R738(c) at plan :13475
+R738(c) — Finding 3: I3's premise that a wrapper writes the launch line was the architect's, taken
+  from R732(d)'s wording, which no gate on disk implements. CC proceeded on a false INFERRED item
+  instead of stopping; the method used is accepted this once because it meets R731(b) and is
+  recorded, and the rule that a false INFERRED item stops the brief is unchanged. The form from
+  here: the launching step holds the launch line in one variable, writes the timestamp sentence
+  and that variable's value into launch_line.txt, then executes that variable, so the line
+  written and the line run cannot differ.
+== R738(d) at plan :13482
+R738(d) — Finding 4: gate_12aa_open/'s nineteen files (gate_c2's set: collected_ids.txt and
+  tree_at_launch.txt included) are the gate-evidence set of record from here; 12z_open's
+  seventeen stand as the earlier form, its launch line reconstructed (R733(a)).
+== R746(e) at plan :13903
+R746(e) — The setup session (R745(g)) builds, outside engine/, scripts/ and tests/: (i)
+  docs/plan/STANDING_RULES.md, every clause of the decision log that sets a standing rule (its text
+  says "from here", "Rule from here" or "the standing form"), each quoted verbatim with its ruling id
+  and one plain-English line, extracted by script, not composed; and, under
+  docs/session-reports/tools/, (ii) a transcription script that writes a decision-log block from an
+  rNNN.txt and its metadata, accepted only if it reproduces existing single and pair blocks byte for
+  byte; (iii) a session-open check script, accepted only if it reproduces this session's measured
+  open values; (iv) the standard gate wrapper, writing its launch line and the gate_12aa_open
+  evidence set itself. Nothing in engine/, scripts/ or tests/ changes. The standing-rules file is
+  adopted only by a later PI ruling after the architect has read it; until then every brief stays
+  in its present form.
+== R804(b) at plan :18822
+R804(b) — The PI's ruling, in his words: "One-time exception tonight." The 12ag-OPEN gate, and
+  no other, is launched as the brief's step 3e wrote it: by launch_gate.sh, in the tmux session
+  12ag_open. This is an exception to the global CLAUDE.md's long-running-jobs rule for this one
+  launch; the rule is unchanged. A change to the wrapper so that a gate launches as a unit is a
+  tools change in a brief of its own; no later gate brief relies on this exception.
+== R805(g) at plan :18909
+R805(g) — Order, after the 12ag-N46A read-out: the tools change that lets the gate wrapper
+  launch a gate as a systemd-run --user unit (R804(b)), two-phase; then U30's build, one
+  brief, from 12af_U30A.md, the N46 read-out and the rulings on them.
+== R660(b) at plan :8365
+R660(b) — The three GET entries at the launch second are this session's bracketing reads and
+  the window is attributed; from here the before-gate reads are made at least five seconds
+  before the launch so the window starts empty.
+== R680(c) at plan :9537
+R680(c) — Reading, no row: 872.27 s is the fifth gate on this host state (871.59, 906.50, 858.50,
+  895.02, 872.27 s), the first with no concurrent job; the band stays 795–971 s until the 12t
+  closeout cuts it in R677(f)'s form. The concurrent-jobs read excludes the snapshot shell's own
+  PIDs from here; attributed self-matches are not jobs.
+== R703(j) at plan :11108
+R703(j) — Readings, no row: CC's finding 10 — from here any pytest run outside a standard gate
+  passes --basetemp under its own scratch directory; another lane rotating a gate's basetemp out
+  of the shared root is harmless because the basetemp is read immediately after the gate
+  (R660(c)). Finding 11 — the direct mode=ro PRAGMA schema reads, with the fingerprint
+  IDENTICAL, are accepted.

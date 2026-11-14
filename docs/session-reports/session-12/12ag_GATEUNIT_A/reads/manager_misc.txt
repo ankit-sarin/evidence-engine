@@ -1,0 +1,45 @@
+$ systemctl --user show -p DefaultOOMPolicy
+DefaultOOMPolicy=stop
+$ systemctl --user show -p DefaultCPUAccounting -p DefaultMemoryAccounting
+$ cat /etc/pam.d/cron
+# The PAM configuration file for the cron daemon
+
+@include common-auth
+
+# Sets the loginuid process attribute
+session    required     pam_loginuid.so
+
+# Read environment variables from pam_env's default files, /etc/environment
+# and /etc/security/pam_env.conf.
+session       required   pam_env.so
+
+# In addition, read system locale information
+session       required   pam_env.so envfile=/etc/default/locale
+
+@include common-account
+@include common-session-noninteractive 
+
+# Sets up user limits, please define limits for cron tasks
+# through /etc/security/limits.conf
+session    required   pam_limits.so
+
+$ systemctl is-active systemd-oomd
+inactive
+$ man systemd-run (Environment / --collect / --wait / -p / --working-directory / --same-dir / -E lines)
+57:       --property=Type=exec) to ensure that systemd-run returns successfully
+73:       --scope
+79:       --unit=, -u
+84:       --property=, -p
+98:       --slice=
+105:       --slice-inherit
+115:       --expand-environment=BOOL
+151:       --service-type=
+164:       --nice=
+170:       --working-directory=
+176:       --same-dir, -d
+182:       -E NAME[=VALUE], --setenv=NAME[=VALUE]
+208:       --pipe, -P
+298:       --wait
+313:       -G, --collect
+327:       --user
+470:       --expand-environment=no.

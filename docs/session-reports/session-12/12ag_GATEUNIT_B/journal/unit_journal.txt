@@ -1,0 +1,2 @@
+2026-11-14T21:28:21.998696+00:00 spark-59e4 systemd[2694]: Started gate-12ag_unit.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit 12ag_unit docs/session-reports/session-12/12af_close/collected_ids_12af_close.txt docs/session-reports/session-12/12af_close/durations_12af_u29b.txt.
+2026-11-14T21:44:51.019779+00:00 spark-59e4 systemd[2694]: gate-12ag_unit.service: Consumed 2min 44.596s CPU time, 1.7M memory peak, 0B memory swap peak.

@@ -1,0 +1,8 @@
+== control 2: a launch whose unit name is already loaded
+$ systemd-run --user --unit=gate-unit_hold --collect sleep 20
+Running as unit: gate-unit_hold.service; invocation ID: 6bf16c4e7fcd49919f132d941f37d3f5
+hold LoadState: loaded ActiveState: active
+REFUSED: user unit gate-unit_hold.service is loaded
+exit 2
+files in /home/ankitsarin/scratch/12ag-gateunit-b/controls/ctrl_loaded: 0
+hold ended: wait rc=0 LoadState not-found

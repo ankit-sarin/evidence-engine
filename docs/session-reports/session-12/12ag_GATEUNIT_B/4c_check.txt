@@ -1,0 +1,14 @@
+PASS launch line's inner == what ran: True
+PASS selection in the line: tests/test_u20_modelfile_num_ctx.py
+PASS nineteen files: True 19 (names against gate_12ag_open/, durations_<name>.txt)
+PASS basetemp under scratch: /home/ankitsarin/scratch/12ag-gateunit-b/dry_run.basetemp
+PASS launch form: begins 'systemd-run --user ' and names gate-unit_dry
+PASS limit: LimitNOFILE=500000 = min(recorded soft 524288, recorded manager hard 500000); now soft 524288, manager hard 500000
+PASS LANG: --setenv=LANG=C.UTF-8, the only variable passed
+PASS no memory property in the line
+PASS launch_line.txt's first line says the unit has no memory cap
+PASS printed status names gate-unit_dry.service
+PASS Linger=yes printed
+PASS gate_rc.txt '0' = gate.log's last line 'pytest exit code: 0', and 0
+PASS no tmux session unit_dry: has-session exit 1
+RESULT: PASS

@@ -1,0 +1,6 @@
+== control 1: a second launch into the same evidence directory (/home/ankitsarin/scratch/12ag-gateunit-b/dry_run)
+6b39199742caafa1e2216242f732e700c51fabf0448a073cec65e9dfa861361b  -
+REFUSED: /home/ankitsarin/scratch/12ag-gateunit-b/dry_run already holds a gate
+exit 2
+6b39199742caafa1e2216242f732e700c51fabf0448a073cec65e9dfa861361b  -
+unit gate-unit_dry_again LoadState: not-found

@@ -1,0 +1,96 @@
+CLAUDE CODE
+
+================================================================================
+SECTION 1 — RULING (R809, PI ruling 2026-11-14 UTC; not on disk). Transcribed at the
+next item 0, not now. The lines between the markers are the byte content of r809.txt
+when that item 0 writes it; the architect's hash of that content:
+  sha256 337d6875e66ade252bd13fe5b853c5a86bba4102dba4a87e270f61de32c170d2,
+  3503 bytes, 45 lines, one trailing newline.
+================================================================================
+
+===== BEGIN r809.txt =====
+RULING [evidence-engine 12ag-R809] — the 12ag-GATEUNIT-B stop at the probe is correct and is the
+  architect's; the unit's open-files limit is the smaller of the shell's and the manager's; a
+  gate's journal start line is required and its stop line reported if present; item 0 accepted;
+  no standing rule; the build resumes at a fresh probe
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the
+  12ag-GATEUNIT-B stop report (item 0 b7e5fb1011632b7ff082c4aca7a5d6ad9a166424; stopped at step
+  2, no tool edited). Transcribe at the next item 0, by transcribe_ruling.py, in the block after
+  R808's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "the line set LimitNOFILE=524288 (this shell's soft limit) and the unit got 500000
+    soft, 500000 hard"; "/proc/2694/limits (that is systemd --user) reads "Max open files 500000
+    500000""; "The probe unit started and ran under the degraded manager, so I3 holds"; "The
+    three tools still hash to R3's values"; "no gate-* unit is loaded"; "r808.txt: 801dfd05…75c7,
+    4,737 B, 58 lines, equal to your hash."; "3 header lines, 1 new section, 9 "Named by" lines
+    that only append ids, 0 other."; "brief_12ag_GATEUNIT_B.md is
+    884138d299b235254d7266c72f0a9fb812bd15f28405e8225c5cff74f2dd5822, 22,133 B, 306 lines" (the
+    architect's copy: the same sha256, bytes and lines); "Commit:
+    b7e5fb1011632b7ff082c4aca7a5d6ad9a166424 (parent e5055c6)"; "Plan now:
+    3dbe145a0413afec97e2b3f747b442c4b7e80e36951cd90d99d770b4800cdabd, 3,243,845 B, 19,112 lines.";
+    "Ledger: 14cea87271bcc2cdb1ae25a24485cfedcf9f6249 (parent 6c279a6)"; "LANG C.UTF-8 as set";
+    "oom_score_adj 200"; "User journal: one line, "Started gate-probe-12ag.service …"".
+  READ (CC's): findings 1–4; options (a)–(c); "There is no stop or "Deactivated" line".
+  READ (the architect's clone, 12ag_GATEUNIT_A/12ag_GATEUNIT_A.md:145): "DefaultLimitNOFILE=500000".
+  INFERRED: none.
+
+R809(a) — The stop is correct and is the architect's: the brief's C1 set the unit's limit to
+  the launching shell's, 524288, although the Phase A read-out already quoted the manager's
+  500000, which a unit cannot exceed. The architect's errors this session: five. None reached
+  a commit, and no tool was edited.
+R809(b) — The PI's ruling on the limit, option (a), in his words: "1 a". The launch line sets
+  the unit's open-files limit to the smaller of the launching shell's own soft limit and the
+  user manager's own hard limit, both read at launch and neither a literal, and the launch
+  line records the value used. This replaces the wording of R808(b)(3) on the limit; the rest
+  of R808(b) stands.
+R809(c) — The PI's ruling on the journal, in his words: "Require the start line only; report a
+  stop line if one appears". A gate's acceptance asks for the unit's start line in the user
+  journal; its end is the gate's own exit and result files.
+R809(d) — Item 0 is accepted as reported: b7e5fb1 (Block 206; "A R808(d)" on the list, the
+  file regenerated within R766(b)'s three kinds; the brief file equal to the architect's
+  copy), ledger 14cea87. claude-config at 6c279a6, one commit of another lane touching
+  neither the ledger nor primer.md, is accepted under R663(b). Readings, no row: a degraded
+  user manager starts a transient unit; a unit's oom_score_adj reads 200, where the read-out
+  inferred 100.
+R809(e) — This ruling states no standing rule. The build resumes under the resume below.
+===== END r809.txt =====
+
+================================================================================
+SECTION 2 — RESUME [evidence-engine 12ag-GATEUNIT-B-R1] under the ruling above, in this
+block
+================================================================================
+
+Same session, same task, same scratch directory (~/scratch/12ag-gateunit-b/). MACHINE:
+DGX, ~/projects/evidence-engine. 12ag-GATEUNIT-B's PERMISSIONS, ASSUMPTION LEDGER,
+CONSTRAINTS, FINAL REPORT FORMAT and CONTRADICTION HANDLING stand with these changes:
+the open-files limit is R809(b)'s wherever the brief names the launching shell's (C1,
+step 2, 4c); step 6's journal acceptance is R809(c)'s; Touched gains
+docs/session-reports/session-12/12ag_GATEUNIT_B/brief_12ag_GATEUNIT_B_R1.md; the unit
+authorization covers one more probe; R809 is not written to disk here.
+
+R0. date -u (TIMING as the brief's). Confirm HEAD
+    b7e5fb1011632b7ff082c4aca7a5d6ad9a166424 (cat-file -e with ^{commit}), clean, level;
+    I1; fingerprint IDENTICAL; the three tools at the brief's R3 hashes; claude-config at
+    14cea87 or a descendant acceptable under R663(b), reported; no gate-* unit loaded. A
+    mismatch = STOP.
+R1. Step 2 again, a fresh probe unit named gate-probe-12ag-r1, its line carrying the
+    limit R809(b) yields (the smaller of this shell's soft limit and the user manager's
+    own hard limit, each read then, the read of the manager quoted) and this shell's
+    LANG. Report as step 2 asks. A launch that fails, or a unit whose soft limit or LANG
+    is not what the line set = STOP before any edit. The first probe's files stay as
+    they are.
+R2. Step 3 as written, C1's limit by R809(b): the launcher reads both limits at launch,
+    sets the smaller, and the value used is in the launch line.
+R3. Step 4 as written; 4c's limit assertion is that the launch line carries the value
+    R809(b) yields for the shell that ran it.
+R4. Steps 5, 6 and 7 as written, with step 6's acceptance asking for the unit's start
+    line in the user journal and reporting a stop line if one appears (R809(c)). The
+    evidence commit also carries both probes' files and this resume as pasted,
+    12ag_GATEUNIT_B/brief_12ag_GATEUNIT_B_R1.md ("CLAUDE CODE" through the
+    STOP-12AG-GATEUNIT-B-R1 line, one trailing newline, written once, hashed straight
+    after, reported): R784(g)(v) for a resume. R809 is transcribed at the next item 0.
+
+HANDBACK: Stop and report in 12ag-GATEUNIT-B's format, sections (2) onward, with R0
+  added and the resume file's sha256, bytes and lines. Do not start U30's build. Await
+  the next brief or ruling in this session. STOP-12AG-GATEUNIT-B-R1

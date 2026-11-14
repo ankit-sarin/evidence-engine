@@ -1,0 +1,2 @@
+2026-11-14T21:26:41.508385765Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-unit_dry --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ag-gateunit-b/dry_run/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/dry_run unit_dry - - tests/test_u20_modelfile_num_ctx.py

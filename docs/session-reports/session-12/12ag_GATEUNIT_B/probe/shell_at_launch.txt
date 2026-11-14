@@ -1,0 +1,1 @@
+shell: nofile soft 524288 hard 524288 LANG=C.UTF-8

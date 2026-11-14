@@ -1,0 +1,17 @@
+Running as unit: gate-12ag_unit.service; invocation ID: c98e130885574695862f3f06ecc5dbd6
+2026-11-14T21:28:21.968132973Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-12ag_unit --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit 12ag_unit docs/session-reports/session-12/12af_close/collected_ids_12af_close.txt docs/session-reports/session-12/12af_close/durations_12af_u29b.txt 
+● gate-12ag_unit.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit 12ag_unit docs/session-reports/session-12/12af_close/collected_ids_12af_close.txt docs/session-reports/session-12/12af_close/durations_12af_u29b.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-12ag_unit.service; transient)
+  Transient: yes
+     Active: active (running) since Sat 2026-11-14 21:28:21 UTC; 7ms ago
+   Main PID: 1969480 (bash)
+      Tasks: 1 (limit: 153552)
+     Memory: 1.5M (peak: 1.7M)
+        CPU: 5ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-12ag_unit.service
+             └─1969480 /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit 12ag_unit docs/session-reports/session-12/12af_close/collected_ids_12af_close.txt docs/session-reports/session-12/12af_close/durations_12af_u29b.txt
+
+Nov 14 21:28:21 spark-59e4 systemd[2694]: Started gate-12ag_unit.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/gate_12ag_unit 12ag_unit docs/session-reports/session-12/12af_close/collected_ids_12af_close.txt docs/session-reports/session-12/12af_close/durations_12af_u29b.txt.
+Linger=yes
+launcher rc=0

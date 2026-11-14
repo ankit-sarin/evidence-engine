@@ -1,0 +1,11 @@
+$ grep "open files" /proc/2694/limits   # the user manager (systemd[2694])
+Max open files            500000               500000               files     
+$ ps -o pid=,args= -p 2694
+   2694 /usr/lib/systemd/systemd --user
+$ grep "open files" /proc/$$/limits   # this shell
+Max open files            524288               524288               files     
+$ systemctl --user show -p DefaultLimitNOFILE -p DefaultLimitNOFILESoft
+DefaultLimitNOFILE=500000
+DefaultLimitNOFILESoft=1024
+$ cat /proc/sys/fs/nr_open
+1048576

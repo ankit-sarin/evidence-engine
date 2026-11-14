@@ -1,0 +1,7 @@
+$ systemctl show user@1000.service -p MainPID --value
+2694
+$ grep 'Max open files' /proc/2694/limits
+Max open files            500000               500000               files     
+$ ps -o args= -p 2694
+/usr/lib/systemd/systemd --user
+shell soft 524288 hard 524288; manager hard 500000; min 500000; LANG=C.UTF-8

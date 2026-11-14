@@ -1,0 +1,14 @@
+● gate-probe-12ag.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/probe/probe.sh /home/ankitsarin/scratch/12ag-gateunit-b/probe/probe_out.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-probe-12ag.service; transient)
+  Transient: yes
+     Active: active (running) since Sat 2026-11-14 21:09:46 UTC; 6ms ago
+   Main PID: 1960520 (bash)
+      Tasks: 1 (limit: 153552)
+     Memory: 1.4M (peak: 1.8M)
+        CPU: 5ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-probe-12ag.service
+             ├─1960520 /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/probe/probe.sh /home/ankitsarin/scratch/12ag-gateunit-b/probe/probe_out.txt
+             └─1960528 nice
+
+Nov 14 21:09:46 spark-59e4 systemd[2694]: Started gate-probe-12ag.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/probe/probe.sh /home/ankitsarin/scratch/12ag-gateunit-b/probe/probe_out.txt.
+[exit 0]

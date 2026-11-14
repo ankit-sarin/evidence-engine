@@ -1,0 +1,2 @@
+2026-11-14T21:25:00.682980366Z probe launched by the line below
+systemd-run --user --unit=gate-probe-12ag-r1 --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ag-gateunit-b/probe_r1/probe.sh /home/ankitsarin/scratch/12ag-gateunit-b/probe_r1/probe_out.txt

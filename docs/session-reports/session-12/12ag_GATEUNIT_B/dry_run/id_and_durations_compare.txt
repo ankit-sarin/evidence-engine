@@ -1,0 +1,6 @@
+gate ids 18; no id reference named
+phases gate 2; no durations reference named
+-- summary line
+============================== 18 passed in 0.22s ==============================
+-- warnings
+(none)

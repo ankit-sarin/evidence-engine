@@ -1,0 +1,9 @@
+PASS the changed files are exactly the three tools: ['docs/session-reports/tools/README.md', 'docs/session-reports/tools/launch_gate.sh', 'docs/session-reports/tools/run_gate.sh']
+launch_gate.sh: hunks (old start, old count, new start, new count) [(8, 1, 8, 1), (36, 2, 36, 4), (39, 0, 42, 2)]
+PASS launch_gate.sh: no changed line outside the allowed set [8, 36, 37, 38, 39] (outside: [])
+run_gate.sh: hunks (old start, old count, new start, new count) [(2, 1, 2, 1)]
+PASS run_gate.sh: no changed line outside the allowed set [2] (outside: [])
+README.md: hunks (old start, old count, new start, new count) [(10, 2, 10, 2), (21, 0, 22, 2)]
+PASS README.md: no changed line outside the allowed set [10, 11] + the end of the file (outside: [])
+PASS launch_gate.sh: no tmux remains
+RESULT: PASS

@@ -1,0 +1,18 @@
+Running as unit: gate-unit_dry.service; invocation ID: 551540131045487eac6cc677765f0401
+2026-11-14T21:26:41.508385765Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-unit_dry --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ag-gateunit-b/dry_run/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/dry_run unit_dry - - tests/test_u20_modelfile_num_ctx.py
+● gate-unit_dry.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/dry_run/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/dry_run unit_dry - - tests/test_u20_modelfile_num_ctx.py
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-unit_dry.service; transient)
+  Transient: yes
+     Active: active (running) since Sat 2026-11-14 21:26:41 UTC; 5ms ago
+   Main PID: 1967949 (bash)
+      Tasks: 3 (limit: 153552)
+     Memory: 1.6M (peak: 1.6M)
+        CPU: 4ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-unit_dry.service
+             ├─1967949 /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/dry_run/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/dry_run unit_dry - - tests/test_u20_modelfile_num_ctx.py
+             └─1967957 date -u +%FT%T.%NZ
+
+Nov 14 21:26:41 spark-59e4 systemd[2694]: Started gate-unit_dry.service - /usr/bin/bash /home/ankitsarin/scratch/12ag-gateunit-b/dry_run/run_gate.sh /home/ankitsarin/scratch/12ag-gateunit-b/dry_run unit_dry - - tests/test_u20_modelfile_num_ctx.py.
+Linger=yes
+launcher rc=0

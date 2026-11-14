@@ -1,0 +1,3 @@
+Sat Nov 14 21:28:08 UTC 2026
+405968 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+ancestors excluded: [1807227, 1807234, 1807243, 1807261, 1807279, 1807331, 1807335, 1807392, 1807479, 1807918, 1969282, 1969284, 2800596]

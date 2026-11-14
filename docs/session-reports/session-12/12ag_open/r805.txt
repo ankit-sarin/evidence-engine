@@ -1,0 +1,61 @@
+RULING [evidence-engine 12ag-R805] — 12ag-OPEN accepted; the series gains 1042.65 s, confounded;
+  R667(e) narrowed, identifiers allowed; U30's design ruled on the PI's five decisions; N46
+  folded into U30 after a read of its readers; the gate hold a standing rule; two standing rules
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the 12ag-OPEN-R1
+  final report (evidence 60a63314118dc9f9ea41a009e5b5197676922b4c). Transcribe at item 0 of the
+  12ag-N46A brief below, by transcribe_ruling.py, in the block after R804's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-OPEN-R1 final report, quoted): "exit 0 at 06:05:39"; "3573 passed, 17
+    deselected, 1 xfailed, 2 warnings"; "ids 3,574 against 3,574, 0 / 0"; "Wall time: 1042.65 s,
+    inside 872–1065 s."; "no model loads and no requests"; "No-marker collection: 3,591."; "Commit:
+    60a63314118dc9f9ea41a009e5b5197676922b4c (parent 16cb307), 34 files, all new, +21,611 / −0";
+    "Ledger: 89b4efdadca69b880096a91c8921b6c9a7182dc9 (parent 0663a61)"; "brief_12ag_OPEN_R1.md is
+    7bee59aa1972b7647201015ba609d5d5a219ca7d226eb4394ae8b63e71e8b356, 7,250 B, 97 lines" (the
+    architect's copy: the same sha256, bytes and lines); "48 items under BLOCKING headings: 31
+    VALUE, 17 FACT."; "pytest-905 to -909 were created during the gate, with surgical-cv's
+    app_db_template* dirs from 05:49:55 to about 05:58".
+  READ (CC's): findings 1–4; the labels of r667e_read.txt, CC's judgement by a fixed rule.
+  READ (the architect's clone at 60a6331): gate_12ag_open/gate_wall.txt "wall: 1042.650800830 s";
+    12af_U30A/12af_U30A.md §7, options "(S-b)", "(R-c) Both.", "(P-b) Yes", items 4 and 5;
+    engine/core/completeness.py:220 "def drop_unexpected(spans, expected: tuple[str, ...]) -> list:".
+  INFERRED: none.
+
+R805(a) — The 12ag-OPEN-R1 final report is accepted as printed: the gate at the 12ag block's
+  counts, ids 0 / 0, no load in its window; step 3f matched; the evidence commit 60a6331
+  (nineteen gate files, the job reads for 2026-11-11 to 11-13 in 12af_close/, r667e_read.txt,
+  the resume file equal to the architect's copy), ledger 89b4efd. Session 12ag is open. CC's
+  findings 2, 3 and 4 are readings: two slips caught before anything rested on them, and a
+  scratch file with no committed counterpart. The architect's errors this session stay two.
+R805(b) — The series gains 1042.65 s as its forty-first member, confounded (R677(f)): another
+  lane's test suite started inside the gate's window after both snapshots, seen only in the
+  temp root. The band in force stays 872–1065 s until the closeout recuts it. That a suite can
+  start after the launch joins the cross-lane item for dgx-infra.
+R805(c) — The PI's ruling, in his words: "Narrow, and allow identifiers". Rule from here,
+  narrowing R667(e): R667(e) applies to INFERRED — BLOCKING items only. A blocking item names
+  the fact that must hold, and may name the thing the fact is about by its identifier (a
+  commit, a file, a session). A quantity, a time or a line number the brief wants checked is a
+  separate reading. An expectation item may carry its value.
+R805(d) — U30's design, on the PI's word ("Decision 1-5 agree"), from 12af_U30A/12af_U30A.md
+  §7: (1) an interrupted cloud run closes interrupted with its signal's reason, the form the
+  local runners use (S-b); (2) the rollback sits in both places: store_result rolls back on any
+  exit that did not commit, and run_arm rolls back an open transaction before its close and
+  closes only a run not already closed (R-c); (3) send records a provider call that an
+  interrupt ends, as an error naming the interrupt, and re-raises — this amends R800(b)'s
+  exclusion for interrupts (P-b); (4) the cloud entry point handles SIGTERM and SIGHUP as the
+  other mains do; (5) INT-i12-71's first half is closed as answered: no activation is owed.
+  The dated notes on INT-i12-71 are written at the U30 build brief's item 0, not here.
+R805(e) — N46, the PI's ruling, in his words: "Fold it into U30: one build closes both." A
+  read-only look at the legacy cloud table's readers comes first: the 12ag-N46A read-out. No
+  design clause for N46 is written before its read-out is accepted and the PI has ruled.
+R805(f) — The hold, the PI's ruling: "Yes". Rule from here: before a standard gate is launched,
+  when the snapshot names another lane's full test suite or an encode, the launch waits for
+  it — one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock. A
+  launch made at the bound is reported with the job named and its value enters the series as
+  confounded (R677(f)). A gate brief does not restate it.
+R805(g) — Order, after the 12ag-N46A read-out: the tools change that lets the gate wrapper
+  launch a gate as a systemd-run --user unit (R804(b)), two-phase; then U30's build, one
+  brief, from 12af_U30A.md, the N46 read-out and the rulings on them.
+R805(h) — This ruling states two standing rules, (c) and (f). The id list gains "A R805(c)" and
+  "A R805(f)" and STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling
+  (R754(c)(iii), R766(b)). R667(e) stays in the list; R805(c) is read with it.

@@ -3,9 +3,9 @@
 **Status: adopted under R754, selected by the committed id list.** A quoted clause is the rule's source; a figure, date, session condition or named commit inside it is that day's, and the current value is the "Expected values at session-N open" block's. A rule this file lacks is a rule a brief must restate. Clause text is the plan's, by script; only the lines headed "Gloss (CC's, not ruled):" are composed, and they rule nothing.
 
 - Generator: `docs/session-reports/tools/extract_rules.py`, sha256 `fc95e62a246a4571295a99180f61b93dd10fc11a528f98d4320dcb8bb82bd7f2`
-- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `fb14a3fd3270ab89894bf87ce1a90bc7d7b9d97b04dbf6eafedf9c11e74f155c`
-- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `0657ba83ca1dd54871ed7634a866cc9de3c5286038b46d81f8911fa6dd2bcd62`
-- Selection: the id list: Tier A 87, Tier B 8, 95 of 1524 clauses in the log.
+- Plan blob: `docs/plan/ENGINE_REFACTOR_PLAN.md`, sha256 `4013412bbbe754bd8f908ab20dbb4879c2d6b230f4ef8177d4dcf5550fb027a2`
+- Id list: `docs/plan/standing_rules_ids.txt`, sha256 `5c301ffbb7a4e3e7697006590a863f4df36f03386e6be96262acbbb27ad9a91e`
+- Selection: the id list: Tier A 89, Tier B 8, 97 of 1677 clauses in the log.
 - "Named by" lists later clauses that carry the exact id; a range or a bare ruling number does not count.
 
 # Tier A — process rules
@@ -18,7 +18,7 @@
 R86 — **The no-live-write window is 07:00–10:35 UTC**: the 07:00 health check, the 09:00 nightly suite, and the 10:30 `dgx-snapshot-user` timer with its 2-minute jitter (row I15). Appendix B and CLAUDE.md's ops block carry the new window. *(Closeout note, 2026-09-23: the plan's addenda carry it; Appendix B lives in the unified plan, and the CLAUDE.md half was not applied at this closeout — see the I13 stop in the session-7b closure paragraph)*
 ```
 
-Named by: R96, R648(c), R747(c), R749(b).
+Named by: R96, R648(c), R747(c), R749(b), R789(a), R795(h), R796(c), R797(d), R805(f).
 
 Gloss (CC's, not ruled): The window with no live write to review.db is 07:00–10:35 UTC.
 
@@ -54,7 +54,7 @@ Gloss (CC's, not ruled): Sessions close pushed and measured at origin; the earli
 R514 — **A finding is closed when its own acceptance test passes** (the test in the original assessment or in `12f_triage_rows.md`). Capability work beyond that test stays in its owning state. Clarifies R512; does not narrow it. Applied: B-F13's run and configuration identity stays in S4 (junior); B-F10's terminal-state writer stays D20's.
 ```
 
-Named by: R517, R676(b), R682(b), R688(f), R691(b), R721(f), R728(b), R736(b), R763(b), R768(g), R770(g), R773(b), R781(j), R782(b).
+Named by: R517, R676(b), R682(b), R688(f), R691(b), R721(f), R728(b), R736(b), R763(b), R768(g), R770(g), R773(b), R781(j), R782(b), R785(f), R787(b), R789(b), R793(b), R799(c), R801(c).
 
 Gloss (CC's, not ruled): A finding closes when its own acceptance test passes, and capability beyond that test stays in its owning state.
 
@@ -263,7 +263,7 @@ R663(b) — S2: claude-config 9aa59b3 is accepted as found. The ledger commit is
   non-row dirt, divergence). Item 0(c)'s note is written, naming 2466df3 and 9aa59b3.
 ```
 
-Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c), R784(c).
+Named by: R672(d), R678(d), R683(f), R691(d), R692(f), R693(b), R701(f), R702(b), R709(c), R709(f), R710(c), R717(a), R719(e), R726(b), R729(e), R730(d), R737(e), R738(e), R751(d), R758(d), R779(c), R784(c), R797(c), R804(d).
 
 Gloss (CC's, not ruled): Another lane's committed claude-config change that leaves this lane's rows and primer lines 41–45 intact is accepted as found, noted by hash and lane.
 
@@ -320,7 +320,7 @@ R667(e) — I5: the premise ("CLAUDE.md carries … watchdog 900 s") was an arch
   CLAUDE.md's "300s" stays on the HK-ARCH line (F5, R650(g)).
 ```
 
-Named by: R780(h).
+Named by: R780(h), R805(c), R805(h).
 
 Gloss (CC's, not ruled): An assumption to verify names only the fact that must hold; a value to check is a separate reading.
 
@@ -418,7 +418,7 @@ R677(f) — The band (R657(d), R674(c), R676(e)): cut from the last four standar
   enters the mean from here; the host's concurrent encodes are its usual state (R676(e)).
 ```
 
-Named by: R678(e), R680(c), R682(d), R683(c).
+Named by: R678(e), R680(c), R682(d), R683(c), R793(c), R795(f), R796(b), R797(d), R805(b), R805(f).
 
 Gloss (CC's, not ruled): A confounded gate reading still counts toward the wall-time band's mean, with its confounder recorded.
 
@@ -462,7 +462,7 @@ R680(b) — Reading, no row: 00a1dc5 stands as pushed (no amend after a push). T
   the 12t closure; the hook row itself is correct.
 ```
 
-Named by: R683(a), R691(d), R692(a), R701(a).
+Named by: R683(a), R691(d), R692(a), R701(a), R793(e), R795(c).
 
 Gloss (CC's, not ruled): A ledger commit carries its subject line and its trailers.
 
@@ -510,7 +510,7 @@ R683(c) — The band (R657(d), R677(f), R682(d)): cut from the last four standar
   906.50, 858.50, 895.02, 872.27, 887.58 s.
 ```
 
-Named by: R692(c), R693(f), R700(e), R701(b), R702(c), R707(g), R709(b), R719(b), R729(b), R737(b), R748(b), R764(d), R765(b), R774(c), R778(b), R782(c), R783(b).
+Named by: R692(c), R693(f), R700(e), R701(b), R702(c), R707(g), R709(b), R719(b), R729(b), R737(b), R748(b), R764(d), R765(b), R774(c), R778(b), R782(c), R783(b), R795(f), R796(b).
 
 Gloss (CC's, not ruled): The band is cut from the last four standard gates on the host state, confounded readings included and recorded, rounded inward; a gate outside it is reported, not adapted to; its figures are that day's.
 
@@ -988,7 +988,7 @@ R732(a) — The stop is correct and is the architect's: the brief named Blocks 1
   governing (R18).
 ```
 
-Named by: R736(f), R739(c), R741(d), R784(d).
+Named by: R736(f), R739(c), R741(d), R784(d), R791(c), R792(h), R794(a), R796(c), R797(e), R803(c).
 
 Gloss (CC's, not ruled): A multi-ruling brief names the pattern, not a model block; CC finds the most recent such commit and quotes its form, and the record wins over the brief.
 
@@ -1172,7 +1172,7 @@ R746(c) — Finding 2 is accepted and is the rule from here: a red at the gate c
   other red at the gate is a stop.
 ```
 
-Named by: R770(e), R772(b), R772(d), R773(c), R781(h).
+Named by: R770(e), R772(b), R772(d), R773(c), R781(h), R787(a), R787(d).
 
 Gloss (CC's, not ruled): A red at the gate from a census miss is class (c): fixed without changing an assertion, re-run once, its evidence kept outside the series; any other red is a stop.
 
@@ -1202,7 +1202,7 @@ R747(b) — transcribe_ruling.py is accepted for every block from here. session_
   is reported as the wrapper's (finding 8).
 ```
 
-Named by: R748(e), R753(e), R765(h), R778(f), R783(g).
+Named by: R748(e), R753(e), R765(h), R778(f), R783(g), R796(g), R803(g).
 
 Gloss (CC's, not ruled): The tools in force and their limits: transcribe_ruling.py for every block, session_open_check.py for what it checks, the gate wrapper pending its first full gate.
 
@@ -1223,7 +1223,7 @@ R749(b) — An open does not wait for a day's scheduled jobs. A brief is valid a
   … health job and … nightly" clause in timing only.
 ```
 
-Named by: R764(c), R767(d), R774(b), R782(f), R784(e).
+Named by: R764(c), R767(d), R774(b), R782(f), R784(e), R795(e), R796(d).
 
 Gloss (CC's, not ruled): An open does not wait for a day's jobs; each job is read by the first brief after it runs, against its governing expected file, and a gate must exit before 07:00 UTC.
 
@@ -1305,7 +1305,7 @@ R753(d) — Three rules carried only by citations are stated here, so the file c
   2d's; the list file carries it under a "#" line until then.
 ```
 
-Named by: R755(a), R755(c), R763(b), R773(b), R782(b).
+Named by: R755(a), R755(c), R763(b), R773(b), R782(b), R787(b), R789(b).
 
 Gloss (CC's, not ruled): The model-load stop is R696(b)'s, a closed pre-tag row is counted until P1 closes, and an open's pre-check reads the process table and tmux for the named archived sessions, stopping only on a survivor of this lane.
 
@@ -1354,7 +1354,7 @@ R766(b) — The 17 "Named by" lines are accepted: each only appends ids, no exis
   classification is written by the check into its own evidence file, never by eye.
 ```
 
-Named by: R767(c), R768(a), R775(b), R783(g), R784(g).
+Named by: R767(c), R768(a), R775(b), R783(g), R784(g), R805(h).
 
 Gloss (CC's, not ruled): A regeneration of STANDING_RULES.md after new blocks moves its derived "Named by" lines; the pre-commit check classifies every changed line and allows only the three header lines, a new section for an id the list gained, and a "Named by" line that only appends ids.
 
@@ -1411,7 +1411,7 @@ R783(d) — Finding 1. Rule from here: a full hash is proved to exist by git cat
   item 0 (R754(c)(iii)), the file regenerated there.
 ```
 
-Named by: R784(a).
+Named by: R784(a), R795(i).
 
 Gloss (CC's, not ruled): In this lane a full hash is shown to exist by git cat-file -e <hash>^{commit} in its own repository; git rev-parse --verify on a 40-character hash shows only that it is well formed, and a brief's step-0 hash check uses the cat-file form.
 
@@ -1438,9 +1438,41 @@ R784(g) — Rule from here, a standing rule (PI's word, 2026-11-09): a brief car
   12ae-U24A's item 0 (R754(c)(iii)), the file regenerated there, the diff classified (R766(b)).
 ```
 
-Named by: none.
+Named by: R785(a), R795(i), R796(a), R796(c), R796(g), R803(g).
 
 Gloss (CC's, not ruled): In this lane a brief carries only what is new to its task: a standing rule is cited by id, a tool or a deliverable's form is named by path, the open block is quoted only where a value gates a stop, and each brief is committed as pasted at its own item 0 and hashed.
+
+## R805(c)
+
+2026-11-14, session 12ag.
+
+```text
+R805(c) — The PI's ruling, in his words: "Narrow, and allow identifiers". Rule from here,
+  narrowing R667(e): R667(e) applies to INFERRED — BLOCKING items only. A blocking item names
+  the fact that must hold, and may name the thing the fact is about by its identifier (a
+  commit, a file, a session). A quantity, a time or a line number the brief wants checked is a
+  separate reading. An expectation item may carry its value.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): R667(e) applies to INFERRED — BLOCKING items only: a blocking item names the fact that must hold and may name the thing it is about by its identifier (a commit, a file, a session); a quantity, a time or a line number a brief wants checked is a separate reading, and an expectation item may carry its value.
+
+## R805(f)
+
+2026-11-14, session 12ag.
+
+```text
+R805(f) — The hold, the PI's ruling: "Yes". Rule from here: before a standard gate is launched,
+  when the snapshot names another lane's full test suite or an encode, the launch waits for
+  it — one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock. A
+  launch made at the bound is reported with the job named and its value enters the series as
+  confounded (R677(f)). A gate brief does not restate it.
+```
+
+Named by: none.
+
+Gloss (CC's, not ruled): Before a standard gate is launched, a snapshot naming another lane's full test suite or an encode makes the launch wait for it: one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock; a launch at the bound is reported with the job named, its value enters the series as confounded (R677(f)), and a gate brief does not restate it.
 
 # Tier B — engine governance, pending the adoption ruling
 
@@ -1464,7 +1496,7 @@ Gloss (CC's, not ruled): The event store starts empty of field-level history, se
 R26 — The extraction field set is frozen for Paper 1: codebook field names and the definitions given to human extractors do not change. Elicitation, validation, tokens and field-state handling remain engine work and may change
 ```
 
-Named by: R128, R571, R612.
+Named by: R128, R571, R612, R787(e).
 
 Gloss (CC's, not ruled): The extraction field names and definitions are frozen for Paper 1, while elicitation, validation, tokens and field-state handling may change.
 
@@ -1476,7 +1508,7 @@ Gloss (CC's, not ruled): The extraction field names and definitions are frozen f
 R71 — R22-U4 extended: no cloud extraction until session 9 (unlinked writer) and session 8 (glob resolver) both land; cloud opt-in is built and tested on fixtures, the live spec keeps `cloud.enabled_arms` empty
 ```
 
-Named by: R210, R237, R599.
+Named by: R210, R237, R599, R791(d), R792(g), R793(f), R798(h), R799(d), R800(f).
 
 Gloss (CC's, not ruled): No cloud extraction until sessions 8 and 9 land, and the live spec keeps cloud.enabled_arms empty.
 
@@ -1488,7 +1520,7 @@ Gloss (CC's, not ruled): No cloud extraction until sessions 8 and 9 land, and th
 R510 — **Y4.** "Each close records pre-tag rows in / out and counts by class."
 ```
 
-Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a), R758(a), R763(f), R764(d), R767(a), R774(c), R779(a), R780(g), R781(i), R782(g), R784(a).
+Named by: R540, R607, R632(a), R634(c), R635(a), R643(b), R648(e), R651(a), R659(d), R683(d), R692(d), R695(c), R698(g), R700(f), R705(e), R707(e), R720(e), R721(f), R728(e), R731(e), R736(e), R738(e), R747(b), R747(f), R751(a), R758(a), R763(f), R764(d), R767(a), R774(c), R779(a), R780(g), R781(i), R782(g), R784(a), R795(g), R796(g), R797(a), R803(g), R804(c).
 
 Gloss (CC's, not ruled): Each close records pre-tag rows in and out and the counts by class.
 

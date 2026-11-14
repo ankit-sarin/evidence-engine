@@ -18781,3 +18781,141 @@ R803(h) — Session 12af closes now. After R803(f) has landed, run /wrap; this r
 | 2026-11-11 | R803(a) — The 12af-CLOSE closeout is accepted as committed: item 0 4884bc3 (Block 200; the INT-i12-71 note; the brief file byte-equal to the architect's copy; the rules files untouched), the closeout 7ddabca (the closure and the 12ag expected-values block, +132 / −0 at the matched position; 12af_close/'s twenty files; the recount and its chain; the band computation; the expected nightly file), ledgers be1ae3e and 4b141cd. E1–E5 held; I1 held; I2 read. Seven committed briefs this session, seven byte-equal to the architect's copies. R803(b) — The band for 12ag is 872–1065 s: ±10% of 968.85 s, the mean of the last four standard gates on this host state (963.43, 966.10, 965.92, 979.95), rounded inward, none confounded, two with a reading beside them as band_computation.txt names them. The series stands at forty. A 12ag gate outside the band is reported with its concurrent jobs, not adapted to. R803(c) — The stops, counted from the rulings: none. Pauses: none. CC's stops: none. The architect's errors this session, six, each caught by CC reading the record or the code over the brief (R732(a)), none stopping a brief or reaching a commit wrong: the session's end time taken from the plan (R797(e)); a listing asserted from the names to be added (R797(e)); two findings sent for rows that already existed (R798(h), corrected by R799(d)); an inserted-line count where the record's table convention governed (R800(a)); two tests named as coupled that run outside a run (R801(f)); a clause on unknown field names that no read-out had quoted (R798(e), corrected by R802(c)). The pattern is the one 12ae named: a statement written from a description where the record or the code had the fact. The session's measured point for the estimate: one CC session (the open at 22:55 UTC on 2026-11-10 to this wrap), two fix units from Phase A to gate (U40, U29), a third unit's Phase A (U30), three rows closed, one opened, no stop, no pause. R803(d) — Readings, no row. The closeout's choices: 1 (the dated job files not written, no job having run — right, and 12ag-OPEN writes them into 12af_close/); 2 (the recount script's package expectations taken from its baseline, plus one for P5 — right; a literal the brief did not supply is not invented); 3 (this brief's equality left to this ruling — done in (a)); 4 (the CC session's open time from R797's quotation and its id from the transcript — the record's sources); 5 (the two blocks not pasted in the report, being committed verbatim — accepted; the architect read them from the clone). Its findings: 1 (another lane's full suite ran beside the closeout, beside no gate — a reading in the host paragraph); 2 (the temp root's figure by the root's own du -sb, as R796(d) finding 2 provides); 3, 4 and 5 (three of CC's own slips, each caught by its own check before a commit — the checks did their job). R803(e) — Carried to 12ag and the plan, from the closure's "Carried forward": U30's five decisions, put to the PI in plain English after 12ag's open and before any build brief (R801(g), R802(b)), with the legacy table's unknown field names (N46); the optional-field defaults in the two accessors; whether a repaired truncated response may be stored (U31); a token for a truncated or refused output on both paths and the local output-length stop (023); the retry budget (INT-ae12-2); INT-af12-1; A15's per-arm axis; the six tools items; the cross-lane readings for dgx-infra; the 2026-11-11 and later jobs against 12af_close/expected_nightly_20261111.md. Whether R797(d)'s hold becomes a standing rule is not ruled: the architect recommended it and the PI has not yet given his word, so it is put to him again at 12ag, and until then each gate brief carries the hold as a task gate, as the 12ag expected-values block already states it. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at 12ag-OPEN's item 0, asserted by content. The PI's instruction of R801(g) enters the unified plan as its rule 40. R803(f) — The lane line (sha256 d84ed8bda3a1b67af636bac536cf47d5b81c11eea153c0780814845e01b4652b, 7,743 bytes, 10 lines, ~/scratch/12af-close/lane_line_12af.txt) is approved on the condition above. First verify the file's sha256 and quote its fifth "+" line whole from the file. If that line reads whole — its "next:" clause runs from 12ag-OPEN through U30's five decisions and its build to the freeze, the tag and Run 7 with no words missing and its emphasis marks paired — apply it: replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines, taken from primer.md itself) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows counted from the diff and named by hash); push; level. If the line is broken in the file itself, STOP before anything is applied and report the line as it stands; the architect then rules its text. R803(g) — 12ag-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with transcribe_ruling.py as the next block (Block 201) and copies lane_line_12af.txt into docs/session-reports/session-12/12af_close/, with r803.txt beside it; no standing rule, the three rules files untouched by content. It runs session_open_check.py and the steps R747(b) keeps explicit, against the "Expected values at session-12ag open" block, the recount by 12af_close/recount_12af_close.py (287; 38 done 33; R510 1 / 0); reads the 2026-11-11 and every later job run before it against 12af_close/expected_nightly_20261111.md; the gate by the wrapper, against 872–1065 s, its reference 12af_close/collected_ids_12af_close.txt and durations_12af_u29b.txt, with the hold. Its brief is committed at its item 0 as brief_12ag_OPEN.md (R784(g)(v)), in 12af_open/brief_12af_OPEN.md's form. Then U30's decisions. R803(h) — Session 12af closes now. After R803(f) has landed, run /wrap; this ruling authorizes /wrap's own commits and pushes and nothing else. The project primer and the global primer record the session as the lane line states it. Report the lane-line commit's hash and parent, the fifth "+" line as quoted from the file, the wrap's verdict, and the archive command to be run after /exit. | PI, 2026-11-11, during session 12af, on architect recommendation, on the 12af-CLOSE closeout report (item 0 4884bc3; closeout 7ddabca) |
 
 The decision log in this file ends at R803.
+
+**Block 202.** *Transcribed 2026-11-14 (item 0 of the 12ag-N46A brief), in its own commit with Block 203, R805(c) and R805(f) on the standing-rules list, the file regenerated, and the brief file it orders, in the R597(e) form:* ruling R804, made by PI on architect recommendation on 2026-11-14 UTC, during session 12ag, on the 12ag-OPEN stop report (item 0 `16cb307164c9203c695c3a4f842cf6d294c771ad`). The 12ag-OPEN-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ag-R804] — the 12ag-OPEN stop before the gate is correct and is the
+  architect's; the PI's one-time exception for this gate's launch; item 0 accepted; claude-config
+  a93fc0b accepted; readings on findings 2–5; no standing rule; the open resumes at 3e
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the 12ag-OPEN
+  stop report (item 0 16cb307164c9203c695c3a4f842cf6d294c771ad; stopped before step 3e).
+  Transcribe at the next item 0, by transcribe_ruling.py, in the block after R803's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "item 0 is 16cb307164c9203c695c3a4f842cf6d294c771ad (parent 54266b7)"; "The ledger
+    commit is 0663a61ed9cc7e0113cb4c8d4cf82528ce26ef96 (parent a93fc0b)"; "r803.txt:
+    b53caeb9…216f, 9,203 B, 106 lines, equal to your hash."; "--append gave +117 / −0";
+    "brief_12ag_OPEN.md: 6cb11d640e5eacbcfaafaab176b8a44b285f7c77efdf41e7567f51365b6df573,
+    32,055 B, 422 lines" (the architect's copy: the same sha256, bytes and lines); "The "ends
+    at" lines went from 157 to 158. The plan is now 9195c82d…45f6, 3,205,501 B, 18,783 lines.";
+    "PASS (0 mismatches)"; "now is 287 (94 / 57 / 136, 0 unclassed), P5 24, 38 dated fix-unit
+    lines with 33 done"; "The JSON is byte-equal to the committed one"; "213 rows at 54266b7
+    and 213 at 16cb307, in 0, out 0"; "HEAD was a93fc0b, nine commits on from 79c4213"; "Eight
+    are ledger-only, adding rows and removing none. The ninth is 9f78b9a"; "primer.md is
+    unchanged since 79c4213"; "both are archived in ~/claude-session-archive/, and nothing
+    started in either window survives"; "NV_ERR_NO_MEMORY is at 34 this boot (31 + 3), all
+    three new lines inside health windows"; "The snapshot at 05:32:00 shows surgical-cv's
+    uvicorn only".
+  READ (CC's, the global CLAUDE.md at 9f78b9a): "If it is unattended and a later step depends
+    on its result, or it loads a model (model, batch, benchmark and scheduled runs), it runs as
+    a transient systemd-run --user unit."; "If the PI may need to watch it or answer prompts
+    (installs, exploratory commands, long downloads), it runs in a named tmux session".
+  READ (CC's): findings 1–5; the three nightlies "match, ran on 7ddabca".
+  INFERRED: none.
+
+R804(a) — The stop before step 3e is correct and is the architect's: the brief's E7 expected
+  the global rule to allow a tmux home for a test gate, written without the rule's text, and
+  the text sends an unattended job a later step depends on to a systemd-run --user unit. The
+  architect's errors this session so far: two — E7, and I1's "clean" where the form's 0d
+  expects other lanes' uncommitted rows (finding 3). Neither reached a commit wrong.
+R804(b) — The PI's ruling, in his words: "One-time exception tonight." The 12ag-OPEN gate, and
+  no other, is launched as the brief's step 3e wrote it: by launch_gate.sh, in the tmux session
+  12ag_open. This is an exception to the global CLAUDE.md's long-running-jobs rule for this one
+  launch; the rule is unchanged. A change to the wrapper so that a gate launches as a unit is a
+  tools change in a brief of its own; no later gate brief relies on this exception.
+R804(c) — Item 0 is accepted as reported: 16cb307 (Block 201 by transcribe_ruling.py; r803.txt
+  equal to the architect's hash; the lane-line copy; the brief file equal to the architect's
+  copy by sha256, bytes and lines; the plan +117 / −0; the rules files untouched), ledger
+  0663a61 carrying two other lanes' rows, named. The pre-check, the three job pairs, the open
+  check, the recount and R510 are accepted as reported. The five WR5 commits stand on the
+  record as checked at 0b: docs only, seven new files.
+R804(d) — claude-config at a93fc0b, nine commits past 79c4213, is accepted under R663(b): no
+  row of this lane removed, primer.md lines 41–45 intact, the ninth commit the PI's rule.
+  Finding 4 (five of another lane's ledger commits without trailers; one message's time behind
+  its row's) is a reading for the cross-lane item, not this lane's to correct.
+R804(e) — Readings, no row: finding 2 (the 12ag block names the closeout as HEAD; the block is
+  its day's and is not edited; the brief's D1 governed); finding 5 (another lane's pytest
+  before the open, none running at the snapshot); the model load of 2026-11-11 22:33:50Z,
+  another lane's; NV_ERR_NO_MEMORY thirty-four this boot.
+R804(f) — The open resumes at step 3e under the resume below. This ruling states no standing
+  rule. Whether R797(d)'s hold becomes one is still the PI's and is not ruled here.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-14 | R804(a) — The stop before step 3e is correct and is the architect's: the brief's E7 expected the global rule to allow a tmux home for a test gate, written without the rule's text, and the text sends an unattended job a later step depends on to a systemd-run --user unit. The architect's errors this session so far: two — E7, and I1's "clean" where the form's 0d expects other lanes' uncommitted rows (finding 3). Neither reached a commit wrong. R804(b) — The PI's ruling, in his words: "One-time exception tonight." The 12ag-OPEN gate, and no other, is launched as the brief's step 3e wrote it: by launch_gate.sh, in the tmux session 12ag_open. This is an exception to the global CLAUDE.md's long-running-jobs rule for this one launch; the rule is unchanged. A change to the wrapper so that a gate launches as a unit is a tools change in a brief of its own; no later gate brief relies on this exception. R804(c) — Item 0 is accepted as reported: 16cb307 (Block 201 by transcribe_ruling.py; r803.txt equal to the architect's hash; the lane-line copy; the brief file equal to the architect's copy by sha256, bytes and lines; the plan +117 / −0; the rules files untouched), ledger 0663a61 carrying two other lanes' rows, named. The pre-check, the three job pairs, the open check, the recount and R510 are accepted as reported. The five WR5 commits stand on the record as checked at 0b: docs only, seven new files. R804(d) — claude-config at a93fc0b, nine commits past 79c4213, is accepted under R663(b): no row of this lane removed, primer.md lines 41–45 intact, the ninth commit the PI's rule. Finding 4 (five of another lane's ledger commits without trailers; one message's time behind its row's) is a reading for the cross-lane item, not this lane's to correct. R804(e) — Readings, no row: finding 2 (the 12ag block names the closeout as HEAD; the block is its day's and is not edited; the brief's D1 governed); finding 5 (another lane's pytest before the open, none running at the snapshot); the model load of 2026-11-11 22:33:50Z, another lane's; NV_ERR_NO_MEMORY thirty-four this boot. R804(f) — The open resumes at step 3e under the resume below. This ruling states no standing rule. Whether R797(d)'s hold becomes one is still the PI's and is not ruled here. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-OPEN stop report (item 0 16cb307) |
+
+The decision log in this file ends at R804.
+
+**Block 203.** *Transcribed 2026-11-14 (item 0 of the 12ag-N46A brief), in its own commit with Block 202, R805(c) and R805(f) on the standing-rules list, the file regenerated, and the brief file it orders, in the R597(e) form:* ruling R805, made by PI on architect recommendation on 2026-11-14 UTC, during session 12ag, on the 12ag-OPEN-R1 final report (evidence `60a63314118dc9f9ea41a009e5b5197676922b4c`). The 12ag-N46A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ag-R805] — 12ag-OPEN accepted; the series gains 1042.65 s, confounded;
+  R667(e) narrowed, identifiers allowed; U30's design ruled on the PI's five decisions; N46
+  folded into U30 after a read of its readers; the gate hold a standing rule; two standing rules
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the 12ag-OPEN-R1
+  final report (evidence 60a63314118dc9f9ea41a009e5b5197676922b4c). Transcribe at item 0 of the
+  12ag-N46A brief below, by transcribe_ruling.py, in the block after R804's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-OPEN-R1 final report, quoted): "exit 0 at 06:05:39"; "3573 passed, 17
+    deselected, 1 xfailed, 2 warnings"; "ids 3,574 against 3,574, 0 / 0"; "Wall time: 1042.65 s,
+    inside 872–1065 s."; "no model loads and no requests"; "No-marker collection: 3,591."; "Commit:
+    60a63314118dc9f9ea41a009e5b5197676922b4c (parent 16cb307), 34 files, all new, +21,611 / −0";
+    "Ledger: 89b4efdadca69b880096a91c8921b6c9a7182dc9 (parent 0663a61)"; "brief_12ag_OPEN_R1.md is
+    7bee59aa1972b7647201015ba609d5d5a219ca7d226eb4394ae8b63e71e8b356, 7,250 B, 97 lines" (the
+    architect's copy: the same sha256, bytes and lines); "48 items under BLOCKING headings: 31
+    VALUE, 17 FACT."; "pytest-905 to -909 were created during the gate, with surgical-cv's
+    app_db_template* dirs from 05:49:55 to about 05:58".
+  READ (CC's): findings 1–4; the labels of r667e_read.txt, CC's judgement by a fixed rule.
+  READ (the architect's clone at 60a6331): gate_12ag_open/gate_wall.txt "wall: 1042.650800830 s";
+    12af_U30A/12af_U30A.md §7, options "(S-b)", "(R-c) Both.", "(P-b) Yes", items 4 and 5;
+    engine/core/completeness.py:220 "def drop_unexpected(spans, expected: tuple[str, ...]) -> list:".
+  INFERRED: none.
+
+R805(a) — The 12ag-OPEN-R1 final report is accepted as printed: the gate at the 12ag block's
+  counts, ids 0 / 0, no load in its window; step 3f matched; the evidence commit 60a6331
+  (nineteen gate files, the job reads for 2026-11-11 to 11-13 in 12af_close/, r667e_read.txt,
+  the resume file equal to the architect's copy), ledger 89b4efd. Session 12ag is open. CC's
+  findings 2, 3 and 4 are readings: two slips caught before anything rested on them, and a
+  scratch file with no committed counterpart. The architect's errors this session stay two.
+R805(b) — The series gains 1042.65 s as its forty-first member, confounded (R677(f)): another
+  lane's test suite started inside the gate's window after both snapshots, seen only in the
+  temp root. The band in force stays 872–1065 s until the closeout recuts it. That a suite can
+  start after the launch joins the cross-lane item for dgx-infra.
+R805(c) — The PI's ruling, in his words: "Narrow, and allow identifiers". Rule from here,
+  narrowing R667(e): R667(e) applies to INFERRED — BLOCKING items only. A blocking item names
+  the fact that must hold, and may name the thing the fact is about by its identifier (a
+  commit, a file, a session). A quantity, a time or a line number the brief wants checked is a
+  separate reading. An expectation item may carry its value.
+R805(d) — U30's design, on the PI's word ("Decision 1-5 agree"), from 12af_U30A/12af_U30A.md
+  §7: (1) an interrupted cloud run closes interrupted with its signal's reason, the form the
+  local runners use (S-b); (2) the rollback sits in both places: store_result rolls back on any
+  exit that did not commit, and run_arm rolls back an open transaction before its close and
+  closes only a run not already closed (R-c); (3) send records a provider call that an
+  interrupt ends, as an error naming the interrupt, and re-raises — this amends R800(b)'s
+  exclusion for interrupts (P-b); (4) the cloud entry point handles SIGTERM and SIGHUP as the
+  other mains do; (5) INT-i12-71's first half is closed as answered: no activation is owed.
+  The dated notes on INT-i12-71 are written at the U30 build brief's item 0, not here.
+R805(e) — N46, the PI's ruling, in his words: "Fold it into U30: one build closes both." A
+  read-only look at the legacy cloud table's readers comes first: the 12ag-N46A read-out. No
+  design clause for N46 is written before its read-out is accepted and the PI has ruled.
+R805(f) — The hold, the PI's ruling: "Yes". Rule from here: before a standard gate is launched,
+  when the snapshot names another lane's full test suite or an encode, the launch waits for
+  it — one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock. A
+  launch made at the bound is reported with the job named and its value enters the series as
+  confounded (R677(f)). A gate brief does not restate it.
+R805(g) — Order, after the 12ag-N46A read-out: the tools change that lets the gate wrapper
+  launch a gate as a systemd-run --user unit (R804(b)), two-phase; then U30's build, one
+  brief, from 12af_U30A.md, the N46 read-out and the rulings on them.
+R805(h) — This ruling states two standing rules, (c) and (f). The id list gains "A R805(c)" and
+  "A R805(f)" and STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling
+  (R754(c)(iii), R766(b)). R667(e) stays in the list; R805(c) is read with it.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-14 | R805(a) — The 12ag-OPEN-R1 final report is accepted as printed: the gate at the 12ag block's counts, ids 0 / 0, no load in its window; step 3f matched; the evidence commit 60a6331 (nineteen gate files, the job reads for 2026-11-11 to 11-13 in 12af_close/, r667e_read.txt, the resume file equal to the architect's copy), ledger 89b4efd. Session 12ag is open. CC's findings 2, 3 and 4 are readings: two slips caught before anything rested on them, and a scratch file with no committed counterpart. The architect's errors this session stay two. R805(b) — The series gains 1042.65 s as its forty-first member, confounded (R677(f)): another lane's test suite started inside the gate's window after both snapshots, seen only in the temp root. The band in force stays 872–1065 s until the closeout recuts it. That a suite can start after the launch joins the cross-lane item for dgx-infra. R805(c) — The PI's ruling, in his words: "Narrow, and allow identifiers". Rule from here, narrowing R667(e): R667(e) applies to INFERRED — BLOCKING items only. A blocking item names the fact that must hold, and may name the thing the fact is about by its identifier (a commit, a file, a session). A quantity, a time or a line number the brief wants checked is a separate reading. An expectation item may carry its value. R805(d) — U30's design, on the PI's word ("Decision 1-5 agree"), from 12af_U30A/12af_U30A.md §7: (1) an interrupted cloud run closes interrupted with its signal's reason, the form the local runners use (S-b); (2) the rollback sits in both places: store_result rolls back on any exit that did not commit, and run_arm rolls back an open transaction before its close and closes only a run not already closed (R-c); (3) send records a provider call that an interrupt ends, as an error naming the interrupt, and re-raises — this amends R800(b)'s exclusion for interrupts (P-b); (4) the cloud entry point handles SIGTERM and SIGHUP as the other mains do; (5) INT-i12-71's first half is closed as answered: no activation is owed. The dated notes on INT-i12-71 are written at the U30 build brief's item 0, not here. R805(e) — N46, the PI's ruling, in his words: "Fold it into U30: one build closes both." A read-only look at the legacy cloud table's readers comes first: the 12ag-N46A read-out. No design clause for N46 is written before its read-out is accepted and the PI has ruled. R805(f) — The hold, the PI's ruling: "Yes". Rule from here: before a standard gate is launched, when the snapshot names another lane's full test suite or an encode, the launch waits for it — one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock. A launch made at the bound is reported with the job named and its value enters the series as confounded (R677(f)). A gate brief does not restate it. R805(g) — Order, after the 12ag-N46A read-out: the tools change that lets the gate wrapper launch a gate as a systemd-run --user unit (R804(b)), two-phase; then U30's build, one brief, from 12af_U30A.md, the N46 read-out and the rulings on them. R805(h) — This ruling states two standing rules, (c) and (f). The id list gains "A R805(c)" and "A R805(f)" and STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling (R754(c)(iii), R766(b)). R667(e) stays in the list; R805(c) is read with it. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-OPEN-R1 final report (evidence 60a6331) |
+
+The decision log in this file ends at R805.

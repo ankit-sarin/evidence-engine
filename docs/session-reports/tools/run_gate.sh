@@ -1,5 +1,5 @@
 #!/bin/bash
-# The standard gate, run inside tmux by launch_gate.sh (R746(e)(iv)). usage: run_gate.sh <evidence_dir> <session> <ref_ids|-> <ref_durations|-> [selection...]
+# The standard gate, run as a transient systemd-run --user unit by launch_gate.sh (R746(e)(iv), R808(b)). usage: run_gate.sh <evidence_dir> <session> <ref_ids|-> <ref_durations|-> [selection...]
 # With no selection it is the nightly's standard selection, in the shared temp root; a selection passes --basetemp under
 # the evidence directory's sibling (R703(j)). Writes the nineteen-file set of record (R738(d)) and writes gate_rc.txt
 # last, so a wait may watch that file.

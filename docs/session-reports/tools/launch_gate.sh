@@ -5,7 +5,7 @@
 set -e
 E=$(readlink -f "$1"); SESSION=$2; REF=$3; REFD=$4; shift 4; HERE=$(dirname "$(readlink -f "$0")")
 mkdir -p "$E"; [ ! -e "$E/gate_rc.txt" ] || { echo "REFUSED: $E already holds a gate"; exit 2; }
-tmux has-session -t "$SESSION" 2>/dev/null && { echo "REFUSED: tmux session $SESSION exists"; exit 2; }
+UNIT="gate-$SESSION"; [ "$(systemctl --user show -p LoadState --value "$UNIT.service")" != "loaded" ] || { echo "REFUSED: user unit $UNIT.service is loaded"; exit 2; }
 cp "$HERE/run_gate.sh" "$E/run_gate.sh"
 cat > "$E/host_snapshot.sh" <<'SNAP'
 #!/bin/bash
@@ -33,7 +33,11 @@ bash "$E/host_snapshot.sh" > "$E/host_snapshot_before_gate.txt" 2>&1
 { git rev-parse HEAD; git status --short; } > "$E/tree_at_launch.txt"
 T=/tmp/pytest-of-$USER; { date -u +%FT%T.%NZ; ls -la --time-style=full-iso "$T"; du -sb "$T"; } > "$E/temp_root_before.txt" 2>&1
 sleep 6   # the before-gate reads are at least five seconds before the launch (R660(b))
-LINE="tmux new-session -d -s $SESSION \"bash $E/run_gate.sh $E $SESSION $REF $REFD $*\""
-{ echo "$(date -u +%FT%T.%NZ) launched by the line below, written into the evidence directory at launch (R731(b), R738(c))"; echo "$LINE"; } > "$E/launch_line.txt"
+MPID=$(systemctl show "user@$(id -u).service" -p MainPID --value); MHARD=$(awk '/^Max open files/{print $5}' "/proc/$MPID/limits"); SSOFT=$(ulimit -Sn)
+[[ $SSOFT =~ ^[0-9]+$ ]] || SSOFT=$MHARD; [[ $MHARD =~ ^[0-9]+$ ]] || MHARD=$SSOFT; NOFILE=$(( SSOFT < MHARD ? SSOFT : MHARD ))   # R809(b): the smaller, read at launch
+LINE="systemd-run --user --unit=$UNIT --collect --property=LimitNOFILE=$NOFILE --setenv=LANG=$LANG bash $E/run_gate.sh $E $SESSION $REF $REFD $*"
+{ echo "$(date -u +%FT%T.%NZ) launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit $SSOFT and the user manager's hard limit $MHARD (R809(b))"; echo "$LINE"; } > "$E/launch_line.txt"
 eval "$LINE"
 cat "$E/launch_line.txt"
+systemctl --user status "$UNIT.service" --no-pager || true
+loginctl show-user "$USER" -p Linger

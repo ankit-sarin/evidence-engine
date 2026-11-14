@@ -1,0 +1,21 @@
+-- lines
+12:collecting ... collected 3591 items / 17 deselected / 3574 selected
+6304:==== 3573 passed, 17 deselected, 1 xfailed, 2 warnings in 984.60s (0:16:24) ====
+6306:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2702 lines, 284900 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- warnings
+3589:=============================== warnings summary ===============================
+3591:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+3595:  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+-- the HEAD it ran on (read at 12ag-OPEN): log Run line; reflog: HEAD@ last move before the run, and the first after it
+Run: 2026-11-12 09:00:01 UTC
+7ddabca HEAD@{2026-11-11 05:58:32 +0000}: commit: docs(plan): 12af-CLOSE — session 12af closed on U29; the closure; the 12ag expected values; 12af_close/
+next move: f936933 HEAD@{2026-11-13 22:27:10 +0000}: commit: docs(session-reports): WR5-A — read-out for mechanical brief checks
+so the 2026-11-12 09:00:01 UTC run read 7ddabca's tree; git diff --stat 977c499 7ddabca -- engine tests scripts analysis review_specs: (empty) (I3)
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+-- governed by 12af_close/expected_nightly_20261111.md (R803(g)): 'collected 3591 items / 17 deselected / 3574 selected', '3573 passed, 17 deselected, 1 xfailed, 2 warnings', 'pytest exit code: 0' last; ids against 12af_close/collected_ids_12af_close.txt (3574 ids)
+-- match: collection True; summary True; exit-last True; durations True; journal-empty True; lock True; ids True; head True

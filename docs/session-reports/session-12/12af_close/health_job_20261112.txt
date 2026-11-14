@@ -1,0 +1,30 @@
+# health job reads, 2026-11-12, read at 12ag-OPEN (2026-11-14T05:27:36Z) from /home/ankitsarin/logs/ollama_health_cron.log (mtime 2026-11-13 07:06:50.416167 +0000); the log carries no date lines, so the 2026-11-12 run is the 20-line block starting at line 4066 (block 113 of 114, each opening 'Testing qwen3.6:35b-a3b'), identified by position and confirmed against the same run's dated log /home/ankitsarin/logs/ollama_health_20261112.log (mtime 2026-11-12 07:06:10.855767 +0000): model, status and elapsed equal line for line: True (R737(c))
+loads OK/total: 20/20; FAIL lines: 0
+-- dated log: Ollama Health Check — Thu Nov 12 07:00:01 AM UTC 2026; Resident at start: qwen3.6:35b-a3b; Done: Thu Nov 12 07:06:10 AM UTC 2026
+-- journal 06:59–07:12 (12af_close/health_journal_20261112.txt)
+lines 2710
+GIN 70
+GIN non-200 0
+model loads (starting runner --model) 20
+-- kernel NV_ERR_NO_MEMORY lines inside 06:59–07:12: 0
+-- the 20 lines
+Testing qwen3.6:35b-a3b                (300s) ... OK 10.3s
+Testing qwen3.6:27b                    (300s) ... OK 13.7s
+Testing gpt-oss:20b                    (300s) ... OK 6.2s
+Testing gemma4:26b                     (300s) ... OK 7.6s
+Testing qwen3:30b-instruct             (300s) ... OK 5.3s
+Testing gemma4:31b                     (300s) ... OK 9.9s
+Testing qwen3.5:27b                    (300s) ... OK 20.7s
+Testing gemma3:27b                     (300s) ... OK 5.5s
+Testing qwen2.5vl:7b                   (120s) ... OK 4.7s
+Testing qwen3:8b                       (120s) ... OK 5.4s
+Testing qwen3:32b                      (300s) ... OK 23.7s
+Testing minicpm-v:latest               (120s) ... OK 5.7s
+Testing qwen3-vl:8b                    (120s) ... OK 31.2s
+Testing qwen2.5:7b-instruct            (120s) ... OK 5.2s
+Testing deepseek-r1:32b                (300s) ... OK 16.3s
+Testing mistral:7b                     (120s) ... OK 6.1s
+Testing gemma2:27b                     (300s) ... OK 23.9s
+Testing qwen2.5:32b                    (300s) ... OK 22.1s
+Testing llama3.3:70b                   (600s) ... OK 142.5s
+Testing llama3.2:3b                    (120s) ... OK 3.7s

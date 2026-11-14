@@ -1,0 +1,302 @@
+# 12ag-OPEN 3g — the R667(e) read at 16cb307164c9203c695c3a4f842cf6d294c771ad; read-only; method in r667e_read.py's docstring
+# files: 23 (git ls-tree -r --name-only 16cb307164c9203c695c3a4f842cf6d294c771ad | grep -E '(^|/)brief_[^/]*\.md$'); files with a heading: 23
+# headings: 65; items: 135; items under BLOCKING headings: 48; labelled VALUE: 31; FACT: 17
+# the labels are CC's judgement, applied by the docstring's stated rule; no conclusion and no proposal
+# method (r667e_read.py docstring, verbatim):
+#   12ag-OPEN 3g — the R667(e) read, read-only. For every brief_*.md `git ls-tree` lists at <commit>, both sections:
+#   each heading that opens a list of INFERRED items (path:line, wording BLOCKING / expectation / untiered) and every item under it,
+#   quoted to its end; each item under a BLOCKING heading labelled VALUE or FACT. No conclusion, no proposal.
+#   usage, from the repository root: python3 -I r667e_read.py <commit> > r667e_read.txt
+#   
+#   Heading: a line whose first word (after indentation) is INFERRED followed by " —", ":" or " (", or an all-capitals ledger heading whose parenthesis says
+#   "INFERRED by source"; a mid-sentence INFERRED is not a heading. Extent: the heading line's text after its first ': ' plus every
+#   following line indented deeper than the heading, to the first blank or not-deeper line. Items: split at the markers B<n>. / I<n>. / E<n>. / X<n>. /
+#   V<n>. ; an extent without a marker is one item; "none." is zero items.
+#   Labels (CC's judgement, applied by this stated rule and marked so): VALUE if the item itself contains a hash (7-64 hex digits
+#   with at least one digit and one letter), a count or size (a number followed by B, bytes, lines, files, rows, ids, items, entries,
+#   tables or s), a time (hh:mm), a line number (a "line"/"lines" phrase with a number, or :<n>), or a quoted literal ("…" or `…`);
+#   otherwise FACT. The token that decided a VALUE is printed beside it.
+
+## docs/session-reports/WR5-B/brief_WR5-B.md:41 [BLOCKING] INFERRED — BLOCKING (verify before acting downstream; stop if false):
+   B1 In ~/claude-session-archive/dc9f61b7-39e2-4cc6-ae86-dd391b660667.jsonl the user turns at the JSONL lines WR5-A section 4 tables for the five briefs that ran into a U18 stop each open with a TASK title naming 12y-U18B or 12y-U18C. Read the lines from that table; quote each title.  [CC's label: VALUE — hash: 'dc9f61b7']
+
+## docs/session-reports/WR5-B/brief_WR5-B.md:47 [expectation] INFERRED — expectation (report a mismatch, continue):
+   X1 HEAD is the WR5-A read-out commit named in the ruling title, or a later lane commit.
+   X2 The prototype will hit few of the five stop briefs. To be measured; no stop rests on it.
+
+## docs/session-reports/WR5-B/brief_WR5-B_R1.md:51 [expectation] INFERRED — expectation (report a mismatch, continue):
+   X3 Region PRE will draw most of the K10 and K13 hits. To be measured; no stop rests on it.
+
+## docs/session-reports/brief_WR5-A.md:17 [BLOCKING] INFERRED — BLOCKING (verify before acting downstream; stop if false):
+   B1 This checkout is the evidence-engine repo and contains docs/plan/STANDING_RULES.md.  [CC's label: FACT]
+
+## docs/session-reports/brief_WR5-A.md:20 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 STANDING_RULES.md holds 95 clauses and is generated from the decision log (from a PI note dated 2026-11-11, not a task report).
+   E2 The decision log holds entries R722(a), R723(a), R724(a), R725(b), R727(a) and R728(e): the six stops of session 12y on unit U18 (from architect memory).
+   E3 Brief text is not stored as files in the repo; it survives, if at all, as the opening prompt in session transcripts or archives.
+   E4 The installed Claude Code supports a hook that runs when a prompt is submitted and can reject that prompt (architect's general knowledge, unverified on this box).
+
+## docs/session-reports/session-12/12ae_CLOSE/brief_12ae_CLOSE.md:48 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_CLOSE/brief_12ae_CLOSE.md:198 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 24ce26b. I2. The 2026-11-09
+   I1 The engine tree is unchanged since 24ce26b.  [CC's label: VALUE — hash: '24ce26b']
+   I2 The 2026-11-09 07:00 health job and 09:00 nightly have run and their logs and journal windows are readable (R795(e)); if either did not run, that is reported as the reading and the expected-values block says so.  [CC's label: VALUE — time: '07:00']
+
+## docs/session-reports/session-12/12ae_CLOSE/brief_12ae_CLOSE.md:202 [expectation] INFERRED — expectation: E1. The recount reads 286 (94 / 56 / 136, 0 unclassed), P1's fix
+   E1 The recount reads 286 (94 / 56 / 136, 0 unclassed), P1's fix units 38 done 31, R510 in 2 / out 0 (R795(g));
+   E2 The band computation reproduces 876–1069 s from 921.98, 945.63, 1059.11, 963.43 (R795(f));
+   E3 git diff --stat 6cb4ab6 HEAD -- engine tests scripts analysis review_specs lists the files of the six engine commits (94ab7a8, 1f6bc16, 168199a, 69e9db8, 077cb0f, 24ce26b) and nothing else; git diff --stat 24ce26b HEAD on the same paths is empty;
+   E4 Retention 23 MATCH / 0 MISMATCH by file sha256, none opened, no new entry (12ae ran no rehearsal and no probe with a server);
+   E5 The fingerprint IDENTICAL; dbchecks_close.txt and pin_tuples_close.json byte-identical to 12ad_close/'s.
+
+## docs/session-reports/session-12/12ae_U24A/brief_12ae_U24A.md:57 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U24A/brief_12ae_U24A.md:215 [BLOCKING] INFERRED — BLOCKING: none beyond step 0's re-reads.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U24A/brief_12ae_U24A.md:216 [expectation] INFERRED — expectation: E1. ~/scratch/12ae-open/ holds the 12ae-OPEN item-0 check,
+   E1 ~/scratch/12ae-open/ holds the 12ae-OPEN item-0 check, block181.json and the regeneration's evidence file (the models for item 0; if gone, the committed evidence and 12ad-U23B's item 0 as recorded in 12ad_U23B.md govern).
+   E2 check_model builds the probe request from a PreflightConfig resolved with or without the spec and the run's preflight row is written by _open_run_manifest (R489) — stated from R63/R489/C54's text, not read; §3 reads it.
+   E3 No test under tests/ pins a spec-less require_preflight call by name; the census decides.
+
+## docs/session-reports/session-12/12ae_U24B/brief_12ae_U24B.md:57 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U24B/brief_12ae_U24B.md:185 [BLOCKING] INFERRED — BLOCKING: I1. HEAD's engine tree is unchanged since 95dad8d (git diff --stat
+   I1 HEAD's engine tree is unchanged since 95dad8d (git diff --stat 95dad8d HEAD -- engine tests scripts analysis review_specs empty).  [CC's label: VALUE — hash: '95dad8d']
+   I2 The sites and the three assertions read at HEAD as the read-out quotes them.  [CC's label: FACT]
+
+## docs/session-reports/session-12/12ae_U24B/brief_12ae_U24B.md:188 [expectation] INFERRED — expectation: E1. The acceptance test's census half, reusing census_u24a.py's
+   E1 The acceptance test's census half, reusing census_u24a.py's call walker over engine/ for the three probe names, is red on the parent at exactly S1, S2, S3 and S6.
+   E2 The new ids are two; the gate collects 3,513 and selects 3,496 (3,494 + 2), only-gate the two.
+   E3 No test outside the four named goes red (the no-op mocks accept the keyword, §4).
+
+## docs/session-reports/session-12/12ae_U24B/brief_12ae_U24B_R1.md:40 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U25A/brief_12ae_U25A.md:44 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U25A/brief_12ae_U25A.md:101 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U25A/brief_12ae_U25A.md:209 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 1f6bc16 (git diff --stat
+   I1 The engine tree is unchanged since 1f6bc16 (git diff --stat 1f6bc16 HEAD -- engine tests scripts analysis review_specs empty).  [CC's label: VALUE — hash: '1f6bc16']
+
+## docs/session-reports/session-12/12ae_U25A/brief_12ae_U25A.md:211 [expectation] INFERRED — expectation: E1. The probe can reproduce both halves of the row in-process
+   E1 The probe can reproduce both halves of the row in-process with no server and no database: a scratch codebook text whose valid_values has an unquoted Yes loads as a bool and fails at the first prompt build (build_extraction_prompt or the prompt_hash render) with a TypeError; a sentinel NO or null loads as False or None and is not recognised by the sentinel check while the strings "False"/"None" are.
+   E2 Tests coupled to the loader are fixtures that write codebook YAML text (the census finds them); none passes an unquoted boolean or null.
+   E3 The semantic hash (codebook.py's) does not change when the loader refuses, because the live codebook is unchanged and loads.
+
+## docs/session-reports/session-12/12ae_U25B/brief_12ae_U25B.md:51 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U25B/brief_12ae_U25B.md:158 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 1f6bc16. I2. codebook.py's
+   I1 The engine tree is unchanged since 1f6bc16.  [CC's label: VALUE — hash: '1f6bc16']
+   I2 codebook.py's _validate_valid_values, _validate_top_level and _validate_fields read at HEAD as the read-out quotes them (:335–371, :258–276, :281–332).  [CC's label: VALUE — line number: ':335']
+
+## docs/session-reports/session-12/12ae_U25B/brief_12ae_U25B.md:161 [expectation] INFERRED — expectation: E1. The five refusal cases are red on the parent as R788(d)
+   E1 The five refusal cases are red on the parent as R788(d) states (the three committed fixtures and the two new ones); the live case is green on the parent.
+   E2 The new ids are six (five parametrized refusals, one live); the gate collects 3,513 + 6 and selects 3,496 + 6, only-gate exactly those; no other test moves (§4 of the read-out).
+   E3 inventory --check stays in sync (no entry point changes).
+
+## docs/session-reports/session-12/12ae_U26A/brief_12ae_U26A.md:44 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U26A/brief_12ae_U26A.md:145 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 168199a. I2. The handler
+   I1 The engine tree is unchanged since 168199a.  [CC's label: VALUE — hash: '168199a']
+   I2 The handler numbering is reconciled on disk before any handler is named in the read-out: each of the triage table's handlers 4–7 and 12–13 mapped to its 12f_C56-A.md census row and to its except clause at HEAD by quoted line, in a table — a handler that cannot be mapped is a STOP, not a guess.  [CC's label: FACT]
+
+## docs/session-reports/session-12/12ae_U26A/brief_12ae_U26A.md:150 [expectation] INFERRED — expectation: E1. The two tests the entry says pin the converting behaviour
+   E1 The two tests the entry says pin the converting behaviour are found by the census and named;
+   E2 A probe with a fake parser raising a run-fault class (one of U02's tuple) inside each handler shows the paper recorded parse_failed at HEAD, with no server and no live database (a scratch ReviewDatabase or the event writer on a temp file);
+   E3 parse_all_pdfs is reachable only from run_pipeline's PARSE stage and parse_expanded_corpus.py (the 12l_P1A note: not on Run 7's path).
+
+## docs/session-reports/session-12/12ae_U26B/brief_12ae_U26B.md:50 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U26B/brief_12ae_U26B.md:151 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 168199a. I2. The six clauses
+   I1 The engine tree is unchanged since 168199a.  [CC's label: VALUE — hash: '168199a']
+   I2 The six clauses read at HEAD as the read-out quotes them at :717, :806, :901, :1120, :520, :525, and extractor.py:439 shows U02's form as quoted.  [CC's label: VALUE — line number: ':717']
+
+## docs/session-reports/session-12/12ae_U26B/brief_12ae_U26B.md:154 [expectation] INFERRED — expectation: E1. 18 of the 24 parametrized cases are red on the parent (every
+   E1 18 of the 24 parametrized cases are red on the parent (every tuple-member case), the 6 KeyError cases green;
+   E2 The new ids are 24 (or the probe's count, read); the gate collects 3,519 + N and selects 3,502 + N, only-gate exactly those; no other test moves (the read-out's §4; the two pinning tests and test_parse_gate.py:383 green by code order).
+   E3 inventory --check drifts on pdf_parser.py's recorded line numbers only (six insertions), regenerated under R786(b)'s form.
+
+## docs/session-reports/session-12/12ae_U27A/brief_12ae_U27A.md:43 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U27A/brief_12ae_U27A.md:146 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 69e9db8. I2. The handler
+   I1 The engine tree is unchanged since 69e9db8.  [CC's label: VALUE — hash: '69e9db8']
+   I2 The handler numbering is reconciled on disk before any handler is named: each of the triage table's handlers 8–11 mapped to its 12f_C56-A.md census row and to its except clause at HEAD by quoted line, in a table — a handler that cannot be mapped is a STOP.  [CC's label: FACT]
+   I3 The two SDK clients can be replaced by fakes at the seam the extractors construct them (read the constructor and the call site; quote), so no provider is reachable from the probe — if the construction cannot be intercepted without a key, the probe is not run and that is a STOP with the finding.  [CC's label: FACT]
+
+## docs/session-reports/session-12/12ae_U27A/brief_12ae_U27A.md:154 [expectation] INFERRED — expectation: E1. The census finds the tests pinning the converting behaviour
+   E1 The census finds the tests pinning the converting behaviour (tests/test_cloud_extraction.py's module fixture and skips, B14's row, among them);
+   E2 A fake client that answers and a fault injected at record_call or store_result shows, at HEAD, the paper counted failed and the manifest closing completed (rows 8–9: re-sent twice first);
+   E3 Neither transport is reachable from run_pipeline while enabled_arms is empty (R71) — the entry point is scripts/run_cloud_extraction.py only, quoted.
+
+## docs/session-reports/session-12/12ae_U27B/brief_12ae_U27B.md:52 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U27B/brief_12ae_U27B.md:192 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 69e9db8. I2. The four clauses
+   I1 The engine tree is unchanged since 69e9db8.  [CC's label: VALUE — hash: '69e9db8']
+   I2 The four clauses read at HEAD as the mapping quotes them at openai_extractor.py:179 and :209, anthropic_extractor.py:205 and :237, each `except Exception as exc:`; extractor.py:438–440 shows U02's form; base.py:141 `if self.run_id is not None:`; base.py:401's re-raise; run_cloud_extraction.py:112–127's close as quoted; the pinning test's raise at tests/test_cloud_extraction.py:840 as quoted.  [CC's label: VALUE — line number: ':179']
+
+## docs/session-reports/session-12/12ae_U27B/brief_12ae_U27B.md:198 [expectation] INFERRED — expectation: E1. Six of the twelve parametrized cases are red on the parent
+   E1 Six of the twelve parametrized cases are red on the parent (every tuple-member case), the six others green;
+   E2 The new ids are 12 (or the file's count, read); the gate collects 3,543 + N and selects 3,526 + N, only-gate exactly those; the moved pinning test keeps its id and stays green; no other test moves (the read-out's §4);
+   E3 `inventory --write` changes nothing (no entry point moves); if it does, the drift is regenerated under R786(b)'s form and quoted.
+
+## docs/session-reports/session-12/12ae_U28A/brief_12ae_U28A.md:45 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U28A/brief_12ae_U28A.md:187 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 077cb0f. I2. A registered
+   I1 The engine tree is unchanged since 077cb0f.  [CC's label: VALUE — hash: '077cb0f']
+   I2 A registered cloud arm's values are read by the reader (engine/core/effective.py's iter_grid / live_claim_events) from one store, and store_result writes to another, or the same — which, is established by quoted code and a FAKE before any option is written; if the reader's route for a cloud arm cannot be established from the code, STOP with the finding.  [CC's label: FACT]
+   I3 store_result and the monitor can be driven against a scratch ReviewDatabase with the cloud arm registered (the registry's form for a cloud arm — open_run's cloud_arms=[…], or the arms table — read and quoted) without any SDK client; if registering the arm requires a path the probe cannot take read-only, STOP.  [CC's label: FACT]
+
+## docs/session-reports/session-12/12ae_U28A/brief_12ae_U28A.md:196 [expectation] INFERRED — expectation: E1. The reader reads claim events (the event store) for every
+   E1 The reader reads claim events (the event store) for every registered arm and store_result writes only the two legacy tables, so the gate never sees a cloud write — the probe shows 12 identical stored values and a gate that reports OK or skipped (R2 row 25: "reproduced").
+   E2 check_distribution returns OK with skipped False for an arm holding zero values (N44), and run_post_extraction_check's under-10 rule masks it on the cloud path when stats["extracted"] < 10.
+   E3 A span with a non-sentinel value and source_snippet "" passes store_result today (only if not spans and enforce_completeness check), and is inserted with the empty snippet.
+   E4 The pinning tests are among tests/test_distribution_monitor.py, tests/test_distribution_check_wiring.py, tests/test_cloud_extraction.py (the distribution-gate and store tests), tests/test_write_boundary_guard.py, tests/test_readers_on_the_reader.py and tests/test_non_value_tokens_downstream.py.
+
+## docs/session-reports/session-12/12ae_U28B/brief_12ae_U28B.md:59 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12ae_U28B/brief_12ae_U28B.md:246 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 077cb0f. I2. The sites read at
+   I1 The engine tree is unchanged since 077cb0f.  [CC's label: VALUE — hash: '077cb0f']
+   I2 The sites read at HEAD as the read-out quotes them: base.py:501–517 (the call and its defaults), :279–283 (the "" fill), :291–298 (the null branch), :336–358 (store_result's checks), :362–403 (the INSERTs); distribution_monitor.py:418–453 (the skip rules), :215–227 (the zero-value branch), :498–499 (assert_no_collapse), :536–543 (main's calls); extractor.py:684–687 (the local enforce_citations call) and citation_guard.py:217– (enforce_citations' signature: paper_id, arm, escape_token, absence_sentinels, mode, citation_counts, contract_unmet_token, attempt); tests/test_cloud_extraction.py:588–630 (test_empty_string_normalized_to_null) and the TestStoreResultCrashProtection docstring at :800 as 077cb0f left it.  [CC's label: VALUE — hash: '077cb0f']
+   I3 The three tokens the local call passes (escape, sentinels, unmet) are obtainable on the cloud path from self._codebook (or from the same source the local path reads them from, quoted) without a spec or run the CloudExtractorBase does not have — if one is not, STOP with the finding (R794(f)).  [CC's label: FACT]
+
+## docs/session-reports/session-12/12ae_U28B/brief_12ae_U28B.md:259 [expectation] INFERRED — expectation: E1. On the parent, the new file's red cases are exactly: (i)'s two
+   E1 On the parent, the new file's red cases are exactly: (i)'s two (extracted 12 / failed 0 → skipped=False ok=11; failed 1 → skipped with "partial run", not the population reason), (ii)'s skipped assertion, (iii)'s two refusals; its green cases: (ii)'s per-field preservation and (iii)'s sentinel insertion (N_red and N_green read from the run, not assumed).
+   E2 The gate collects 3,555 + N and selects 3,538 + N, only-gate exactly the new ids (the rewritten test keeps its module and changes its name, so one id leaves and one arrives: only-ref 1, only-gate N + 1 — read and matched); no other test moves (§4: test_distribution_monitor.py's 56, test_distribution_check_wiring.py's 3 and test_write_boundary_guard.py's 4 green by code order; test_null_converted_to_nr green).
+   E3 inventory --write is a stamp-only diff, reverted; no entry moves.
+
+## docs/session-reports/session-12/12af_CLOSE/brief_12af_CLOSE.md:47 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12af_CLOSE/brief_12af_CLOSE.md:153 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 977c499. I2. No scheduled job
+   I1 The engine tree is unchanged since 977c499.  [CC's label: VALUE — hash: '977c499']
+   I2 No scheduled job has run since 12af-OPEN read the 2026-11-10 pair (the logs and the lock, read); if one has, it is read under TIMING's last sentence.  [CC's label: FACT]
+
+## docs/session-reports/session-12/12af_CLOSE/brief_12af_CLOSE.md:156 [expectation] INFERRED — expectation (report a mismatch, continue with the measured value):
+   E1 The recount reads 287 (94 / 57 / 136, 0 unclassed); the dated lines' fix units 38, done 33; R510 for 12af in 1 (INT-af12-1), out 0; six-cell INT- rows 212 at 840db24 and 213 at the item-0 commit.
+   E2 The band computation, from the last four standard gates on this host state — U28B 963.43, 12af-OPEN 966.10, U40B 965.92, U29B 979.95, each read from its gate_wall.txt — gives a mean of 968.85 s and, rounded inward as band_computation.txt of 12ae rounds, 872–1065 s. The series has forty members.
+   E3 git diff --stat 840db24 HEAD on engine tests scripts analysis review_specs lists the files of the two engine commits (53eabfd, 977c499) and nothing else; from 977c499 it is empty.
+   E4 Retention 23 MATCH / 0 MISMATCH by file sha256, none opened, no new entry.
+   E5 The fingerprint IDENTICAL; dbchecks_close.txt and pin_tuples_close.json byte-identical to 12ae_close/'s, the pins also to 12af_U29B/pin_tuples_u29b.json.
+
+## docs/session-reports/session-12/12af_U29A/brief_12af_U29A.md:55 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12af_U29A/brief_12af_U29A.md:197 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 53eabfd (git diff --stat
+   I1 The engine tree is unchanged since 53eabfd (git diff --stat 53eabfd HEAD on engine tests scripts analysis review_specs empty).  [CC's label: VALUE — hash: '53eabfd']
+
+## docs/session-reports/session-12/12af_U29A/brief_12af_U29A.md:199 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 At HEAD, inside an open run: a _create that raises leaves 0 run_calls rows and one hash in the paper's chain; a returned response is recorded "completed" with a NULL response digest whatever its finish reason.
+   E2 The row count after item 0 is 287 (94 / 57 / 136, 0 unclassed).
+   E3 Nothing is predicted about Q2–Q5 below: the architect has not read the SDK sources, run_manifest.record_call or the outcome CHECK.
+
+## docs/session-reports/session-12/12af_U29B/brief_12af_U29B.md:54 [untiered] INFERRED (each verified at the build's step 2a before any edit; false = STOP): what a provider
+   - what a provider really returns on truncation or refusal was not established (read-out §9) — the accessor is built on the pinned SDK types' declared fields; the two transports' own loops retry a connection or status error that the SDK no longer retries (the handlers, quoted).
+
+## docs/session-reports/session-12/12af_U29B/brief_12af_U29B.md:212 [BLOCKING] INFERRED — BLOCKING (read at 2a before any edit; false = STOP):
+   I1 The engine tree is unchanged since 53eabfd.  [CC's label: VALUE — hash: '53eabfd']
+   I2 Each pinned SDK's client constructor accepts max_retries=0 and its request path makes exactly one attempt with it (the constructor signature and the retry decision, quoted from the installed source with file and line).  [CC's label: FACT]
+   I3 The two transports' loops, as they stand, retry a connection, timeout or status error raised by a client that no longer retries (each handler quoted with the class it catches); a class that would now end a paper where the SDK used to retry is named in the report and is a finding, not a stop.  [CC's label: FACT]
+   I4 No send is reached while store_result's transaction is open (the call order in both transports' run and in extract_with_completeness, quoted).  [CC's label: FACT]
+   I5 An SDK response in each provider's declared shape can be built in a test from the installed types without a client or a network (the probe's fakes, quoted).  [CC's label: FACT]
+
+## docs/session-reports/session-12/12af_U29B/brief_12af_U29B.md:225 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 On the parent, R800(h)'s cases (1)–(6) and (8) are red and (7) is green; N_red and N_green read from the run.
+   E2 Coupled tests (c) as R800(h) names them; the census and the selected runs decide, and a file not named there is a (c), not a stop.
+   E3 The gate collects 3,572 + N and selects 3,555 + N, N the new file's ids plus any id a rewrite renames (each rename an only-ref / only-gate pair, read and matched).
+   E4 The inventory's recorded entries in base.py move (send grows above them): an entry change, regenerated and kept (R786(b)); a stamp-only diff is reverted (R793(e)).
+   E5 Pins and the audit prompt_hash do not move, and each transport's request payload is byte-identical (tests/test_request_capture.py's assertions unchanged).
+
+## docs/session-reports/session-12/12af_U30A/brief_12af_U30A.md:47 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12af_U30A/brief_12af_U30A.md:176 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 977c499 (git diff --stat
+   I1 The engine tree is unchanged since 977c499 (git diff --stat 977c499 HEAD on engine tests scripts analysis review_specs empty).  [CC's label: VALUE — hash: '977c499']
+
+## docs/session-reports/session-12/12af_U30A/brief_12af_U30A.md:178 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 At HEAD a KeyboardInterrupt raised between store_result's two INSERTs is not rolled back by store_result, and run_arm's close_run then commits what was left: the paper has an extraction row with no span rows and is no longer pending.
+   E2 The run closes "failed", not "interrupted".
+   E3 The row count after item 0 is 287 (94 / 57 / 136, 0 unclassed), rows in 0, out 0.
+   E4 Nothing is predicted about Q2–Q6 below: the architect has not read close_run, the run status tokens, R625's block or the local pipeline's interrupt handling.
+
+## docs/session-reports/session-12/12af_U40A/brief_12af_U40A.md:55 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12af_U40A/brief_12af_U40A.md:180 [BLOCKING] INFERRED — BLOCKING: I1. The engine tree is unchanged since 24ce26b (git diff --stat
+   I1 The engine tree is unchanged since 24ce26b (git diff --stat 24ce26b HEAD on engine tests scripts analysis review_specs empty).  [CC's label: VALUE — hash: '24ce26b']
+
+## docs/session-reports/session-12/12af_U40A/brief_12af_U40A.md:182 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 The census finds R5's twelve files and R3's four call sites; more or fewer is a finding with the difference listed.
+   E2 At HEAD the entry's test is red in U28's way: after twelve store_result writes the gate reports skipped on a population of 0 and does not raise.
+   E3 No expectation is stated on Q1–Q4 below. They are the questions; the architect has not read those code paths and predicts nothing about them.
+
+## docs/session-reports/session-12/12af_U40B/brief_12af_U40B.md:60 [untiered] INFERRED (each verified at the build's step 2a before any edit; false = STOP): the β column of
+   - the β column of the read-out's consumer table is CODE ORDER — no consumer was driven with claims and no paper event, because no such writer existed; legacy_record takes the span dicts store_result holds; the last send for a paper is the accepted attempt's.
+
+## docs/session-reports/session-12/12af_U40B/brief_12af_U40B.md:233 [BLOCKING] INFERRED — BLOCKING (read at 2a before any edit; false = STOP):
+   I1 The engine tree is unchanged since 24ce26b.  [CC's label: VALUE — hash: '24ce26b']
+   I2 legacy_record builds a record of value outcomes from the span dicts store_result is given (the shape enforce_citations already takes there), with expected the instance's expected fields; fake_probe_u40a.py's accepted write (ii)(d) is the worked form — quote it.  [CC's label: FACT]
+   I3 store_result is reached only after an accepted attempt, so the last hash send computed for the paper is the accepted request's (the two transports' loops and extract_with_completeness, quoted).  [CC's label: FACT]
+   I4 Every refusal R798(d)(iv) names is an EventRefused and the two transports' store handlers re-raise it through is_run_fault (the class lines and the handlers, quoted).  [CC's label: FACT]
+   I5 With paper_event=False the plan's field events alone leave the store consistent: no reader joins a claim's extraction_uid or reuse key to an `extracted` paper event of the same arm (grep and the census's reader list; incomplete_extractions and claim_text_ref read first). If one does, STOP with the finding.  [CC's label: VALUE — quoted literal: '`extracted`']
+
+## docs/session-reports/session-12/12af_U40B/brief_12af_U40B.md:249 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 On the parent, R798(f)'s cases (1), (3), (4) and (5) are red and (2) is green; N_red and N_green read from the run.
+   E2 Coupled tests (c): the six store tests in tests/test_cloud_extraction.py, the store-reaching tests in tests/test_u28_cloud_gate_and_boundary.py and tests/test_u27_cloud_run_faults.py; the census and the selected runs decide, and a file not named here is a (c), not a stop.
+   E3 The gate collects 3,562 + N and selects 3,545 + N, N the new file's ids plus any id a rewrite renames (each rename an only-ref / only-gate pair, read and matched).
+   E4 The inventory's recorded entry in base.py moves (lines are inserted above :520): an entry change, regenerated and kept (R786(b)); a stamp-only diff is reverted (R793(e)).
+   E5 Pins and the audit prompt_hash do not move: no request byte changes.
+
+## docs/session-reports/session-12/12af_open/brief_12af_OPEN.md:48 [untiered] INFERRED: none.
+   (no items)
+
+## docs/session-reports/session-12/12af_open/brief_12af_OPEN.md:214 [BLOCKING] INFERRED — BLOCKING (verify before anything downstream; false = STOP):
+   I1 (unified plan v102, from the wrap report) claude-config HEAD is 34e422a6476d9601f57f61b83f6b1fc64030f9f2, parent 2aa4eac1b54a69d80e7b26587f6ff4df25114b67, clean and level, or a descendant acceptable under R663(b) and R796(g); primer.md lines 41–45 equal the lane line's five "+" lines.  [CC's label: VALUE — hash: '34e422a6476d9601f57f61b83f6b1fc64030f9f2']
+   I2 (same source) CC session 53a21c5b-0879-47ef-9a86-9ba2b7e623a4 ran 2026-11-09 02:57 to 23:24 UTC and is archived; nothing of this lane survives it. The archive time is read from the record.  [CC's label: VALUE — hash: '53a21c5b']
+   I3 Every nightly since the closeout ran on 840db24 (reflog method with the lock line, R779(c); form: 12ae_close/nightly_20261109.txt).  [CC's label: VALUE — hash: '840db24']
+   I4 transcribe_ruling.py --append only appends: the plan's "−" count is 0, read from the numstat and matched, never assumed (R766(c)).  [CC's label: VALUE — quoted literal: '"−"']
+
+## docs/session-reports/session-12/12af_open/brief_12af_OPEN.md:226 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 ~/scratch/12ae-open/ still holds expected_12ae.json, block181.json and the item-0 and step-4 checks; ~/scratch/12ae-close/ holds block193.json. If one is gone, the committed evidence and the tool's docstring govern.
+   E2 The recount's JSON is byte-equal to the committed one (item 0 moves no row and no dated line).
+   E3 Health jobs 20/20, no FAIL; NV_ERR_NO_MEMORY at or above 31, new lines inside health-job windows.
+   E4 The gate lands inside the band beside surgical-cv's uvicorn only.
+   E5 The host's four band values equal 12ae_close/host_state_close.txt's. If one differs the band series restarts: report it before the gate and do not match.
+
+## docs/session-reports/session-12/12ag_open/brief_12ag_OPEN.md:45 [BLOCKING] INFERRED — BLOCKING (verified before R803(f) is carried out; false = STOP, nothing applied): the
+   - the lane-line file's fifth "+" line reads whole. The report's copy of it breaks between "U30's five" and "freeze, tag freshman", which is either the report's rendering or the file's own text; the file decides.  [CC's label: VALUE — quoted literal: '"+"']
+
+## docs/session-reports/session-12/12ag_open/brief_12ag_OPEN.md:234 [untiered] READINGS FROM OUTSIDE THE CLONE (unified plan v104 and R803; INFERRED by source; each is
+   (lead) the value an item below is checked against):
+   V1 claude-config after the 12af wrap: 79c421362dd16528122a7901175e47f1b0db0a18, parent 4b141cd789d327a515503df8ddf138965d43f087. The global CLAUDE.md's long-running-jobs commit 9f78b9a (2026-11-11, the PI's report) is expected among its descendants.
+   V2 ~/scratch/12af-close/lane_line_12af.txt: sha256 d84ed8bda3a1b67af636bac536cf47d5b81c11eea153c0780814845e01b4652b, 7,743 B, 10 lines.
+   V3 CC sessions: beae3514-cf73-4eb2-8448-3d9ce131234c (12af; opened 2026-11-10 22:55 UTC) and c4f7c3c7-8e58-4a82-9b30-25d20e8fb125 (WR5; 2026-11-13). Each one's first and last entry and its archive state are read from the record, never from this line.
+   V4 The last jobs read before this open: the 2026-11-10 pair, at 12af-OPEN.
+
+## docs/session-reports/session-12/12ag_open/brief_12ag_OPEN.md:246 [BLOCKING] INFERRED — BLOCKING (verify before anything downstream; false = STOP):
+   I1 claude-config HEAD is the commit the 12af wrap left, or a descendant acceptable under R663(b) and R803(g), clean and level; primer.md lines 41–45 equal the lane line's five "+" lines.  [CC's label: VALUE — line number: 'lines 41']
+   I2 The 12af CC session is exited and archived; the WR5 CC session has no running process; nothing of this lane survives either.  [CC's label: FACT]
+   I3 Every nightly since the 12af closeout ran on a HEAD whose engine tree (R8's five paths) equals 977c499's (reflog method with the lock line, R779(c)).  [CC's label: VALUE — hash: '977c499']
+   I4 transcribe_ruling.py --append only appends: the plan's "−" count is read from the numstat and matched to zero, never assumed (R766(c)).  [CC's label: VALUE — quoted literal: '"−"']
+
+## docs/session-reports/session-12/12ag_open/brief_12ag_OPEN.md:256 [expectation] INFERRED — expectation (report a mismatch, continue):
+   E1 ~/scratch/12af-open/ still holds expected_12af.json, block194.json and the item-0 and step-4 checks. If one is gone, the committed evidence and the tool's docstring govern.
+   E2 The recount's JSON is byte-equal to the committed one.
+   E3 Every health job loaded every model it lists with no FAIL, and no new NV_ERR_NO_MEMORY line falls outside a health-job window.
+   E4 The gate lands inside the band beside surgical-cv's uvicorn only, with no hold.
+   E5 The host's four band values equal 12af_close/host_state_close.txt's. If one differs the band series restarts: report it before the gate and do not match.
+   E6 The WR5 CC session is archived.
+   E7 The global CLAUDE.md's long-running-jobs rule, quoted at 0d, allows a named tmux session as the home of a test gate. If its text excludes that, STOP before 3e.

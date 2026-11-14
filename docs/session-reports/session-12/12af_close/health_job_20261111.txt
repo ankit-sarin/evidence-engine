@@ -1,0 +1,32 @@
+# health job reads, 2026-11-11, read at 12ag-OPEN (2026-11-14T05:27:36Z) from /home/ankitsarin/logs/ollama_health_cron.log (mtime 2026-11-13 07:06:50.416167 +0000); the log carries no date lines, so the 2026-11-11 run is the 20-line block starting at line 4046 (block 112 of 114, each opening 'Testing qwen3.6:35b-a3b'), identified by position and confirmed against the same run's dated log /home/ankitsarin/logs/ollama_health_20261111.log (mtime 2026-11-11 07:04:47.048014 +0000): model, status and elapsed equal line for line: True (R737(c))
+loads OK/total: 20/20; FAIL lines: 0
+-- dated log: Ollama Health Check — Wed Nov 11 07:00:01 AM UTC 2026; Resident at start: none; Done: Wed Nov 11 07:04:47 AM UTC 2026
+-- journal 06:59–07:12 (12af_close/health_journal_20261111.txt)
+lines 2713
+GIN 71
+GIN non-200 0
+model loads (starting runner --model) 20
+-- kernel NV_ERR_NO_MEMORY lines inside 06:59–07:12: 2
+2026-11-11T07:03:16+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-11T07:04:00+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+-- the 20 lines
+Testing qwen3.6:35b-a3b                (300s) ... OK 13.7s
+Testing qwen3.6:27b                    (300s) ... OK 18.4s
+Testing gpt-oss:20b                    (300s) ... OK 6.1s
+Testing gemma4:26b                     (300s) ... OK 6.6s
+Testing qwen3:30b-instruct             (300s) ... OK 5.0s
+Testing gemma4:31b                     (300s) ... OK 9.5s
+Testing qwen3.5:27b                    (300s) ... OK 20.5s
+Testing gemma3:27b                     (300s) ... OK 5.7s
+Testing qwen2.5vl:7b                   (120s) ... OK 4.4s
+Testing qwen3:8b                       (120s) ... OK 6.5s
+Testing qwen3:32b                      (300s) ... OK 19.9s
+Testing minicpm-v:latest               (120s) ... OK 7.9s
+Testing qwen3-vl:8b                    (120s) ... OK 12.0s
+Testing qwen2.5:7b-instruct            (120s) ... OK 5.2s
+Testing deepseek-r1:32b                (300s) ... OK 21.8s
+Testing mistral:7b                     (120s) ... OK 6.1s
+Testing gemma2:27b                     (300s) ... OK 14.6s
+Testing qwen2.5:32b                    (300s) ... OK 36.7s
+Testing llama3.3:70b                   (600s) ... OK 61.2s
+Testing llama3.2:3b                    (120s) ... OK 3.7s

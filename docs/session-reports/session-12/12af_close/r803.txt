@@ -1,0 +1,106 @@
+RULING [evidence-engine 12af-R803] — wrap ruling: closeout accepted; the band set 872–1065 s; no
+  stop and no pause this session; readings on the closeout's findings and choices; no standing
+  rule, the hold's question carried to 12ag for the PI's word; lane line approved on one
+  condition and applied; close now
+STATUS: PI ruling, 2026-11-11 UTC, session 12af, on architect recommendation, on the 12af-CLOSE
+  closeout report (item 0 4884bc3e794be1b1c136c73cd87a56d726f93641; closeout
+  7ddabca71511374aacdaefdd95a6de4eb651a268). Transcribe as item 0 of 12ag-OPEN by
+  transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the closeout report, quoted): "4884bc3 (parent dacc67c)"; "7ddabca (parent 4884bc3)";
+    ledgers "be1ae3e", "4b141cd"; "r802.txt: cabdefe4…6c81, 5,696 B, 69 lines. Equal to your
+    hash."; "brief_12af_CLOSE.md: e8c2b13f8e3375ec8bef4180e5f954a5e466ad45d7e81cbf3da2d88d52605a47,
+    25,553 B, 332 lines" (the architect's copy: equal, cmp byte for byte against the clone — the
+    seventh match of seven this session); "Check: PASS. Plan numstat +81/−1; six-cell INT- rows 213
+    before and after."; "12af_close/, 20 files"; "retention 23 MATCH / 0 MISMATCH, and the 12v
+    probe scratch 10/10 and 53/53"; "287 rows (94 / 57 / 136, 0 unclassed); fix units 38, done 33;
+    expected_holds true"; "R510: in 1 (INT-af12-1), out 0, no class or package move"; "The mean is
+    968.85 s, so inward 872–1065 s"; "The series counts 40."; "The plan block: +132/−0, inserted
+    after 12ae's expected-values block and before "## Decision log"."; "The plan is now
+    328edeff…1e2d, 3,189,092 B, 18,666 lines."; "check_close.py → PASS"; the lane line
+    "d84ed8bda3a1b67af636bac536cf47d5b81c11eea153c0780814845e01b4652b, 7,743 B, 10 lines; not
+    applied"; "Its five "−" lines are primer.md 41–45 as they stand".
+  READ (CC's): choices 1–5 and findings 1–5.
+  READ (the architect's clone at 7ddabca): the two full hashes in STATUS; the plan's sha256
+    328edeff381a221027c192e7560ed6375afc0d60241f84f796c053ce28901e2d, 3,189,092 bytes, 18,666
+    lines; the closure and the 12ag expected-values block, plan :5384–:5515, read; 12af_close/'s
+    twenty files listed; band_computation.txt "mean 968.85 s; x0.9 871.965; x1.1 1065.735" and
+    "rounded inward: 872–1065 s".
+  INFERRED — BLOCKING (verified before R803(f) is carried out; false = STOP, nothing applied): the
+    lane-line file's fifth "+" line reads whole. The report's copy of it breaks between "U30's
+    five" and "freeze, tag freshman", which is either the report's rendering or the file's own
+    text; the file decides.
+
+R803(a) — The 12af-CLOSE closeout is accepted as committed: item 0 4884bc3 (Block 200; the
+  INT-i12-71 note; the brief file byte-equal to the architect's copy; the rules files untouched),
+  the closeout 7ddabca (the closure and the 12ag expected-values block, +132 / −0 at the matched
+  position; 12af_close/'s twenty files; the recount and its chain; the band computation; the
+  expected nightly file), ledgers be1ae3e and 4b141cd. E1–E5 held; I1 held; I2 read. Seven
+  committed briefs this session, seven byte-equal to the architect's copies.
+R803(b) — The band for 12ag is 872–1065 s: ±10% of 968.85 s, the mean of the last four standard
+  gates on this host state (963.43, 966.10, 965.92, 979.95), rounded inward, none confounded,
+  two with a reading beside them as band_computation.txt names them. The series stands at
+  forty. A 12ag gate outside the band is reported with its concurrent jobs, not adapted to.
+R803(c) — The stops, counted from the rulings: none. Pauses: none. CC's stops: none. The
+  architect's errors this session, six, each caught by CC reading the record or the code over
+  the brief (R732(a)), none stopping a brief or reaching a commit wrong: the session's end time
+  taken from the plan (R797(e)); a listing asserted from the names to be added (R797(e)); two
+  findings sent for rows that already existed (R798(h), corrected by R799(d)); an inserted-line
+  count where the record's table convention governed (R800(a)); two tests named as coupled that
+  run outside a run (R801(f)); a clause on unknown field names that no read-out had quoted
+  (R798(e), corrected by R802(c)). The pattern is the one 12ae named: a statement written from
+  a description where the record or the code had the fact. The session's measured point for the
+  estimate: one CC session (the open at 22:55 UTC on 2026-11-10 to this wrap), two fix units
+  from Phase A to gate (U40, U29), a third unit's Phase A (U30), three rows closed, one opened,
+  no stop, no pause.
+R803(d) — Readings, no row. The closeout's choices: 1 (the dated job files not written, no job
+  having run — right, and 12ag-OPEN writes them into 12af_close/); 2 (the recount script's
+  package expectations taken from its baseline, plus one for P5 — right; a literal the brief did
+  not supply is not invented); 3 (this brief's equality left to this ruling — done in (a)); 4
+  (the CC session's open time from R797's quotation and its id from the transcript — the record's
+  sources); 5 (the two blocks not pasted in the report, being committed verbatim — accepted; the
+  architect read them from the clone). Its findings: 1 (another lane's full suite ran beside the
+  closeout, beside no gate — a reading in the host paragraph); 2 (the temp root's figure by the
+  root's own du -sb, as R796(d) finding 2 provides); 3, 4 and 5 (three of CC's own slips, each
+  caught by its own check before a commit — the checks did their job).
+R803(e) — Carried to 12ag and the plan, from the closure's "Carried forward": U30's five
+  decisions, put to the PI in plain English after 12ag's open and before any build brief
+  (R801(g), R802(b)), with the legacy table's unknown field names (N46); the optional-field
+  defaults in the two accessors; whether a repaired truncated response may be stored (U31); a
+  token for a truncated or refused output on both paths and the local output-length stop (023);
+  the retry budget (INT-ae12-2); INT-af12-1; A15's per-arm axis; the six tools items; the
+  cross-lane readings for dgx-infra; the 2026-11-11 and later jobs against
+  12af_close/expected_nightly_20261111.md. Whether R797(d)'s hold becomes a standing rule is not
+  ruled: the architect recommended it and the PI has not yet given his word, so it is put to him
+  again at 12ag, and until then each gate brief carries the hold as a task gate, as the 12ag
+  expected-values block already states it. This ruling states no standing rule: the id list,
+  the glosses file and STANDING_RULES.md are untouched at 12ag-OPEN's item 0, asserted by
+  content. The PI's instruction of R801(g) enters the unified plan as its rule 40.
+R803(f) — The lane line (sha256 d84ed8bda3a1b67af636bac536cf47d5b81c11eea153c0780814845e01b4652b,
+  7,743 bytes, 10 lines, ~/scratch/12af-close/lane_line_12af.txt) is approved on the condition
+  above. First verify the file's sha256 and quote its fifth "+" line whole from the file. If
+  that line reads whole — its "next:" clause runs from 12ag-OPEN through U30's five decisions and
+  its build to the freeze, the tag and Run 7 with no words missing and its emphasis marks
+  paired — apply it: replace lines 41–45 of ~/claude-config/primer.md (which must equal its five
+  "−" lines, taken from primer.md itself) with its five "+" lines, applied from the file, not
+  from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the
+  row's exact timestamp, foreign rows counted from the diff and named by hash); push; level. If
+  the line is broken in the file itself, STOP before anything is applied and report the line as
+  it stands; the architect then rules its text.
+R803(g) — 12ag-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or
+  a child carrying only hook rows, reported), level and clean. Its item 0 writes this ruling with
+  transcribe_ruling.py as the next block (Block 201) and copies lane_line_12af.txt into
+  docs/session-reports/session-12/12af_close/, with r803.txt beside it; no standing rule, the
+  three rules files untouched by content. It runs session_open_check.py and the steps R747(b)
+  keeps explicit, against the "Expected values at session-12ag open" block, the recount by
+  12af_close/recount_12af_close.py (287; 38 done 33; R510 1 / 0); reads the 2026-11-11 and every
+  later job run before it against 12af_close/expected_nightly_20261111.md; the gate by the
+  wrapper, against 872–1065 s, its reference 12af_close/collected_ids_12af_close.txt and
+  durations_12af_u29b.txt, with the hold. Its brief is committed at its item 0 as
+  brief_12ag_OPEN.md (R784(g)(v)), in 12af_open/brief_12af_OPEN.md's form. Then U30's decisions.
+R803(h) — Session 12af closes now. After R803(f) has landed, run /wrap; this ruling authorizes
+  /wrap's own commits and pushes and nothing else. The project primer and the global primer
+  record the session as the lane line states it. Report the lane-line commit's hash and parent,
+  the fifth "+" line as quoted from the file, the wrap's verdict, and the archive command to be
+  run after /exit.

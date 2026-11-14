@@ -1,0 +1,59 @@
+RULING [evidence-engine 12ag-R807] — 12ag-N46A accepted; N46's design: the cloud store drops an
+  unexpected field before any write; INT-j12-51 closes on U30's build with N46 noted as the same
+  finding; readings; no standing rule; the gate-launch tools change opens with its Phase A
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the 12ag-N46A-R1
+  final report (item 0 dcf623e18d9134e054185f61f3ca3b97c68153d7; read-out
+  19b1f011f9f039f5ff1a6cfaee5dc9abe4c99700). Transcribe at item 0 of the 12ag-GATEUNIT-A brief
+  below, by transcribe_ruling.py, in the block after R806's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-N46A-R1 final report, quoted): "Commit: dcf623e18d9134e054185f61f3ca3b97c68153d7
+    (parent 60a6331)"; "Ledger: 46057aabff24377b74eb5cf463f77ef66678b10b (parent 98fedf6)";
+    "Commit: 19b1f011f9f039f5ff1a6cfaee5dc9abe4c99700 (parent dcf623e)"; "Ledger
+    a4d4296832f9aae8741c9747cdc040dd6de2bfab (parent 46057aa)"; "The new plan is
+    4013412bbbe754bd8f908ab20dbb4879c2d6b230f4ef8177d4dcf5550fb027a2, 3,222,530 B, 18,921 lines.";
+    "3 header lines, 2 new sections, 18 "Named by" lines that only append ids, 0 other lines";
+    "brief_12ag_N46A.md is 7b9c3cc75cda9e3190299a1d573e5cc48d78478c8ebf13aa39c7294efc75ceaf,
+    21,419 B, 288 lines" and "brief_12ag_N46A_R1.md is
+    ef67895d845f61576f6a26936795f16e07816fc6d22fce860a630af4dce2e449, 6,473 B, 91 lines" (the
+    architect's copies: the same sha256, bytes and lines, both); "E1 held: the cloud store never
+    calls drop_unexpected"; "the fix would go in store_result, after enforce_completeness (:422)
+    and before enforce_citations (:433), which is the local path's order. Dropping there changes
+    no request byte, pin or claim hash. No existing test moves."
+  READ (CC's): findings 1–6; the reader census's classes, CC's judgement; probe cases (A)–(C),
+    FAKE.
+  READ (the architect's clone at 19b1f01): 12ag_N46A/12ag_N46A.md §7, "(D) Drop before any write,
+    as R118's docstring states." and "`extracted_data` keeps the response verbatim, the name in
+    it."; the plan's sha256 as the report gives it, last line "The decision log in this file ends
+    at R805."; row INT-j12-51 at plan :685.
+  INFERRED: none.
+
+R807(a) — The 12ag-N46A-R1 final report is accepted as printed: item 0 dcf623e (Blocks 202 and
+  203; "A R805(c)" and "A R805(f)" on the list, the file regenerated, every changed line of
+  R766(b)'s three kinds; both brief files equal to the architect's copies), ledger 46057aa; the
+  read-out 19b1f01 with its census and probe, ledger a4d4296. CC's finding 6, a check that
+  failed on its own bug and was fixed before the commit, is a reading (R763(c)).
+R807(b) — N46's design, the PI's ruling, in his words: "Drop it before any write". From
+  12ag_N46A/12ag_N46A.md §7 option (D): store_result drops the spans whose field the codebook
+  did not ask for, by the function the local path uses, after the completeness check and before
+  the citation check, so the legacy spans table holds the names the claims hold and an uncited
+  invented field no longer costs the paper. extracted_data stays the response as received.
+  Acceptance in the read-out's §7 item 3 shape, both cases, each failing on the unmodified
+  tree. Not taken: filtering extracted_data (D′); refusing the response (X). It is built in
+  U30's build brief, with R805(d)'s design.
+R807(c) — The PI's ruling, in his words: "Close INT-j12-51 on U30's build, with N46 noted as
+  the same finding". The notes are written at the item 0 after U30 lands, in the record's
+  CLOSED form; the row's class and package are read from the row there, and the count's
+  effect is the recount's to state.
+R807(d) — Readings, no row: finding 2 (U28 never carried N46; "with U28" in the P1 list and in
+  the architect's earlier wording was not what U28's entry or read-out say); findings 3 and 4
+  (the uncited case, and a run that closes completed with every paper refused at the store, a
+  reading beside INT-ae12-2); finding 5 (the brief's R5 named engine/cloud/schema.py, which
+  selects no row). Left open by N46 and not U30's: whether live holds such a row; the two
+  repair scripts' insert path from extracted_data; the three analysis readers that count every
+  row.
+R807(e) — The tools change of R805(g) opens with its Phase A, read-only: the gate wrapper's
+  launch as a systemd-run --user unit, and nothing else. The other tools items carried in the
+  plan are not part of this change. No unit is launched in Phase A.
+R807(f) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the next item 0, asserted by content.

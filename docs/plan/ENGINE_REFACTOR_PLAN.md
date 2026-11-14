@@ -18919,3 +18919,125 @@ R805(h) — This ruling states two standing rules, (c) and (f). The id list gain
 | 2026-11-14 | R805(a) — The 12ag-OPEN-R1 final report is accepted as printed: the gate at the 12ag block's counts, ids 0 / 0, no load in its window; step 3f matched; the evidence commit 60a6331 (nineteen gate files, the job reads for 2026-11-11 to 11-13 in 12af_close/, r667e_read.txt, the resume file equal to the architect's copy), ledger 89b4efd. Session 12ag is open. CC's findings 2, 3 and 4 are readings: two slips caught before anything rested on them, and a scratch file with no committed counterpart. The architect's errors this session stay two. R805(b) — The series gains 1042.65 s as its forty-first member, confounded (R677(f)): another lane's test suite started inside the gate's window after both snapshots, seen only in the temp root. The band in force stays 872–1065 s until the closeout recuts it. That a suite can start after the launch joins the cross-lane item for dgx-infra. R805(c) — The PI's ruling, in his words: "Narrow, and allow identifiers". Rule from here, narrowing R667(e): R667(e) applies to INFERRED — BLOCKING items only. A blocking item names the fact that must hold, and may name the thing the fact is about by its identifier (a commit, a file, a session). A quantity, a time or a line number the brief wants checked is a separate reading. An expectation item may carry its value. R805(d) — U30's design, on the PI's word ("Decision 1-5 agree"), from 12af_U30A/12af_U30A.md §7: (1) an interrupted cloud run closes interrupted with its signal's reason, the form the local runners use (S-b); (2) the rollback sits in both places: store_result rolls back on any exit that did not commit, and run_arm rolls back an open transaction before its close and closes only a run not already closed (R-c); (3) send records a provider call that an interrupt ends, as an error naming the interrupt, and re-raises — this amends R800(b)'s exclusion for interrupts (P-b); (4) the cloud entry point handles SIGTERM and SIGHUP as the other mains do; (5) INT-i12-71's first half is closed as answered: no activation is owed. The dated notes on INT-i12-71 are written at the U30 build brief's item 0, not here. R805(e) — N46, the PI's ruling, in his words: "Fold it into U30: one build closes both." A read-only look at the legacy cloud table's readers comes first: the 12ag-N46A read-out. No design clause for N46 is written before its read-out is accepted and the PI has ruled. R805(f) — The hold, the PI's ruling: "Yes". Rule from here: before a standard gate is launched, when the snapshot names another lane's full test suite or an encode, the launch waits for it — one wait, by pid, nothing signalled, bounded at sixty minutes and by the R86 clock. A launch made at the bound is reported with the job named and its value enters the series as confounded (R677(f)). A gate brief does not restate it. R805(g) — Order, after the 12ag-N46A read-out: the tools change that lets the gate wrapper launch a gate as a systemd-run --user unit (R804(b)), two-phase; then U30's build, one brief, from 12af_U30A.md, the N46 read-out and the rulings on them. R805(h) — This ruling states two standing rules, (c) and (f). The id list gains "A R805(c)" and "A R805(f)" and STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling (R754(c)(iii), R766(b)). R667(e) stays in the list; R805(c) is read with it. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-OPEN-R1 final report (evidence 60a6331) |
 
 The decision log in this file ends at R805.
+
+**Block 204.** *Transcribed 2026-11-14 (item 0 of the 12ag-GATEUNIT-A brief), in its own commit with Block 205 and the brief file it orders, in the R597(e) form:* ruling R806, made by PI on architect recommendation on 2026-11-14 UTC, during session 12ag, on the 12ag-N46A stop report (no commit; HEAD `60a63314118dc9f9ea41a009e5b5197676922b4c`). The 12ag-N46A-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ag-R806] — the 12ag-N46A stop before item 0 is correct and is the
+  architect's; the fourteen "Named by" lines accepted under R766(b); the rehearsal's forms
+  accepted; claude-config 98fedf6 accepted; no standing rule; item 0 resumes on the real tree
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the 12ag-N46A
+  stop report (no commit; HEAD 60a63314118dc9f9ea41a009e5b5197676922b4c). Transcribe at the next
+  item 0 after this brief's, by transcribe_ruling.py, in the block after R805's, not now.
+
+ASSUMPTIONS IN THIS RULING (quoted from the stop report):
+  MEASURED: "Regenerating STANDING_RULES.md moves 14 "Named by" lines that name no R805 clause";
+    "evidence-engine is clean at 60a6331, level 0 0"; "r804.txt is
+    d2ccb5ef7d253a04f541e37f790fbb5632a96863aa4b80ac623ff6ddc54b681e, 4,625 B, 55 lines"; "r805.txt
+    is 28d71b14666662e8e1bddbb3e002dc8f59e8abbb6775e499fc80858d2a91125b, 5,227 B, 61 lines"; "The
+    plan's numstat is 138 0"; "After: "Tier A 89, Tier B 8, 97 of 1677 clauses""; "Numstat:
+    STANDING_RULES.md 53 / 21, glosses 3 / 1"; "id list 2 / 0"; "Four "Named by" lines that append
+    an R805 clause: R86, R667(e), R677(f) and R766(b)"; "Fourteen "Named by" lines that append only
+    ids from R785 to R804"; "Nothing else changed."; "claude-config is at 98fedf6, four commits
+    past 89b4efd".
+  READ (CC's): findings 1–4; the pattern commit d488573 and its form; the regeneration command
+    with its two --glosses arguments; the two glosses as composed.
+  READ (the architect's clone, plan :15105): R766(b), "a "Named by" line that only appends ids;
+    any other changed line is a stop".
+  INFERRED: none.
+
+R806(a) — The stop is correct and is the architect's: the brief's I3 allowed only "Named by"
+  lines that name R805, narrower than R766(b), which allows any that only appends ids. It is
+  the error R766(a) records, repeated, with R766(b) cited in the same brief. The architect's
+  errors this session: four — E7, I1's "clean", I3, and one "followed" wording given to both
+  blocks (finding 2). None reached a commit.
+R806(b) — The PI's ruling, in his words: "Accept the 14 lines and resume". The fourteen lines
+  are accepted under R766(b): each only appends ids from blocks that landed with no
+  regeneration. I3 is withdrawn and R766(b)'s classification stands in its place.
+R806(c) — The rehearsal's forms are accepted as reported and are used on the real tree: each
+  block's "beside" naming the other block first and its "followed" naming what followed that
+  ruling in its own paste (the 12ag-OPEN-R1 resume for R804, the 12ag-N46A brief for R805), as
+  d488573 has them; the regeneration command with both glosses files; the two glosses as
+  composed, which keep the clauses' words.
+R806(d) — claude-config at 98fedf6 is accepted under R663(b): three ledger-only commits of
+  other lanes and one skills commit, none touching this lane's rows or primer.md lines 41–45.
+  Finding 4 (earlier hash checks without the ^{commit} form) is a reading; R783(d)'s form is
+  the one used from here, as this pre-check used it.
+R806(e) — This ruling states no standing rule. Item 0 resumes under the resume below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-14 | R806(a) — The stop is correct and is the architect's: the brief's I3 allowed only "Named by" lines that name R805, narrower than R766(b), which allows any that only appends ids. It is the error R766(a) records, repeated, with R766(b) cited in the same brief. The architect's errors this session: four — E7, I1's "clean", I3, and one "followed" wording given to both blocks (finding 2). None reached a commit. R806(b) — The PI's ruling, in his words: "Accept the 14 lines and resume". The fourteen lines are accepted under R766(b): each only appends ids from blocks that landed with no regeneration. I3 is withdrawn and R766(b)'s classification stands in its place. R806(c) — The rehearsal's forms are accepted as reported and are used on the real tree: each block's "beside" naming the other block first and its "followed" naming what followed that ruling in its own paste (the 12ag-OPEN-R1 resume for R804, the 12ag-N46A brief for R805), as d488573 has them; the regeneration command with both glosses files; the two glosses as composed, which keep the clauses' words. R806(d) — claude-config at 98fedf6 is accepted under R663(b): three ledger-only commits of other lanes and one skills commit, none touching this lane's rows or primer.md lines 41–45. Finding 4 (earlier hash checks without the ^{commit} form) is a reading; R783(d)'s form is the one used from here, as this pre-check used it. R806(e) — This ruling states no standing rule. Item 0 resumes under the resume below. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-N46A stop report (no commit; HEAD 60a6331) |
+
+The decision log in this file ends at R806.
+
+**Block 205.** *Transcribed 2026-11-14 (item 0 of the 12ag-GATEUNIT-A brief), in its own commit with Block 204 and the brief file it orders, in the R597(e) form:* ruling R807, made by PI on architect recommendation on 2026-11-14 UTC, during session 12ag, on the 12ag-N46A-R1 final report (item 0 `dcf623e18d9134e054185f61f3ca3b97c68153d7`; read-out `19b1f011f9f039f5ff1a6cfaee5dc9abe4c99700`). The 12ag-GATEUNIT-A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ag-R807] — 12ag-N46A accepted; N46's design: the cloud store drops an
+  unexpected field before any write; INT-j12-51 closes on U30's build with N46 noted as the same
+  finding; readings; no standing rule; the gate-launch tools change opens with its Phase A
+STATUS: PI ruling, 2026-11-14 UTC, session 12ag, on architect recommendation, on the 12ag-N46A-R1
+  final report (item 0 dcf623e18d9134e054185f61f3ca3b97c68153d7; read-out
+  19b1f011f9f039f5ff1a6cfaee5dc9abe4c99700). Transcribe at item 0 of the 12ag-GATEUNIT-A brief
+  below, by transcribe_ruling.py, in the block after R806's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ag-N46A-R1 final report, quoted): "Commit: dcf623e18d9134e054185f61f3ca3b97c68153d7
+    (parent 60a6331)"; "Ledger: 46057aabff24377b74eb5cf463f77ef66678b10b (parent 98fedf6)";
+    "Commit: 19b1f011f9f039f5ff1a6cfaee5dc9abe4c99700 (parent dcf623e)"; "Ledger
+    a4d4296832f9aae8741c9747cdc040dd6de2bfab (parent 46057aa)"; "The new plan is
+    4013412bbbe754bd8f908ab20dbb4879c2d6b230f4ef8177d4dcf5550fb027a2, 3,222,530 B, 18,921 lines.";
+    "3 header lines, 2 new sections, 18 "Named by" lines that only append ids, 0 other lines";
+    "brief_12ag_N46A.md is 7b9c3cc75cda9e3190299a1d573e5cc48d78478c8ebf13aa39c7294efc75ceaf,
+    21,419 B, 288 lines" and "brief_12ag_N46A_R1.md is
+    ef67895d845f61576f6a26936795f16e07816fc6d22fce860a630af4dce2e449, 6,473 B, 91 lines" (the
+    architect's copies: the same sha256, bytes and lines, both); "E1 held: the cloud store never
+    calls drop_unexpected"; "the fix would go in store_result, after enforce_completeness (:422)
+    and before enforce_citations (:433), which is the local path's order. Dropping there changes
+    no request byte, pin or claim hash. No existing test moves."
+  READ (CC's): findings 1–6; the reader census's classes, CC's judgement; probe cases (A)–(C),
+    FAKE.
+  READ (the architect's clone at 19b1f01): 12ag_N46A/12ag_N46A.md §7, "(D) Drop before any write,
+    as R118's docstring states." and "`extracted_data` keeps the response verbatim, the name in
+    it."; the plan's sha256 as the report gives it, last line "The decision log in this file ends
+    at R805."; row INT-j12-51 at plan :685.
+  INFERRED: none.
+
+R807(a) — The 12ag-N46A-R1 final report is accepted as printed: item 0 dcf623e (Blocks 202 and
+  203; "A R805(c)" and "A R805(f)" on the list, the file regenerated, every changed line of
+  R766(b)'s three kinds; both brief files equal to the architect's copies), ledger 46057aa; the
+  read-out 19b1f01 with its census and probe, ledger a4d4296. CC's finding 6, a check that
+  failed on its own bug and was fixed before the commit, is a reading (R763(c)).
+R807(b) — N46's design, the PI's ruling, in his words: "Drop it before any write". From
+  12ag_N46A/12ag_N46A.md §7 option (D): store_result drops the spans whose field the codebook
+  did not ask for, by the function the local path uses, after the completeness check and before
+  the citation check, so the legacy spans table holds the names the claims hold and an uncited
+  invented field no longer costs the paper. extracted_data stays the response as received.
+  Acceptance in the read-out's §7 item 3 shape, both cases, each failing on the unmodified
+  tree. Not taken: filtering extracted_data (D′); refusing the response (X). It is built in
+  U30's build brief, with R805(d)'s design.
+R807(c) — The PI's ruling, in his words: "Close INT-j12-51 on U30's build, with N46 noted as
+  the same finding". The notes are written at the item 0 after U30 lands, in the record's
+  CLOSED form; the row's class and package are read from the row there, and the count's
+  effect is the recount's to state.
+R807(d) — Readings, no row: finding 2 (U28 never carried N46; "with U28" in the P1 list and in
+  the architect's earlier wording was not what U28's entry or read-out say); findings 3 and 4
+  (the uncited case, and a run that closes completed with every paper refused at the store, a
+  reading beside INT-ae12-2); finding 5 (the brief's R5 named engine/cloud/schema.py, which
+  selects no row). Left open by N46 and not U30's: whether live holds such a row; the two
+  repair scripts' insert path from extracted_data; the three analysis readers that count every
+  row.
+R807(e) — The tools change of R805(g) opens with its Phase A, read-only: the gate wrapper's
+  launch as a systemd-run --user unit, and nothing else. The other tools items carried in the
+  plan are not part of this change. No unit is launched in Phase A.
+R807(f) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the next item 0, asserted by content.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-14 | R807(a) — The 12ag-N46A-R1 final report is accepted as printed: item 0 dcf623e (Blocks 202 and 203; "A R805(c)" and "A R805(f)" on the list, the file regenerated, every changed line of R766(b)'s three kinds; both brief files equal to the architect's copies), ledger 46057aa; the read-out 19b1f01 with its census and probe, ledger a4d4296. CC's finding 6, a check that failed on its own bug and was fixed before the commit, is a reading (R763(c)). R807(b) — N46's design, the PI's ruling, in his words: "Drop it before any write". From 12ag_N46A/12ag_N46A.md §7 option (D): store_result drops the spans whose field the codebook did not ask for, by the function the local path uses, after the completeness check and before the citation check, so the legacy spans table holds the names the claims hold and an uncited invented field no longer costs the paper. extracted_data stays the response as received. Acceptance in the read-out's §7 item 3 shape, both cases, each failing on the unmodified tree. Not taken: filtering extracted_data (D′); refusing the response (X). It is built in U30's build brief, with R805(d)'s design. R807(c) — The PI's ruling, in his words: "Close INT-j12-51 on U30's build, with N46 noted as the same finding". The notes are written at the item 0 after U30 lands, in the record's CLOSED form; the row's class and package are read from the row there, and the count's effect is the recount's to state. R807(d) — Readings, no row: finding 2 (U28 never carried N46; "with U28" in the P1 list and in the architect's earlier wording was not what U28's entry or read-out say); findings 3 and 4 (the uncited case, and a run that closes completed with every paper refused at the store, a reading beside INT-ae12-2); finding 5 (the brief's R5 named engine/cloud/schema.py, which selects no row). Left open by N46 and not U30's: whether live holds such a row; the two repair scripts' insert path from extracted_data; the three analysis readers that count every row. R807(e) — The tools change of R805(g) opens with its Phase A, read-only: the gate wrapper's launch as a systemd-run --user unit, and nothing else. The other tools items carried in the plan are not part of this change. No unit is launched in Phase A. R807(f) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the next item 0, asserted by content. | PI, 2026-11-14, during session 12ag, on architect recommendation, on the 12ag-N46A-R1 final report (item 0 dcf623e; read-out 19b1f01) |
+
+The decision log in this file ends at R807.

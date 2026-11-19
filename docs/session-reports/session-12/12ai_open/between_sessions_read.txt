@@ -1,0 +1,379 @@
+# 12ai-OPEN step 0h — between-session readings (read-only). Each command with its UTC timestamp, output beneath.
+# (v) is read first, before step 0b's fetch, as the brief orders; then (i)–(iv) and (vi).
+## (v) the interim session's fetch (V6, I6)
+
+$ cd ~/projects/evidence-engine && stat -c "%y %s B %n" .git/FETCH_HEAD && cat .git/FETCH_HEAD    # 2026-11-19T14:59:33.761Z
+2026-11-19 14:37:49.901912651 +0000 98 B .git/FETCH_HEAD
+b13b5eb23c86c5da9df566d9e59a9764c7831335		branch 'main' of github.com:ankit-sarin/evidence-engine
+
+$ cd ~/projects/evidence-engine && git reflog --date=iso HEAD | head -8    # 2026-11-19T14:59:33.767Z
+b13b5eb HEAD@{2026-11-19 06:31:46 +0000}: commit: docs(plan): 12ah-CLOSE — session 12ah closed; the closure; the 12ai expected values; 12ah_close/
+9fed148 HEAD@{2026-11-19 06:26:22 +0000}: commit: docs(plan): 12ah-CLOSE item 0 — R815 as Block 213; the brief file
+6dc36b3 HEAD@{2026-11-19 06:17:02 +0000}: commit: docs(plan): 12ah-OLRA-REC item 0, resumed under R814 — R813 and R814 as Blocks 211–212; the 12ah-OLRA files; the brief and resume files
+c412033 HEAD@{2026-11-19 05:09:16 +0000}: commit: docs(session-reports): 12ah-OPEN — the gate evidence; the 2026-11-15 to 11-18 job reads; the between-session readings
+34ff8a7 HEAD@{2026-11-19 04:49:54 +0000}: commit: docs(plan): 12ah-OPEN item 0 — R811 and R812 as Blocks 209–210; "A R812(a)", the file regenerated; the 12ag lane-line copy; the brief file
+35a914b HEAD@{2026-11-14 22:01:46 +0000}: commit: docs(plan): 12ag-CLOSE — session 12ag closed on the gate-launch tools change; the closure; the 12ah expected values; 12ag_close/
+e329ced HEAD@{2026-11-14 21:56:16 +0000}: commit: docs(plan): 12ag-CLOSE item 0 — R809 and R810 as Blocks 207–208; the brief file
+3e3c334 HEAD@{2026-11-14 21:46:01 +0000}: commit: docs(session-reports): 12ag-GATEUNIT-B — the unit launch's evidence: two probes, the dry run, the controls, the gate under gate-12ag_unit; the resume file
+
+$ cd ~/projects/evidence-engine && git reflog --date=iso main | head -8    # 2026-11-19T14:59:33.784Z
+b13b5eb main@{2026-11-19 06:31:46 +0000}: commit: docs(plan): 12ah-CLOSE — session 12ah closed; the closure; the 12ai expected values; 12ah_close/
+9fed148 main@{2026-11-19 06:26:22 +0000}: commit: docs(plan): 12ah-CLOSE item 0 — R815 as Block 213; the brief file
+6dc36b3 main@{2026-11-19 06:17:02 +0000}: commit: docs(plan): 12ah-OLRA-REC item 0, resumed under R814 — R813 and R814 as Blocks 211–212; the 12ah-OLRA files; the brief and resume files
+c412033 main@{2026-11-19 05:09:16 +0000}: commit: docs(session-reports): 12ah-OPEN — the gate evidence; the 2026-11-15 to 11-18 job reads; the between-session readings
+34ff8a7 main@{2026-11-19 04:49:54 +0000}: commit: docs(plan): 12ah-OPEN item 0 — R811 and R812 as Blocks 209–210; "A R812(a)", the file regenerated; the 12ag lane-line copy; the brief file
+35a914b main@{2026-11-14 22:01:46 +0000}: commit: docs(plan): 12ag-CLOSE — session 12ag closed on the gate-launch tools change; the closure; the 12ah expected values; 12ag_close/
+e329ced main@{2026-11-14 21:56:16 +0000}: commit: docs(plan): 12ag-CLOSE item 0 — R809 and R810 as Blocks 207–208; the brief file
+3e3c334 main@{2026-11-14 21:46:01 +0000}: commit: docs(session-reports): 12ag-GATEUNIT-B — the unit launch's evidence: two probes, the dry run, the controls, the gate under gate-12ag_unit; the resume file
+
+$ cd ~/projects/evidence-engine && git reflog --date=iso origin/main | head -8    # 2026-11-19T14:59:33.790Z
+b13b5eb refs/remotes/origin/main@{2026-11-19 06:31:49 +0000}: update by push
+9fed148 refs/remotes/origin/main@{2026-11-19 06:26:25 +0000}: update by push
+6dc36b3 refs/remotes/origin/main@{2026-11-19 06:17:04 +0000}: update by push
+c412033 refs/remotes/origin/main@{2026-11-19 05:09:18 +0000}: update by push
+34ff8a7 refs/remotes/origin/main@{2026-11-19 04:50:02 +0000}: update by push
+35a914b refs/remotes/origin/main@{2026-11-14 22:01:49 +0000}: update by push
+e329ced refs/remotes/origin/main@{2026-11-14 21:56:27 +0000}: update by push
+3e3c334 refs/remotes/origin/main@{2026-11-14 21:46:04 +0000}: update by push
+
+$ cd ~/projects/evidence-engine && git rev-parse HEAD main origin/main && git for-each-ref --format="%(refname) %(objectname)"    # 2026-11-19T14:59:33.796Z
+b13b5eb23c86c5da9df566d9e59a9764c7831335
+b13b5eb23c86c5da9df566d9e59a9764c7831335
+b13b5eb23c86c5da9df566d9e59a9764c7831335
+refs/heads/main b13b5eb23c86c5da9df566d9e59a9764c7831335
+refs/remotes/origin/main b13b5eb23c86c5da9df566d9e59a9764c7831335
+## (i) the health job (I5)
+
+$ crontab -l | grep -n ollama_health    # 2026-11-19T15:01:18.489Z
+7:0 7 * * * /bin/bash /home/ankitsarin/scripts/ollama_health_check.sh >> /home/ankitsarin/logs/ollama_health_cron.log 2>&1
+
+$ crontab -l | grep -cE "^[A-Za-z_]+="    # 2026-11-19T15:01:18.504Z
+0
+
+$ readlink -f ~/scripts/ollama_health_check.sh; sha256sum ~/projects/dgx-infra/scripts/ollama_health_check.sh ~/projects/dgx-infra/scripts/ollama_check_one.py    # 2026-11-19T15:01:18.509Z
+/home/ankitsarin/projects/dgx-infra/scripts/ollama_health_check.sh
+42c11f18ba8d3411b79196cc7c39c893ed67331669fc9cc7fa1ae058cd7de50b  /home/ankitsarin/projects/dgx-infra/scripts/ollama_health_check.sh
+971a03f96d001deae09fb35dd20109e9feda8468cd9f778ecf4305a373e8188b  /home/ankitsarin/projects/dgx-infra/scripts/ollama_check_one.py
+
+$ git -C ~/projects/dgx-infra log -1 --format="%H %cI %s" -- scripts/ollama_health_check.sh scripts/ollama_check_one.py; git -C ~/projects/dgx-infra status --porcelain -- scripts/    # 2026-11-19T15:01:18.515Z
+b5af93d854060402a33bdf767adfa0ff286d8dbe 2026-11-15T23:55:39+00:00 ollama health check: daily light check, full sweep on Sundays (PI 2026-11-15, OHC-1)
+
+$ awk 'NR>=11&&NR<=18||NR>=32&&NR<=32||NR>=44&&NR<=50||NR>=56&&NR<=57||NR>=144&&NR<=159||NR>=187&&NR<=189||NR>=211&&NR<=227||NR==242||NR>=256&&NR<=260{printf "%4d  %s\n",NR,$0}' ~/projects/dgx-infra/scripts/ollama_health_check.sh    # 2026-11-19T15:01:18.522Z
+  11  # Light / full split (PI 2026-11-15, decision 5; OHC-1). Cron runs this with no
+  12  # arguments every day at 07:00; the mode is chosen here, so crontab is unchanged:
+  13  #   full  — Sundays (UTC): the sweep above, every installed model, keep_alive 0,
+  14  #           standing down while the experiment lock is held.
+  15  #   light — every other day: GET /api/version, /api/ps and /api/tags only, no
+  16  #           POST. Records the resident model and FAILs on any model listed in
+  17  #           ollama_lane_models.txt that is missing from /api/tags. It sends no
+  18  #           load, so it neither consults nor holds the experiment lock.
+  32  MODE="${OLLAMA_HEALTH_MODE:-}"
+  44  if [[ -z "$MODE" ]]; then
+  45    if [[ "$(date -u +%u)" == 7 ]]; then
+  46      MODE=full;  MODE_WHY="Sunday (UTC) full sweep"
+  47    else
+  48      MODE=light; MODE_WHY="weekday light check; full sweep on Sundays (UTC)"
+  49    fi
+  50  fi
+  56  LOGDIR="${OLLAMA_HEALTH_LOGDIR:-$HOME/logs}"
+  57  LOGFILE="$LOGDIR/ollama_health_$(date +%Y%m%d).log"
+ 144  # Light mode sends no load, so it neither opens nor holds the lock: holding it
+ 145  # would only block an experiment from starting during the check.
+ 146  LOCKFILE="${OLLAMA_EXPERIMENT_LOCK:-$HOME/.ollama_experiment.lock}"
+ 147  if [[ "$MODE" == light ]]; then
+ 148    LOCK_STATE="NOT_CONSULTED"
+ 149  else
+ 150    LOCK_OK=true
+ 151    exec 9>>"$LOCKFILE" 2>/dev/null || LOCK_OK=false
+ 152    if ! $LOCK_OK; then
+ 153      LOCK_STATE="ERROR"
+ 154    elif flock -n 9; then
+ 155      LOCK_STATE="ACQUIRED"
+ 156    else
+ 157      LOCK_STATE="HELD"
+ 158    fi
+ 159  fi
+ 187  # ── Light mode: GET only, then the same footer as a full run ─────────────
+ 188  if [[ "$MODE" == light ]]; then
+ 189    light_out=$(timeout "${LIGHT_BACKSTOP_S}s" python3 -I "$CHECK_ONE" light "$LANE_MODELS" 2>/dev/null) && rc=0 || rc=$?
+ 211  # Skip all inference when an experiment owns the box. Note the systemd env
+ 212  # snapshot above still runs: `systemctl show` touches systemd, not Ollama, and
+ 213  # the env-drop canary is the one check worth keeping on a skipped day.
+ 214  if [[ "$LOCK_STATE" == "HELD" ]]; then
+ 215    # Wording matters: morning_digest.sh greps the log for /TIMEOUT|FAIL/i and
+ 216    # reports FAIL on any hit, so this line must contain neither substring. It
+ 217    # must also be non-empty and fresh, or is_stale() reports STALE instead.
+ 218    msg="SKIPPED — experiment lock held ($LOCKFILE)"
+ 219    printf '%s\n' "$msg"
+ 220    {
+ 221      printf '%s\n' "$msg"
+ 222      echo "No models were exercised; no Ollama requests were issued."
+ 223      echo "$SEPARATOR"
+ 224      echo "Done: $(date)"
+ 225    } >> "$LOGFILE"
+ 226    exit 0
+ 227  fi
+ 242  MODELS=$(ollama list 2>/dev/null | tail -n +2 | awk '{print $1}')
+ 256  for model in $MODELS; do
+ 257    model_timeout=${TIMEOUTS[$model]:-$DEFAULT_TIMEOUT}
+ 258    printf "Testing %-30s (%ss) ... " "$model" "$model_timeout"
+ 259    started=$EPOCHREALTIME
+ 260    status=$(timeout "$((model_timeout + BACKSTOP_S))s" python3 -I "$CHECK_ONE" check "$model" "$model_timeout" 2>/dev/null) && rc=0 || rc=$?
+
+$ awk 'NR>=118&&NR<=135||NR>=177&&NR<=189{printf "%4d  %s\n",NR,$0}' ~/projects/dgx-infra/scripts/ollama_check_one.py    # 2026-11-19T15:01:18.527Z
+ 118  def light(lane_file: str) -> tuple[list[str], bool]:
+ 119      """Lines for the log, and whether every line is clean."""
+ 120      lines: list[str] = []
+ 121      ok = True
+ 122  
+ 123      try:
+ 124          version = _get_json("/api/version")["version"]
+ 125          lines.append("Ollama version: " + _clean(str(version))[:ERROR_CHARS])
+ 126      except Exception:  # noqa: BLE001
+ 127          lines.append("Ollama version: FAIL (/api/version unreadable)")
+ 128          ok = False
+ 129  
+ 130      try:
+ 131          resident = _get_json("/api/ps")["models"]
+ 132          if not resident:
+ 133              lines.append("Resident: none")
+ 134          for m in resident:
+ 135              name = _clean(str(m.get("name") or m.get("model") or "?"))
+ 177  def check(model: str, timeout_s: int) -> str:
+ 178      payload = json.dumps({
+ 179          "model": model,
+ 180          "prompt": PROMPT,
+ 181          "stream": False,
+ 182          "keep_alive": KEEP_ALIVE,
+ 183          "options": {"num_ctx": NUM_CTX},
+ 184      }).encode()
+ 185      req = urllib.request.Request(
+ 186          HOST + "/api/generate", data=payload,
+ 187          headers={"Content-Type": "application/json"}, method="POST")
+ 188      try:
+ 189          with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+
+$ grep -nE "urlopen|method=" ~/projects/dgx-infra/scripts/ollama_check_one.py    # 2026-11-19T15:01:18.531Z
+76:    with urllib.request.urlopen(HOST + "/api/ps", timeout=PS_TIMEOUT_S) as resp:
+87:    with urllib.request.urlopen(HOST + path, timeout=PS_TIMEOUT_S) as resp:
+187:        headers={"Content-Type": "application/json"}, method="POST")
+189:        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+
+$ cat /etc/timezone; timedatectl | grep "Time zone"    # 2026-11-19T15:01:18.535Z
+Etc/UTC
+                Time zone: Etc/UTC (UTC, +0000)
+## (ii) the snapshot timer
+
+$ systemctl cat dgx-snapshot-user.timer | grep -E "^OnCalendar|^Persistent|^RandomizedDelay"    # 2026-11-19T15:01:18.608Z
+OnCalendar=*-*-* 10:30:00 UTC
+RandomizedDelaySec=120
+Persistent=true
+
+$ systemctl show dgx-snapshot-user.timer -p LastTriggerUSec -p NextElapseUSecRealtime    # 2026-11-19T15:01:18.616Z
+NextElapseUSecRealtime=Fri 2026-11-20 10:30:07 UTC
+LastTriggerUSec=Thu 2026-11-19 10:31:03 UTC
+## (iii) ollama.service (E7)
+
+$ systemctl show ollama -p ExecMainStartTimestamp -p MainPID -p NRestarts -p RestartUSec    # 2026-11-19T15:01:18.623Z
+RestartUSec=10s
+MainPID=3633749
+NRestarts=0
+ExecMainStartTimestamp=Mon 2026-11-16 00:06:51 UTC
+
+$ systemctl show ollama -p Environment --value | tr " " "\n" | grep "^OLLAMA_KEEP_ALIVE="    # 2026-11-19T15:01:18.630Z
+OLLAMA_KEEP_ALIVE=30m
+
+$ curl -s -m 10 http://127.0.0.1:11434/api/version; echo; curl -s -m 10 http://127.0.0.1:11434/api/ps; echo    # 2026-11-19T15:01:18.638Z
+{"version":"0.21.0"}
+{"models":[]}
+## (iv) ~/scratch/12ai-scri/ (V4, E6)
+
+$ stat -c "mtime %y  %n" ~/scratch/12ai-scri; find ~/scratch/12ai-scri -type d -printf "mtime %TY-%Tm-%Td %TT  %p\n" | sort -k4    # 2026-11-19T15:01:26.455Z
+mtime 2026-11-19 14:26:59.018094229 +0000  /home/ankitsarin/scratch/12ai-scri
+mtime 2026-11-19 14:26:59.0180942290  /home/ankitsarin/scratch/12ai-scri
+mtime 2026-11-19 14:17:18.7053880840  /home/ankitsarin/scratch/12ai-scri/clone_status
+mtime 2026-11-19 14:16:58.5783436780  /home/ankitsarin/scratch/12ai-scri/patches
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs/session-reports
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs/session-reports/session-12
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs/session-reports/session-12/12ae_close
+
+$ cd ~/scratch/12ai-scri && sha256sum SHA256SUMS && wc -c SHA256SUMS && wc -l SHA256SUMS && head -3 SHA256SUMS && sha256sum 12ai_SCRI.md    # 2026-11-19T15:01:26.463Z
+1d834e29bd0b10a05bc536677f481f5b4cd6963850bfffdc3208d5317ab074d2  SHA256SUMS
+9914 SHA256SUMS
+96 SHA256SUMS
+12ai_SCRI.md  22178  7e3bdda1dc59c1c3a3a2d53d70af378d6fa52a6364e660217389b0a9518301ad
+clone_status/12aa-close__clone.txt  0  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+clone_status/12aa-open__clone.txt  0  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+7e3bdda1dc59c1c3a3a2d53d70af378d6fa52a6364e660217389b0a9518301ad  12ai_SCRI.md
+
+$ find ~/scratch/12ai-scri -type f | wc -l; find ~/scratch/12ai-scri -type d | wc -l; du -sb ~/scratch/12ai-scri | cut -f1    # 2026-11-19T15:01:26.472Z
+97
+9
+7477599
+
+$ find ~/scratch/12ai-scri -printf "%y %10s %TY-%Tm-%Td %TT  %P\n" | sort -k5    # 2026-11-19T15:01:46.981Z
+d       4096 2026-11-19 14:26:59.0180942290  
+f      22178 2026-11-19 14:26:58.9230941590  12ai_SCRI.md
+f       9914 2026-11-19 14:26:59.3500944730  SHA256SUMS
+d       4096 2026-11-19 14:17:18.7053880840  clone_status
+f          0 2026-11-19 14:15:12.8251104040  clone_status/12aa-close__clone.txt
+f          0 2026-11-19 14:15:15.2291157060  clone_status/12aa-open__clone.txt
+f          0 2026-11-19 14:15:15.2751158080  clone_status/12aa-u20c__bt_sweep__test_t6_git_state_reads_the_st0__repo.txt
+f         84 2026-11-19 14:15:17.8401214650  clone_status/12ab-close__clone.txt
+f          0 2026-11-19 14:15:20.0501263390  clone_status/12ab-open__clone.txt
+f        328 2026-11-19 14:15:22.5341318170  clone_status/12ab-u21b__parent.txt
+f        104 2026-11-19 14:15:24.8101368370  clone_status/12ab-u21p__clone.txt
+f         84 2026-11-19 14:15:27.4181425890  clone_status/12ac-close__clone.txt
+f          0 2026-11-19 14:15:29.6691475540  clone_status/12ac-open__recount__clone.txt
+f         47 2026-11-19 14:15:31.6951520220  clone_status/12ad-close__recount__clone.txt
+f          0 2026-11-19 14:15:34.0301571720  clone_status/12ad-open__recount__clone.txt
+f         84 2026-11-19 14:15:38.8861678830  clone_status/12ae-close__pre_clone.txt
+f         47 2026-11-19 14:15:36.5691627720  clone_status/12ae-close__recount.txt
+f          0 2026-11-19 14:15:41.5931738530  clone_status/12ae-open__recount__clone.txt
+f        369 2026-11-19 14:15:44.1431794780  clone_status/12ae-u24b__invclone.txt
+f         47 2026-11-19 14:15:47.0641859210  clone_status/12af-close__clone.txt
+f          0 2026-11-19 14:15:49.9391922620  clone_status/12af-open__recount.txt
+f         70 2026-11-19 14:15:52.7541984710  clone_status/12af-u29a__clone.txt
+f         70 2026-11-19 14:15:55.2972040800  clone_status/12af-u30a__clone.txt
+f          0 2026-11-19 14:15:58.1582103910  clone_status/12ag-close__clone.txt
+f        311 2026-11-19 14:16:00.5082155750  clone_status/12ag-n46a__regen_clone.txt
+f          0 2026-11-19 14:16:03.1692214440  clone_status/12ag-open__recount.txt
+f          0 2026-11-19 14:16:05.9282275300  clone_status/12ah-close__clone.txt
+f          0 2026-11-19 14:16:08.8052338760  clone_status/12ah-open__recount.txt
+f        100 2026-11-19 14:16:10.9052385090  clone_status/12r-open__pc_clone.txt
+f         46 2026-11-19 14:16:15.1412478530  clone_status/12s-close__clone.txt
+f         83 2026-11-19 14:16:13.1522434650  clone_status/12s-close__clone2.txt
+f         37 2026-11-19 14:16:17.4112528600  clone_status/12s-open__clone.txt
+f          0 2026-11-19 14:16:19.4242573010  clone_status/12s-open__clone_head.txt
+f         37 2026-11-19 14:16:21.3092614590  clone_status/12s-u14b__clone.txt
+f        376 2026-11-19 14:16:23.5862664820  clone_status/12s-u14b__oldclone.txt
+f         37 2026-11-19 14:16:25.6182709650  clone_status/12s-u15a__clone.txt
+f          0 2026-11-19 14:16:28.0102762410  clone_status/12t-close__clone.txt
+f          0 2026-11-19 14:16:30.4262815710  clone_status/12t-open__clone.txt
+f        365 2026-11-19 14:16:32.8922870110  clone_status/12t-u15b__prefix.txt
+f         37 2026-11-19 14:16:35.2302921690  clone_status/12u-close__clone.txt
+f          0 2026-11-19 14:16:37.6722975560  clone_status/12u-open__clone.txt
+f        519 2026-11-19 14:16:39.7293020940  clone_status/12u-u16b__checkout.txt
+f          9 2026-11-19 14:16:42.0223071530  clone_status/12v-close__clone.txt
+f          9 2026-11-19 14:16:44.4883125930  clone_status/12v-open__clone.txt
+f        139 2026-11-19 14:16:46.7343175480  clone_status/12v-u37b__clone.txt
+f          9 2026-11-19 14:16:49.0673226950  clone_status/12v-u38a__clone.txt
+f          9 2026-11-19 14:16:51.3603277540  clone_status/12v-u38b__clone.txt
+f         83 2026-11-19 14:16:53.5543325940  clone_status/12w-close__clone.txt
+f          0 2026-11-19 14:16:56.1043382200  clone_status/12w-open__clone.txt
+f          0 2026-11-19 14:16:56.1483383170  clone_status/12w-u17b__census__basetemp__test_t6_git_state_reads_the_st0__repo.txt
+f         37 2026-11-19 14:16:58.5433436010  clone_status/12w-u17b__clone.txt
+f          0 2026-11-19 14:17:01.2033494690  clone_status/12x-close__clone.txt
+f          0 2026-11-19 14:17:03.5543546560  clone_status/12x-open__clone.txt
+f          0 2026-11-19 14:17:06.0193600950  clone_status/12x-u39b__clone.txt
+f          0 2026-11-19 14:17:08.5233656190  clone_status/12x-u39c__clone.txt
+f          0 2026-11-19 14:17:10.9523709780  clone_status/12y-close__clone.txt
+f          0 2026-11-19 14:17:13.4353764570  clone_status/12y-open__clone.txt
+f          0 2026-11-19 14:17:16.1143823670  clone_status/12z-close__clone.txt
+f          0 2026-11-19 14:17:18.7053880840  clone_status/12z-open__clone.txt
+f      10774 2026-11-19 14:23:31.1730001480  g1_after.tsv
+f      10774 2026-11-19 14:14:12.5179774130  g1_before.tsv
+f          0 2026-11-19 14:23:31.2420001570  g1_diff.txt
+f       4653 2026-11-19 14:23:31.2400001560  g1_mainstatus_after.txt
+f       4653 2026-11-19 14:14:12.5933415630  g1_mainstatus_before.txt
+f        746 2026-11-19 14:22:17.9360005520  g3_match_proof.txt
+f       4096 2026-11-19 14:22:09.2553039770  g3_random.bin
+f        928 2026-11-19 14:22:26.8729993910  g4_numstat_check.tsv
+d       4096 2026-11-19 14:16:58.5783436780  patches
+f      27347 2026-11-19 14:15:17.9141216280  patches/12ab-close__clone.patch
+f      14448 2026-11-19 14:15:24.8671369630  patches/12ab-u21p__clone.patch
+f      27678 2026-11-19 14:15:27.4961427610  patches/12ac-close__clone.patch
+f      55744 2026-11-19 14:15:38.9601680460  patches/12ae-close__pre_clone.patch
+f      15221 2026-11-19 14:15:44.1841795680  patches/12ae-u24b__invclone.patch
+f       1407 2026-11-19 14:15:52.7801985280  patches/12af-u29a__clone.patch
+f       1407 2026-11-19 14:15:55.3252041420  patches/12af-u30a__clone.patch
+f      40622 2026-11-19 14:16:00.5892157530  patches/12ag-n46a__regen_clone.patch
+f      17022 2026-11-19 14:16:10.9592386280  patches/12r-open__pc_clone.patch
+f      52672 2026-11-19 14:16:13.1952435600  patches/12s-close__clone2.patch
+f       9501 2026-11-19 14:16:17.4572529620  patches/12s-open__clone.patch
+f      28251 2026-11-19 14:16:21.3562615630  patches/12s-u14b__clone.patch
+f      12030 2026-11-19 14:16:23.6142665440  patches/12s-u14b__oldclone.patch
+f      43543 2026-11-19 14:16:25.6682710750  patches/12s-u15a__clone.patch
+f      34427 2026-11-19 14:16:35.2922923060  patches/12u-close__clone.patch
+f      23813 2026-11-19 14:16:53.6183327350  patches/12w-close__clone.patch
+f       6621 2026-11-19 14:16:58.5993437240  patches/12w-u17b__clone.patch
+f       8506 2026-11-19 14:24:43.7880185040  s1_toplevel.tsv
+f      18169 2026-11-19 14:21:03.5990320210  s2_citations.tsv
+f       1848 2026-11-19 14:19:06.3915229890  s3_clone_sizes.tsv
+f       7503 2026-11-19 14:17:18.7303881390  s3_clones.tsv
+f       4293 2026-11-19 14:24:43.6840184660  s3_dirty_sentences.tsv
+f       4108 2026-11-19 14:18:10.0145012960  s3_modified_files.tsv
+f      37279 2026-11-19 14:17:54.1394662680  s3_untracked_ignored.tsv
+f       8717 2026-11-19 14:19:06.3915229890  s4_entries.tsv
+f    2508415 2026-11-19 14:19:06.3915229890  s4_records_with_committed_copy.tsv
+f    4378258 2026-11-19 14:19:06.3915229890  s4_records_without_committed_copy.tsv
+f        238 2026-11-19 14:23:02.1019978810  s4_unique_by_kind.tsv
+f       1531 2026-11-19 14:21:31.1509452260  s6_files.tsv
+f        184 2026-11-19 14:22:49.2407975100  s7_class_totals.tsv
+f      12541 2026-11-19 14:22:49.2407217980  s7_classes.tsv
+d       4096 2026-11-19 14:17:53.9774659110  untracked
+d       4096 2026-11-19 14:17:53.9774659110  untracked/12ae-close__pre_clone
+d       4096 2026-11-19 14:17:53.9774659110  untracked/12ae-close__pre_clone/docs
+d       4096 2026-11-19 14:17:53.9774659110  untracked/12ae-close__pre_clone/docs/session-reports
+d       4096 2026-11-19 14:17:53.9774659110  untracked/12ae-close__pre_clone/docs/session-reports/session-12
+d       4096 2026-11-19 14:17:53.9774659110  untracked/12ae-close__pre_clone/docs/session-reports/session-12/12ae_close
+f       1962 2026-11-09 23:07:00.4368625690  untracked/12ae-close__pre_clone/docs/session-reports/session-12/12ae_close/recount_12ae_close.json
+
+$ python3 -I -B ~/scratch/12ai-open/helpers/scri_check.py ~/scratch/12ai-scri SHA256SUMS    # 2026-11-19T15:01:46.987Z
+SHA256SUMS: lines 96 match 96 mismatch 0 (distinct names 96)
+files under the directory (recursive): 97; not named by the list: 1: ['SHA256SUMS']
+
+$ stat -c "mtime %y  %n" ~/scratch/12ai-scri; find ~/scratch/12ai-scri -type d -printf "mtime %TY-%Tm-%Td %TT  %p\n" | sort -k4; find ~/scratch/12ai-scri -newer ~/scratch/12ai-scri/SHA256SUMS -print | grep -v "^/home/ankitsarin/scratch/12ai-scri$" | wc -l; find ~/scratch/12ai-scri -name __pycache__ | wc -l    # 2026-11-19T15:01:47.028Z
+mtime 2026-11-19 14:26:59.018094229 +0000  /home/ankitsarin/scratch/12ai-scri
+mtime 2026-11-19 14:26:59.0180942290  /home/ankitsarin/scratch/12ai-scri
+mtime 2026-11-19 14:17:18.7053880840  /home/ankitsarin/scratch/12ai-scri/clone_status
+mtime 2026-11-19 14:16:58.5783436780  /home/ankitsarin/scratch/12ai-scri/patches
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs/session-reports
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs/session-reports/session-12
+mtime 2026-11-19 14:17:53.9774659110  /home/ankitsarin/scratch/12ai-scri/untracked/12ae-close__pre_clone/docs/session-reports/session-12/12ae_close
+0
+0
+## (vi) how this open's config is supplied (R11)
+
+$ cd ~/projects/evidence-engine && sed -n 2p docs/session-reports/tools/session_open_check.py    # 2026-11-19T15:02:05.161Z
+"""The session-open check (R746(e)(iii)). usage, from the repository root: session_open_check.py <expected.json>
+
+$ ls -la --time-style=full-iso ~/scratch/12ah-open/expected_12ah.json && sha256sum ~/scratch/12ah-open/expected_12ah.json    # 2026-11-19T15:02:05.165Z
+-rw-r--r-- 1 ankitsarin ankitsarin 3629 2026-11-19 04:50:39.493897228 +0000 /home/ankitsarin/scratch/12ah-open/expected_12ah.json
+f9d0ae8418ed4e9b6e67f53b90477ce9eb6b5289b54a3ed5254d1963d9c3f11d  /home/ankitsarin/scratch/12ah-open/expected_12ah.json
+
+$ cd ~/projects/evidence-engine && git ls-files | grep -iE "expected.*\.json$" | cat; echo "(committed expected*.json: above; empty = none)"    # 2026-11-19T15:02:05.170Z
+docs/session-reports/session-12/12aa_SETUP/open_expected_validation.json
+(committed expected*.json: above; empty = none)
+
+## notes and readings (CC's, from the lines above)
+- (v) read first, before 0b's fetch. FETCH_HEAD was written 2026-11-19 14:37:49.90 UTC, inside the interim session's span
+  (bf3224f8: first 14:13:44.358Z, last 14:38:56.375Z by its record, 0f), and names only b13b5eb… (branch main). The reflogs of
+  HEAD, main and origin/main carry no entry after 2026-11-19 06:31:49 UTC (the 12ah closeout push); every ref is at
+  b13b5eb23c86c5da9df566d9e59a9764c7831335. The interim fetch changed no ref: I6's part (v) TRUE.
+- (i) One crontab entry, line 7, "0 7 * * *", byte-equal to R12's line; no environment line; box time zone Etc/UTC. The script
+  resolves to dgx-infra scripts/ollama_health_check.sh, sha256 42c11f18…de50b (equal to R12's), its helper 971a03f9…188b, both
+  last changed at dgx-infra b5af93d (2026-11-15T23:55:39Z), dgx-infra scripts/ clean. Mode (:44-50): full only when `date -u
+  +%u` is 7 (Sunday UTC), else light; the cron line passes no argument and sets no OLLAMA_HEALTH_MODE (:32). The only POST
+  (/api/generate) is check() (helper :177-189), called from the full sweep's loop (:256-260); light mode's light() issues GETs
+  only and takes no lock (:147-148). Full mode flock -n's the lock and stands down when HELD (:214-227). So the scheduled job
+  loads models on Sunday UTC only, from 07:00 UTC, inside R812(a)'s Sunday window: I5 TRUE, unchanged from R813(b)'s reading.
+- (ii) dgx-snapshot-user.timer: OnCalendar 10:30:00 UTC, RandomizedDelaySec 120, Persistent; last 2026-11-19 10:31:03 UTC, next
+  2026-11-20 10:30:07 UTC.
+- (iii) ollama.service: start Mon 2026-11-16 00:06:51 UTC, MainPID 3633749, NRestarts 0, RestartUSec 10s, OLLAMA_KEEP_ALIVE=30m;
+  0.21.0; /api/ps empty. Equal to V7 (E7's digests are read by the open check at 3b).
+- (iv) SHA256SUMS: sha256 1d834e29bd0b10a05bc536677f481f5b4cd6963850bfffdc3208d5317ab074d2, 9,914 B, 96 lines, line form
+  "<relative path>  <bytes>  <sha256>". 96 lines, 96 match, 0 mismatch; 12ai_SCRI.md 7e3bdda1…301ad equal to V4; 97 files under
+  the directory (9 directories, 7,477,599 B by du -sb), the one the list does not name being SHA256SUMS itself. Every directory's
+  mtime is the same before and after the check; no __pycache__ under it. E6 TRUE.
+- (vi) session_open_check.py takes one argument, the expected-values JSON. ~/scratch/12ah-open/expected_12ah.json exists
+  (sha256 f9d0ae84…f11d). No committed file is named expected_12*.json (R11 holds), but one committed file holds an
+  expected-values config in the tool's fourteen-section shape: docs/session-reports/session-12/12aa_SETUP/open_expected_validation.json
+  (the 12aa tool-validation run's config, its repos at ca12c30 / ea127df); no value of this open is taken from it. This open writes ~/scratch/12ai-open/expected_12ai.json
+  at 3a and passes it by path; the 12ah file is a shape model only.

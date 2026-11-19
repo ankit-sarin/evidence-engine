@@ -1,0 +1,16 @@
+Running as unit: gate-12ai_open.service; invocation ID: de7f9212d42347deb51833a8b89bf9fb
+2026-11-19T15:09:17.750228497Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-12ai_open --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ai-open/gate_12ai_open/run_gate.sh /home/ankitsarin/scratch/12ai-open/gate_12ai_open 12ai_open docs/session-reports/session-12/12ah_close/collected_ids_12ah_close.txt docs/session-reports/session-12/12ah_close/durations_12ah_open.txt 
+● gate-12ai_open.service - /usr/bin/bash /home/ankitsarin/scratch/12ai-open/gate_12ai_open/run_gate.sh /home/ankitsarin/scratch/12ai-open/gate_12ai_open 12ai_open docs/session-reports/session-12/12ah_close/collected_ids_12ah_close.txt docs/session-reports/session-12/12ah_close/durations_12ah_open.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-12ai_open.service; transient)
+  Transient: yes
+     Active: active (running) since Thu 2026-11-19 15:09:17 UTC; 6ms ago
+   Main PID: 54367 (bash)
+      Tasks: 2 (limit: 153552)
+     Memory: 1.5M (peak: 1.7M)
+        CPU: 5ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-12ai_open.service
+             └─54367 /usr/bin/bash /home/ankitsarin/scratch/12ai-open/gate_12ai_open/run_gate.sh /home/ankitsarin/scratch/12ai-open/gate_12ai_open 12ai_open docs/session-reports/session-12/12ah_close/collected_ids_12ah_close.txt docs/session-reports/session-12/12ah_close/durations_12ah_open.txt
+
+Nov 19 15:09:17 spark-59e4 systemd[2694]: Started gate-12ai_open.service - /usr/bin/bash /home/ankitsarin/scratch/12ai-open/gate_12ai_open/run_gate.sh /home/ankitsarin/scratch/12ai-open/gate_12ai_open 12ai_open docs/session-reports/session-12/12ah_close/collected_ids_12ah_close.txt docs/session-reports/session-12/12ah_close/durations_12ah_open.txt.
+Linger=yes

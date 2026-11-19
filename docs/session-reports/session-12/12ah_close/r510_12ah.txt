@@ -1,0 +1,4 @@
+# R510 for session 12ah: six-cell INT- rows at 35a914b (HEAD at the 12ah open, the 12ag closeout) and at 9fed148 (12ah-CLOSE item 0)
+35a914b: 213; 9fed148: 213; rows in 0 []; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first token of the Owning-package cell compared, row by row)
+method: lines starting '| INT-' with six ' | '-separated cells, as 12ag_close/r510_12ag.txt's method line

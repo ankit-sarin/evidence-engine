@@ -1,0 +1,19 @@
+receipts 21 [('022_run_kinds_and_audit_tables', 'da1f31c82db6426efd634845f5573f39c75530677037c408a539b010f9ada67b')]
+arms [('local', 'not recorded (pre-manifest)', None), ('anthropic_sonnet_4_6', 'not recorded (pre-manifest)', None), ('openai_o4_mini_high', 'not recorded (pre-manifest)', None)]
+paper_events 190
+parsed_text_refs 194
+review_identities 3
+field_events 0
+run_manifests 0
+run_stage_configs 0
+run_calls 0
+claim_inputs 0
+audit_verdicts 0
+refs with sha 194
+multi-version papers [(455, '2,3'), (586, '2,3'), (699, '2,3'), (719, '2,3')]
+papers [('ABSTRACT_SCREENED_OUT', 9647), ('AI_AUDIT_COMPLETE', 190), ('FT_SCREENED_OUT', 171), ('PDF_EXCLUDED', 31)] 10039
+workflow_state [(1, 'ABSTRACT_SCREENING_COMPLETE', 'complete', '2026-03-10T05:36:32.109457+00:00', 'Original 251 papers screened (95 in, 156 out) + expanded search 9787 papers (958 include, 8818 exclude, 11 flagged) + verification (553 confirmed, 405 flagged)'), (2, 'ABSTRACT_DIAGNOSTIC_COMPLETE', 'complete', '2026-03-10T05:42:13.681951+00:00', 'FP analysis done during initial categorizer build — 7 FP categories identified from 416 flagged papers'), (3, 'ABSTRACT_CATEGORIES_CONFIGURED', 'complete', '2026-03-10T05:48:19.339509+00:00', '7 categories loaded'), (4, 'ABSTRACT_QUEUE_EXPORTED', 'complete', '2026-03-10T05:48:19.634614+00:00', '416 papers exported to data/surgical_autonomy/adjudication/screening_queue_20260310.xlsx'), (5, 'ABSTRACT_ADJUDICATION_COMPLETE', 'complete', '2026-03-12T05:37:12.242426+00:00', '416 expanded-search papers excluded via human review (screening_queue_20260310.xlsx). 0 missing, 0 invalid decisions.'), (6, 'EXTRACTION_COMPLETE', 'pending', None, None), (7, 'AI_AUDIT_COMPLETE_STAGE', 'pending', None, None), (8, 'AUDIT_QUEUE_EXPORTED', 'pending', None, None), (9, 'AUDIT_REVIEW_COMPLETE', 'pending', None, None), (10, 'PDF_ACQUISITION', 'pending', None, None), (11, 'FULL_TEXT_SCREENING_COMPLETE', 'complete', '2026-03-14T23:55:25.554742+00:00', '143 confirmed, 36 flagged'), (12, 'FULL_TEXT_ADJUDICATION_COMPLETE', 'complete', '2026-03-15T04:55:49.856126+00:00', '31 eligible, 5 screened out (of 36 total)')]
+prisma {'eligible': None, 'extraction_in_progress': 190, 'verification_pending': 0, 'total_identified': None} | keys: ['duplicates_removed', 'eligibility_excluded_total', 'eligibility_exclusions', 'exclusion_reasons', 'extracted_incomplete', 'extraction_failed', 'extraction_in_progress', 'failure_reasons', 'ft_ai_primary', 'ft_flagged', 'ft_pi_adjudicated', 'ft_screened_out', 'full_text_assessed', 'full_text_not_obtainable', 'full_text_retrieved', 'incomplete_fields', 'input_exceeds_context', 'n_eligible', 'parse_failed', 'pdf_eligibility_exclusions', 'pdf_excluded', 'pdf_exclusion_reasons', 'records_by_source', 'records_excluded', 'records_identified', 'records_screened', 'reports_not_retrieved', 'reports_sought', 'screen_flagged', 'screening_in_progress', 'studies_included', 'verification_pending']
+prisma valid {'valid': True, 'total_db': 10039, 'total_prisma': 10039, 'discrepancy': 0, 'verification_pending': 0, 'details': []}
+selection 190 0 0
+hash baseline entries 194 mismatches 0

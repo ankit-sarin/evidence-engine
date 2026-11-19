@@ -5714,6 +5714,176 @@ Expected values at session-12ah open, as at this closeout (2026-11-14):
 - **12ah-OPEN**, run outside 07:00–10:35 UTC, the clock read beside the day boundary (R775(d)). Its item 0 transcribes R811 (the wrap ruling) as the next block by `transcribe_ruling.py` and copies the 12ag lane-line file into `12ag_close/`. It runs `session_open_check.py` and the explicit steps R747(b) names (the recount, the R510 count, the nightly's ids against the expected set, the health job's journal read), reads the 2026-11-15 and later jobs as R749(b)–(c) place them against `12af_close/expected_nightly_20261111.md`, and runs the startup verify against this block, its gate launched as a unit.
 - **U30's build**, one brief, from `12af_U30A/12af_U30A.md`, `12ag_N46A/12ag_N46A.md` and the rulings on them (R805(d), R807(b)).
 
+Session 12ah closed 2026-11-19 UTC; opened 2026-11-19 04:39 UTC on `35a914b2bdd75147af104e5abfaea388eae3a057`, the 12ag closeout, CC session `65ffbac0` (one session; its record's first entries, 2026-11-16 04:43–04:44 UTC, are the first paste of 12ah-OPEN stopping on its own TIMING with nothing written, R813(a); the work ran from 2026-11-19 04:39 UTC). Before the open, the interim CC session `c72bc042` (2026-11-15 23:53 to 2026-11-16 00:42 UTC) ran the read-only 12ah-OLRA read-out to scratch and committed nothing; it is counted with this session from the commit of its files (R813(f)). **No fix unit landed. The no-live-write window is ruled by UTC day — 09:00–10:35 UTC Monday to Saturday, 07:00–10:35 UTC on Sunday (R812(a), standing) — and its basis was measured from the health job's own schedule and script (R813(b)). The interim read-out 12ah-OLRA is in the record with its evidence (`6dc36b3`), behind a credential scan. The restart change's design is not ruled. The recount reads 287.** No commit to the engine tree or the tools; no live write; no model call — every Ollama request a read-only reading, and the gate's journal window empty of loads. `docs/plan/STANDING_RULES.md` was regenerated once, at `34ff8a7`. The PI closed the session after the interim read-out's commit (R814(e)); 12ai opens, then the restart change's design ruling. Briefs, in order:
+- the interim session's 12ah-OLRA, the restart paths' Phase A read-out, with its rulings-and-resumes 12ah-OLRA-R1 and 12ah-OLRA-R2 and its close ruling 12ah-OLRA-CLOSE (interim rulings, not numbered in this log; committed under `12ah_OLRA/`);
+- 12ah-OPEN (R811 and R812 at item 0);
+- 12ah-OLRA-REC, the interim read-out's files into the record (stopped at its step 2c; R813 carried in it), and its resume 12ah-OLRA-REC-R1 (R813 and R814 at item 0);
+- this closeout, 12ah-CLOSE (R815 at item 0).
+
+Each committed brief file of this session is byte-equal to the architect's copy, three of three as the rulings record it: `12ah_open/brief_12ah_OPEN.md` `3ed2db46…0bd8` (R813(a)), `12ah_OLRA/brief_12ah_OLRA_REC.md` `86a9e5f0…7141` and `brief_12ah_OLRA_REC_R1.md` `ef714924…6fab` (R815(a)); this closeout's, `12ah_CLOSE/brief_12ah_CLOSE.md` `f860358d…aa6a`, is compared by the wrap ruling. The interim briefs are recorded by their own list, `12ah_OLRA/SHA256SUMS`, each line a match against the committed file: `brief_12ah_OLRA.md` `9ef43e27…354d`, `brief_12ah_OLRA_R1.md` `ed24c8da…3f7d`, `brief_12ah_OLRA_R2.md` `0fa58829…8a66`, `brief_12ah_OLRA_CLOSE.md` `774a0f71…6987`.
+
+**Commits, in order** (each hash read from `git log 35a914b..HEAD`; its claude-config ledger commit beside it, found by its row):
+
+- `34ff8a7` — item 0 of the open: R811 and R812 (Blocks 209–210), "A R812(a)" on the standing-rules list, the file regenerated, the 12ag lane-line copy, the brief file. Ledger `0e16bf7`.
+- `c412033` — the open's gate evidence, `12ah_open/gate_12ah_open/`; the 2026-11-15 to 11-18 job reads into `12ag_close/`; the between-session readings, `12ah_open/between_sessions_read.txt`. Ledger `d46c74d`.
+- `6dc36b3` — item 0 of 12ah-OLRA-REC as resumed under R814: R813 and R814 (Blocks 211–212); the twenty-seven files of the interim read-out under `12ah_OLRA/`, with the scan's evidence; the brief and resume files. Ledger `b0bb0ba`.
+- `9fed148` — item 0 of this closeout: R815 (Block 213), the brief file; no standing rule. Ledger `43473fc`.
+- **This closeout** — the commit that carries this paragraph, the child of `9fed148`: this closure, the 12ai expected values, and `docs/session-reports/session-12/12ah_close/`'s measurements.
+
+`git diff --stat 35a914b HEAD -- engine tests scripts analysis review_specs` is empty (`12ah_close/diff_engine_since_35a914b.txt`), and so is the same diff from `977c499` (`12ah_close/diff_since_977c499.txt`); from `f4a5586` it lists 96 files, 6,609 insertions, 345 deletions (`12ah_close/diff_since_f4a5586.txt`). `git diff --stat 35a914b HEAD -- docs/session-reports/tools` is empty, so no tools diff file is written. The live spec's sha256 is `aeb90ba8…8b33` and the codebook's `89dbfa91…ad82`, both unchanged (`12ah_close/codebook_spec_sha256.txt`); both pins and the audit `prompt_hash` are byte-identical to 12ag's (`12ah_close/pin_tuples_close.json`), and no request byte moved.
+
+**Rulings R811–R815 this session. All are transcribed and the decision log in this file ends at R815; R816, the wrap ruling, is transcribed at 12ai-OPEN's item 0 by `transcribe_ruling.py`.** R811 was made at the 12ag wrap (2026-11-14) and transcribed at 12ah-OPEN (Block 209), so its transcribed and made dates differ (R775(a)).
+
+- R811 — the 12ag wrap: closeout accepted; the band 894–1092 s; three stops in 12ag, each the architect's, no pause; the lane line approved and applied; 12ah-OPEN, then U30's build.
+- R812 — the no-live-write window from 12ah: 09:00–10:35 UTC Monday to Saturday and 07:00–10:35 UTC on Sunday, by UTC day, the gate hold's clock the day's opening (standing, (a)); amends R86 and R749(b) in timing only; CLAUDE.md's line to be corrected with the next brief that edits CLAUDE.md ((c)).
+- R813 — 12ah-OPEN accepted; R812's basis measured ((b)); 978.22 s the series' forty-third member; the PI's "A": the interim read-out's twenty-one top-level files committed behind a credential scan; two tools items.
+- R814 — 12ah-OLRA-REC's stop at its step 2c is correct and the architect's; the PI's "1 then close": work/'s six files committed too, R813(d) amended; two of R813's readings corrected; the session closes after the commit.
+- R815 — 12ah-OLRA-REC-R1 accepted: the twenty-seven files in the record, scanned and verified by their own lists; no closeout gate; no standing rule.
+
+**Notes and readings recorded this session** (cell notes and readings with no row): no cell note was written — R805(d) places the INT-i12-71 notes at U30's build brief's item 0 and R807(c) the INT-j12-51 and N46 notes at the item 0 after U30 lands. Readings, no row: R812(c), R813(e), R814(d), R815(b), R815(d).
+
+**The rows (R510: in 0, out 0).** No row was opened or closed.
+
+**The stops and the pauses, for the record, listed from the rulings.** One stop, the architect's:
+- 12ah-OLRA-REC at its step 2c (R814(a)): its gate required every line of the committed lists to match a committed file while R813(d) kept work/'s six listed files out; nothing was committed and the tree was restored to `c412033`.
+
+The first paste of 12ah-OPEN stopped on its own TIMING with nothing written and is not a stop of the session (R813(a)). No pause; no brief reached a day's window. **The architect's errors, as the rulings count them: three** (R814(c)) — tool paths written short; a premise passed on unchecked (that no list covers work/, from CC's own wrong 12ah-OPEN finding 5, corrected by CC); a gate that contradicted the ruling beside it; none reaching a commit.
+
+**The tools.**
+- `transcribe_ruling.py` wrote Blocks 209–213.
+- `extract_rules.py` regenerated `STANDING_RULES.md` once, at `34ff8a7` (R812(d)), by the command with both glosses files rebuilt from `b7e5fb1`'s own inputs and reproducing that commit's file but for two path lines (R813(e)): Tier A 91, Tier B 8, 99 of 1716 clauses; every changed line within R766(b)'s kinds.
+- `session_open_check.py` ran at 12ah-OPEN with the explicit steps beside it.
+- `launch_gate.sh` and `run_gate.sh` ran the open's gate as the unit `gate-12ah_open`.
+- No tools change. The tools items carried from 12ag, unchanged: R752(c), R765(d), R766(d), R784(d), R791(c) finding 4, R793(e) finding 3, and the launcher's unexercised failed-launch path (R810(c)). With them two more (R813(e)): the open check's health section cannot read a light-check day, and with a count of zero it reads the whole log; the open check has no key for the Ollama service start.
+
+**The no-live-write window (R812, R813(b)).**
+- As ruled (R812(a), standing): 09:00–10:35 UTC Monday to Saturday (the 09:00 nightly suite and the 10:30 snapshot timer) and 07:00–10:35 UTC on Sunday (the full health sweep), by UTC day; a brief is valid outside the day's window and a gate exits before the day's window opens; R805(f)'s hold is bounded by the day's opening. It amends R86 and R749(b) in timing only; earlier clauses, briefs and blocks that say "07:00–10:35 UTC" are read as the day's window, unedited (R812(b)).
+- Its basis, measured at 12ah-OPEN's step 0h (`12ah_open/between_sessions_read.txt`): one crontab entry, `0 7 * * *`, the box on Etc/UTC; the script (`dgx-infra` `scripts/ollama_health_check.sh`, from `b5af93d`) chooses the full sweep only when `date -u +%u` is 7, else the light check of three GET requests and no lock; the full sweep stands down on a held experiment lock (read, not exercised). R812's blocking item held (R813(b)).
+- CLAUDE.md's no-live-write line still states 07:00–10:35 UTC; its correction is owed, as quoted text, with the next brief that edits CLAUDE.md (R812(c)).
+
+**The host changes made in the dgx-infra lane** (readings, `12ah_open/between_sessions_read.txt`, `12ah_close/host_state_close.txt`):
+- Ollama restarted 2026-11-16 00:06:51 UTC (MainPID 3633749), `OLLAMA_KEEP_ALIVE=30m` (was −1), `RestartUSec` 10 s; `NRestarts` 0 since.
+- The 07:00 health job: from 2026-11-16, a light check Monday to Saturday (GET `/api/version`, `/api/ps`, `/api/tags`; no load, no lock) and the full twenty-model sweep on Sunday; the 2026-11-15 sweep ran on the script before the change.
+
+**The interim read-out (R813(d), R814(b), R815(b)–(c)).** The interim CC session `c72bc042` ran task 12ah-OLRA, the Ollama restart paths' Phase A read-out, read-only, to `~/scratch/12ah-olra/`. Its twenty-seven files — twenty-one at the top level and work/'s six — are committed under `12ah_OLRA/` (`6dc36b3`), each sha256-equal to its source, every line of the three lists `SHA256SUMS`, `SHA256SUMS_add1` and `SHA256SUMS_close` a match against the committed files (24 / 24). A credential scan (`12ah_OLRA/rec_scan.py`, its outputs `rec_credential_scan.txt` and `rec_credential_scan_work.txt`) found no stop-class hit on any of the twenty-seven, on a negative control that flagged all seventeen classes; its reading-class hits (paths, quoted sudoers lines, the all-interfaces address, one no-reply address) were accepted for publication. Two of the files come from other lanes (`OLR-1_REPORT.md`, the workbench handoff; `q10_7c74c2b_primer_diff.txt`, a diff of claude-config's primer), their publication accepted by the PI. The read-out `12ah_OLRA/12ah_OLRA.md` and its addendum `12ah_OLRA_add1.md` are this lane's record and are not edited. **The restart change's design is not ruled in 12ah, and nothing in this closure states it.**
+
+**Carried forward.**
+- **The restart change:** its design ruling, quoting `12ah_OLRA/12ah_OLRA.md` and `12ah_OLRA_add1.md` from the committed files; then its build as one engine-commit brief; the merge sha reported to the workbench (R813(g)).
+- **U30's build,** one brief, with N46's drop (R807(b)). The INT-i12-71 notes come at its item 0 (R805(d)); INT-j12-51's CLOSED note, with N46 noted as the same finding, at the item 0 after it lands (R807(c)). Then U31–U36.
+- **The items the 12ag closure carried that 12ah did not touch:**
+  - N46's open items (R807(d));
+  - the optional-field defaults in the two accessors (R801(f));
+  - whether a truncated response that a repair completes may be stored (U31, R800(c));
+  - a token of its own for a truncated or refused output on both paths, and the local path's output-length stop recorded `completed` (023, R800(c));
+  - the retry budget (INT-ae12-2, R801(e));
+  - INT-af12-1 (P5);
+  - A15's per-arm axis (F15);
+  - `base.py`'s `getattr` on `model_string` (P7, R800(g));
+  - the stage-key question of `12f_C56-A.md:717`, untraced;
+  - the provider-keys reading (R808(e));
+  - the tools items, now nine with R813(e)'s two.
+- **CLAUDE.md's no-live-write line,** its correction owed with the next brief that edits CLAUDE.md (R812(c)).
+- **The cross-lane readings for dgx-infra (R813(e)):**
+  - the eighteen `NV_ERR_NO_MEMORY` lines of the 2026-11-15 sweep, all inside its 07:00 window (`12ah_close/nvrm_this_boot_20261119.txt`);
+  - other lanes' model loads outside the health windows: gemma2:27b, qwen2.5:32b and mistral:7b, six each by POST `/api/chat`, at 2026-11-15 22:05 and 2026-11-16 06:09 and 06:32 UTC, none in a nightly window (read at 12ah-OPEN);
+  - other lanes' commits in claude-config: the eighteen between `a2bbd81` and `7d89d6b` (read at 12ah-OPEN's step 0d), each another lane's ledger rows or primer lines at line 353 or later, accepted under R663(b);
+  - the user manager still degraded on `run-u134.scope` and `update-notifier-crash.service`, neither this lane's, nothing cleared (R808(e));
+  - a suite starting inside a gate's window after both snapshots (R805(b)), carried from 12ag.
+- **The nightly files' succession:** `12af_close/expected_nightly_20261111.md` governs each nightly while the engine tree stays `977c499`'s, 2026-11-19 and later included.
+
+**Measured — the session's gate.** With 2 warnings (sklearn's), no phase slower than its comparison by more than 10 s, nothing resident before or after (`ollama_reads_before.txt` / `_after.txt`), and its journal window empty of loads:
+
+| gate | tree | launch | result | collected | wall | concurrent jobs |
+| --- | --- | --- | --- | --- | --- | --- |
+| 12ah-OPEN | `34ff8a7` (engine tree equal to `977c499`'s) | `systemd-run --user`, `gate-12ah_open`, LimitNOFILE 500000, LANG C.UTF-8 (R808, R809) | 3,573 / 1 xfailed / 17 deselected | 3,574 of 3,591; 0/0 | 978.22 s, standard, the second launched as a unit (R813(c)) | uvicorn pid 4130743; the hold not needed |
+
+**The band, a figure for the wrap ruling.** The series of forty-three is the forty-two of `12ag_close/band_computation.txt` plus 978.22 s, read from the gate's `gate_wall.txt`.
+- **The inputs:** the last four standard gates on this host state — U29 979.95, 12ag-OPEN 1042.65 (confounded, R805(b)), the 12ag unit gate 982.43 and the 12ah-OPEN gate 978.22, the last two launched as units.
+- **The figure:** a mean of 995.81 s; ×0.9 is 896.231 and ×1.1 is 1095.394, rounded inward as R683(c) rounded: **897–1095 s** (`12ah_close/band_computation.txt`, each gate's launch and concurrent jobs described there; the brief's expectation matched).
+- It is a figure, not a band in force; the band in force stays 894–1092 s until the wrap ruling sets 12ai's (R813(c)).
+
+**The jobs.**
+- **2026-11-15 to 11-18:** those health jobs and nightlies were read at 12ah-OPEN, their files in `12ag_close/` (`health_job_20261115.txt` to `health_job_20261118.txt` with their journals, nightly and ids files, and `nvrm_this_boot_20261119_read.txt`). The 2026-11-15 health job was the full sweep, 20 of 20, no failure, on the script before the change; 2026-11-16 to 11-18 were light checks, three GET requests each and no load. Each nightly matched `12af_close/expected_nightly_20261111.md` line for line, ids 3,574 with 0 / 0, on HEAD `35a914b` by the reflog method, whose engine tree is `977c499`'s.
+- **After the 2026-11-18 pair:** no job had run when this closeout read (2026-11-19 06:28 UTC, before the 07:00 light check); no job file is written here.
+- **From 2026-11-16 the health job is a light check Monday to Saturday and the full sweep on Sunday (R813(b)).** Each nightly from 2026-11-19 is governed by `12af_close/expected_nightly_20261111.md` while the engine tree stays unchanged (R749(b)). No new expected-nightly file is written.
+
+**Measured — the recount.**
+- **No new recount script:** no row was opened in 12ah (R678(f)). `12af_close/recount_12af_close.py` was run in a scratch clone on the plan at `9fed148`, with the nine plan arguments its docstring names. Its JSON was byte-equal to the committed `12af_close/recount_12af_close.json` (`3657ce2f…15a5`).
+- **The counts:** **287 rows — Class 1 / 2 / 3 = 94 / 57 / 136, 0 without a class**; fix units by the dated lines **38, done 33**; `expected_holds` true.
+- **R510 for session 12ah** (`12ah_close/r510_12ah.txt`): 213 six-cell INT- rows at `35a914b` and at `9fed148`; rows in 0, rows out 0, no class or package move.
+
+**Retention (R675(b)), `12ah_close/retention_close.txt`.**
+- 23 MATCH / 0 MISMATCH, by `review.db` file sha256 against `12ag_close/retention_close.txt`, none opened.
+- The 12v probe-scratch entry: requests 10 of 10 and responses 53 of 53 equal to the 12v record by file sha256, hashed at this closeout.
+- No new entry: 12ah ran no probe and no server.
+- `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+
+**Ledger.** Every evidence-engine commit's row is committed; this closeout's row is settled at its step 2h. Each message was built from the diff, and every ledger commit of this session carried no foreign row. Before this lane's first ledger commit of the session, other lanes had committed eighteen times to claude-config without rows of this lane (the readings above), each accepted under R663(b); between this lane's ledger commits, none.
+
+**Counterpart files.** `12ah_close/` follows `12ag_close/`'s names with 12ah's sources:
+- **Renamed for this session:** the diff files take this session's base (`diff_engine_since_35a914b.txt`); the dated files take this closeout's date (`earlyoom_grep_20261119.txt`, `nvrm_this_boot_20261119.txt`); the copies are of the 12ah-OPEN gate's lists (`collected_ids_12ah_close.txt`, equal to `12ag_close/collected_ids_12ag_close.txt`, and `durations_12ah_open.txt`); `r510_12ah.txt` stands where `r510_12ag.txt` stood.
+- **Names in `12ag_close/` with no 12ah source, not written:**
+  - `diff_tools_since_54266b7.txt`: the tools are unchanged since `35a914b`, so no tools diff file is written.
+  - `health_job_`, `health_journal_`, `nightly_` and `nightly_ids_` with a 12ah closeout date, and `nvrm_this_boot_<date>_read.txt`: no job ran after the 2026-11-18 pair before this read; 2026-11-15 to 11-18 were read at 12ah-OPEN into `12ag_close/`.
+  - `r811.txt` and `lane_line_12ag.txt` (the 12ah-OPEN copies in `12ag_close/`): their counterparts are R816, not yet ruled, and the 12ah lane line, which stays in `~/scratch/12ah-close/` until 12ai-OPEN copies it.
+- **Not written, as in 12ag:** `recount_12af_close.py` and its JSON (no row opened; the 12af script ran and its JSON is unchanged); `expected_nightly_20261111.md` (the engine tree is unchanged, so 12af's governs).
+- **Where else:** R812–R815 are in `12ah_open/`, as the session's item 0s placed them; the interim read-out and its scan's evidence are in `12ah_OLRA/`.
+
+**The host, 2026-11-19** (dated facts, `12ah_close/host_state_close.txt`).
+- **Band values** equal 12ag's: kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02.
+- **Boot and service:** boot `abf99132-fd8b-41f9-b9fd-62241e40110c`; Ollama started 2026-11-16 00:06:51 UTC (the dgx-infra lane's restart, a reading; 12ag's start was 2026-10-17 23:04:05 UTC), MainPID 3633749, `NRestarts` 0, `RestartUSec` 10 s, `OLLAMA_KEEP_ALIVE=30m`; version 0.21.0; the five digests unchanged (`12ah_close/ollama_reads.txt`).
+- **The health job:** `0 7 * * *` in the crontab; its script's sha256 `42c11f18…de50b` (readings in `host_state_close.txt`).
+- **earlyoom:** active, `--prefer ^ollama$`; 0 kill lines this boot by its kill wording (`12ah_close/earlyoom_grep_20261119.txt`).
+- **NVRM:** `NV_ERR_NO_MEMORY` fifty-five this boot, the last at 2026-11-15 07:03:19 UTC, each of the eighteen since 12ag's thirty-seven inside the 2026-11-15 sweep's 07:00 window (`12ah_close/nvrm_this_boot_20261119.txt`).
+- **The user manager:** degraded, its failed units `run-u134.scope` and `update-notifier-crash.service`, neither this lane's, nothing cleared; Linger yes; no `gate-*` unit loaded (readings in `host_state_close.txt`).
+- **Concurrent work beside this session's gate:** surgical-cv's uvicorn server (pid 4130743), the one job the gate's snapshots name; none a model load.
+- **Temp root** (`12ah_close/temp_root_close.txt`): `pytest-1147`, `-1148`, `-1149` and `pytest-current` → `pytest-1149`; 1,444,028,059 B by the root's own `du -sb` (the combined line reads 0, as the file says). `pytest-1148` is the 12ah-OPEN gate's; `-1149` is that open's step-3f collection and eligibility run; `-1147` is another lane's, from 01:57 UTC on 2026-11-19. Nothing emptied.
+
+**Live.** Never written. `db_fingerprint --compare` against the migration-02 record was IDENTICAL at every check of the session (overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`), and is re-taken for this commit (`12ah_close/fingerprint_close.txt`, with the Ollama reads in `12ah_close/ollama_reads.txt`). `dbchecks_close.txt` and `pin_tuples_close.json` are byte-identical to `12ag_close/dbchecks_close.txt` and `12ag_close/pin_tuples_close.json`.
+
+**Session 12ah closed.** Next: session 12ai, fresh.
+
+Expected values at session-12ai open, as at this closeout (2026-11-19):
+- **HEAD:** the 12ah closeout commit (child of `9fed14881a114107f65090f17aa77a432dc8dc80`; its full hash is in the lane line and the closeout report), clean and **level with origin** (R370). The plan file's sha256, bytes and lines are in the closeout report.
+- **The decision log in this file ends at R815.** R816, the wrap ruling, is transcribed at 12ai-OPEN's item 0 by `docs/session-reports/tools/transcribe_ruling.py`.
+- **The standing-rules files:** `docs/plan/STANDING_RULES.md` `d56dbdae…e3ff`, `docs/plan/standing_rules_ids.txt` `a28da061…5257`, `docs/plan/standing_rules_glosses.json` `7f7374b2…72ed`.
+- **The gate** on this tree (engine tree equal to `977c499`'s):
+  - **Launch:** by `docs/session-reports/tools/launch_gate.sh`, as the transient user unit `gate-<name>` (R808(b), R809(b)). Its launch line is written whole into `launch_line.txt` at launch (R738(c), R808(d)), carrying the open-files limit it used and the shell's LANG, with no memory cap stated in its first line. At launch Claude Code reports what the launcher prints: `launch_line.txt`, `systemctl --user status gate-<name>.service`, and the Linger line. The unit's start line is required in the user journal, and a stop line is reported if one appears (R809(c)).
+  - **Counts:** the 12ah-OPEN gate's, quoted from `12ah_open/gate_12ah_open/`: **3,573 passed / 1 xfailed / 17 deselected**, collected **3,591**, selected **3,574**, 0/0 (a set comparison, R655(b)) against `docs/session-reports/session-12/12ah_close/collected_ids_12ah_close.txt` (3,574 ids, a copy of that gate's list).
+  - **Wall time:** against the band the wrap ruling sets (this closeout's figure is 897–1095 s: ±10% of 995.81 s, the mean of 979.95, 1042.65, 982.43 and 978.22, rounded inward), beside the series of forty-three above. A gate outside it is reported with its concurrent jobs.
+  - **Ollama reads:** version, tags and ps, at least five seconds before the gate is launched and after it exits, each timestamped (R660(b)). A model load in the gate's journal window is a stop (R696(b)); a read-only request is a reading.
+  - **Durations:** a file written (`--durations=0`) and compared with `12ah_close/durations_12ah_open.txt`; any phase slower by more than 10 s is reported.
+  - **The evidence set:** the nineteen files (R738(d)), by `launch_gate.sh` and `run_gate.sh`.
+  - **The hold:** the standing rule R805(f), its clock the day's opening (R812(a)).
+  - **A red** caused by a census miss is class (c), fixed in P1's form and re-run once (R746(c), R772(b)); any other red is a stop.
+  - **Basetemp** read immediately after the gate (R660(c)). The two warnings are sklearn's (R641(c)). The concurrent-jobs read excludes its own shell (R680(c)) and names ffmpeg, nvenc, surgical-cv, uvicorn and pytest (R720(e)).
+- **The 2026-11-19 and later 09:00 UTC nightlies** per `12af_close/expected_nightly_20261111.md`: `collected 3591 items / 17 deselected / 3574 selected`, **3573 passed, 17 deselected, 1 xfailed, 2 warnings**, last line `pytest exit code: 0`; the durations file present; the Ollama journal for 09:00–09:25 UTC empty of loads; the lock file's mtime unchanged; ids equal to `collected_ids_12ah_close.txt`; the HEAD each ran on by the reflog method, with the lock line, in the read file (R779(c)). Each read as R749(b)–(c) place it. No nightly after 2026-11-18's had run at this closeout.
+- **The 2026-11-19 and later 07:00 UTC health jobs:** readings, in their two forms (R813(b)): Monday to Saturday the light check — three GET requests, no load, no lock, its log `~/logs/ollama_health_<date>.log` carrying "Mode: light" and its lane-model lines — and on Sunday the full sweep of every installed model, standing down while the experiment lock is held; its loads and outcome read from the log and the Ollama journal, with an NVRM grep over the kernel journal (fifty-five `NV_ERR_NO_MEMORY` lines this boot before them, the last 2026-11-15 07:03:19 UTC, `12ah_close/nvrm_this_boot_20261119.txt`); a read-only request is a reading (R696(b)). The open check's health section cannot read a light-check day (R813(e)): a light day is read by the explicit step.
+- **The pytest temp root at the open** (R647(c)): entry count and size recorded, not matched; nothing emptied. At this closeout: `pytest-1147` to `-1149` and `pytest-current` (4 entries, 1,444,028,059 B by the root's own `du -sb`).
+- **Collection and inventory:** no-marker collection **3,591**; `tests/test_eligibility.py` 91; `inventory --check` in sync.
+- **The diff list:** `git diff --stat 35a914b HEAD -- engine tests scripts analysis review_specs` is empty (`12ah_close/diff_engine_since_35a914b.txt`), and so is `git diff --stat 977c499 HEAD` on the same paths; `git diff --stat f4a5586 HEAD` on the same paths lists 96 files, 6,609 insertions, 345 deletions (`12ah_close/diff_since_f4a5586.txt`).
+- **The fingerprint of record, unchanged:** `docs/session-reports/migration-02/review_db_fingerprint_20260929T172123Z.json` — 36 tables; overall `0d3eedead60c2ce1c6341b973fa5931d69c4b13c14e93bd5b805bc06734fcb25`. `ls data/*/review.db` lists one path.
+- **`12f_repro/dbchecks.py`** (`909e3ed2…4ff5`): its output byte-identical to `12ah_close/dbchecks_close.txt`.
+- **Retention** (`12ah_close/retention_close.txt`): the 23 never-opened copies by `review.db` file sha256 (23 MATCH), and the 12v probe-scratch entry (10 requests, 53 response files) by file sha256. `~/scratch/12q-u13-build/stage/` holds `RESTORE.txt` only.
+- **Codebook and live spec, unchanged:** `89dbfa91…ad82`; `aeb90ba8…8b33`.
+- **Pins, by `12l_U04/pin_tuples.py`** with both arguments: `12ah_close/pin_tuples_close.json`, byte-identical; elicited `d70bf688…59f0`, non-elicited `d3672ab6…ff5c`; audit `prompt_hash` `d972c46d…838d` (unchanged from 12ag's, the file byte-identical).
+- **Ollama:** 0.21.0; the five digests (R767(c)): `gemma3:27b` `a418f583…2203`, `qwen3:8b` `500a1f06…8b41`, `qwen3:32b` `030ee887…7840`, `deepseek-r1:32b` `edba8017…960c`, `qwen2.5vl:7b` `5ced39df…11cc` (`12ah_close/ollama_reads.txt`); `NRestarts=0`. Service start, MainPID and keep-alive are readings: started 2026-11-16 00:06:51 UTC, MainPID 3633749, `OLLAMA_KEEP_ALIVE=30m` (`12ah_close/host_state_close.txt`). Boot id is a reading. Residency is a reading: nothing at this closeout.
+- **The host state the band belongs to** (`12ah_close/host_state_close.txt`): kernel `6.17.0-1032-nvidia`, Python 3.12.3, libsqlite3-0 `3.45.1-1ubuntu2.8`, NVIDIA driver 580.173.02; earlyoom's state and argv, `vm.min_free_kbytes`, ollama's `oom_score_adj`, the user manager's state and Linger are readings.
+- **The pre-tag list** by `12af_close/recount_12af_close.py` (its JSON fields; run in a scratch clone, R673(b)): `now` = `{rows 287, class_1 94, class_2 57, class_3 136, without_class 0}`; **38 with 33 done** (`fix_units_dated_lines`, read from the plan); `expected_holds` true; its JSON byte-equal to the committed one while no row or dated line moves. It runs with nine plan arguments, read from its docstring.
+- **The check rule (R772(c)):** a pre-commit check asserts what a diff contains and reads its numstat into the evidence; it matches a count only when a record supplies it; the item-0 check asserts the standing-rule entry by content (R777(b)), and a regeneration's changed lines by R766(b)'s three kinds; a check is written for its brief (R794(i)). The transcription date is the commit's UTC date (R775(a)).
+- **Standing rules stated in 12ah:** R812(a) (the no-live-write window by UTC day; the hold's clock the day's opening).
+- **The window (R812(a)):** a brief is valid outside the day's window — 09:00–10:35 UTC Monday to Saturday, 07:00–10:35 UTC on Sunday — and a gate exits before the day's window opens.
+- **Commits (R780(b)):** a git commit and push a brief directs, the hook-written ledger row's included, is not a print-and-review step; a brief states "auto mode ON, commit steps included". A ledger commit's message is built from the diff (R801(f)).
+- **Briefs (R784(g)):** a brief carries only what is new to its task and is committed as pasted at its item 0; the committed brief file is compared with the architect's copy. **Decisions (R801(g)):** a design clause that rests on a decision below moderate-high confidence is written only after the PI's word on it.
+- **Hashes (R783(d)):** a full hash is proved to exist by `git cat-file -e <hash>^{commit}`.
+- **Scratch:** the four 12ah directories — `12ah-open/`, `12ah-olra/`, `12ah-olra-rec/` and `12ah-close/` — beside those present at the 12ah open and `retained/`.
+- **claude-config:** at the ledger commit this closeout settles (its full hash is in the closeout report); the wrap ruling applies the lane line.
+
+12ai's first items, in this order:
+- **12ai-OPEN**, run outside the day's window (R812(a)), the clock read beside the day boundary (R775(d)). Its item 0 transcribes R816 (the wrap ruling) as the next block by `transcribe_ruling.py` and copies the 12ah lane-line file into `12ah_close/`. It runs `session_open_check.py` and the explicit steps R747(b) names (the recount, the R510 count, the nightly's ids against the expected set, the health job's journal read, a light-check day by the explicit step), reads the 2026-11-19 and later jobs as R749(b)–(c) place them against `12af_close/expected_nightly_20261111.md`, and runs the startup verify against this block, its gate launched as a unit.
+- **The restart change's design ruling**, quoting `12ah_OLRA/12ah_OLRA.md` and `12ah_OLRA_add1.md` from the committed files; then its build as one engine-commit brief (R813(g)).
+- **U30's build**, one brief, from `12af_U30A/12af_U30A.md`, `12ag_N46A/12ag_N46A.md` and the rulings on them (R805(d), R807(b)).
+
 ## Decision log
 
 Rulings made by the PI in the architect session of 2026-09-19 to 2026-09-21, in order. The architect's four provisional rulings of 2026-09-19 (recall-bounded filter with code-enforced basis; SYNERGY as reference; a tiered lane with 2d first; a 50 KB plan) were withdrawn after the external review and replaced by R1–R9 below.

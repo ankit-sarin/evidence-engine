@@ -1,0 +1,14 @@
+# temp root at the 12ah closeout, 2026-11-19T06:27:09Z (R647(c)); a reading, nothing emptied
+total 516
+drwx------    5 ankitsarin ankitsarin   4096 2026-11-19 05:08:49.731577290 +0000 .
+drwxrwxrwt  584 root       root        81920 2026-11-19 06:27:03.824621137 +0000 ..
+drwx------  123 ankitsarin ankitsarin  20480 2026-11-19 01:57:27.426790321 +0000 pytest-1147
+drwx------ 3576 ankitsarin ankitsarin 401408 2026-11-19 05:07:58.111446274 +0000 pytest-1148
+drwx------   93 ankitsarin ankitsarin  12288 2026-11-19 05:08:49.731577290 +0000 pytest-1149
+lrwxrwxrwx    1 ankitsarin ankitsarin     37 2026-11-19 05:08:45.393566284 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-1149
+1753094	/tmp/pytest-of-ankitsarin/pytest-1147
+1439568437	/tmp/pytest-of-ankitsarin/pytest-1148
+2706491	/tmp/pytest-of-ankitsarin/pytest-1149
+37	/tmp/pytest-of-ankitsarin/pytest-current
+0	/tmp/pytest-of-ankitsarin
+1444028059	/tmp/pytest-of-ankitsarin   (du -sb of the root alone, read 2026-11-19T06:27:25Z; the combined du line read 0, du counting each inode once across its arguments)

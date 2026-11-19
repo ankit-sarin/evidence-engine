@@ -1,0 +1,182 @@
+tests/_lock_census.py:43:    ("engine.utils.ollama_client", "_restart_ollama_and_retry"): "last-resort Ollama restart",
+tests/_lock_census.py:44:    ("engine.agents.extractor", "restart_ollama"): "proactive Ollama restart",
+tests/conftest.py:5:last-resort recovery fired it ran a real `sudo systemctl restart ollama`. A
+tests/conftest.py:24:    manager (`systemctl`, `service`, `sudo`, `shutdown`, `reboot`, `init`,
+tests/conftest.py:26:    flock holders in `test_ollama_lock.py` and `test_restart_ollama_guard.py`
+tests/conftest.py:30:    detail. `_restart_ollama_and_retry` wraps its restart in `except Exception`
+tests/conftest.py:63:# `/usr/bin/systemctl` and `systemctl` are both caught.
+tests/conftest.py:65:    "systemctl", "service", "sudo", "doas", "pkexec",
+tests/conftest.py:85:    Handles both the list form (`["sudo", "systemctl", ...]`) and the string
+tests/conftest.py:124:        f"Tests must never touch a system service — a real `systemctl restart "
+tests/test_citation_record.py:171:                                 restart_every=0, run_id=handle.run_id)
+tests/test_cut_over.py:108:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_cut_over.py:161:    stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+tests/test_cut_over.py:184:            E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+tests/test_cut_over.py:202:        stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+tests/test_cut_over.py:244:        stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id,
+tests/test_cut_over.py:269:        E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+tests/test_duplicate_on_pass1_attempt_2.py:116:        stats = E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+tests/test_duplicate_on_pass1_attempt_2.py:217:        E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+tests/test_duplicate_on_pass1_attempt_2.py:238:        E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+tests/test_extraction_run_link.py:109:                                restart_every=0, run_id=run_id, **kw)
+tests/test_extractor.py:20:    restart_ollama,
+tests/test_extractor.py:336:    # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
+tests/test_extractor.py:464:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:476:        """Proactive restart fires after restart_every papers are processed."""
+tests/test_extractor.py:481:        run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
+tests/test_extractor.py:483:        # 5 papers processed, restart_every=3 → should fire once (after paper 3)
+tests/test_extractor.py:488:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:492:    def test_restart_disabled_when_zero(
+tests/test_extractor.py:495:        """restart_every=0 disables proactive restarts entirely."""
+tests/test_extractor.py:499:        run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+tests/test_extractor.py:504:    @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+tests/test_extractor.py:515:        stats = run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
+tests/test_extractor.py:520:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:547:        stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+tests/test_extractor.py:563:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:592:            stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+tests/test_extractor.py:674:# ── H4: Graceful handling of restart_ollama failure ──────────────────
+tests/test_extractor.py:678:    """restart_ollama() failure in extraction loop must not crash the run."""
+tests/test_extractor.py:681:        """If restart_ollama raises RuntimeError, extraction continues."""
+tests/test_extractor.py:689:            patch("engine.agents.extractor.restart_ollama",
+tests/test_extractor.py:693:                stats = run_extraction(db, spec, "test_review", restart_every=1, run_id=self.run_id)
+tests/test_floor_and_stored_attempt.py:100:                                restart_every=0, run_id=run_id)
+tests/test_lock_census.py:41:_CLIENT = "def ollama_chat(**kw):\n    return _restart_ollama_and_retry()\n\ndef _restart_ollama_and_retry():\n    pass\n"
+tests/test_lock_census.py:43:_EXTRACTOR = "def restart_ollama():\n    pass\n"
+tests/test_lock_census.py:88:        extractor.restart_ollama()
+tests/test_lock_census.py:126:    assert "engine.agents.extractor::restart_ollama" in failures[0]
+tests/test_lock_census.py:168:            if "systemctl" in words and "restart" in words:
+tests/test_lock_census.py:174:                        and "systemctl" in a.value and "restart" in a.value:
+tests/test_lock_census.py:191:    assert set(SINKS) >= {("engine.agents.extractor", "restart_ollama"),
+tests/test_lock_census.py:192:                          ("engine.utils.ollama_client", "_restart_ollama_and_retry")}
+tests/test_lock_census.py:197:                    "subprocess.run(['sudo', 'systemctl', 'restart', 'ollama'])\n"
+tests/test_lock_census.py:198:                    "os.system('sudo systemctl restart ollama')\n")
+tests/test_ollama_client.py:14:    _restart_ollama_and_retry,
+tests/test_ollama_client.py:62:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:91:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:152:        retries drops into `_restart_ollama_and_retry`, and without this patch
+tests/test_ollama_client.py:153:        the assertion below was being satisfied by a **real** `sudo systemctl
+tests/test_ollama_client.py:160:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:212:        """After a request ends by the read timeout, should attempt sudo systemctl restart ollama."""
+tests/test_ollama_client.py:219:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:236:        assert restart_args == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_ollama_client.py:245:        # Test _restart_ollama_and_retry directly to avoid timing complexity
+tests/test_ollama_client.py:249:        result = _restart_ollama_and_retry(
+tests/test_ollama_client.py:266:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:289:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:307:           side_effect=OSError("systemctl not found"))
+tests/test_ollama_client.py:308:    def test_restart_ollama_and_retry_raises_on_restart_failure(self, mock_subprocess):
+tests/test_ollama_client.py:309:        """M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure."""
+tests/test_ollama_client.py:311:            _restart_ollama_and_retry(
+tests/test_ollama_client.py:321:    def test_restart_ollama_and_retry_raises_on_post_restart_failure(
+tests/test_ollama_client.py:324:        """M3: _restart_ollama_and_retry raises RuntimeError when post-restart call fails."""
+tests/test_ollama_client.py:329:            raise httpx.ReadTimeout("read timed out")
+tests/test_ollama_client.py:334:            _restart_ollama_and_retry(
+tests/test_ollama_input_fit.py:58:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_ollama_preflight.py:204:    def test_get_ollama_env_parses_systemctl_output(self):
+tests/test_ollama_preflight.py:215:                   side_effect=FileNotFoundError("no systemctl")):
+tests/test_ollama_preflight.py:337:        # `_get_ollama_env` shells out to `systemctl show ollama`, which the
+tests/test_parsed_text_resolver.py:135:        run_extraction(db, spec, "resolver", experiment_lock=False, restart_every=0,
+tests/test_qualgap01.py:30:    monkeypatch.delenv(R.oc.RESTART_OPT_OUT_ENV, raising=False)
+tests/test_qualgap01.py:101:    assert R.oc.restart_disabled() is True
+tests/test_qualgap01.py:102:    with pytest.raises(RuntimeError, match=R.oc.RESTART_OPT_OUT_ENV):
+tests/test_qualgap01.py:103:        R.oc._restart_ollama_and_retry(
+tests/test_restart_ollama_guard.py:1:"""restart_ollama() must stand down for a FOREIGN experiment lock only (OPS-GUARD-01 C).
+tests/test_restart_ollama_guard.py:5:fragmentation. If restart_ollama() skipped whenever the lock was held at all, it
+tests/test_restart_ollama_guard.py:8:The explicit opt-out (`EVIDENCE_ENGINE_NO_OLLAMA_RESTART`, N17) is checked before
+tests/test_restart_ollama_guard.py:34:    monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+tests/test_restart_ollama_guard.py:65:                extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25)
+tests/test_restart_ollama_guard.py:66:        # the whole point: no systemctl, no HTTP poll
+tests/test_restart_ollama_guard.py:83:            extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:85:        assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_restart_ollama_guard.py:92:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:102:            assert extractor.restart_ollama(reason="proactive", papers_done=25) is False  # U19: a skip says so
+tests/test_restart_ollama_guard.py:112:    def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
+tests/test_restart_ollama_guard.py:126:    def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
+tests/test_restart_ollama_guard.py:143:    """T1. Set, with the lock free: no systemctl, no poll, one skip line, None returned."""
+tests/test_restart_ollama_guard.py:144:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_restart_ollama_guard.py:149:            assert extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25) is False  # U19
+tests/test_restart_ollama_guard.py:155:    assert oc.RESTART_OPT_OUT_ENV in lines[0] and "proactive after 25 papers" in lines[0]
+tests/test_restart_ollama_guard.py:161:    """T4. The spellings `restart_disabled()` reads as unset leave the restart armed."""
+tests/test_restart_ollama_guard.py:162:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, value)
+tests/test_restart_ollama_guard.py:166:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:168:    assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_restart_ollama_guard.py:175:    `_extract_selected` zeroes `papers_since_restart` whenever `restart_ollama` returns
+tests/test_restart_ollama_guard.py:179:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_restart_recovery_guard.py:1:"""`_restart_ollama_and_retry` must respect the experiment lock and the opt-out.
+tests/test_restart_recovery_guard.py:3:OPSFIX-01. `extractor.restart_ollama` has been flock-gated since OPS-GUARD-01,
+tests/test_restart_recovery_guard.py:5:same `sudo systemctl restart ollama` — was not. That is the class of bug that
+tests/test_restart_recovery_guard.py:32:    monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+tests/test_restart_recovery_guard.py:72:    return oc._restart_ollama_and_retry(**kwargs)
+tests/test_restart_recovery_guard.py:101:        assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_restart_recovery_guard.py:126:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_restart_recovery_guard.py:128:        with pytest.raises(RuntimeError, match=oc.RESTART_OPT_OUT_ENV):
+tests/test_restart_recovery_guard.py:135:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, value)
+tests/test_restart_recovery_guard.py:136:    assert oc.restart_disabled() is True
+tests/test_restart_recovery_guard.py:141:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, value)
+tests/test_restart_recovery_guard.py:142:    assert oc.restart_disabled() is False
+tests/test_restart_recovery_guard.py:146:    monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+tests/test_restart_recovery_guard.py:147:    assert oc.restart_disabled() is False
+tests/test_restart_recovery_guard.py:155:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_restart_recovery_guard.py:159:        raise httpx.ReadTimeout("read timed out")
+tests/test_run_calls_outcomes.py:25:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_run_fault_predicate.py:102:    pytest.param(lambda: httpx.ReadTimeout("read timed out"),
+tests/test_run_fault_predicate.py:103:                 "model_call_failed", id="ReadTimeout"),
+tests/test_run_fault_predicate.py:129:                                restart_every=0, run_id=run_id)
+tests/test_run_interrupts.py:247:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_run_pipeline_starts.py:111:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_run_pipeline_starts.py:167:    (`systemctl show`, the engine client's `ps`): the probe goes through `ollama_chat` and
+tests/test_selection_bound.py:121:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_selection_refusals.py:145:                                 restart_every=0, run_id=run_id)
+tests/test_service_call_fence.py:3:OPSFIX-01's acceptance gate was "a deliberate probe hitting systemctl fails
+tests/test_service_call_fence.py:27:    """`sudo systemctl restart ollama` — what every offline run used to do."""
+tests/test_service_call_fence.py:28:    with pytest.raises(ServiceCallBlocked, match="systemctl"):
+tests/test_service_call_fence.py:29:        subprocess.run(["sudo", "systemctl", "restart", "ollama"], check=False)
+tests/test_service_call_fence.py:33:def test_bare_systemctl_is_blocked_without_sudo():
+tests/test_service_call_fence.py:35:        subprocess.run(["systemctl", "restart", "ollama"], check=False)
+tests/test_service_call_fence.py:40:    """The sudoers rule names /usr/bin/systemctl, so the path form must match too."""
+tests/test_service_call_fence.py:42:        subprocess.run(["/usr/bin/systemctl", "restart", "ollama"], check=False)
+tests/test_service_call_fence.py:48:        subprocess.run("sudo systemctl restart ollama", shell=True, check=False)
+tests/test_service_call_fence.py:54:        os.system("systemctl restart ollama")
+tests/test_service_call_fence.py:61:        getattr(subprocess, api)(["systemctl", "restart", "ollama"])
+tests/test_service_call_fence.py:68:    """`test_ollama_lock` and `test_restart_ollama_guard` spawn real helpers."""
+tests/test_service_call_fence.py:103:    `_restart_ollama_and_retry` wraps its restart in `except Exception` and
+tests/test_service_call_fence.py:114:            subprocess.run(["systemctl", "restart", "ollama"], check=False)
+tests/test_text_refusal_at_selection.py:95:                                 restart_every=0, run_id=run_id)
+tests/test_u18_one_host.py:76:    monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+tests/test_u18_one_host.py:85:        E.restart_ollama(reason="u18", papers_done=0)                            # the restart poll
+tests/test_u19_env_recheck.py:6:The subprocess boundary is patched in every test: `systemctl show` answers from a
+tests/test_u19_env_recheck.py:7:hand-typed `Environment=` line in the form `systemctl show ollama --property=Environment`
+tests/test_u19_env_recheck.py:9:`test_restart_ollama_guard.py`'s T3 drives it; the manifests are opened as
+tests/test_u19_env_recheck.py:49:    """The subprocess boundary: answers `systemctl show ollama --property=Environment`
+tests/test_u19_env_recheck.py:56:        assert list(argv[:3]) == ["systemctl", "show", "ollama"], argv
+tests/test_u19_env_recheck.py:88:        monkeypatch.setattr(E, "restart_ollama", restart)
+tests/test_u19_env_recheck.py:102:    return [e for e in read_run_events(tmp_path) if e["kind"] == "ollama_env_after_restart"]
+tests/test_u19_env_recheck.py:175:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_u19_env_recheck.py:177:    assert E.restart_ollama(reason="proactive", papers_done=0) is False   # a skip says so
+tests/test_u19_local_service.py:7:(`_OLLAMA_HOST`); the subprocess boundary answers `systemctl show` from a hand-typed
+tests/test_u19_local_service.py:30:# The §3.4 line (12z_U19A.md), as `systemctl show ollama --property=Environment` printed it.
+tests/test_u19_local_service.py:53:def _systemctl(raw):
+tests/test_u19_local_service.py:55:        assert list(argv[:3]) == ["systemctl", "show", "ollama"], argv
+tests/test_u19_local_service.py:89:    monkeypatch.setattr(pf.subprocess, "run", _systemctl(line))
+tests/test_u19_local_service.py:106:    monkeypatch.setattr(pf.subprocess, "run", _systemctl(RAW))
+tests/test_u20_modelfile_num_ctx.py:68:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_u21_no_overlap.py:89:                raise httpx.ReadTimeout("read timed out")
+tests/test_u21_no_overlap.py:92:                raise httpx.ReadTimeout("read timed out")
+tests/test_u21_no_overlap.py:102:    monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+tests/test_u21_no_overlap.py:173:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_u21_no_overlap.py:250:    row = [r for r in rows if r["kind"] == "ollama_env_after_restart"][-1]
+tests/test_u21_no_overlap.py:262:    (row,) = [r for r in rows if r["kind"] == "ollama_env_after_restart"]
+tests/test_u21_no_overlap.py:280:    assert rm.RUN_CALL_ENDING_DETAILS == (
+tests/test_u21_no_overlap.py:298:    monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+tests/test_u21_no_overlap.py:300:    assert detail.startswith(rm.DETAIL_RESTART_REFUSED_OPT_OUT + ": TimeoutError: ")
+tests/test_u21_no_overlap.py:307:    assert detail.startswith(rm.DETAIL_RESTART_REFUSED_LOCK + ": TimeoutError: ")
+tests/test_u21_no_overlap.py:314:    assert detail.startswith(rm.DETAIL_RESTART_COMMAND_FAILED + ": TimeoutError: ")
+tests/test_u21_no_overlap.py:320:    assert detail.startswith(rm.DETAIL_POST_RESTART_FAILED + ": TimeoutError: ")
+tests/test_u21_no_overlap.py:328:    assert detail.startswith(rm.DETAIL_WORKER_ALIVE + ": TimeoutError: ")
+tests/test_u24_preflight_spec.py:7:`systemctl show`, is replaced. No server, no database; the suite's fences stay on. Every captured
+tests/test_undeclared_call.py:235:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_undeclared_call.py:239:                E.run_extraction(db, other, "undeclared_loop", restart_every=0, run_id=run_id)
+tests/test_units_as_source_slices.py:252:                                 restart_every=0, run_id=handle.run_id)
+tests/test_value_divergence.py:87:                                restart_every=0, run_id=run_id)
+tests/test_write_boundary_guard.py:91:                                restart_every=0, run_id=run_id)

@@ -1,0 +1,58 @@
+RULING [evidence-engine 12ah-R814] — the 12ah-OLRA-REC stop is correct and the architect's;
+  the PI's ruling: work/'s six files are committed too, behind the same scan; R813(d) amended
+  and two of R813's readings corrected; item 0 redone under the resume below; no standing
+  rule
+STATUS: PI ruling, 2026-11-19 UTC, session 12ah, on architect recommendation, on the
+  12ah-OLRA-REC stop report (stopped at step 2c; nothing committed, the tree restored to
+  c4120330c7c8102d89d6c8298363e2624c7aca24). Transcribe at item 0 of the 12ah-OLRA-REC
+  brief, redone under the resume below, by transcribe_ruling.py, in the block after R813's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted): "6 of its 18 lines name files under work/"; "SHA256SUMS
+    12 of 18; SHA256SUMS_add1 5 of 5; SHA256SUMS_close 1 of 1"; the six named,
+    "work/g4_window_end.txt, work/ledger_ee_at_HEAD.txt, work/ledger_ee_at_a2bbd81.txt,
+    work/olr1_sha_before.txt, work/primer_41_45_at_HEAD.txt and
+    work/primer_41_45_at_a2bbd81.txt"; "the 21 top-level files equal R3 by name and bytes";
+    "olra_check.py (sha256 9224a31d…1eec) reads 24 lines, 24 match"; "every one of the 17
+    classes was flagged on its planted line, and the clean fixture produced 0 hits"; "Scan of
+    all 21 files: all valid UTF-8, 0 stop-class hits"; "r813.txt:
+    cc073a2ec82cb00b2dd14b60a8120359e2a6298aad2a407f2aa9b00c776d10a9, 6,957 B, 87 lines,
+    equal to the architect's hash."; "I then restored the evidence-engine tree to HEAD
+    c412033 (plan sha256 back to 90e5c6df…d3b5, clean, level)"; "claude-config is untouched
+    at d46c74d"; "12ah_OLRA.md:13 lists "work/ (comparison inputs)" in its file inventory".
+  READ (CC's): finding 2, CC's correction of its own 12ah-OPEN finding 5; "two of its files
+    are copies of claude-config's ledger rows at 102,446 B each".
+  INFERRED — expectation (reported if false): work/'s six files hold this lane's ledger rows,
+    this lane's primer lines and two small records of the interim session. The architect has
+    read their names, not their content; the scan of (b) is the gate, not this item.
+
+R814(a) — The stop is correct, at the first point where the brief's gate could not hold, and
+  nothing was committed. The cause is the architect's: G3 required every line of the
+  committed lists to match a committed file while R813(d) kept six listed files out. Both
+  rested on one statement, that no list covers work/, which came from the 12ah-OPEN report's
+  finding 5 and was carried to the PI as the premise of his options without the list being
+  read. The restore of the tree to HEAD is accepted on its evidence: it removed only this
+  task's own uncommitted writes, each reproducible from scratch and from the paste.
+R814(b) — The PI's ruling, in his words: "1 then close". Option 1 of the three put to him:
+  work/'s six files are committed too, to docs/session-reports/session-12/12ah_OLRA/work/,
+  after the same scan has run on them with the same stop. This amends R813(d)'s "work/ stays
+  in scratch, uncommitted" and nothing else in it; the PI's acceptance of publication there
+  extends to these six, the two copies of this lane's ledger rows among them. With them
+  every line of the three lists matches a committed file, and G3 stands as the brief wrote
+  it.
+R814(c) — R813 stands as issued and is transcribed with this ruling; two of its readings are
+  corrected here. R813(e) on finding 5: the scratch directory's eighteen-entry list was
+  described rightly and did cover work/; the statement that no list covers work/ was CC's,
+  from a helper that looked at top-level names only, and CC has corrected it; the
+  architect's part is that it was passed on unchecked. R813(f)'s count now reads: one stop,
+  this one, the architect's; no pause; the architect's errors three (tool paths written
+  short; a premise passed on unchecked; a gate that contradicted the ruling beside it),
+  none reaching a commit.
+R814(d) — Reading, no row: with work/ committed, the read-out's inventory line naming work/
+  as comparison inputs is true of the record as well as of scratch.
+R814(e) — "then close": session 12ah closes after this task's report is read and accepted,
+  by a closeout brief and a wrap ruling of their own. The restart change's design ruling
+  opens the next session. R813(g)'s order is unchanged; the session boundary falls after its
+  first item.
+R814(f) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.

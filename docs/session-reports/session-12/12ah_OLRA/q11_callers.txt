@@ -1,0 +1,21 @@
+analysis/eval/elicit01/runner.py:118:        r = oc.ollama_chat(
+analysis/eval/run_capture01.py:119:        response = oc.ollama_chat(
+analysis/eval/run_local_ab.py:119:        resp = ollama_chat(model=MODEL, messages=_pass2_messages(prompt, trace), **kwargs)
+analysis/eval/run_local_abc.py:142:        resp = ollama_chat(model=MODEL, messages=pass2_messages(prompt, trace), **kwargs)
+analysis/eval/run_qualgap01.py:118:    response = oc.ollama_chat(
+analysis/eval/run_qualgap01.py:158:        resp = oc.ollama_chat(
+analysis/eval/run_qualgap01.py:231:            r2 = oc.ollama_chat(
+analysis/paper1/judge.py:116:        response = ollama_chat(
+analysis/paper1/judge.py:225:        response = ollama_chat(
+analysis/paper1/pass2_retry_single.py:215:        response = ollama_chat(
+engine/acquisition/pdf_quality_check.py:105:            response = ollama_chat(
+engine/agents/auditor.py:73:    response = ollama_chat(
+engine/agents/extractor.py:236:    result = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/agents/extractor.py:344:    result = ollama_chat(paper_id=paper_id,
+engine/agents/extractor.py:432:        result = ollama_chat(
+engine/agents/ft_screener.py:216:    response, request_hash = ollama_chat(
+engine/agents/ft_screener.py:226:    response, request_hash = ollama_chat(
+engine/agents/screener.py:125:    response = ollama_chat(messages=build_messages(paper, spec, role=role), **cfg.kwargs())
+engine/elicitation/pipeline.py:295:    response, req_hash = ollama_chat(paper_id=paper_id, messages=pass1_messages(prompt),
+engine/parsers/pdf_parser.py:280:            response = ollama_chat(
+engine/utils/ollama_preflight.py:69:        ollama_chat(

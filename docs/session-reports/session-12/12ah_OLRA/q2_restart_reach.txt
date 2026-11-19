@@ -1,0 +1,29 @@
+n rows 83
+keys ['entry', 'local_call', 'restart_proactive', 'preflight_probe', 'cloud_call', 'holds_lock', 'probes_lock']
+
+entry points reaching extractor.restart_ollama (proactive): 4
+  analysis/eval/elicit01/runner.py | lock: True | chain: True
+  analysis/eval/run_capture01.py | lock: True | chain: True
+  analysis/paper1/pass2_full.py | lock: True | chain: True
+  scripts/run_pipeline.py | lock: True | chain: True
+
+entry points reaching ollama_chat (hence _restart_ollama_and_retry): 17
+  analysis/eval/elicit01/runner.py | lock: True
+  analysis/eval/run_capture01.py | lock: True
+  analysis/eval/run_local_ab.py | lock: True
+  analysis/eval/run_local_abc.py | lock: True
+  analysis/eval/run_qualgap01.py | lock: True
+  analysis/eval/smoke_regression01.py | lock: True
+  analysis/paper1/judge_cli.py | lock: True
+  analysis/paper1/judge_codebook_smoke.py | lock: True
+  analysis/paper1/pass2_full.py | lock: True
+  analysis/paper1/pass2_retry_single.py | lock: True
+  analysis/paper1/pass2_smoke.py | lock: True
+  engine/acquisition/pdf_quality_check.py | lock: True
+  engine/agents/ft_screener.py | lock: True
+  engine/utils/ollama_preflight.py | lock: True
+  scripts/parse_expanded_corpus.py | lock: True
+  scripts/run_pipeline.py | lock: True
+  scripts/screen_expanded.py | lock: True
+
+shell scripts: ['scripts/nightly_tests.sh', 'scripts/watch_run4.sh']

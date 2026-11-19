@@ -1,0 +1,16 @@
+== 879d361a98366e93da06d78493a5cd238f1ea9d4
+ primer.md | 2 +-
+== ba6a6924cc075e1a2bc04af29943c96daa97a781
+ primer.md | 2 +-
+== ae0dfe4fa56f097f315914a13aae7cc4d16e6469
+ PROJECT_LEDGER.md | 1 +
+== 1afb2c88b8501ce2e6351f7aafbbfd5d53e4df53
+ primer.md | 2 +-
+== 67157c0fcbb4aef206ad9cd8b74899ee59bf63b9
+ PROJECT_LEDGER.md | 3 +++
+== 16498c236828ceb2d2be8b7cb8f4f48f2f76de81
+ PROJECT_LEDGER.md | 1 +
+== a5fd9e18945ac7fb2e65910aa93f27d3ef787675
+ primer.md | 4 ++--
+== 7c74c2bea1fef8aec5ed457e199306be441f42ed
+ primer.md | 4 ++++

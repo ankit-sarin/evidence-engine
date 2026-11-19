@@ -1,0 +1,54 @@
+analysis/eval/run_qualgap01.py:91:    oc._client = ollama.Client(host=host, timeout=oc._httpx_timeout)
+engine/agents/extractor.py:796:    # Poll /api/tags until responsive (max 60s)
+engine/agents/extractor.py:800:            resp = httpx.get(f"{ollama_host()}/api/tags", timeout=5)
+engine/agents/ft_screener.py:567:    `git` / `digest_fn` default to the live tree and `/api/tags`."""
+engine/agents/screener.py:119:    # Model, options, think, format and keep_alive come from the one resolver
+engine/core/effective_config.py:7:a model name, options, `think`, `format` or `keep_alive` from, and it reads
+engine/core/effective_config.py:13:`keep_alive` the one addition. Options a site does not send today (`seed`,
+engine/core/effective_config.py:24:  not: the model digest (`fetch_model_digest`, `/api/tags`, which loads no model
+engine/core/effective_config.py:120:    keep_alive: int | str | None
+engine/core/effective_config.py:137:        if "keep_alive" in self.sent_keys:
+engine/core/effective_config.py:138:            out["keep_alive"] = self.keep_alive
+engine/core/effective_config.py:186:            "keep_alive": self.keep_alive if "keep_alive" in self.sent_keys else UNSENT,
+engine/core/effective_config.py:256:def _freeze(stage, provider, model, options, think, fmt, keep_alive, sent, recorded, sources):
+engine/core/effective_config.py:261:        keep_alive=keep_alive, sent_keys=frozenset(sent),
+engine/core/effective_config.py:266:def _keep_alive(spec) -> tuple[Any, str]:
+engine/core/effective_config.py:268:    return rt.keep_alive, _src(src_block, "keep_alive")
+engine/core/effective_config.py:311:    sent = {"model", "messages", "options", "keep_alive"}
+engine/core/effective_config.py:312:    keep_alive, sources["keep_alive"] = _keep_alive(spec)
+engine/core/effective_config.py:381:                   keep_alive, sent, recorded, sources)
+engine/core/effective_config.py:506:    `digest_fn` defaults to `fetch_model_digest` (`/api/tags`; R57) and raises
+engine/core/paper_state.py:158:#: The model's context ceiling could not be read (`/api/show` failed).
+engine/core/review_spec.py:675:    keep_alive: Union[StrictInt, str] = Field(
+engine/core/run_manifest.py:6:call: the only network use is `fetch_model_digest` (`GET /api/tags`, which loads
+engine/core/run_manifest.py:39:kwargs handed to `_client.chat`, and a digest of the response). A cloud
+engine/core/run_manifest.py:265:    """U20 commit 2, R744(c): after a completed call under a run, `/api/ps` reports a
+engine/core/run_manifest.py:284:            f"checked against a ceiling of {ceiling}, and /api/ps read {read} for its name and "
+engine/core/run_manifest.py:702:                "sent_keys_json, sources_json, keep_alive, format_schema_hash, prompt_hash) "
+engine/core/run_manifest.py:707:                 canonical_json(row["sources"]), row["keep_alive"],
+engine/core/run_manifest.py:809:        "keep_alive": str(cfg.keep_alive) if "keep_alive" in cfg.sent_keys else "unset",
+engine/migrations/009_add_backfill_audit_log.py:7:canonical fetcher fell back silently when Ollama's /api/show returned no
+engine/migrations/009_add_backfill_audit_log.py:9:`/api/tags models[].digest` with strict validation; this audit table
+engine/migrations/020_run_manifest.py:11:  keep_alive, format-schema hash, prompt hash. Append-only.
+engine/migrations/020_run_manifest.py:178:    keep_alive      TEXT    NOT NULL,
+engine/utils/ollama_client.py:4:should call `ollama_chat(...)` instead of `ollama.chat(...)` directly.
+engine/utils/ollama_client.py:89:def _build_client(**kwargs) -> ollama.Client:
+engine/utils/ollama_client.py:91:    return ollama.Client(host=ollama_host(), timeout=_httpx_timeout, **kwargs)
+engine/utils/ollama_client.py:252:    """The `num_ctx` line of a `/api/show` `parameters` string, or None if it has none.
+engine/utils/ollama_client.py:289:        info = _client.show(model)
+engine/utils/ollama_client.py:474:# /api/show, which does not expose the digest, and returned None on every call —
+engine/utils/ollama_client.py:476:# `fetch_model_digest` below (/api/tags), which raises rather than returning None.
+engine/utils/ollama_client.py:498:    """Return the SHA-256 manifest digest for `model_name` via /api/tags.
+engine/utils/ollama_client.py:500:    The digest is not exposed on /api/show in current Ollama versions; the
+engine/utils/ollama_client.py:501:    canonical structured field is models[].digest on /api/tags. This
+engine/utils/ollama_client.py:515:    url = f"{_client_host()}/api/tags"
+engine/utils/ollama_client.py:517:        resp = _client._client.get("/api/tags", timeout=timeout)
+engine/utils/ollama_client.py:548:            f"in /api/tags; available={available}"
+engine/utils/ollama_client.py:553:            f"match model_name={model_name!r} in /api/tags"
+engine/utils/ollama_client.py:567:    """The server's resident models (`/api/ps`), through the engine client (U18).
+engine/utils/ollama_client.py:571:    return _client.ps()
+engine/utils/ollama_client.py:669:        Passed through to ollama.Client.chat() (format, options, think, etc.).
+engine/utils/ollama_client.py:697:        After the call and before the checks below, under a run, if `/api/ps` does not
+engine/utils/ollama_client.py:784:                    _client.chat,
+engine/utils/ollama_client.py:955:            _client.chat,
+engine/utils/ollama_preflight.py:314:    parser.add_argument("--review", required=True, help="Review id. The probe's options and keep_alive come from its spec's preflight and ollama blocks (U24).")

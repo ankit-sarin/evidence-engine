@@ -1,0 +1,17 @@
+CLAUDE.md:173:  - `extractor.restart_ollama()` — proactive CUDA-defrag restart (`RESTART_EVERY_N`).
+CLAUDE.md:174:  - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after a request
+CLAUDE.md:176:- **Opt-out:** `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` disarms both restart paths, for
+CLAUDE.md:179:  success. The proactive restart is skipped with one log line naming the variable,
+CLAUDE.md:359:'aborted' (U18, R721(b)). After a performed proactive restart, a correctness-tier drift in the re-read
+CLAUDE.md:655:EVIDENCE_ENGINE_NO_OLLAMA_RESTART=1 PYTHONPATH=. python -m <harness>
+docs/architecture/models.md:66:**Proactive restart:** Extractor restarts Ollama every `RESTART_EVERY_N` papers (default 25, configurable via `--restart-every 0` to disable). Restart failure is graceful — logged via `logger.exception` and the run continues (does not crash the pipeline).
+docs/architecture/modules.md:146:- `MODEL = "deepseek-r1:32b"`, `MAX_RETRIES = 2`, `RETRY_DELAY = 30`, `SNIPPET_MAX_RETRIES = 2`, `RESTART_EVERY_N = 25`
+docs/architecture/modules.md:151:- `run_extraction(db, spec, review_name, restart_every)` — Batch pipeline with pre-flight, staleness check, proactive restart
+docs/architecture/pipeline.md:223:8. **Proactive restart:** `restart_ollama()` every `RESTART_EVERY_N` papers (default 25). Polls `/api/tags` for up to 60s
+docs/architecture/pipeline.md:231:**Constants:** `MODEL = "deepseek-r1:32b"`, `MAX_RETRIES = 2`, `RETRY_DELAY = 30`, `SNIPPET_MAX_RETRIES = 2`, `RESTART_EVERY_N = 25`
+docs/architecture/pipeline.md:430:- Proactive `restart_ollama()` failures are logged and the run continues (graceful degradation, not crash)
+docs/architecture/models.md:62:| 3. Restart recovery | `sudo systemctl restart ollama` + poll `/api/tags` (60s max) | Final attempt after all retries exhausted |
+docs/architecture/models.md:64:**Retry logic:** Up to `1 + max_retries` attempts (default 3 total) with 30s delay between retries. On final exhaustion, restart Ollama and make one last attempt.
+docs/architecture/modules.md:375:- `ollama_chat(model, messages, ...)` — HTTP timeout + wall-clock timeout + restart recovery. Model-aware timeouts (8b:300s, 27b:600s, 32b:900s, 70b:1200s). Default 2 retries + 30s delay. Checks input fit 
+docs/architecture/modules.md:511:| `test_ollama_client.py` | Timeout wrapper, retry, restart recovery |
+docs/architecture/pipeline.md:435:- Ollama timeouts raise after retry exhaustion (with restart recovery as final attempt)

@@ -1,0 +1,673 @@
+| 2026-03-14T21:21:33Z | evidence-engine | main | 8ba20bb | feat: Ollama watchdog — shared client with HTTP timeouts and wall-clock guard |
+| 2026-03-14T21:32:59Z | evidence-engine | main | a968b85 | fix: raise HTTP read timeout to 900s — prompt eval on 32K+ texts needs minutes |
+| 2026-03-14T22:55:11Z | evidence-engine | main | 644eedf | feat: Ollama auto-restart recovery after exhausted retries |
+| 2026-03-14T23:08:42Z | evidence-engine | main | b608d93 | feat: FT screening model swap to qwen3:32b, architecture and gitignore updates |
+| 2026-03-15T04:36:33Z | evidence-engine | main | 969ecf4 | feat: extraction audit HTML tool + FT adjudication HTML tool with JSON importers |
+| 2026-03-15T04:52:32Z | evidence-engine | main | 5fb2f86 | feat: abstract adjudication HTML tool, standardize HTML/JSON for all human review, deprecate xlsx |
+| 2026-03-15T05:15:14Z | evidence-engine | main | 7919558 | feat: naming convention (engine/core/naming.py), HTML/JSON standardization, xlsx deprecation, CLAUDE.md updated |
+| 2026-03-15T07:31:46Z | evidence-engine | main | 2e3d916 | fix: three bugs blocking Run 5 — low_yield v2 schema, extractor status filter, validator/prompt |
+| 2026-03-15T18:45:09Z | evidence-engine | main | 477aeb3 | feat: concordance analysis module, cloud extraction fixes, PRISMA 2020 split |
+| 2026-03-15T20:29:42Z | evidence-engine | main | 35d0a8a | feat: codebook-driven extraction prompt, replaces hand-curated _FIELD_GUIDES |
+| 2026-03-16T05:01:42Z | evidence-engine | main | 3aa7e11 | feat: extraction validator improvements, DB backup, retry-failed, progress reporter |
+| 2026-03-16T19:09:52Z | evidence-engine | main | f979763 | feat: Sonnet arm fixes, proactive Ollama restart, model digest tracking, concordance schema parity |
+| 2026-03-17T15:04:58Z | evidence-engine | main | ed9edee | feat: pre-flight env assertions, restart_ollama timestamp/paper-count logging |
+| 2026-03-17T15:29:44Z | evidence-engine | main | 2f8847f | feat: Paper 1 analysis — human workbook importer and concordance adjudication |
+| 2026-03-17T16:19:58Z | evidence-engine | main | d0bf07c | feat: consensus derivation and distribution collapse detector |
+| 2026-03-17T16:59:37Z | evidence-engine | main | 90f65c3 | docs: regenerate architecture documentation from codebase audit |
+| 2026-03-18T23:44:11Z | evidence-engine | main | 7b51cc0 | feat: post-extraction distribution monitor, cloud parser hardening, validation scripts |
+| 2026-03-19T00:10:06Z | evidence-engine | main | 6d4b1bb | docs: update CLAUDE.md with cloud extraction, concordance, and Paper 1 architecture |
+| 2026-03-19T05:16:37Z | evidence-engine | main | b1ef2cb | feat: engine hardening — codebase audit fixes (Batches 1-7) |
+| 2026-03-19T16:28:34Z | evidence-engine | main | e124b20 | feat: engine hardening — codebase audit fixes (Batches 8-10) |
+| 2026-03-19T23:55:41Z | evidence-engine | main | e1696e8 | docs: regenerate architecture documentation from full codebase audit |
+| 2026-03-19T23:58:39Z | evidence-engine | main | 9d6903d | docs: regenerate architecture documentation from full codebase audit |
+| 2026-03-28T23:59:49Z | evidence-engine | main | a811275 | chore: gitignore .claude/ and logs/ directories |
+| 2026-03-28T23:59:58Z | evidence-engine | main | 81a7408 | feat: add tier column to evidence_spans with NOT NULL constraint |
+| 2026-03-29T00:00:05Z | evidence-engine | main | 35111c5 | feat: 3-arm AI disagreement pairs export for PLUM Lab review |
+| 2026-03-29T00:00:11Z | evidence-engine | main | 766e845 | feat: add nightly test suite script with crontab at 2:00 AM Pacific |
+| 2026-04-19T18:26:45Z | evidence-engine | main | a252ed9 | refactor: tier ollama_preflight env assertions into correctness vs performance |
+| 2026-04-20T11:09:45Z | evidence-engine | main | fd2d391 | feat(paper1): add deterministic pre-judge flags (precheck) |
+| 2026-04-20T11:09:59Z | evidence-engine | main | cd4e38b | feat(paper1): add LLM-as-judge Pass 1 schema, prompts, orchestrator |
+| 2026-04-20T11:10:10Z | evidence-engine | main | a06227c | feat(db): add migration 007 for judge_runs / judge_ratings tables |
+| 2026-04-20T11:10:23Z | evidence-engine | main | a560322 | feat(paper1): add judge storage API with atomic transactional writes |
+| 2026-04-20T11:10:41Z | evidence-engine | main | d5bbd81 | feat(paper1): add judge loader + CLI for Pass 1 pipeline |
+| 2026-04-22T04:26:04Z | evidence-engine | main | 25e83f7 | feat(db): add migration 008 for fabrication_verifications table |
+| 2026-04-22T04:26:41Z | evidence-engine | main | d48d9d3 | feat(paper1): add Pass 2 fabrication verification core |
+| 2026-04-22T04:26:49Z | evidence-engine | main | 9e6eb03 | feat(paper1): add Pass 2 smoke and full-run CLI orchestrators |
+| 2026-04-22T04:26:55Z | evidence-engine | main | 0a8ecef | feat(paper1): add Pass 1 inspection cross-tab report |
+| 2026-04-22T04:27:03Z | evidence-engine | main | ab96078 | chore(paper1): add Pass 2 smoke diagnostic scripts and reports |
+| 2026-04-22T18:09:13Z | evidence-engine | main | fcf45fd | feat(paper1): add pass2 single-triple retry and Branch B preliminary report generators |
+| 2026-04-22T18:11:13Z | evidence-engine | main | 8fefa66 | feat(paper1): fetch canonical judge model SHA-256 digest via Ollama /api/tags |
+| 2026-04-22T18:11:54Z | evidence-engine | main | c845751 | fix(paper1): tighten Pass 2 verdict schema to prevent malformed arm_verdicts emission |
+| 2026-04-22T18:21:11Z | evidence-engine | main | cb8815b | chore(paper1): add Pass 2 preliminary reports for run 20260421T174729Z |
+| 2026-04-22T19:25:20Z | evidence-engine | main | c62c30b | feat(paper1): add PI audit sampler and blinded workbook (n=100, balanced within stratum) |
+| 2026-06-03T17:57:47Z | evidence-engine | main | 568f093 | feat(paper1): add judge_rubric_family + ordinal metadata to extraction codebook |
+| 2026-06-03T18:05:15Z | evidence-engine | main | ca858cb | feat(paper1): rebuild build_judge_prompt() to dispatch on judge_rubric_family |
+| 2026-06-04T02:33:07Z | evidence-engine | main | 13074c6 | feat(paper1): cut over run_pass2 to codebook-aware build_judge_prompt() |
+| 2026-06-04T04:21:05Z | evidence-engine | main | 45343f1 | feat(paper1): pass2_full seed reuse + resume + proactive restart |
+| 2026-06-05T03:56:02Z | evidence-engine | main | 4ae8272 | feat(paper1): implement PI audit unblinding + judge-reliability scoring |
+| 2026-06-05T03:56:12Z | evidence-engine | main | 28b490f | feat(paper1): add PI audit v2 sampler (verdict-transition + intra-rater, n=200) |
+| 2026-06-05T03:56:20Z | evidence-engine | main | ae6f8ac | docs(paper1): Phase 2b codebook-aware run report + refresh CLAUDE.md/.gitignore |
+| 2026-07-27T18:40:04Z | evidence-engine | main | b158a25 | feat(paper1): pin evidence-provenance taxonomy + full Run 6 census |
+| 2026-07-27T19:52:35Z | evidence-engine | main | fdbf076 | feat(paper1): separate ABSENCE_CLAIM from no-textual-basis in the provenance taxonomy |
+| 2026-07-27T23:25:15Z | evidence-engine | main | f182f0c | feat(ops): flock-based experiment guard so foreign runs cannot restart Ollama |
+| 2026-07-28T00:08:03Z | evidence-engine | main | 9b0da41 | feat(paper1): three-way field classification (STATED/INFERABLE/JUDGMENT) + census recount |
+| 2026-07-28T15:45:15Z | evidence-engine | main | 97179b4 | feat(paper1): restate Pass 2 judge verdicts against the frozen provenance taxonomy |
+| 2026-07-28T16:01:49Z | evidence-engine | main | db93ce6 | feat(paper1): autopsy the single-span storage collapse (21 Run 6 extractions) |
+| 2026-07-28T16:58:53Z | evidence-engine | main | a90bbfe | feat(engine): capture finish_reason and pre-parse response content per extraction call |
+| 2026-07-28T16:58:53Z | evidence-engine | main | ee6a82b | feat(engine): enforce extraction completeness at the write boundary, all arms |
+| 2026-07-28T20:20:07Z | evidence-engine | main | c8fcb03 | feat(eval): A/B harness for schema-constrained vs unconstrained extraction |
+| 2026-07-29T15:59:54Z | evidence-engine | main | 9190e41 | fix(engine): consume Ollama's native thinking channel; remove the silent fallback |
+| 2026-07-29T16:28:52Z | evidence-engine | main | 8486f89 | feat(eval): post-fix smoke for the thinking-channel regression |
+| 2026-07-29T23:04:04Z | evidence-engine | main | f5e28d8 | feat(eval): A/B/C local response-contract harness (SCHEMA-EVAL-02) |
+| 2026-07-31T23:49:49Z | evidence-engine | main | 92c70a5 | docs: preserve 2026-07-29/30 session engineering records |
+| 2026-08-01T00:03:33Z | evidence-engine | main | 9b9d88c | feat(eval): adjudicate the schema-decision disagreement clause (ADJUD-01) |
+| 2026-08-01T17:11:03Z | evidence-engine | main | 1ffa04e | feat(eval): runtime-version A/B against Ollama 0.17.7 (QUALGAP-01) |
+| 2026-08-23T05:02:37Z | evidence-engine | main | 4eafbc9 | docs: QUALGAP-01 report — the runtime is acquitted, the code path is not |
+| 2026-08-23T05:49:26Z | evidence-engine | main | 184d857 | test: fence the suite against service-manager calls (OPSFIX-01) |
+| 2026-08-23T05:49:36Z | evidence-engine | main | 19e0ad8 | fix(engine): flock-gate the last-resort Ollama restart, add a supported opt-out |
+| 2026-08-23T06:31:16Z | evidence-engine | main | 9674c8c | feat(eval): measure Pass-1 channel quote-richness and its link to anchoring (PRIME-01) |
+| 2026-08-23T07:07:14Z | evidence-engine | main | e54c07e | docs: record the Ollama service invariants and the extraction-quality chain |
+| 2026-08-30T04:51:34Z | evidence-engine | main | 0bc5765 | docs: append QUALGAP-01 correction addenda to three superseded reports |
+| 2026-08-30T04:51:43Z | evidence-engine | main | 8edd6bb | docs: PRIME-01 report -- the two Pass-1 channels are categorically different |
+| 2026-08-30T08:06:40Z | evidence-engine | main | 0cd8d4d | feat(eval): capture the 0.21.0 Pass-1 draft channel and measure it (CAPTURE-01) |
+| 2026-08-30T08:06:51Z | evidence-engine | main | 945f414 | docs: CAPTURE-01 report -- the channel gap replicates, the draft is thinner |
+| 2026-08-30T20:35:42Z | evidence-engine | main | bd4439a | feat(eval): add paired same-paper 0.17.7-vs-0.21.0 draft comparison (CAPTURE-01) |
+| 2026-08-30T20:35:42Z | evidence-engine | main | 884b771 | docs: record the paired 0.17.7-vs-0.21.0 draft comparison in the CAPTURE-01 report |
+| 2026-08-30T21:59:34Z | evidence-engine | main | 3894035 | feat(eval): corpus-wide parse-quality and input-truncation sweep (PARSE-01) |
+| 2026-08-30T21:59:34Z | evidence-engine | main | 3114e41 | docs: PARSE-01 report -- four parse-defective papers, two truncated on input |
+| 2026-08-30T21:59:50Z | evidence-engine | main | ddf8415 | docs: append PARSE-01 addenda to nine affected reports |
+| 2026-08-30T22:15:19Z | evidence-engine | main | 7e33d0c | docs: record the three PARSE-01 fix-phase findings (F1-F3) |
+| 2026-08-31T01:29:19Z | evidence-engine | main | d99a2b2 | feat(eval): COPY vs INDEX quote elicitation harness for STATED fields (ELICIT-01) |
+| 2026-08-31T01:29:34Z | evidence-engine | main | 6371e87 | docs: ELICIT-01 report -- COPY 36.1% anchored, INDEX 100% index-valid |
+| 2026-09-03T03:59:33Z | evidence-engine | main | 8f1a3e4 | docs: VERIFY-EXIT-01 report -- ELICIT-01 exit verified, zero deltas |
+| 2026-09-03T15:19:21Z | evidence-engine | main | b05380e | docs: ELICIT-DESIGN-01 STEP 0 -- field census, I1/I4 falsified, prompt defect |
+| 2026-09-03T15:20:06Z | evidence-engine | main | d9a3b13 | fix(extract): prompt clause for surgical_domain contradicted the codebook |
+| 2026-09-03T15:37:32Z | evidence-engine | main | 4eb4f75 | feat(codebook): field_class per field + NO_EVIDENCE_LOCATABLE escape token |
+| 2026-09-03T15:37:47Z | evidence-engine | main | bbfd7f7 | feat(elicit): port the ELICIT-01 unit machinery + build-time prompt sizing |
+| 2026-09-03T15:38:00Z | evidence-engine | main | 54f4490 | feat(elicit): per-class Pass-1 evidence contracts, enforced at parse time |
+| 2026-09-03T15:38:11Z | evidence-engine | main | 4338fa4 | feat(extract): write-boundary fail-fast -- no value is stored without evidence |
+| 2026-09-03T15:38:28Z | evidence-engine | main | 87f3434 | feat(elicit): materialize cited units and prime Pass 2 with them |
+| 2026-09-03T15:38:38Z | evidence-engine | main | 8cf0332 | feat(eval): ELICIT-DESIGN-01 three-paper smoke harness |
+| 2026-09-03T15:56:22Z | evidence-engine | main | 1ba2d58 | fix(elicit): restore the integer-only index instruction lost in the class rewrite |
+| 2026-09-03T15:56:48Z | evidence-engine | main | 336bd76 | fix(eval): key the smoke scratch tree by run id instead of clearing one shared dir |
+| 2026-09-03T16:41:15Z | evidence-engine | main | a6da917 | docs: ELICIT-DESIGN-01 end-of-task -- smoke 0/3, design works, corpus does not meet it |
+| 2026-09-03T16:57:29Z | evidence-engine | main | ea9f806 | docs: record the per-class elicitation architecture and its invariants |
+| 2026-09-05T01:11:14Z | evidence-engine | main | 21731d8 | feat(codebook): enumerate CONTRACT_UNMET and end the quote/steps collision |
+| 2026-09-05T01:11:41Z | evidence-engine | main | a5abcbb | feat(elicit): per-field terminal states replace the paper-level refusal |
+| 2026-09-05T01:11:41Z | evidence-engine | main | 7a15e3d | feat(elicit): INFERABLE gains a DIRECTLY_STATED declaration branch |
+| 2026-09-05T01:12:06Z | evidence-engine | main | dfa1453 | feat(elicit): teach the escape token at every field, and type the retry feedback |
+| 2026-09-05T01:12:06Z | evidence-engine | main | a87db2b | feat(elicit): one feedback-carrying retry under conservative acceptance |
+| 2026-09-05T01:12:23Z | evidence-engine | main | 3424c90 | fix(consumers): a terminal state is not a value to score, audit or rewrite |
+| 2026-09-05T01:12:50Z | evidence-engine | main | d3de9c7 | docs: dated addendum correcting ELICIT-DESIGN-01's stale status header |
+| 2026-09-05T01:53:42Z | evidence-engine | main | ca4f1d1 | docs: ELICIT-DESIGN-02 end-of-task -- smoke 3/3 stored, four rulings implemented |
+| 2026-09-05T02:21:37Z | evidence-engine | main | 2463c11 | docs(claude-md): Write-Boundary section named a deleted exception |
+| 2026-09-05T02:43:35Z | evidence-engine | main | 9581a4c | fix(codebook): the last JUDGMENT instruction demanding a quote |
+| 2026-09-05T02:59:56Z | evidence-engine | main | 4102707 | docs: D2 probe -- p498 after the JUDGMENT-instruction rewrite, n=1 |
+| 2026-09-05T03:16:57Z | evidence-engine | main | dfe8cce | docs: addendum -- verbatim cited units behind p498's four task_* values |
+| 2026-09-07T19:56:51Z | evidence-engine | main | 377b4ec | docs(session-reports): VERIFY-EXIT-01 close-state verification ledger |
+| 2026-09-07T20:25:54Z | evidence-engine | main | 8388a1d | fix(corpus): single corpus-eligibility authority; retire three inline copies |
+| 2026-09-07T21:29:47Z | evidence-engine | main | 167d481 | feat(parse): parse-quality metrics and absolute PASS/FAIL verdict module |
+| 2026-09-07T21:58:24Z | evidence-engine | main | c1b2499 | fix(parse): conjunctive shattering criterion, replacement density, uni telemetry |
+| 2026-09-07T22:45:57Z | evidence-engine | main | 3fdaa1e | feat(parse): quality-gated parse cascade, attempt ledger, targeted re-parse |
+| 2026-09-08T02:34:03Z | evidence-engine | main | fe81ac2 | fix(parse): retry docling on a link-stripped copy; record parser exceptions; pin docling |
+| 2026-09-08T03:16:16Z | evidence-engine | main | b7c6803 | feat(parse): deterministic OCR tier (docling+rapidocr), reroute rewrite, glue telemetry, ledger on total failure |
+| 2026-09-08T03:35:29Z | evidence-engine | main | 5e58020 | fix(parse): bound vision route — output cap, context, transcription prompt, truncation abort |
+| 2026-09-08T21:32:44Z | evidence-engine | main | 3c7d3e1 | docs(session-reports): PARSE-GATE lane report and close-state verification |
+| 2026-09-08T22:02:42Z | evidence-engine | main | f96d647 | test(conftest): fence tests out of the live review database |
+| 2026-09-08T23:29:40Z | evidence-engine | main | 658165d | docs(session-reports): PARSE-GATE-08 and -09 read-outs |
+| 2026-09-09T15:48:58Z | evidence-engine | main | 581568c | docs(session-reports): PARSE-GATE-10 corpus font audit |
+| 2026-09-09T16:23:34Z | evidence-engine | main | 6bdb1ea | refactor(parse): move RE_GLYPH to markers.py |
+| 2026-09-09T16:57:25Z | evidence-engine | main | 6264ae1 | feat(parse): font-signature exposure audit + tests |
+| 2026-09-09T16:57:38Z | evidence-engine | main | 6b6260a | docs(session-reports): FONT-AUDIT-01 read-out |
+| 2026-09-09T19:27:30Z | evidence-engine | main | ebdbd68 | feat(parse): FONT_EXPOSURE criterion + tests |
+| 2026-09-09T19:48:30Z | evidence-engine | main | d6972da | feat(db): migration for parse_attempts.font_audit + cascade ledger write + tests |
+| 2026-09-09T19:50:51Z | evidence-engine | main | cd35560 | docs(session-reports): PARSE-GATE-10 addendum and FONT-AUDIT-02 read-out |
+| 2026-09-09T22:43:22Z | evidence-engine | main | 633e56b | docs(session-reports): VERIFY-EXIT-01 font-audit close |
+| 2026-09-09T23:21:27Z | evidence-engine | main | fa394e5 | docs(session-reports): GENERALIZE-READOUT-01 read-out |
+| 2026-09-09T23:45:20Z | evidence-engine | main | e1f27af | feat(spec): reject unknown keys at every level of the Review Spec |
+| 2026-09-09T23:49:16Z | evidence-engine | main | 64d9a6a | feat(spec): the Review Spec names its own review |
+| 2026-09-09T23:51:25Z | evidence-engine | main | fa4a7de | feat(spec): resolver derives spec path and data root from the review id |
+| 2026-09-10T00:03:31Z | evidence-engine | main | fa6c738 | feat(spec): every spec-bearing entry point resolves the review from its id |
+| 2026-09-10T00:10:54Z | evidence-engine | main | 967d135 | docs(claude-md): --review invocation after SPEC-AUTH-01 |
+| 2026-09-10T00:22:54Z | evidence-engine | main | 5f4de81 | feat(tools): AST inventory of entry points and authority readers |
+| 2026-09-10T00:23:03Z | evidence-engine | main | 3ab8cff | docs(inventory): generated entry-point and authority-reader inventory |
+| 2026-09-10T00:45:13Z | evidence-engine | main | 04a4c64 | chore(data): retire debris directories; regenerate inventory |
+| 2026-09-10T20:56:36Z | evidence-engine | main | 962e2a1 | feat(codebook): one loader — resolved, validated, identity-checked, hashed |
+| 2026-09-10T21:22:20Z | evidence-engine | main | 87093a3 | fix(codebook): the silent readers close |
+| 2026-09-10T21:30:37Z | evidence-engine | main | cc7a65f | feat(db): record the codebook in extraction provenance |
+| 2026-09-10T21:43:17Z | evidence-engine | main | 02452ee | fix(spec): one field-type vocabulary, and a parity test that holds it |
+| 2026-09-10T22:05:48Z | evidence-engine | main | 13b16a4 | refactor(codebook): every reader obtains the document from the loader |
+| 2026-09-10T22:31:31Z | evidence-engine | main | 4106a8f | docs(session-reports): MIGRATE-012 live application |
+| 2026-09-10T23:05:45Z | evidence-engine | main | caaac93 | docs(session-reports): SCHEMA-DERIVE-01 description side-by-side |
+| 2026-09-10T23:21:32Z | evidence-engine | main | 9b3f170 | feat(codebook): accessors that replace the spec's schema sub-models |
+| 2026-09-10T23:42:27Z | evidence-engine | main | 911cd28 | refactor(schema): the twelve consumers read the codebook |
+| 2026-09-10T23:49:01Z | evidence-engine | main | 9de8249 | fix(adjudication): the human audit rubric is the model's rubric |
+| 2026-09-11T00:37:12Z | evidence-engine | main | dfde733 | feat(provenance): staleness, cleanup and parity read codebook_hash |
+| 2026-09-11T00:46:45Z | evidence-engine | main | e99204f | feat(spec): the extraction schema leaves the Review Spec |
+| 2026-09-11T02:00:19Z | evidence-engine | main | a8ede6d | content(codebook): validation_setting ordered_values in fidelity order |
+| 2026-09-11T02:09:27Z | evidence-engine | main | 8d43b99 | docs(session-reports): MIGRATE-013 live application |
+| 2026-09-12T00:50:29Z | evidence-engine | main | fefd112 | docs(session-reports): recover ten chat-only read-outs from transcript |
+| 2026-09-12T21:56:33Z | evidence-engine | main | 521b92a | feat(screening): one eligibility authority, and a renderer that proves it |
+| 2026-09-12T21:58:16Z | evidence-engine | main | 95ddc3f | docs(session-reports): SCREEN-AUTH-01 Phase 2b |
+| 2026-09-12T22:15:56Z | evidence-engine | main | e9c4aa0 | feat(screening): the identity gate covers the whole request, not half of it |
+| 2026-09-12T22:16:31Z | evidence-engine | main | 83defc5 | docs(session-reports): SCREEN-AUTH-01 Phase 2b addendum |
+| 2026-09-13T00:07:13Z | evidence-engine | main | a01ab47 | feat(screening): fold the eligibility authority to one canonical wording |
+| 2026-09-13T00:13:18Z | evidence-engine | main | 4d78a2c | docs(session-reports): SCREEN-AUTH-01 Phase 2c renders — the evidence the fold was approved from |
+| 2026-09-13T00:20:14Z | evidence-engine | main | 61326fa | docs(session-reports): SCREEN-AUTH-01 Phase 2c |
+| 2026-09-13T04:11:54Z | evidence-engine | main | e2adff3 | feat(eval): SCREEN-AUTH-01 Phase 2f three-arm abstract-screening smoke harness |
+| 2026-09-13T05:28:25Z | evidence-engine | main | 8a7dc4f | docs(session-reports): SCREEN-AUTH-01 Phase 2f smoke outputs and scorer |
+| 2026-09-13T05:35:33Z | evidence-engine | main | 34a348e | docs(session-reports): SCREEN-AUTH-01 Phase 2f |
+| 2026-09-13T18:25:12Z | evidence-engine | main | a6543c8 | docs(session-reports): SCREEN-AUTH-01 Phase 2g Part 1 readout |
+| 2026-09-13T19:17:54Z | evidence-engine | main | e1c5a38 | docs(session-reports): INPUT-FIT-01 Phase 1 readout |
+| 2026-09-13T20:17:09Z | evidence-engine | main | d770244 | feat(ollama): input-fit guard in the client wrapper |
+| 2026-09-13T20:26:43Z | evidence-engine | main | de2abe7 | refactor(elicitation): remove the pipeline's private input-size guard |
+| 2026-09-13T20:45:40Z | evidence-engine | main | 6e07216 | docs: INPUT-FIT-01 addenda, guard architecture, CLAUDE.md corrections |
+| 2026-09-13T20:52:57Z | evidence-engine | main | b3a061e | fix(ollama): an explicit num_ctx is clamped only by the trained context |
+| 2026-09-13T21:25:30Z | evidence-engine | main | 7e3ebc1 | docs(session-reports): INVENTORY-02 Phase 1 read-out |
+| 2026-09-19T20:48:10Z | evidence-engine | main | c600e8d | docs(session-reports): SCREEN-AUTH-01 2g arm-D pre-registration and PI verdicts |
+| 2026-09-19T21:52:14Z | evidence-engine | main | 56c5c57 | feat(screening): exclusion basis as a declared stage policy |
+| 2026-09-19T23:12:18Z | evidence-engine | main | 9a69fbe | feat(eval): SCREEN-AUTH-01 2g P3 pre-flight — arm sets, corrections, the rule |
+| 2026-09-19T23:23:05Z | evidence-engine | main | 19241b9 | fix(eval): arm D is its inputs, not the commit id of the tree they sit in |
+| 2026-09-20T00:40:24Z | evidence-engine | main | 1ec513c | docs(session-reports): SCREEN-AUTH-01 2g P3 — the arm-D re-smoke, NO-GO |
+| 2026-09-20T01:07:48Z | evidence-engine | main | 4e2a66c | docs(session-reports): SCREEN-AUTH-01 2g P3 ruling — D is NO-GO, the bar is inert |
+| 2026-09-20T05:07:48Z | evidence-engine | main | 7e09de3 | docs(session-reports): DISCOVERY-01 Part A — nine result-integrity findings at HEAD |
+| 2026-09-20T05:35:01Z | evidence-engine | main | b8a83b1 | docs(session-reports): DISCOVERY-01 Part B — execution and screening-seam read-out |
+| 2026-09-20T22:18:55Z | evidence-engine | main | 11dd9dd | feat(tools): db_fingerprint — the standing content check for review.db |
+| 2026-09-20T22:19:18Z | evidence-engine | main | fa32025 | fix(db): WAL-aware backup, verified by fingerprint, with an exercised restore |
+| 2026-09-20T22:19:18Z | evidence-engine | main | ed0d92a | docs(session-reports): SAFE-GROUND-01 — report, Appendix B addition, tool pointer |
+| 2026-09-20T23:16:47Z | evidence-engine | main | 4fb0a20 | fix(analysis): Cohen's kappa from label marginals; numeric, boundary and polarity rules |
+| 2026-09-20T23:17:02Z | evidence-engine | main | 62d3a0b | docs(session-reports): INSTRUMENTS-01 — the 63 kappas regenerated, old vs new |
+| 2026-09-21T00:45:12Z | evidence-engine | main | a849660 | feat(migrations): a runner with receipts, and a fresh database that builds the schema |
+| 2026-09-21T00:45:27Z | evidence-engine | main | 806cc5d | docs(session-reports): MIGRATIONS-01 — the live registration, and two addenda |
+| 2026-09-21T00:57:30Z | evidence-engine | main | f19e0bf | docs(session-reports): MIGRATIONS-01 addendum — the cloud NOT NULL gap, measured |
+| 2026-09-21T01:13:52Z | evidence-engine | main | 59dc247 | docs(claude): the database ops invariants, the tools package, and the corrected instruments |
+| 2026-09-21T03:33:47Z | evidence-engine | main | 0709309 | docs(plan): the engine refactor plan enters the repo, with its pointer and the architect archive |
+| 2026-09-21T03:41:20Z | evidence-engine | main | 7887a6e | docs(session-reports): S2 Phase 1 — the effective-result model, design read-out |
+| 2026-09-21T03:59:13Z | evidence-engine | main | 9235e6f | docs(session-reports): S2 Phase 1 addendum — four read-only measurements before the ruling |
+| 2026-09-21T04:54:35Z | evidence-engine | main | 1281e02 | docs: resolution rule v2, R10-R19 in the decision log, two CLAUDE.md corrections |
+| 2026-09-21T05:06:41Z | evidence-engine | main | b0d05f8 | docs: resolution rule v2.1 approved, R20-R23 in the decision log |
+| 2026-09-21T06:21:00Z | evidence-engine | main | 13a2f83 | docs: legacy scope reset — seed, not migrate (R24-R26) |
+| 2026-09-21T18:47:29Z | evidence-engine | main | d028c7a | docs(plan): EFFECTIVE-RESULT-02 Part 0 — the session-4 wrap residue |
+| 2026-09-21T20:57:16Z | evidence-engine | main | b2cd687 | feat(core): the S2 event store, the arm registry, and one reader of v2.1 |
+| 2026-09-21T21:28:25Z | evidence-engine | main | c650347 | docs(plan): session 5 closed — the S2 event store seeded on live |
+| 2026-09-22T02:34:09Z | evidence-engine | main | 9b232c6 | docs: READERS-01 Part 0 — R27-R31, rules 8-9, class C row C11 |
+| 2026-09-22T02:34:27Z | evidence-engine | main | ab5193f | docs(session-reports): READERS-01 Phase 1 — the reader read-out, read-only |
+| 2026-09-22T05:07:20Z | evidence-engine | main | 27ea188 | feat(migrations): 019 — the paper-state vocabulary splits into two axes |
+| 2026-09-22T05:07:36Z | evidence-engine | main | 0bc2e83 | feat(migrations): 018 — cloud tables to the fresh shape; audit_adjudication dropped |
+| 2026-09-22T05:07:51Z | evidence-engine | main | 67d44a3 | feat(core): effective_state goes two-axis; the arm registry and the grid |
+| 2026-09-22T05:08:03Z | evidence-engine | main | b4d5c71 | refactor(cloud): the corpus predicate reads the eligibility axis |
+| 2026-09-22T05:08:16Z | evidence-engine | main | 9370aee | refactor(analysis): concordance and the distribution monitor route through the registry |
+| 2026-09-22T05:08:29Z | evidence-engine | main | b35368c | refactor(judge): the loader takes the full cell grid, the verdict as a feature |
+| 2026-09-22T05:08:41Z | evidence-engine | main | e0ff079 | refactor(exporters): the evidence table reads through the reader |
+| 2026-09-22T05:08:56Z | evidence-engine | main | 443e3d8 | docs: READERS-01 Phase 2a — R27 amended, R32-R39, rules 10, C12/C13, I13 |
+| 2026-09-22T05:48:01Z | evidence-engine | main | 2c5cad4 | refactor(exporters): docx onto the reader, trace exporter retired, pairs universe removed |
+| 2026-09-22T05:48:08Z | evidence-engine | main | ef935d6 | refactor(exporters): docx onto the reader, trace exporter retired, pairs universe removed |
+| 2026-09-22T05:48:24Z | evidence-engine | main | 32180c0 | docs: READERS-01 Phase 2b — R40-R48, the R33 amendment, and the architecture corrections |
+| 2026-09-22T05:55:54Z | evidence-engine | main | d0a19c0 | docs(plan): session 6a closed — the readers are behind the reader; Phase 3 is 6b |
+| 2026-09-22T16:36:06Z | evidence-engine | main | 509aa3c | docs(claude): R52 — the partial-index guard, as an ops invariant |
+| 2026-09-22T16:48:45Z | evidence-engine | main | af00132 | docs(session-reports): READERS-01 phase 3(i) — 018 and 019 rehearsed on a verified copy |
+| 2026-09-22T16:57:29Z | evidence-engine | main | d4ac668 | chore(db): READERS-01 Phase 3 — 018 and 019 applied to live; new fingerprint record |
+| 2026-09-22T17:14:48Z | evidence-engine | main | b17c6fc | docs(plan): READERS-01 closed — R53-R55, row C14, the retention ledger, the 6b closure |
+| 2026-09-22T17:28:22Z | evidence-engine | main | f07c9a5 | docs(plan): the C12/C13 id correction, and the S7 scratch copy swept |
+| 2026-09-22T20:01:36Z | evidence-engine | main | b1429ce | docs(session-reports): MANIFEST-01 Phase 1 — configuration, manifest, run linkage read-out |
+| 2026-09-22T21:27:58Z | evidence-engine | main | 1cd80a4 | feat(manifest): MANIFEST-01 Phase 2a — resolver, capture instrument, run manifest, arm pinning, cloud opt-in |
+| 2026-09-22T21:31:28Z | evidence-engine | main | 545795d | docs(manifest): MANIFEST-01 Phase 2a report, plan rows C15-C21/D8, R56-R79, rule 11, ledger |
+| 2026-09-22T21:59:48Z | evidence-engine | main | b7fff74 | docs(closeout): MANIFEST-01-CLOSE — session 7a closed; R80-R84; CLAUDE.md to the resolver/manifest design |
+| 2026-09-23T15:57:17Z | evidence-engine | main | f4fc628 | docs(manifest): MANIFEST-01 P3i — rehearsal of migration 020 on a verified copy of live |
+| 2026-09-23T16:22:58Z | evidence-engine | main | e62b18a | docs(manifest): MANIFEST-01 P3ii — migration 020 applied to live; new record of reference |
+| 2026-09-23T16:44:43Z | evidence-engine | main | 3c85d47 | docs(closeout): MANIFEST-01-CLOSE — session 7b closed, and with it session 7; R85-R88, row I15 |
+| 2026-09-23T21:31:03Z | evidence-engine | main | b512e31 | docs(plan): INPUT-IDENTITY-01 Part 0 — R89; R85/R86 window in CLAUDE.md |
+| 2026-09-23T21:56:08Z | evidence-engine | main | 8b14b28 | docs(input-identity): INPUT-IDENTITY-01 Phase 1 read-out and parsed-text hash baseline |
+| 2026-09-23T22:20:00Z | evidence-engine | main | 7a9f73a | docs(input-identity): R90-R94 provisional, rows D9-D12, D11 addendum, cleanup do-not-run note |
+| 2026-09-23T22:42:56Z | evidence-engine | main | e40387d | docs(plan): INPUT-IDENTITY-01 Phase 2a Step 0 — R90-R94 confirmed; R95-R97; D9-D12 coverage |
+| 2026-09-23T23:13:03Z | evidence-engine | main | d261003 | refactor(extraction): INPUT-IDENTITY-01 Step 1 — retire the delete paths (R94, R98) |
+| 2026-09-23T23:27:27Z | evidence-engine | main | 47fb81a | feat(migrations): INPUT-IDENTITY-01 Step 2 — migration 021, parsed_text_sha256 (R93, R100, R101) |
+| 2026-09-23T23:42:54Z | evidence-engine | main | f596c23 | feat(parsed-text): INPUT-IDENTITY-01 Step 3 — the one parsed-text resolver (S3e, R95, R100) |
+| 2026-09-23T23:54:31Z | evidence-engine | main | 476ac4d | feat(parser): INPUT-IDENTITY-01 Step 4 — parse_pdf records its parsed_text_refs row (D8, R99) |
+| 2026-09-24T00:05:59Z | evidence-engine | main | fd2ca03 | feat(reuse): INPUT-IDENTITY-01 Step 5 — reuse_key (R91), R97 pin tests, R98-R102, row D13 |
+| 2026-09-24T00:31:15Z | evidence-engine | main | b614bc5 | docs(closeout): INPUT-IDENTITY-01 — session 8a closed; rows A14, I16, D14, D15; Next: 8b |
+| 2026-09-24T01:53:26Z | evidence-engine | main | 34f4656 | docs(closeout): INPUT-IDENTITY-01 8a — retention rows for the two retired scripts; Status entry |
+| 2026-09-24T20:36:01Z | evidence-engine | main | 00e1a45 | docs(rehearsal): INPUT-IDENTITY-01-P3i — 021 rehearsed on a verified copy of live |
+| 2026-09-24T20:54:01Z | evidence-engine | main | 9e09377 | docs(live-write): INPUT-IDENTITY-01-P3ii — 021 applied to live; new record of reference |
+| 2026-09-24T21:18:06Z | evidence-engine | main | cc176cc | docs(closeout): session 8b — 021 on live; session 8 closed |
+| 2026-09-24T21:22:08Z | evidence-engine | main | ca13532 | docs(claude-md): R109 — migrations 020 and 021 recorded as applied to live |
+| 2026-09-24T21:49:09Z | evidence-engine | main | 8297af3 | docs: session 9 Part 0 — R107–R110 to the log; modules.md per R110 |
+| 2026-09-24T22:04:56Z | evidence-engine | main | 80d8df1 | docs(readout): WRITE-PATH-01 Phase 1a — extractor write path, selection, event writer, S5b |
+| 2026-09-24T22:14:23Z | evidence-engine | main | 99934ca | docs(readout): WRITE-PATH-01 Phase 1b — /api/chat truncate, A14, D15, B6/C23, R46 |
+| 2026-09-24T22:19:34Z | evidence-engine | main | 3647f84 | docs(readout): WRITE-PATH-01 Phase 1c addendum — client transport for truncate; run_calls columns |
+| 2026-09-24T22:38:41Z | evidence-engine | main | 2b2ce91 | fix(parser): D15 (R123) — the same-hash short-circuit reads no parsed-text file |
+| 2026-09-24T22:49:17Z | evidence-engine | main | bc6df61 | refactor(auditor): C23 (R125) — retire eval_auditor_models.py and the ollama_options override |
+| 2026-09-24T23:04:36Z | evidence-engine | main | a1de184 | feat(telemetry): R126/R130 — Pass 1 done_reason and prompt_eval_count per attempt |
+| 2026-09-24T23:41:36Z | evidence-engine | main | 36bb312 | refactor(sentinels): R124/R128/R131-R138 — absence sentinels from the codebook; canonical sentinel declared |
+| 2026-09-25T00:21:49Z | evidence-engine | main | b8fc014 | closeout: session 9a — R111–R138, Step 2 rows, row-9 addendum, retention, CLAUDE.md |
+| 2026-09-25T03:27:32Z | evidence-engine | main | 06aab85 | WRITE-PATH-01 9b Part 0: R139 (F7) into the decision log |
+| 2026-09-25T03:55:34Z | evidence-engine | main | 15c0ae1 | WRITE-PATH-01 9b-2a: selection to the corpus predicate with reuse_key; R114 sentence |
+| 2026-09-25T04:28:22Z | evidence-engine | main | f9e18ad | WRITE-PATH-01 9b-2b: manifest run_id required (R116); one digest per run (R117); run_calls.paper_id |
+| 2026-09-25T05:21:44Z | evidence-engine | main | ca93558 | WRITE-PATH-01 9b-2c: extraction event mapping, paper events, F9 vocabulary, R118 (not yet wired) |
+| 2026-09-25T06:05:50Z | evidence-engine | main | 49e4cd6 | WRITE-PATH-01 9b-2d: shared locator (R17), event-side auditor, audit_span retirements (R124), prompt sites read the codebook (R131) — not yet wired |
+| 2026-09-25T06:31:28Z | evidence-engine | main | 4756bd2 | WRITE-PATH-01 9b-FLIP 1/2: stage-completion counts and gates read the event store (R112) |
+| 2026-09-25T07:12:58Z | evidence-engine | main | 6e09166 | WRITE-PATH-01 9b-FLIP 2/2: the cut-over (R111) — extractor and audit stage write events; legacy writes retire; finding 1 closed |
+| 2026-09-25T14:56:56Z | evidence-engine | main | 0fade3d | WRITE-PATH-01 9b-2e/f: reextract_failed, reset_for_reextraction and the ELICIT-DESIGN-01 smoke retire (R113, I18); I17 superseded by C27 |
+| 2026-09-25T15:38:32Z | evidence-engine | main | 40ea017 | closeout: session 9b — R140–R156, docs residue, closure paragraph |
+| 2026-09-25T16:54:43Z | evidence-engine | main | 9456c40 | docs(write-path-01): 9c Phase 1 slice-3 census read-out and collected-id baseline at 40ea017 |
+| 2026-09-25T17:29:16Z | evidence-engine | main | 804da1d | test(write-path-01): 9c commit 1 — dead-weight fixtures (R158, class b) |
+| 2026-09-25T17:52:07Z | evidence-engine | main | 9d5fccf | refactor(write-path-01): 9c commit 2 — retire extraction_cleanup and the pre-flight stale count (R159) |
+| 2026-09-25T18:41:39Z | evidence-engine | main | 4c5310c | refactor(write-path-01): 9c commit 3 — retire readers 11–13, the human-audit tooling on legacy verdicts (R162) |
+| 2026-09-25T19:07:18Z | evidence-engine | main | 16b3800 | refactor(write-path-01): 9c commit 4 — reader 14: get_pipeline_stats onto the reader; monitor_extraction retired (R165) |
+| 2026-09-25T19:30:35Z | evidence-engine | main | e53164e | refactor(write-path-01): 9c commit 5 — item 3a, the no-consumer retirements (R160a) |
+| 2026-09-25T19:43:23Z | evidence-engine | main | 2259bb6 | refactor(write-path-01): 9c commit 6 — count_populated_fields narrows to the list shape (R166) |
+| 2026-09-25T20:07:55Z | evidence-engine | main | 03eafe7 | feat(write-path-01): 9c commit 7 — B9: the distribution-collapse check on the local path (R167) |
+| 2026-09-25T20:45:57Z | evidence-engine | main | 2f2525a | closeout: session 9c — R157–R172, rows, ledger, closure paragraph |
+| 2026-09-27T17:20:40Z | evidence-engine | main | 4bd40c6 | docs(write-path-01): 9d-P0/PA — Phase A read-out of the three reporting readers |
+| 2026-09-27T17:54:12Z | evidence-engine | main | dd9a714 | refactor(write-path-01): 9d-C1 — validate_all onto iter_grid (R174 as amended, R175) |
+| 2026-09-27T18:25:54Z | evidence-engine | main | e5b8a67 | refactor(write-path-01): 9d-C2 — methods_section onto the run tables (R177, 9d-C2-R1) |
+| 2026-09-27T18:42:48Z | evidence-engine | main | 17009ed | fix(write-path-01): 9d-C3 — export_all exports the spec's extraction arm (R174, R176; row C29) |
+| 2026-09-27T18:53:29Z | evidence-engine | main | b7f2763 | docs(write-path-01): 9d-C4 — N6/N10 classification read-out (R179 as amended by 9d-C4) |
+| 2026-09-27T19:34:26Z | evidence-engine | main | 22d494d | closeout: 9d closeout: R173–R182, rows, ledger, closure paragraph |
+| 2026-09-28T15:32:01Z | evidence-engine | main | 2153193 | refactor(write-path-01): 9e-C-P1 — PRISMA on the freshman count model (R183–R196) |
+| 2026-09-28T15:46:56Z | evidence-engine | main | 17c4b06 | test(write-path-01): 9e-C-P2 — exporter tests on the event toolkit; populated_db and the mirror retired (R190) |
+| 2026-09-28T16:02:17Z | evidence-engine | main | a6b884f | refactor(write-path-01): 9e-C-P3 — get_screening_summary on the count model (H5, R194) |
+| 2026-09-28T17:08:11Z | evidence-engine | main | edca8a1 | refactor(write-path-01): 9e-3b — retire the four ReviewDatabase writers and the extraction-stage edges (R160b, R197–R201) |
+| 2026-09-28T17:25:50Z | evidence-engine | main | 1fef9f6 | refactor(write-path-01): 9e-R47 (1/3) — retire min_status from the exporters (C33) |
+| 2026-09-28T17:45:29Z | evidence-engine | main | 894f3cf | refactor(write-path-01): 9e-R47 (2/3) — retire normalize_prefix (R180) |
+| 2026-09-28T17:55:43Z | evidence-engine | main | b0ee3bc | refactor(write-path-01): 9e-R47 (3/3) — retire verify_schema_parity (C34) |
+| 2026-09-28T18:06:59Z | evidence-engine | main | 46cd7df | docs(write-path-01): 9e-SE-A — staged-entry design read-out (R182(6)) |
+| 2026-09-28T18:38:41Z | evidence-engine | main | 88889e6 | closeout: 9e closeout: R183–R209, rows, ledger, closure paragraph |
+| 2026-09-28T18:47:25Z | evidence-engine | main | a5744d9 | docs(plan): R210 — R71 stands, re-based on F15 |
+| 2026-09-29T03:29:07Z | evidence-engine | main | 9c4fd00 | feat(migrations): 10a-C1 — the I16 guard: refuse pending migrations on a non-fresh database (R222/R222a) |
+| 2026-09-29T04:07:32Z | evidence-engine | main | 2271b18 | feat(migrations): 10a-C2 — migration 022, R212-R218 (paper_events, run tables, claim_inputs, audit_verdicts) |
+| 2026-09-29T05:03:23Z | evidence-engine | main | 9a6cd52 | feat(ollama,run-manifest): 10a-C3 — R216 recorder on every refusal path, R215 aborted close with reason |
+| 2026-09-29T05:08:13Z | evidence-engine | main | 3ac22b1 | docs(extractor): fix RunAborted's message and docstring — closes 'aborted', not 'failed' (10a-C3 Finding 3) |
+| 2026-09-29T05:41:22Z | evidence-engine | main | 85669ff | feat(events,selection): 10a-C4 commit (b) — claim_inputs writer invariant and selection read (R217) |
+| 2026-09-29T06:00:59Z | evidence-engine | main | 1f1c94d | feat(audit): 10a-C5 — audit_verdicts writer; audit_calls.jsonl retired (R218) |
+| 2026-09-29T07:20:30Z | evidence-engine | main | 2eefe8a | feat(parser): 10a-C6-B — C35 reason sets, ParseFailed, the parse-stage event writer (R227-R231) |
+| 2026-09-29T08:49:07Z | evidence-engine | main | a19ab92 | feat(config): 10a-C7 — R223a: with_options refuses an undeclared option override |
+| 2026-09-29T09:59:30Z | evidence-engine | main | e859b79 | feat(events,extractor,elicitation): 10a-C8-B — R224a: presented context on every local claim |
+| 2026-09-29T10:33:25Z | evidence-engine | main | 3aa6e8d | feat(events,run-manifest): 10a-C9 (1/3) — B15: refuse an unknown field name under an active run |
+| 2026-09-29T10:44:51Z | evidence-engine | main | 5ad9a25 | feat(auditor): 10a-C9 (2/3) — C31: the audit stage's ollama_chat call carries paper_id |
+| 2026-09-29T10:56:12Z | evidence-engine | main | 94ee916 | test(events): 10a-C9 (3/3) — C22: the migration-caller file-location guard, tested directly |
+| 2026-09-29T12:10:50Z | evidence-engine | main | f335c4a | fix(run-manifest): 10a-C10 — R225a: the codebook field set is keyed by run, not by activation |
+| 2026-09-29T12:22:18Z | evidence-engine | main | a551bea | docs(plan): 10a closeout — decision log R211-R231, rows closed/opened, retention ledger, closure paragraph |
+| 2026-09-29T13:58:54Z | evidence-engine | main | 2c3fbbd | docs(plan): 10a-W pre-wrap fix — C1-C5 gate wall times; R232 (id-baseline and decision-log conventions) |
+| 2026-09-29T17:12:32Z | evidence-engine | main | 3ce8265 | fix(migrations): 10b-C1 — 022 end_reason pairing as permitted states (R79, 10b-P3i finding 3) |
+| 2026-09-29T17:22:48Z | evidence-engine | main | 0bcdbb2 | docs(migration-02): 10b-P3ii — 022 applied to live; new record of reference |
+| 2026-09-29T18:58:41Z | evidence-engine | main | c1c6210 | feat(pipeline): 10b-C2 — --max-papers, a declared, manifest-recorded extraction bound |
+| 2026-09-29T20:56:28Z | evidence-engine | main | 0e0bd8f | docs(plan): 10b closeout — decision log R233–R241, rows B21 C37–C40 I20, retention ledger, R114 rewrite (R237), closure paragraph |
+| 2026-09-30T03:20:26Z | evidence-engine | main | e86e163 | docs(staged-entry-01): session 11 P0 — startup verify and read census |
+| 2026-09-30T03:53:05Z | evidence-engine | main | 392d1c7 | fix(inventory): B21 — review-id census anchored on review_specs/, throwaway-aware |
+| 2026-09-30T04:16:51Z | evidence-engine | main | 3a114da | fix(ft-screener): remove the three undeclared FT-path overrides (R-c, R223a) |
+| 2026-09-30T04:47:30Z | evidence-engine | main | ce86e30 | fix(ft-screener): FT primary selects PARSED only (R-e, D18 partial) |
+| 2026-09-30T05:13:19Z | evidence-engine | main | 6e9b247 | docs(staged-entry-01): BRIDGE-A read-out, V1/V2 read, BRIDGE-R1 rulings |
+| 2026-09-30T05:28:55Z | evidence-engine | main | 9a1410d | fix(prisma): identity 1 refined for verification pending (R-S1, R-SEAM-1..4) |
+| 2026-09-30T05:59:58Z | evidence-engine | main | 41bb417 | docs(plan): session 11 closeout — decision log R242–R269, rows B21 closed / C41–C46 opened, retention, closure paragraph |
+| 2026-09-30T08:46:24Z | evidence-engine | main | 7d9f916 | feat(ft-screener): eligibility bridge — screening manifest and model eligibility events (R258–R262) |
+| 2026-09-30T11:14:37Z | evidence-engine | main | f98a375 | test(extraction-events): paper-event and SQLite-raised failure points (B10, R244) |
+| 2026-09-30T11:46:13Z | evidence-engine | main | 5d83ac3 | feat(adjudication): FT adjudication import under an import manifest (R247, R252; closes C42) |
+| 2026-09-30T12:21:25Z | evidence-engine | main | 698f78f | docs(plan): session 11b closeout — decision log R270–R299, rows C42/C43/D19/B10 closed, C47–C50/I21/J8 opened, retention, closure paragraph |
+| 2026-09-30T14:48:30Z | evidence-engine | main | dd6cd5a | docs(CLAUDE.md): FT screening selection true at HEAD (11c R-a) |
+| 2026-09-30T15:05:42Z | evidence-engine | main | e40030c | feat(adjudication): extraction-entry import into an empty review (R204; 11c R-b..R-e, R-j..R-m) |
+| 2026-09-30T15:53:30Z | evidence-engine | main | d3d7181 | feat(adjudication): screening-entry import into an empty review (11c R-r..R-t) |
+| 2026-09-30T22:17:32Z | evidence-engine | main | 694d568 | docs(plan): session 11c closeout — decision log R300–R331, rows B22/C51/D21/E9/F6/F7/F8/H7/I22 opened, D20 amended, roadmap to R300, retention, closure paragraph |
+| 2026-10-01T00:39:21Z | evidence-engine | main | 198a349 | docs(claude-md): 12a item 0b — importer scope, lifecycle on retired tokens, no gate count/duration |
+| 2026-10-01T01:22:02Z | evidence-engine | main | 59c4047 | fix(run_pipeline): C40 — BLOCKED closes carry a gate reason; one close helper |
+| 2026-10-01T01:48:37Z | evidence-engine | main | e5dac62 | fix(runs): C47 — interrupts and SIGTERM/SIGHUP close 'interrupted' with a reason |
+| 2026-10-01T02:07:12Z | evidence-engine | main | 7f28032 | fix(runs): C47 — roll back before the closed check (a rolled-back close is not a close) |
+| 2026-10-01T02:31:45Z | evidence-engine | main | 0b4ac1c | refactor(extractor): E-DEADKI — drop outcome_for_exception's unreachable interrupt branch |
+| 2026-10-01T03:27:07Z | evidence-engine | main | d4d64c2 | fix(runs): E-EXEC — an interrupted CLI exits at once (no in-flight worker join) |
+| 2026-10-01T04:13:02Z | evidence-engine | main | b05ef06 | fix(manifest): E-STATE — engine_state from a named-state tag at HEAD |
+| 2026-10-01T05:41:22Z | evidence-engine | main | bcceff8 | docs(run_manifest): E-STATE — keep the refusals list contiguous |
+| 2026-10-01T05:55:10Z | evidence-engine | main | 77fe1a2 | docs(plan): session 12a closeout — rulings R332–R370, rows, session-12c expectations |
+| 2026-10-01T12:34:19Z | evidence-engine | main | 93e3a55 | docs(plan): 12c item 0c — addendum correcting 12a closeout citations |
+| 2026-10-01T13:54:48Z | evidence-engine | main | 84faf0d | fix(manifest): E-PIN — prompt_hash renders every template a stage sends |
+| 2026-10-01T14:18:25Z | evidence-engine | main | 1131fdc | fix(elicitation): E-SENTINEL — a codebook the sentinels cannot fill is refused by name |
+| 2026-10-01T14:39:25Z | evidence-engine | main | 4596965 | refactor(elicitation): retire SYSTEM_PASS2; unreachable priming branches raise |
+| 2026-10-01T15:35:41Z | evidence-engine | main | 2997cc9 | fix(extractor): C41 — remove _with_think's think= override (as R246 removed FT's) |
+| 2026-10-01T16:05:16Z | evidence-engine | main | 2f87855 | fix(extractor): C41 follow-up — cfg required where the fallback dropped the spec; keyword-only tails |
+| 2026-10-01T16:31:49Z | evidence-engine | main | b909989 | fix(engine): C52 — cfg required at the four remaining spec-dropping sites |
+| 2026-10-01T17:12:49Z | evidence-engine | main | a1d9d16 | fix(parse): C53 — thread the spec through the PARSE stage into the parser |
+| 2026-10-01T18:02:54Z | evidence-engine | main | c92fe30 | fix(extract): D21 — record papers refused at selection (R122 at selection time) |
+| 2026-10-01T21:16:54Z | evidence-engine | main | ad01226 | docs(plan): session 12c closeout — rulings R371–R428, rows, session-12d expectations |
+| 2026-10-06T04:24:15Z | evidence-engine | main | 485e7b9 | fix(audit): D23 — audit locates each claim against the text it was extracted from |
+| 2026-10-06T05:02:09Z | evidence-engine | main | c44ff73 | fix(events): D23 follow-up — a citation must name its claim's text (strict form) |
+| 2026-10-06T05:22:08Z | evidence-engine | main | 0d19bb4 | fix(events): D26 — refuse a model extraction claim without an extraction_uid |
+| 2026-10-06T16:07:08Z | evidence-engine | main | c83cd2c | refactor(auditor): B23 — semantic_verify drops the paper text it never sent |
+| 2026-10-06T16:40:53Z | evidence-engine | main | 40ec8b6 | refactor(auditor): B23 follow-up — semantic_verify takes only the span positionally |
+| 2026-10-06T17:58:07Z | evidence-engine | main | 5ef694f | fix(extract): D24 — a new outcome supersedes the paper's old-text claims |
+| 2026-10-06T18:43:00Z | evidence-engine | main | caf2034 | docs(plan): session 12d closeout — rulings R429–R463, rows, session-12e expectations |
+| 2026-10-06T19:29:02Z | evidence-engine | main | 2b0d51f | docs(plan): 12e item 0c — addendum: D26's post-mint refusal was accepted as built |
+| 2026-10-06T21:51:22Z | evidence-engine | main | 29321ae | fix(run): C54 — ollama_chat refuses an undeclared call before sending |
+| 2026-10-06T22:38:29Z | evidence-engine | main | 0cfd591 | fix(pipeline): C57 — a start at or before SCREEN stops at the adjudication gate |
+| 2026-10-06T22:53:56Z | evidence-engine | main | 3774449 | fix(pipeline): C55 — a run that screens declares the screening preflight |
+| 2026-10-06T23:42:09Z | evidence-engine | main | 49845c1 | fix(pipeline): C58 — the audit-review gate stops on the audit review's own state |
+| 2026-10-07T00:11:28Z | evidence-engine | main | c22c15d | docs(plan): session 12e closeout — rulings R464–R506, rows, session-12f expectations |
+| 2026-10-08T15:51:45Z | evidence-engine | main | 297667c | docs(plan): 12f item 0c — rulings R507–R513, defect classes, outside assessments A and B as inputs |
+| 2026-10-08T16:26:06Z | evidence-engine | main | 1a25337 | docs(session-12): 12f read-out — outside findings verified at HEAD, C56 census, triage table |
+| 2026-10-08T16:50:22Z | evidence-engine | main | 46873f6 | docs(plan): session 12f closeout — the verification read, 12g expectations, retention row |
+| 2026-10-08T17:21:25Z | evidence-engine | main | f51a2d5 | docs(plan): 12g item 0c — rulings R514–R541, inventory section L, the order to the tag |
+| 2026-10-08T17:44:32Z | evidence-engine | main | c85a49f | docs(session-12): 12g read-out — R516 and R536 measurements, read-only |
+| 2026-10-08T18:11:04Z | evidence-engine | main | 931e385 | docs(session-12): 12g Rehearsal A, Phase A — the design read |
+| 2026-10-08T20:45:19Z | evidence-engine | main | 6d9a56a | docs(session-12): 12g Rehearsal A — the run, retention and four analyses |
+| 2026-10-08T21:10:25Z | evidence-engine | main | 015b2e4 | docs(session-12): 12g front-half rehearsal, Phase A — the design read |
+| 2026-10-08T21:52:14Z | evidence-engine | main | b3b4289 | docs(session-12): 12g front-half rehearsal — the run, retention and analysis |
+| 2026-10-08T22:53:39Z | evidence-engine | main | aabca44 | docs(plan): 12g close — rulings R542–R565 (R557–R559 withdrawn by R563) |
+| 2026-10-08T22:55:04Z | evidence-engine | main | 00b2835 | docs(plan): 12g close — section L (12g additions), dated notes, the pre-tag recount |
+| 2026-10-08T22:56:33Z | evidence-engine | main | 90f4697 | docs(plan): session 12g closeout — retention, the closure, 12h expectations |
+| 2026-10-08T23:51:39Z | evidence-engine | main | 76b8ae9 | docs(session-12): 12h RD-3 — readers of payload_json.state_at_write |
+| 2026-10-08T23:51:55Z | evidence-engine | main | 94006b1 | docs(session-12): 12h RD-4 — where cited units beyond the first run are dropped |
+| 2026-10-08T23:51:57Z | evidence-engine | main | d056e13 | docs(session-12): 12h RD-5 — undeclared-reach stages and the screen-start arm pin |
+| 2026-10-08T23:51:59Z | evidence-engine | main | 7d35794 | docs(session-12): 12h RD-6 — the two abstract passes never differed |
+| 2026-10-08T23:57:52Z | evidence-engine | main | 9a3c147 | docs(session-12): 12h RD-1 — Pass-1 contract text, feedback and where first attempts fail |
+| 2026-10-08T23:58:14Z | evidence-engine | main | 8d98873 | docs(session-12): 12h RD-1 — dated addendum making two summary sentences precise |
+| 2026-10-09T00:02:05Z | evidence-engine | main | dc603c8 | docs(session-12): 12h RD-2 — Run 6 legacy local spans against their source texts |
+| 2026-10-09T00:14:49Z | evidence-engine | main | 4e0bf36 | docs(plan): 12h rulings R566–R573 — the six reads ruled, section L and the recount |
+| 2026-10-09T00:35:21Z | evidence-engine | main | 7ff6782 | docs(plan): 12h rulings R574–R576 — the Run 7 clause restored, R540's locator-2 clause withdrawn, three row notes |
+| 2026-10-09T00:40:33Z | evidence-engine | main | 0e9093d | docs(plan): session 12h closeout — the closure, retention, 12i expectations |
+| 2026-10-09T01:43:59Z | evidence-engine | main | b711683 | docs(session-12): 12i scoping read — which engine code assessments A and B covered |
+| 2026-10-09T02:24:11Z | evidence-engine | main | ba63301 | docs(session-12): 12i internal review, wave 1 — the Run 7 core and papers 4, 23, 168 |
+| 2026-10-09T03:13:35Z | evidence-engine | main | 03878da | docs(session-12): 12i EE-LOCATE — the two EE-NNN numberings |
+| 2026-10-09T03:14:15Z | evidence-engine | main | a11370b | docs(session-12): 12f_triage dated addendum — reader count and roles as recorded (R582(2)) |
+| 2026-10-09T03:15:47Z | evidence-engine | main | 0499ef8 | docs(plan): session 12i closeout — the closure, retention, 12j expectations and first items |
+| 2026-10-10T23:18:52Z | evidence-engine | main | 850effd | docs(plan): decision log — R577–R597 transcribed (12j item 0c) |
+| 2026-10-10T23:23:30Z | evidence-engine | main | 44e37f8 | docs(plan): section L (12i additions), Wave 1 notes and the recount (12j item 0c) |
+| 2026-10-10T23:54:01Z | evidence-engine | main | 2b74a4b | docs(plan): decision log — R598 transcribed (12j-0c-FIX) |
+| 2026-10-10T23:54:58Z | evidence-engine | main | 0e3b823 | docs(plan): R598 applied — INT-i12-78 … 89, seven dated notes, recount 168 (12j-0c-FIX) |
+| 2026-10-11T00:13:49Z | evidence-engine | main | 895ba62 | docs(session-12): 12j internal review, wave 2 — lots L08–L14 |
+| 2026-10-11T04:03:59Z | evidence-engine | main | 7f1ebb1 | docs(plan): session 12j closeout — the closure, retention, 12k expectations and first items |
+| 2026-10-11T04:23:20Z | evidence-engine | main | 6e5fea4 | docs(plan): 12j closeout R-1 — ~/scratch/12j-open retained, dated note and 12k-open addendum |
+| 2026-10-11T04:36:53Z | evidence-engine | main | e40596d | docs(plan): decision log — R599–R604 transcribed as Block 8 (12k item 0c) |
+| 2026-10-11T04:46:25Z | evidence-engine | main | 6b6354e | docs(plan): R599–R603 applied — L (12j additions) INT-j12-1 … 59, dated notes, coverage map, recount 238 (12k item 0c) |
+| 2026-10-11T16:51:31Z | evidence-engine | main | b9bd1be | docs(session-12): 12k-EST — read-only inputs for the path to the tag (R604) |
+| 2026-10-11T17:10:56Z | evidence-engine | main | 46ed7e3 | docs(plan): decision log — R605–R611 transcribed as Block 9, with the R609 and R611 notes (12k-RULE) |
+| 2026-10-11T17:30:35Z | evidence-engine | main | 82a33d7 | docs(plan): session 12k closeout — the closure, 12l expectations and first items |
+| 2026-10-11T19:26:06Z | evidence-engine | main | a579915 | docs(session-12): 12l-P1A — P1 Phase A read-out for the package ruling (R607, R608) |
+| 2026-10-11T19:40:11Z | evidence-engine | main | 4049600 | docs(plan): R612 transcribed as Block 10 — P1 package plan; L (12l additions) INT-l12-1 … 11, dated notes, recount 249 (12l-R612) |
+| 2026-10-11T20:48:58Z | evidence-engine | main | 10cc974 | fix(elicitation): units are exact slices of the parsed text; a cited run is one slice, checked EXACT (P1 U01) |
+| 2026-10-11T20:54:45Z | evidence-engine | main | f323708 | docs(plan): R613 transcribed as Block 11 — U01's findings; INT-l12-12, INT-l12-13, two notes on INT-g6-1, recount 251 (12l item 0) |
+| 2026-10-11T21:22:28Z | evidence-engine | main | 13822e6 | fix(extraction): one run-fault predicate, re-raised ahead of extract-path handlers 1 and 2 (P1 U02) |
+| 2026-10-11T22:29:54Z | evidence-engine | main | e2189c1 | docs(plan): R614 transcribed as Block 12 — U02's findings; INT-l12-14 … 16, a note on C56, recount 254 (12l item 0) |
+| 2026-10-11T22:48:50Z | evidence-engine | main | bc93976 | fix(elicitation): every cited unit on the claim as a citation record; unit-map directory named by the manifest run (P1 U03) |
+| 2026-10-11T23:02:24Z | evidence-engine | main | 822f1fb | docs(plan): R615 transcribed as Block 13 — U03's findings; three notes on INT-g12-1, list unchanged at 254 (12l item 0) |
+| 2026-10-11T23:21:06Z | evidence-engine | main | 36de472 | fix(elicitation): Pass-1 contract sentences R571(a)/(b), canonical sentinel in the sentinel rule, JUDGMENT step check (P1 U04, 1 of 3) |
+| 2026-10-11T23:21:07Z | evidence-engine | main | a0b818e | feat(telemetry): each Pass-1 attempt's raw response and request hash in the telemetry row (P1 U04, 3 of 3; R571(e)) |
+| 2026-10-11T23:32:41Z | evidence-engine | main | f3c3535 | docs(plan): R616 transcribed as Block 14 — U04's stop and findings; INT-l12-17, notes on INT-h12-2 and INT-i12-1, recount 255 (12l item 0) |
+| 2026-10-11T23:36:30Z | evidence-engine | main | fe3ffe3 | fix(manifest): the pin records the segmentation, the canonical sentinel is in the semantic hash, an elicited run declares two stages (P1 U04, 2 of 4) |
+| 2026-10-11T23:51:32Z | evidence-engine | main | dccd679 | fix(elicitation): a JUDGMENT field meets the citation requirement only when a reasoning step cites a unit (P1 U04, 4 of 4; R616(c)) |
+| 2026-10-12T00:00:50Z | evidence-engine | main | 304b13a | docs(plan): R617 transcribed as Block 15 — U04b's findings; notes on INT-h12-2, INT-l12-17 and INT-i12-4, list unchanged at 255 (12l item 0) |
+| 2026-10-12T00:23:39Z | evidence-engine | main | 6a9b58c | fix(manifest): the extraction arm is pinned by the run that reaches the extract stage (P1 U05; INT-g12-4, R569(b)) |
+| 2026-10-12T00:33:42Z | evidence-engine | main | ace5388 | docs(plan): R618 transcribed as Block 16 — U05's stop and findings; INT-l12-18, INT-l12-19, recount 257 (12l item 0) |
+| 2026-10-12T00:34:11Z | evidence-engine | main | 06edfba | docs(claude-md): the arm is pinned at extract; units are exact source slices; the citation record is on the claim (R612(h), R613(d), R615(c), R618(a)) |
+| 2026-10-12T01:10:25Z | evidence-engine | main | e52c17e | fix(extraction): a record under the floor is a paper failure; the attempt rule; the writer refuses a claim on an unpinned arm (P1 U06; A-11, INT-l12-18) |
+| 2026-10-12T01:25:26Z | evidence-engine | main | 2fc5a0b | docs(session-12): 12l-U06 — report, the real-state run's output on a throwaway copy, gate record (R560, RB-4) |
+| 2026-10-12T01:40:45Z | evidence-engine | main | b6f7fc1 | docs(plan): R619 transcribed as Block 17 — U06's findings; INT-l12-20, notes on INT-l12-15 and A-11, recount 258 (12l item 0) |
+| 2026-10-12T01:48:44Z | evidence-engine | main | ab240d9 | fix(extraction): a blank value and a non-value token are refused at the write boundary; a stored record is counted extracted (P1 U07; INT-i12-2, INT-i12-6, INT-l12-20) |
+| 2026-10-12T02:03:06Z | evidence-engine | main | c4f1369 | docs(session-12): 12l-U07 — report and gate record |
+| 2026-10-12T02:35:54Z | evidence-engine | main | ed112d1 | docs(plan): R620 transcribed as Block 18 — U07's findings; INT-l12-21, notes on B9 and A-11, recount 259 (12l item 0) |
+| 2026-10-12T02:47:00Z | evidence-engine | main | 3b4b6a7 | fix(extraction): value divergence is recorded on the claim and counted in the run summary; attempts means attempts spent (P1 U08; INT-i12-3, N11, R620(c)) |
+| 2026-10-12T03:01:40Z | evidence-engine | main | 8058399 | docs(session-12): 12l-U08 — report and gate record |
+| 2026-10-12T03:12:34Z | evidence-engine | main | 736e2c9 | docs(plan): R621 transcribed as Block 19 — U08's findings; INT-l12-22, recount 260 (12l item 0) |
+| 2026-10-12T03:22:32Z | evidence-engine | main | e816afa | fix(elicitation): a duplicate field on Pass-1 attempt 2 keeps attempt 1's result and both calls on record (P1 U09; INT-i12-5) |
+| 2026-10-12T03:37:20Z | evidence-engine | main | 7293279 | docs(session-12): 12l-U09 — report and gate record |
+| 2026-10-12T03:42:09Z | evidence-engine | main | 962c57d | docs(plan): R622 transcribed as Block 20 — U09's findings; INT-l12-23, a note on INT-i12-5, recount 261 (12l item 0) |
+| 2026-10-12T04:06:15Z | evidence-engine | main | a332f36 | fix(manifest): open_run refuses a codebook that declares another review, or none (P1 U10; INT-i12-9) |
+| 2026-10-12T04:21:00Z | evidence-engine | main | 459575d | docs(session-12): 12l-U10 — report and gate record |
+| 2026-10-12T04:28:55Z | evidence-engine | main | af9a46b | docs(plan): R623 transcribed as Block 21 — U10's findings; INT-l12-24, a note on INT-i12-9, recount 262 (12l item 0) |
+| 2026-10-12T04:41:08Z | evidence-engine | main | e2d76a2 | fix(selection): a missing or changed text file on an already-extracted paper is reported, not re-failed each run (P1 U11; INT-i12-69) |
+| 2026-10-12T04:55:42Z | evidence-engine | main | 65327f6 | docs(session-12): 12l-U11 — report and gate record |
+| 2026-10-12T05:04:25Z | evidence-engine | main | e9944d7 | docs(plan): R624 transcribed as Block 22 — U11's findings; INT-l12-25, two notes on INT-i12-69, recount 263 (12l item 0) |
+| 2026-10-12T05:04:35Z | evidence-engine | main | ff428a8 | docs(claude-md): open_run's refusals name CodebookReviewMismatch (R623(b); INT-i12-9) |
+| 2026-10-12T05:20:01Z | evidence-engine | main | 4dd721d | docs(plan): session 12l closeout — the closure, the unit table, 12m expectations and first items |
+| 2026-10-12T19:08:27Z | evidence-engine | main | b2d3dfa | docs(session-12): 12m-U12A — U12 read-out: lock census, scheduled model loaders, nightly, requirements, run-fault reason, empty-selection stats |
+| 2026-10-13T02:36:48Z | evidence-engine | main | 7bed8e0 | docs(plan): R625 transcribed as Block 23 — U12 read-out rulings; INT-m12-1 … 3, notes on B-F17 and the 12l closure, recount 266 (12m-R625) |
+| 2026-10-13T03:33:31Z | evidence-engine | main | 74f5317 | docs(plan): R626 transcribed as Block 24 — INT-m12-4, corrections on R625 and the read-out, a note on A-4b, recount 267 (12m-U12-C1b item 0) |
+| 2026-10-13T03:51:59Z | evidence-engine | main | 9cf9318 | test(suite): no test takes the real experiment lock; an Ollama fence; live tiers are opt-in (U12 commit 1; INT-m12-1, -2, -4) |
+| 2026-10-13T04:22:36Z | evidence-engine | main | 954796e | chore(scripts): retire the ten legacy model-calling scripts under R31 (U12; R625(a)(6)) |
+| 2026-10-13T04:32:05Z | evidence-engine | main | 432952e | docs(plan): R627 transcribed as Block 25 — INT-m12-5, notes on A-4b and INT-m12-2, recount 268 (12m-CLOSE item 0) |
+| 2026-10-13T04:47:14Z | evidence-engine | main | 60c6d3e | docs(plan): session 12m closeout — the closure, U12's commit table, 12n expectations and first items |
+| 2026-10-13T16:26:10Z | evidence-engine | main | 469ebe5 | docs(plan): R628 transcribed as Block 26 — the 12n-open verify accepted; R626(e) closed as operator reads (12n-U12-C2A item 0) |
+| 2026-10-13T16:38:05Z | evidence-engine | main | 98b9af6 | docs(session-12): 12n-U12-C2A — U12 commit 2 Phase A: lock census, outer-lock experiment, design options |
+| 2026-10-13T16:52:32Z | evidence-engine | main | 7338c85 | docs(plan): R629 transcribed as Block 27 — INT-n12-1, notes on A-1, commit 2's row and HK-RETIRE, recount 269 (12n-U12-C2B item 0) |
+| 2026-10-13T17:28:22Z | evidence-engine | main | 9390328 | chore(analysis): retire the screen2f runner and its worker under R31 (U12; R629(d)) |
+| 2026-10-13T17:42:49Z | evidence-engine | main | 0457978 | docs(plan): R630 transcribed as Block 28 — the retirement's gate accepted as reported; the band not re-cut (12n-U12-C2 item 0) |
+| 2026-10-13T18:02:51Z | evidence-engine | main | 944efd3 | docs(plan): R631 transcribed as Block 29 — the untracked entry point archived; INT-n12-2; recount 270 (12n-U12-C2-R1 item 0b) |
+| 2026-10-13T18:23:50Z | evidence-engine | main | f6a13a6 | feat(lock): the experiment lock never waits, and every local model-calling entry point holds it (U12 commit 2; R625(b), R629-R631) |
+| 2026-10-13T18:39:16Z | evidence-engine | main | 4db7a6b | docs(plan): R632 transcribed as Block 30 — U12 commit 2 accepted at f6a13a6; its cell records the hash (12n-U12-C3 item 0) |
+| 2026-10-13T19:14:07Z | evidence-engine | main | 9a00dc9 | fix(extractor): restart_ollama honours EVIDENCE_ENGINE_NO_OLLAMA_RESTART (U12 commit 3; N17) |
+| 2026-10-13T19:32:42Z | evidence-engine | main | d3dd335 | docs(plan): R633 transcribed as Block 31 — commit 3's gate accepted, the band re-cut; its cell records 9a00dc9 (12n-U12-C4 item 0) |
+| 2026-10-13T19:58:29Z | evidence-engine | main | f7f7409 | fix(manifest): a failed close records "<ExceptionClass>: <message>" at all six sites (U12 commit 4; R625(a)(8), INT-l12-14) |
+| 2026-10-13T20:46:34Z | evidence-engine | main | 69487eb | docs(plan): R634 transcribed as Block 32 — the failed-close reason form; commit 4's cell records f7f7409 (12n-U12-C5 item 0) |
+| 2026-10-13T21:20:54Z | evidence-engine | main | e240cea | fix(nightly): the nightly runs the standard gate, logs pytest's exit code and exits with it (U12 commit 5; R625(a)(1), R627(c)) |
+| 2026-10-13T21:41:28Z | evidence-engine | main | 31cc4ad | docs(plan): R635 transcribed as Block 33 — U12 commit 5 accepted at e240cea; the nightly script's test ordered (12n-U12-C5B item 0) |
+| 2026-10-13T21:58:24Z | evidence-engine | main | f4a5586 | test(nightly): the nightly script runs the standard gate and propagates pytest's status (U12 commit 5B; R635(c)) |
+| 2026-10-13T22:38:36Z | evidence-engine | main | 8a52a92 | docs(plan): session 12n closeout — R636 as Block 34, the closure, U12's commit table, 12o expectations and first items |
+| 2026-10-15T03:09:24Z | evidence-engine | main | 8c6c665 | docs(plan): R637 transcribed as Block 35 — the foreign claude-config commit accepted; a note on the 12n closure; the 12n lane-line file (12o-OPEN item 0) |
+| 2026-10-15T03:53:06Z | evidence-engine | main | 8c7049b | docs(session-12): 12o-U12-C6A — U12 commit 6 Phase A: engine.cloud importer census, the SDK chain from a fresh database, the defect reproduced, mechanism options; R638 and R639 as Blocks 36–37, a note on B-F17 |
+| 2026-10-15T04:22:42Z | evidence-engine | main | ce9d4cc | fix(cloud): the package init imports nothing, so a fresh review database needs no provider SDK (U12 commit 6; R625(a)(4), R640) |
+| 2026-10-15T04:54:03Z | evidence-engine | main | f957ccb | fix(requirements): every imported distribution declared and pinned; chromadb, sentence-transformers and gradio removed; a census test (U12 commit 7; R625(a)(9), R641(e), R642) |
+| 2026-10-15T05:47:00Z | evidence-engine | main | 5dbd3c4 | fix(pipeline): the empty-selection return carries the extraction summary, so both returns share one key set; CLAUDE.md's ChromaDB line deleted; U12 closes (U12 commit 8; R643(f), R644) |
+| 2026-10-15T05:59:47Z | evidence-engine | main | f723c6e | docs(plan): session 12o closeout — R645 as Block 43, the closure, U12 closed (commits 6–8), the 12p expected values and first items |
+| 2026-10-15T13:47:09Z | evidence-engine | main | 9e32a46 | docs(plan): 12p item 0 — R646 as Block 44, the dated note on the 12o closure, the 12o lane-line file in 12o_close/ |
+| 2026-10-15T14:46:33Z | evidence-engine | main | 57c1604 | docs(plan): 12p-U13A item 0 — R647–R649 as Blocks 45–47, row INT-p12-1 in section L, the recount by recount_12p_item0.py (271) |
+| 2026-10-15T14:59:06Z | evidence-engine | main | f4b296d | docs(session-12): 12p-U13A — U13's design read (Phase A): 12g's measures, the throwaway, what HEAD records for R612(b)/R617(a)/R622(b), the launch, confounders, options; read-only |
+| 2026-10-15T21:33:11Z | evidence-engine | main | 85daac2 | docs(plan): session 12p closeout: R650, INT-p12-2, the closure, 12q expected values |
+| 2026-10-16T23:13:59Z | evidence-engine | main | f087d4f | docs(plan): 12q item 0 — R653 as Block 51, the 12p lane-line file in 12p_close/ |
+| 2026-10-16T23:59:47Z | evidence-engine | main | e9a827a | docs(plan): 12q-P12-2A item 0 — R654–R658 as Blocks 52–56 |
+| 2026-10-17T00:06:19Z | evidence-engine | main | ef5e7fb | docs(session-12): 12q-P12-2A — INT-p12-2's Phase A: the attempt-1 duplicate path, the attempt-2 key "duplicated_fields", the exception's telemetry and its one reader, U09's test, pin effect, legacy scope; read-only |
+| 2026-10-17T00:20:54Z | evidence-engine | main | 89be3c4 | docs(plan): 12q-P12-2B item 0 — R659 as Block 57, rows INT-q12-1–3 in section L, the note on INT-p12-2, the recount by recount_12q_r659.py (275) |
+| 2026-10-17T00:38:04Z | evidence-engine | main | b3f0072 | fix(extractor): an attempt-1 Pass-1 duplicate is named in every retry row's telemetry (P1; INT-p12-2, R659(b)) |
+| 2026-10-17T00:47:52Z | evidence-engine | main | ddfd1cc | docs(plan): 12q-U13-BUILD item 0 — R660 as Block 58, INT-p12-2's closing note (CLOSED at b3f0072) |
+| 2026-10-17T06:04:21Z | evidence-engine | main | e5ec600 | docs(plan): session 12q closeout: R661, the closure, 12r expected values |
+| 2026-10-18T21:15:35Z | evidence-engine | main | c748129 | docs(plan): 12r item 0 — R662 as Block 60, the 12q lane-line file in 12q_close/ |
+| 2026-10-19T00:49:13Z | evidence-engine | main | ef12a41 | docs(session-12): 12r-U13 — the comparison rehearsal on ra_12q (run 2), its read-out and scoring script |
+| 2026-10-19T01:10:50Z | evidence-engine | main | 94ea85c | docs(session-12): 12r-U13-PA — Phase A, read-only: the attempt-1 FIELD_MISSING on papers 3 and 10, and F5 |
+| 2026-10-19T01:57:50Z | evidence-engine | main | d7bafc4 | docs(session-12): 12r-U13-PROBE — the attempt-1 STATED-only shape does not reproduce on papers 3 and 10 (0 of 3 each) |
+| 2026-10-19T02:18:05Z | evidence-engine | main | 15b7ef9 | docs(plan): session 12r closeout: R663–R671 (Blocks 61–69), row INT-r12-1, notes on INT-h12-2, INT-g12-6 and INT-g12-5, the closure, 12s expected values |
+| 2026-10-19T16:13:20Z | evidence-engine | main | 1ddff37 | docs(plan): 12s item 0 — R672 as Block 70, the INT-h12-2 package-table note, the 12r lane-line file and r672.txt in 12r_close/ |
+| 2026-10-19T16:41:42Z | evidence-engine | main | 134f41b | docs(plan): 12s-U14A item 0 — R673 and R674 as Blocks 71 and 72 |
+| 2026-10-19T16:51:48Z | evidence-engine | main | 2d8823e | docs(session-12): 12s-U14A — U14 Phase A read-out (INT-i12-7, INT-i12-8), census, reproducers, restore-point record, r673/r674 |
+| 2026-10-19T17:01:50Z | evidence-engine | main | 4938501 | docs(plan): 12s-U14B item 0 — R675 as Block 73, the R675(g) notes on INT-i12-7 and INT-i12-8, r675.txt |
+| 2026-10-19T17:06:40Z | evidence-engine | main | 9f1809a | docs(session-12): 12s-U14B step 1 — R675(c) variant measurement: condition met, variant built |
+| 2026-10-19T17:10:22Z | evidence-engine | main | 7074305 | fix(locator): re-score the best windows without autojunk (INT-i12-7); bridged only when the located text lacks the ellipsis (INT-i12-8); LOCATOR_VERSION locator-1.1 (R675) |
+| 2026-10-19T17:28:48Z | evidence-engine | main | cb27494 | docs(session-12): 12s-U14B — U14 read-out, gate evidence (3330 / 1 / 17), set comparison, pins unchanged, post-fix check |
+| 2026-10-19T17:42:01Z | evidence-engine | main | 01751e7 | docs(plan): 12s-U15A item 0 — R676 as Block 74; INT-i12-7 and INT-i12-8 CLOSED at 7074305; notes on HK-ARCH and B11 |
+| 2026-10-19T17:48:12Z | evidence-engine | main | 8b2c388 | docs(session-12): 12s-U15A — U15 Phase A read-out (INT-i12-12), census, reproducers, paper_events DDL, r676 |
+| 2026-10-19T18:20:42Z | evidence-engine | main | 54499d5 | docs(plan): session 12s closeout: R677 (Block 75), rows INT-s12-1 and INT-s12-2, notes on INT-i12-12 and C35, the closure, 12t expected values |
+| 2026-10-20T18:47:36Z | evidence-engine | main | 4485778 | docs(plan): 12t-OPEN item 0 — R678 as Block 76; the 12s lane-line copy into 12s_close/ |
+| 2026-10-20T19:55:27Z | evidence-engine | main | 805c79a | docs(plan): 12t-U15B item 0 — R679 as Block 77, R680 as Block 78 |
+| 2026-10-20T20:54:09Z | evidence-engine | main | 9cfd726 | fix(audit): audit_run admits only AUDIT_ADMITTED_STATES (INT-i12-12, U15, R677(c), R681) |
+| 2026-10-20T20:55:45Z | evidence-engine | main | 5a250c6 | docs(session-12): 12t-U15B — U15 read-out (INT-i12-12), gate evidence (3342 / 1 / 17), pre-fix run, regression census, pins |
+| 2026-10-20T21:30:13Z | evidence-engine | main | a2e6378 | docs(plan): 12t-CLOSE item 0 — R681 as Block 79, R682 as Block 80; INT-i12-12 CLOSED; notes on INT-s12-2 and HK-ARCH |
+| 2026-10-20T21:33:34Z | evidence-engine | main | 2cab14f | docs(plan): session 12t closeout: the closure, 12u expected values, 12t_close/ evidence |
+| 2026-10-22T01:57:40Z | evidence-engine | main | 45ba353 | docs(plan): 12u-OPEN item 0 — R683 as Block 81; the 12t lane-line copy |
+| 2026-10-22T02:37:10Z | evidence-engine | main | a50e067 | docs(plan): 12u-U16A item 0 — R684 as Block 82 |
+| 2026-10-22T02:48:34Z | evidence-engine | main | 97e5079 | docs(session-12): 12u-U16A — U16 Phase A read-out (INT-i12-73) and the R624(b) changed-text cases |
+| 2026-10-22T03:26:12Z | evidence-engine | main | 21a224d | docs(plan): 12u-U16B item 0 — R685 as Block 83, R686 as Block 84; notes on INT-i12-69, INT-i12-73, D24, C56 |
+| 2026-10-22T03:48:53Z | evidence-engine | main | 6229970 | docs(session-12): 12u-U16B Phase 1 — U16 acceptance tests against HEAD (5 failed as predicted), regression 157 passed, r687.txt |
+| 2026-10-22T05:06:32Z | evidence-engine | main | f2eb7a1 | docs(plan): 12u-U16C item 0 — R687 as Block 85, R688 as Block 86; note on A15 |
+| 2026-10-22T05:24:41Z | evidence-engine | main | 2c3822b | fix(audit): the AI-audit stage completes on the whole corpus; an extracted paper with nothing to locate is audited vacuously (U16, INT-i12-73) |
+| 2026-10-22T05:43:03Z | evidence-engine | main | 2579f7c | docs(session-12): 12u-U16C read-out — U16 landed at 2c3822b; gate 3,347/1/17 in 912.14 s; r689.txt, r690.txt |
+| 2026-10-22T17:06:26Z | evidence-engine | main | 0ceec48 | docs(plan): 12u-CLOSE item 0 — R689, R690, R691 as Blocks 87–89; INT-i12-73 CLOSED (U16, 2c3822b); note on HK-ARCH |
+| 2026-10-22T17:11:15Z | evidence-engine | main | 9673aff | docs(plan): session 12u closeout: the closure, 12v expected values, 12u_close/ evidence |
+| 2026-10-23T15:28:54Z | evidence-engine | main | 049cec8 | docs(plan): 12v-OPEN item 0 — R692 as Block 90; the 12u lane-line copy |
+| 2026-10-23T16:02:23Z | evidence-engine | main | 3525e02 | docs(plan): 12v-RSA item 0 — R693 as Block 91 |
+| 2026-10-23T16:14:41Z | evidence-engine | main | cc2d83a | docs(session-12): 12v-RSA read-out — INT-r12-1 and INT-s12-1 Phase A |
+| 2026-10-23T16:35:38Z | evidence-engine | main | 1e15b50 | docs(plan): 12v-U37A item 0 — R694 as Block 92; notes on INT-s12-1, INT-r12-1 and the 12u host facts |
+| 2026-10-23T16:47:44Z | evidence-engine | main | 37bb382 | docs(plan): 12v-U37B item 0 — R695 as Block 93; INT-v12-1 opened (L, 12v additions); the U37 Phase 1 record |
+| 2026-10-23T17:13:16Z | evidence-engine | main | 62d5e7e | fix(elicitation): attempt-2 feedback names the whole schema and repeats the output instruction (U37, INT-r12-1) |
+| 2026-10-23T17:15:13Z | evidence-engine | main | 11c7e43 | docs(session-12): 12v-U37B read-out — U37 landed at 62d5e7e; INT-r12-1 note (row open); fix units 36 |
+| 2026-10-23T17:20:42Z | evidence-engine | main | 5344e8b | docs(plan): 12v-U37R item 0 — R696 as Block 94, with its correction at transcription |
+| 2026-10-23T18:10:49Z | evidence-engine | main | fcbbad4 | docs(session-12): 12v-U37R read-out — U37 rehearsal Part A: STATED-only re-emission old 2/5, new 1/5 |
+| 2026-10-23T18:28:46Z | evidence-engine | main | 124d4b9 | docs(plan): 12v-U37R2 item 0 — R697 as Block 95 |
+| 2026-10-23T21:24:37Z | evidence-engine | main | b315733 | docs(session-12): 12v-U37R2 read-out — U37 rehearsal Part A2: STATED-only old 10/25, new 5/25; verdict (i) |
+| 2026-10-23T23:30:53Z | evidence-engine | main | 553609a | docs(plan): 12v-U38A item 0 — R698 as Block 96; INT-r12-1 CLOSED on U37; INT-g12-5 note; fix units 17 of 36 |
+| 2026-10-23T23:33:48Z | evidence-engine | main | b31ab08 | docs(session-12): 12v-U38A U38 Phase 1 — six acceptance tests held; HEAD reads 2 failed (T1, T4) / 4 passed, as predicted |
+| 2026-10-24T05:05:57Z | evidence-engine | main | 07a24b6 | docs(plan): 12v-U38B item 0 — R699 as Block 97 |
+| 2026-10-24T05:25:17Z | evidence-engine | main | 731ebf2 | fix(extractor): the snippet precheck consults the paper text and exhausted retries keep the original snippet (U38, INT-s12-1) |
+| 2026-10-24T05:26:40Z | evidence-engine | main | 9ea15a5 | docs(session-12): 12v-U38B read-out — U38 landed at 731ebf2; INT-s12-1 CLOSED; fix units 18 of 36 |
+| 2026-10-24T05:33:02Z | evidence-engine | main | 4738ebf | docs(plan): 12v-CLOSE item 0 — R700 as Block 98; R700(b)'s notes on INT-s12-1 and INT-i12-7 |
+| 2026-10-24T05:36:56Z | evidence-engine | main | 6735188 | docs(plan): session 12v closeout: the closure, 12w expected values, 12v_close/ evidence |
+| 2026-10-24T15:39:37Z | evidence-engine | main | 1557600 | docs(plan): 12w-OPEN item 0 — R701 as Block 99; the 12v lane-line copy |
+| 2026-10-24T16:36:51Z | evidence-engine | main | 87e416b | docs(plan): 12w-U17A item 0 — R702 as Block 100 |
+| 2026-10-24T16:48:49Z | evidence-engine | main | a05d0e0 | docs(session-12): 12w-U17A read-out — U17's Phase A, the cross-family rule (INT-i12-45) |
+| 2026-10-24T17:11:21Z | evidence-engine | main | e5e23b7 | docs(plan): 12w-U17B item 0 — R703 as Block 101 |
+| 2026-10-24T17:30:26Z | evidence-engine | main | 098fc74 | docs(session-12): 12w-U17B Phase 1 — U17's record before the fix; stopped on I3 |
+| 2026-10-24T18:24:28Z | evidence-engine | main | ac55c4f | docs(plan): 12w-U17B resume item 0 — R704 as Block 102 |
+| 2026-10-24T19:01:41Z | evidence-engine | main | e81d699 | fix(U17): the cross-family rule as a base-lineage check at spec load and run open (INT-i12-45) |
+| 2026-10-24T19:04:03Z | evidence-engine | main | c5ab505 | docs(session-12): 12w-U17B read-out — U17 landed at e81d699; INT-i12-45 CLOSED; fix units 19 of 36 |
+| 2026-10-25T00:11:14Z | evidence-engine | main | 287a9c7 | docs(plan): 12w-V1A item 0 — R705 as Block 103 |
+| 2026-10-25T00:24:01Z | evidence-engine | main | a0f2323 | docs(session-12): 12w-V1A Q2 record — INT-v12-1 exercised; stopped on the V1 reading |
+| 2026-10-25T03:33:12Z | evidence-engine | main | 7457b28 | docs(plan): 12w-V1A resume item 0 — R706 as Block 104; INT-v12-1 note |
+| 2026-10-25T03:56:56Z | evidence-engine | main | 8659035 | docs(session-12): 12w-V1A Q3–Q4 record — options A/B/C measured; stopped on R706(d)'s B expectation |
+| 2026-10-25T04:15:54Z | evidence-engine | main | f7a16f3 | docs(plan): 12w-CLOSE item 0 — R707 and R708 as Blocks 105–106; INT-v12-1 note; INT-w12-1 opened; recount 280 |
+| 2026-10-25T04:21:56Z | evidence-engine | main | e83611d | docs(session-12): 12w closeout — session 12w closed; the 12x expected values; 12w_close/ |
+| 2026-10-26T02:16:15Z | evidence-engine | main | a5892c9 | docs(plan): 12x-OPEN item 0 — R709 as Block 107; the 12w lane-line copy |
+| 2026-10-26T02:45:08Z | evidence-engine | main | 88e28bb | docs(plan): 12x-U39A item 0 — R710 and R711 as Blocks 108–109 |
+| 2026-10-26T02:55:54Z | evidence-engine | main | 5de3133 | docs(session-12): 12x-U39A record — U39 Phase 1: runtime lists equal the hashed lists |
+| 2026-10-26T03:55:56Z | evidence-engine | main | 305868f | docs(plan): 12x-U39B item 0 — R712 as Block 110 |
+| 2026-10-26T04:14:23Z | evidence-engine | main | 1ebb3ae | test(u39): runtime message lists equal the hashed lists, every local hashed stage |
+| 2026-10-26T04:15:26Z | evidence-engine | main | 6368069 | docs(plan): 12x-U39B notes — INT-v12-1 CLOSED on U39; INT-w12-1 open; dated line |
+| 2026-10-26T04:36:06Z | evidence-engine | main | 6cb6ad6 | docs(plan): 12x-AQA item 0 — R713 and R714 as Blocks 111–112 |
+| 2026-10-26T04:41:13Z | evidence-engine | main | b571aaf | docs(session-12): 12x-AQA record — audit's field-type variants and pdf_quality's hashing (Phase A) |
+| 2026-10-26T04:47:36Z | evidence-engine | main | 4f1af8d | docs(plan): 12x-U39C item 0 — R715 as Block 113 |
+| 2026-10-26T05:05:59Z | evidence-engine | main | f3f552e | test(u39): audit's runtime list equals a rendered variant for every codebook type |
+| 2026-10-26T17:05:31Z | evidence-engine | main | 39a87ab | docs(plan): 12x-U39C notes — INT-w12-1 audit covered (Anthropic arm only open); INT-j12-15 measured |
+| 2026-10-26T17:39:34Z | evidence-engine | main | 2b11a57 | docs(plan): 12x-CLOSE item 0 — R716 and R717 as Blocks 114–115; INT-w12-1 correcting note |
+| 2026-10-26T21:26:46Z | evidence-engine | main | a4be9f7 | docs(plan): 12x-CLOSE — session 12x closure, the 12y expected values, 12x_close/ measurements |
+| 2026-10-28T16:12:32Z | evidence-engine | main | ec544a2 | docs(plan): 12y-OPEN item 0 — R718 and R719 as Blocks 116–117; 12x lane line and 12x-OPEN gate evidence copied |
+| 2026-10-28T17:19:13Z | evidence-engine | main | b2557a5 | docs(plan): 12y-U18A item 0 — R720 as Block 118; the Blocks 116–117 addendum |
+| 2026-10-28T17:24:45Z | evidence-engine | main | fac60b4 | docs(session-12): 12y-U18A — U18's Phase A read-out: Ollama host sources, the digest and chat paths, per-call /api/tags cost |
+| 2026-10-28T17:47:41Z | evidence-engine | main | 43ca120 | docs(plan): 12y-U18B item 0 — R721 and R722 as Blocks 119–120; notes on A-4b and HK-ARCH |
+| 2026-10-28T18:39:02Z | evidence-engine | main | e7425b3 | feat(U18): one Ollama host for every engine read; the manifest records it; a non-loopback host refused at open_run (U18 commit 1, A-4b) |
+| 2026-10-28T19:15:13Z | evidence-engine | main | 2c67bfc | docs(plan): 12y-U18C item 0 — R723, R724, R725 and R726 as Blocks 121–124 |
+| 2026-10-28T19:40:20Z | evidence-engine | main | 32fc09e | feat(U18): the model digest re-checked on every call under a run; a change closes the run 'aborted' (U18 commit 2, A-4b) |
+| 2026-10-28T19:57:30Z | evidence-engine | main | 0f83f46 | docs(plan): 12y-CLOSE item 0 — R727 and R728 as Blocks 125–126; A-4b CLOSED; the R117 addendum |
+| 2026-10-28T20:01:11Z | evidence-engine | main | 22a21bb | docs(plan): 12y-CLOSE — session 12y closure, the 12z expected values, 12y_close/ measurements |
+| 2026-10-29T21:48:33Z | evidence-engine | main | 81db498 | docs(plan): 12z-OPEN item 0 — R729 as Block 127; U18's dated fix-unit line; the R730(b) addendum; lane_line_12y.txt copied |
+| 2026-10-30T01:55:19Z | evidence-engine | main | a6cfc10 | docs(plan): 12z-U19A item 0 — R730, R731, R732 and R733 as Blocks 128–131; the 12z-OPEN gate evidence and launch_line.txt |
+| 2026-10-30T02:07:34Z | evidence-engine | main | bc1ffee | docs(session-12): 12z-U19A — U19 Phase A read-out (INT-j12-17), the census and its evidence |
+| 2026-10-30T02:53:58Z | evidence-engine | main | e5a3517 | docs(plan): 12z-U19B item 0 — R734 as Block 132; notes on INT-j12-17, B-F14 and HK-ARCH |
+| 2026-10-30T03:37:25Z | evidence-engine | main | aa76124 | feat(U19): the Ollama environment recorded at open and re-checked after every performed restart (U19 commit 1, INT-j12-17) |
+| 2026-10-30T04:00:28Z | evidence-engine | main | 973ecef | feat(U19): open_run refuses a loopback Ollama host that is not the local service; one Environment= parser (U19 commit 2, INT-j12-17) |
+| 2026-10-30T04:02:33Z | evidence-engine | main | c5e11e8 | docs(plan): 12z-U19B — INT-j12-17 CLOSED on U19 (aa76124, 973ecef); U19's dated fix-unit line; records C1 and C2 |
+| 2026-10-30T04:28:42Z | evidence-engine | main | 237c321 | docs(plan): 12z-CLOSE item 0 — R735 and R736 as Blocks 133–134; the R736(d) read-back |
+| 2026-10-30T04:35:20Z | evidence-engine | main | 2b592ae | docs(plan): 12z-CLOSE — session 12z closure, the 12aa expected values, 12z_close/ measurements |
+| 2026-10-30T17:56:19Z | evidence-engine | main | 6cb3336 | docs(plan): 12aa-OPEN item 0 — R737 as Block 135; the 12z lane-line copy |
+| 2026-10-30T18:13:35Z | evidence-engine | main | 5c1474c | docs(plan): 12aa-OPEN — the startup-verify gate's evidence under 12aa_open/ |
+| 2026-10-30T18:54:23Z | evidence-engine | main | 697f0db | docs(plan): 12aa-U20A item 0 — R738 and R739 as Blocks 136–137 |
+| 2026-10-30T19:02:01Z | evidence-engine | main | dba1406 | docs(plan): 12aa-U20A — U20's Phase A read-out |
+| 2026-10-30T19:27:25Z | evidence-engine | main | da8d7f5 | docs(plan): 12aa-U20P item 0 — R740 and R741 as Blocks 138–139 |
+| 2026-10-30T19:29:45Z | evidence-engine | main | f542587 | docs(plan): 12aa-U20P — the U20 probe's record: /api/show and /api/ps |
+| 2026-10-30T19:35:39Z | evidence-engine | main | df92bf1 | docs(plan): 12aa-U20B item 0 — R742 and R743 as Blocks 140–141 |
+| 2026-10-30T20:00:00Z | evidence-engine | main | ca29906 | fix(U20): the input-fit ceiling reads a Modelfile's num_ctx (U20 commit 1, INT-i12-11) |
+| 2026-10-30T20:00:45Z | evidence-engine | main | 6deba58 | docs(plan): 12aa-U20B — record C1, the pre-edit reads and the commit-1 gate evidence |
+| 2026-10-30T21:26:25Z | evidence-engine | main | e3d303d | docs(plan): 12aa-U20C item 0 — R744 as Block 142 |
+| 2026-10-30T23:05:57Z | evidence-engine | main | bc2ae19 | fix(U20): under a run, each completed call's ceiling is confirmed against /api/ps (U20 commit 2, N25, INT-i12-11) |
+| 2026-10-30T23:07:54Z | evidence-engine | main | ca12c30 | docs(plan): 12aa-U20C — INT-i12-11 CLOSED on U20 (ca29906, bc2ae19); the dated line; record C2 |
+| 2026-10-30T23:31:04Z | evidence-engine | main | 5f81f4b | docs(tools): 12aa-SETUP — STANDING_RULES.md (extracted, not adopted); the session tools; the 2026-10-31 expected nightly |
+| 2026-10-30T23:31:49Z | evidence-engine | main | 8cca7b0 | docs(plan): 12aa-SETUP item 0 — R745 and R746 as Blocks 143–144; the R746(b) addendum |
+| 2026-10-31T01:10:46Z | evidence-engine | main | afd179e | docs(plan): 12aa-CLOSE item 0 — R747 as Block 145 |
+| 2026-10-31T01:16:05Z | evidence-engine | main | 1914ccf | docs(plan): 12aa-CLOSE — session 12aa closure, the 12ab expected values, 12aa_close/ measurements |
+| 2026-10-31T01:52:22Z | evidence-engine | main | e397be4 | docs(plan): 12ab-OPEN item 0 — R748 as Block 146; the 12aa lane-line copy |
+| 2026-10-31T02:16:00Z | evidence-engine | main | f3761c3 | docs(session-reports): 12ab-OPEN — the startup-verify gate's evidence |
+| 2026-10-31T03:09:51Z | evidence-engine | main | 565ea6f | docs(plan): 12ab-TOOLS item 0 — R749, R750 and R751 as Blocks 147–149 |
+| 2026-10-31T03:11:25Z | evidence-engine | main | 2543d6b | docs(session-reports): 12ab-TOOLS — session_open_check's cc_sessions counts only this lane |
+| 2026-10-31T03:37:05Z | evidence-engine | main | 5738cef | docs(plan): 12ab-RULES item 0 — R752 as Block 150 |
+| 2026-10-31T03:51:14Z | evidence-engine | main | ece937d | docs(plan): 12ab-RULES — extract_rules.py id-list mode; the standing-rules list; the file regenerated |
+| 2026-10-31T04:00:21Z | evidence-engine | main | fa44c9e | docs(plan): 12ab-ADOPT item 0 — R753 and R754 as Blocks 151–152; R753(d) on the id list; the file regenerated |
+| 2026-10-31T04:15:41Z | evidence-engine | main | 044935e | docs(plan): 12ab-ADOPT — STANDING_RULES.md adopted under R754; three tool corrections; CLAUDE.md session start |
+| 2026-10-31T04:26:35Z | evidence-engine | main | 42e21de | docs(plan): 12ab-U21A item 0 — R755 and R756 as Blocks 153–154 |
+| 2026-10-31T04:33:30Z | evidence-engine | main | 8b7573c | docs(session-reports): 12ab-U21A — U21 Phase A read-out; the census; the measurement designed, not run |
+| 2026-10-31T05:01:53Z | evidence-engine | main | 07bea9c | docs(plan): 12ab-U21P item 0 — R757 as Block 155; row INT-ab12-1; the 12ab_U21A addendum; R756(b) on the standing rules |
+| 2026-10-31T05:04:29Z | evidence-engine | main | 6e908b4 | docs(session-reports): 12ab-U21P — the B-F14 probe stopped at V0's calibration; the record |
+| 2026-10-31T05:13:01Z | evidence-engine | main | 7a73494 | docs(session-reports): 12ab-U21P-R1 — the B-F14 probe re-run stopped at calibration; the record |
+| 2026-10-31T05:19:21Z | evidence-engine | main | 2ba00bf | docs(session-reports): 12ab-U21P-R2 — the B-F14 probe third attempt stopped at the floor; the record |
+| 2026-10-31T05:32:44Z | evidence-engine | main | f373b10 | docs(session-reports): 12ab-U21P-R3 — the B-F14 probe: V0 and V1 measured, V2 not sent; the record |
+| 2026-10-31T05:41:11Z | evidence-engine | main | a34cc71 | docs(plan): 12ab-U21B item 0 — R758, R759, R760 and R761 as Blocks 156–159 |
+| 2026-10-31T05:43:17Z | evidence-engine | main | 8abaedc | docs(session-reports): 12ab-U21B — Phase B reads; the census; I2 false, no edit made |
+| 2026-10-31T05:56:35Z | evidence-engine | main | a6c31b1 | fix(U21): no request is sent while the previous one is alive; the restart only after a request has ended |
+| 2026-10-31T06:13:10Z | evidence-engine | main | 7290d00 | docs(session-reports): 12ab-U21B — the U21 gate's evidence |
+| 2026-10-31T06:16:38Z | evidence-engine | main | 36c1017 | docs(plan): 12ab-U21B — INT-ab12-1, N23 and N24 CLOSED on U21 (a6c31b1); the dated line; the acceptance evidence |
+| 2026-10-31T06:38:28Z | evidence-engine | main | 52be363 | docs(plan): 12ab-CLOSE item 0 — R762, R763 and R764 as Blocks 160–162; B-F14 CLOSED; F12 noted on C47; the CLAUDE.md sentence |
+| 2026-10-31T06:44:58Z | evidence-engine | main | 228ee31 | docs(plan): 12ab-CLOSE — session 12ab closed on U21; the closure; the 12ac expected values; 12ab_close/ |
+| 2026-10-31T19:00:18Z | evidence-engine | main | bc1da26 | docs(plan): 12ac-OPEN item 0 — R765 as Block 163; the 12ab lane-line copy; R763(c) on the standing-rules list, the file regenerated |
+| 2026-10-31T19:18:00Z | evidence-engine | main | d54c4fc | docs(session-reports): 12ac-OPEN — the startup-verify gate's evidence; the 2026-10-31 job reads |
+| 2026-10-31T19:35:47Z | evidence-engine | main | 718ef7f | docs(plan): 12ac-U22A item 0 — R766 and R767 as Blocks 164–165; R766(b) on the standing-rules list, the file regenerated |
+| 2026-10-31T19:48:03Z | evidence-engine | main | 23fad87 | docs(session-reports): 12ac-U22A — U22's Phase A read-out, eval_count recorded (INT-g12-6) |
+| 2026-10-31T21:29:03Z | evidence-engine | main | bb224fd | docs(plan): 12ac-U22B item 0 — R768 as Block 166; the two dated notes on INT-g12-6 |
+| 2026-10-31T21:38:21Z | evidence-engine | main | 41ba988 | docs(session-reports): 12ac-U22B — U22's Phase B reads, every seam of R768(b) quoted at HEAD (INT-g12-6) |
+| 2026-10-31T22:48:09Z | evidence-engine | main | 51f8317 | feat(U22): eval_count recorded — the input_fit line and the extraction telemetry row (schema -4) |
+| 2026-10-31T23:19:38Z | evidence-engine | main | bfe3bd3 | test(U22): the input_fit key-set pin outside a run gains eval_count (class (c), R746(c)) |
+| 2026-10-31T23:37:32Z | evidence-engine | main | 3e3988f | docs(session-reports): 12ac-U22B — U22's gate evidence: the red run and the green re-run; the parent acceptance |
+| 2026-11-01T01:21:51Z | evidence-engine | main | 95873b5 | docs(plan): 12ac-CLOSE item 0 — R769–R774 as Blocks 167–172; INT-g12-6 CLOSED; the dated units line; R772(c) on the standing-rules list, the file regenerated |
+| 2026-11-01T01:30:50Z | evidence-engine | main | 6095e6c | docs(plan): 12ac-CLOSE — session 12ac closed on U22; the closure; the 12ad expected values; 12ac_close/ |
+| 2026-11-02T03:53:15Z | evidence-engine | main | 483ecbb | docs(plan): 12ad-OPEN item 0 — R778 as Block 176; the 12ac lane-line copy |
+| 2026-11-02T04:11:36Z | evidence-engine | main | fbd7f8e | docs(session-reports): 12ad-OPEN — the startup-verify gate's evidence; the 2026-11-01 job reads |
+| 2026-11-02T04:25:10Z | evidence-engine | main | c83b0d5 | docs(plan): 12ad-U23A item 0 — R779 as Block 177 |
+| 2026-11-02T04:33:36Z | evidence-engine | main | 94f7853 | docs(session-reports): 12ad-U23A — U23's Phase A read-out (E-ROOT, N30) |
+| 2026-11-02T04:48:42Z | evidence-engine | main | 10a64eb | docs(plan): 12ad-U23B item 0 — R780 as Block 178; "A R780(b)", the file regenerated; INT-ad12-1, INT-ad12-2; E-ROOT's note |
+| 2026-11-02T04:54:00Z | evidence-engine | main | 66092a2 | docs(session-reports): 12ad-U23B — U23's Phase B reads (R780(c)) |
+| 2026-11-02T05:05:13Z | evidence-engine | main | 9ae1fde | feat(U23): one root for spec, data and git state — REPO_ROOT in a leaf, DATA_ROOT and SPEC_ROOT anchored to it |
+| 2026-11-02T05:21:52Z | evidence-engine | main | 30a4f4d | docs(session-reports): 12ad-U23B — U23's gate evidence; the parent acceptance |
+| 2026-11-02T05:32:48Z | evidence-engine | main | 2f73fd6 | docs(plan): 12ad-CLOSE item 0 — R781 and R782 as Blocks 179–180; E-ROOT CLOSED; INT-ad12-3; the dated units line |
+| 2026-11-02T05:37:10Z | evidence-engine | main | 6cb4ab6 | docs(plan): 12ad-CLOSE — session 12ad closed on U23; the closure; the 12ae expected values; 12ad_close/ |
+| 2026-11-09T03:04:18Z | evidence-engine | main | ca9d348 | docs(plan): 12ae-OPEN item 0 — R783 as Block 181; "A R783(d)", the file regenerated; the 12ad lane-line copy |
+| 2026-11-09T03:22:55Z | evidence-engine | main | 95dad8d | docs(session-reports): 12ae-OPEN — the gate evidence; the 2026-11-02 to 11-08 job reads |
+| 2026-11-09T04:22:07Z | evidence-engine | main | 2b0badd | docs(plan): 12ae-U24A item 0 — R784 as Block 182; "A R784(g)", the file regenerated; the I4 note; the brief file |
+| 2026-11-09T04:28:57Z | evidence-engine | main | d7f5905 | docs(session-reports): 12ae-U24A — U24's Phase A read-out (C49, the preflight probe's spec) |
+| 2026-11-09T04:54:46Z | evidence-engine | main | b8becaa | docs(plan): 12ae-U24B item 0 — R785 as Block 183; INT-ae12-1; the I20 and C54 notes; the brief file |
+| 2026-11-09T05:04:00Z | evidence-engine | main | 94ab7a8 | fix(U24): every engine preflight probe is sent the spec's block (C49); the CLI takes --review/--spec |
+| 2026-11-09T05:21:07Z | evidence-engine | main | 1f6bc16 | test(U24): the preflight CLI's two lock tests pass --review (class (c), R746(c)) |
+| 2026-11-09T05:37:54Z | evidence-engine | main | 7732a4f | docs(session-reports): 12ae-U24B — U24's gate evidence; b0 on the parent; the pin recompute; the R1 brief |
+| 2026-11-09T06:14:06Z | evidence-engine | main | d488573 | docs(plan): 12ae-U25A item 0 — R786 and R787 as Blocks 184–185; C49 CLOSED; the dated units line; the red run's evidence; the brief file |
+| 2026-11-09T06:19:55Z | evidence-engine | main | b599667 | docs(session-reports): 12ae-U25A — U25's Phase A read-out (INT-i12-31, unquoted YAML booleans and nulls at codebook load) |
+| 2026-11-09T06:43:45Z | evidence-engine | main | 4a4c850 | docs(plan): 12ae-U25B item 0 — R788 as Block 186; INT-i12-31 widened by note; the brief file |
+| 2026-11-09T16:22:13Z | evidence-engine | main | 168199a | fix(U25): unquoted YAML booleans, nulls and numbers refused at codebook load (INT-i12-31) |
+| 2026-11-09T16:38:40Z | evidence-engine | main | 0854f29 | docs(session-reports): 12ae-U25B — U25's gate evidence; b0 on the parent; the pin recompute |
+| 2026-11-09T17:01:30Z | evidence-engine | main | 5e38485 | docs(plan): 12ae-U26A item 0 — R789 as Block 187; INT-i12-31 CLOSED; the dated units line; the brief file |
+| 2026-11-09T17:07:52Z | evidence-engine | main | e5d9fed | docs(session-reports): 12ae-U26A — U26's Phase A read-out (C56, the parse handlers 4–7 and 12–13) |
+| 2026-11-09T18:16:30Z | evidence-engine | main | e89d602 | docs(plan): 12ae-U26B item 0 — R790 as Block 188; the C56, L07-C4 and HK-ARCH notes; the brief file |
+| 2026-11-09T18:21:46Z | evidence-engine | main | 69e9db8 | fix(U26): run faults leave the six parse handlers as themselves (C56's parse half) |
+| 2026-11-09T18:38:49Z | evidence-engine | main | 5895e8c | docs(session-reports): 12ae-U26B — U26's gate evidence; b0 on the parent; the pin recompute |
+| 2026-11-09T19:00:10Z | evidence-engine | main | dd1b0b5 | docs(plan): 12ae-U27A item 0 — R791 as Block 189; the C56 note; the dated units line; the brief file |
+| 2026-11-09T19:08:27Z | evidence-engine | main | 0d1d004 | docs(session-reports): 12ae-U27A — U27's Phase A read-out (C56, the cloud handlers 8–11) |
+| 2026-11-09T19:20:27Z | evidence-engine | main | 76cfd4e | docs(plan): 12ae-U27B item 0 — R792 as Block 190; the INT-ae12-2 row; the brief file |
+| 2026-11-09T19:23:24Z | evidence-engine | main | 077cb0f | fix(U27): run faults leave the four cloud handlers as themselves (C56's cloud half) |
+| 2026-11-09T19:42:26Z | evidence-engine | main | 1f0b364 | docs(session-reports): 12ae-U27B — U27's gate evidence; b0 on the parent; the pin recompute |
+| 2026-11-09T20:03:09Z | evidence-engine | main | c4e13f6 | docs(plan): 12ae-U28A item 0 — R793 as Block 191; C56 CLOSED; the dated units line; the section-L header cell; the brief file |
+| 2026-11-09T20:08:41Z | evidence-engine | main | 679133a | docs(session-reports): 12ae-U28A — U28's Phase A read-out (B9, C28: the cloud gate, N44, the cloud write boundary) |
+| 2026-11-09T20:36:51Z | evidence-engine | main | 6bfbe36 | docs(plan): 12ae-U28B item 0 — R794 as Block 192; the B9 and C28 notes; the dated units line (U40 entered); the brief file |
+| 2026-11-09T20:41:46Z | evidence-engine | main | 24ce26b | fix(U28): the cloud gate skips honestly, an empty arm is reported skipped, the cloud write boundary refuses uncited values (B9, C28) |
+| 2026-11-09T20:58:44Z | evidence-engine | main | b14d0da | docs(session-reports): 12ae-U28B — U28's gate evidence; b0 on the parent; the pin recompute |
+| 2026-11-09T23:07:50Z | evidence-engine | main | df3e721 | docs(plan): 12ae-CLOSE item 0 — R795 as Block 193; the B9 and C28 landing notes; the dated units line (286 measured); the brief file |
+| 2026-11-09T23:17:30Z | evidence-engine | main | 840db24 | docs(plan): 12ae-CLOSE — session 12ae closed on U28; the closure; the 12af expected values; 12ae_close/ |
+| 2026-11-10T23:02:07Z | evidence-engine | main | 91a619b | docs(plan): 12af-OPEN item 0 — R796 as Block 194; the 12ae lane-line copy; the brief file |
+| 2026-11-10T23:26:17Z | evidence-engine | main | 3310738 | docs(session-reports): 12af-OPEN — the gate evidence; the 2026-11-10 job reads |
+| 2026-11-11T00:53:20Z | evidence-engine | main | 9b9f3d6 | docs(plan): 12af-U40A item 0 — R797 as Block 195; the brief file |
+| 2026-11-11T01:10:00Z | evidence-engine | main | aa97c6a | docs(session-reports): 12af-U40A — U40's Phase A read-out; the census and the FAKE probe with their outputs |
+| 2026-11-11T02:45:46Z | evidence-engine | main | 27fda1c | docs(plan): 12af-U40B item 0 — R798 as Block 196; the B9 and C28 notes; the brief file |
+| 2026-11-11T03:01:02Z | evidence-engine | main | 53eabfd | fix(cloud): U40 — the cloud store writes the arm's claim events, no paper event (B9, C28, A1-β) |
+| 2026-11-11T03:18:34Z | evidence-engine | main | 0814545 | docs(session-reports): 12af-U40B — U40's evidence: b0, the census, the post-build probe, the gate, the pins |
+| 2026-11-11T03:46:48Z | evidence-engine | main | ffc6c38 | docs(plan): 12af-U29A item 0 — R799 as Block 197; B9 and C28 CLOSED; notes on A15, A16, INT-i12-73; INT-af12-1; the dated line; the brief file |
+| 2026-11-11T03:59:34Z | evidence-engine | main | 1e3b74d | docs(session-reports): 12af-U29A — U29's Phase A read-out; the census and the FAKE probe with their outputs |
+| 2026-11-11T04:13:30Z | evidence-engine | main | 95ce15f | docs(plan): 12af-U29B item 0 — R800 as Block 198; the C24 and INT-ae12-2 notes; the brief file |
+| 2026-11-11T04:27:05Z | evidence-engine | main | 977c499 | fix(cloud): U29 — send records every call it makes (C24, Wave 2 row 28; N47) |
+| 2026-11-11T04:44:33Z | evidence-engine | main | 2b68cd4 | docs(session-reports): 12af-U29B — U29's evidence: b0, the census, the gate, the pins |
+| 2026-11-11T05:31:21Z | evidence-engine | main | faa6729 | docs(plan): 12af-U30A item 0 — R801 as Block 199; C24 CLOSED; the note on INT-ae12-2; the dated line; the brief file |
+| 2026-11-11T05:36:45Z | evidence-engine | main | dacc67c | docs(session-reports): 12af-U30A — U30's Phase A read-out; the census and the FAKE probe with their outputs |
+| 2026-11-11T05:52:53Z | evidence-engine | main | 4884bc3 | docs(plan): 12af-CLOSE item 0 — R802 as Block 200; the INT-i12-71 note; the brief file |
+| 2026-11-11T05:58:32Z | evidence-engine | main | 7ddabca | docs(plan): 12af-CLOSE — session 12af closed on U29; the closure; the 12ag expected values; 12af_close/ |
+| 2026-11-13T22:27:10Z | evidence-engine | main | f936933 | docs(session-reports): WR5-A — read-out for mechanical brief checks |
+| 2026-11-13T22:56:02Z | evidence-engine | main | 22f8a63 | docs(session-reports): WR5-B item 0a — the WR5-A brief file, as pasted |
+| 2026-11-13T22:56:13Z | evidence-engine | main | 957f917 | docs(session-reports): WR5-B item 0b — the WR5-B brief file, as pasted |
+| 2026-11-13T23:03:30Z | evidence-engine | main | 886c6f9 | docs(session-reports): WR5-B-R1 item 0 — the resume brief file, as pasted |
+| 2026-11-13T23:12:13Z | evidence-engine | main | 54266b7 | docs(session-reports): WR5-B — prototype brief checker, its controls and its hit rates |
+| 2026-11-14T05:30:38Z | evidence-engine | main | 16cb307 | docs(plan): 12ag-OPEN item 0 — R803 as Block 201; the 12af lane-line copy; the brief file |
+| 2026-11-14T06:07:52Z | evidence-engine | main | 60a6331 | docs(session-reports): 12ag-OPEN — the gate evidence; the 2026-11-11 to 11-13 job reads; the R667(e) read; the resume file |
+| 2026-11-14T20:06:45Z | evidence-engine | main | dcf623e | docs(plan): 12ag-N46A item 0 — R804 and R805 as Blocks 202–203; "A R805(c)" and "A R805(f)", the file regenerated; the brief file |
+| 2026-11-14T20:15:22Z | evidence-engine | main | 19b1f01 | docs(session-reports): 12ag-N46A — N46's Phase A read-out: the cloud write, the legacy tables' readers, the probe; the resume file |
+| 2026-11-14T20:40:27Z | evidence-engine | main | 12c1108 | docs(plan): 12ag-GATEUNIT-A item 0 — R806 and R807 as Blocks 204–205; the brief file |
+| 2026-11-14T20:47:45Z | evidence-engine | main | e5055c6 | docs(session-reports): 12ag-GATEUNIT-A — Phase A read-out: the gate wrapper launched as a systemd-run --user unit |
+| 2026-11-14T21:09:04Z | evidence-engine | main | b7e5fb1 | docs(plan): 12ag-GATEUNIT-B item 0 — R808 as Block 206; "A R808(d)", the file regenerated; the brief file |
+| 2026-11-14T21:27:40Z | evidence-engine | main | b3d3534 | feat(tools): launch_gate.sh launches the gate as a transient systemd-run --user unit |
+| 2026-11-14T21:46:01Z | evidence-engine | main | 3e3c334 | docs(session-reports): 12ag-GATEUNIT-B — the unit launch's evidence: two probes, the dry run, the controls, the gate under gate-12ag_unit; the resume file |
+| 2026-11-14T21:56:16Z | evidence-engine | main | e329ced | docs(plan): 12ag-CLOSE item 0 — R809 and R810 as Blocks 207–208; the brief file |
+| 2026-11-14T22:01:46Z | evidence-engine | main | 35a914b | docs(plan): 12ag-CLOSE — session 12ag closed on the gate-launch tools change; the closure; the 12ah expected values; 12ag_close/ |

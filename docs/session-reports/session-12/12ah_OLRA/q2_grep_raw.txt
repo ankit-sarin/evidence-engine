@@ -1,0 +1,274 @@
+analysis/eval/elicit01/runner.py:35:from engine.agents.extractor import RESTART_EVERY_N, restart_ollama
+analysis/eval/elicit01/runner.py:193:                    restart_ollama(reason="elicit01 cadence", papers_done=n)
+analysis/eval/run_capture01.py:19:    foreign `restart_ollama()` stand down (OPS-GUARD-01).
+analysis/eval/run_capture01.py:20:  * Proactive `restart_ollama()` every `RESTART_EVERY_N` calls to clear CUDA
+analysis/eval/run_capture01.py:55:from engine.agents.extractor import RESTART_EVERY_N, build_extraction_prompt, restart_ollama
+analysis/eval/run_capture01.py:227:                restart_ollama(reason="capture01 cadence", papers_done=n)
+analysis/eval/run_qualgap01.py:21:    recovery runs `sudo systemctl restart ollama`, which would restart the
+analysis/eval/run_qualgap01.py:24:    `_restart_ollama_and_retry`; the env switch replaced that, and the branch is
+analysis/eval/run_qualgap01.py:87:    `oc._restart_ollama_and_retry`; OPSFIX-01 replaced that with the supported
+analysis/paper1/pass2_branchB_report.py:187:    L.append("| Ollama service restarts | 0 (no systemctl restart detected in run log) |")
+analysis/paper1/pass2_full.py:53:from engine.agents.extractor import restart_ollama
+analysis/paper1/pass2_full.py:257:                restart_ollama(reason="proactive", papers_done=processed)
+docs/session-reports/session-12/12aa_SETUP/dry_run/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12aa_SETUP/dry_run/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12aa_U20B/gate_c1/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12aa_U20B/gate_c1/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12aa_U20C/gate_c2/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12aa_U20C/gate_c2/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12aa_U20C/gate_c2_red/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12aa_U20C/gate_c2_red/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12aa_open/gate_12aa_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12aa_open/gate_12aa_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ab_U21B/gate_u21b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ab_U21B/gate_u21b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ab_open/gate_12ab_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ab_open/gate_12ab_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ac_U22B/gate_u22b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ac_U22B/gate_u22b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ac_U22B/gate_u22b_rerun/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ac_U22B/gate_u22b_rerun/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ac_open/gate_12ac_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ac_open/gate_12ac_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ad_U23B/gate_u23b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ad_U23B/gate_u23b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ad_open/gate_12ad_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ad_open/gate_12ad_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_U24B/gate_u24b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_U24B/gate_u24b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_U24B/gate_u24b_run1/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_U24B/gate_u24b_run1/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_U25B/gate_u25b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_U25B/gate_u25b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_U26B/gate_u26b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_U26B/gate_u26b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_U27B/gate_u27b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_U27B/gate_u27b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_U28B/gate_u28b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_U28B/gate_u28b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ae_open/gate_12ae_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ae_open/gate_12ae_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12af_U29B/gate_u29b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12af_U29B/gate_u29b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12af_U40B/gate_u40b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12af_U40B/gate_u40b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12af_open/gate_12af_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12af_open/gate_12af_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:9:r systemctl --version
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:10:r systemctl --user is-system-running
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:11:r systemctl --user status --no-pager
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:14:echo; echo "\$ systemctl --user show-environment | (allow-list filter)"; systemctl --user show-environment 2>&1 | filt | sort; echo "[exit ${PIPESTATUS[0]}]"
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:16:r systemctl --user show -p DefaultLimitNOFILE -p DefaultLimitNOFILESoft -p DefaultTasksMax -p DefaultMemoryAccounting -p DefaultCPUAccounting -p DefaultIOAccounting -p DefaultTimeoutStopUSec -p DefaultStandardOutput -p DefaultStandardError -p Environment
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:17:r systemctl show "user@$(id -u).service" -p MemoryMax -p MemoryHigh -p CPUWeight -p IOWeight -p TasksMax -p Delegate -p OOMScoreAdjust -p ManagedOOMMemoryPressure -p LimitNOFILE -p Slice -p ControlGroup
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:18:r systemctl show "user-$(id -u).slice" -p MemoryMax -p MemoryHigh -p CPUWeight -p IOWeight -p TasksMax
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:19:r systemctl --user show app.slice -p MemoryMax -p MemoryHigh -p CPUWeight -p IOWeight -p TasksMax -p ControlGroup
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:20:r systemctl --user show background.slice -p MemoryMax -p CPUWeight -p IOWeight -p ControlGroup
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:21:r systemctl --user list-units --all --no-pager
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:22:r systemctl --user list-unit-files --no-pager
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:23:r systemctl --user list-timers --all --no-pager
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:24:r systemctl list-timers --all --no-pager
+docs/session-reports/session-12/12ag_GATEUNIT_A/reads/box_reads.sh:30:r systemctl cat earlyoom --no-pager
+docs/session-reports/session-12/12ag_GATEUNIT_B/dry_run/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ag_GATEUNIT_B/dry_run/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ag_GATEUNIT_B/gate_12ag_unit/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ag_GATEUNIT_B/gate_12ag_unit/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12ag_open/gate_12ag_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12ag_open/gate_12ag_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12g_ra/checkpoint.sh:20:echo "flags: undeclared=$(grep -a -c -E 'UndeclaredCall|UndeclaredOverride' ~/scratch/12g-ra/run.log) truncated_or_dropped=$(grep -a -c -E 'input_fit (TRUNCATED|DROPPED)' ~/scratch/12g-ra/run.log) refused=$(grep -a -c 'input_fit REFUSED' ~/scratch/12g-ra/run.log) timeouts=$(grep -a -c -i 'TimeoutError\|watchdog' ~/scratch/12g-ra/run.log) restarts_logged=$(grep -a -c -i 'systemctl restart\|Ollama restart' ~/scratch/12g-ra/run.log) tracebacks=$(grep -a -c 'Traceback' ~/scratch/12g-ra/run.log)"
+docs/session-reports/session-12/12g_ra/checkpoint.sh:21:systemctl show ollama --property=NRestarts --property=ActiveEnterTimestamp --no-pager | tr '\n' ' '; echo
+docs/session-reports/session-12/12t_U15B/gate/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12t_U15B/gate/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12u_U16B/gate_12u_u16c/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12u_U16B/gate_12u_u16c/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12v_U37B/gate_12v_u37b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12v_U37B/gate_12v_u37b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12v_U38B/gate_12v_u38b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12v_U38B/gate_12v_u38b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12w_U17B/gate_12w_u17b/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12w_U17B/gate_12w_u17b/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12x_U39B/gate/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12x_U39B/gate/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12x_U39C/gate/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12x_U39C/gate/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12x_close/gate_12x_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12x_close/gate_12x_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12y_U18B/gate/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12y_U18B/gate/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12y_U18B/gate_red/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12y_U18B/gate_red/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12y_U18C/gate_round1/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12y_U18C/gate_round1/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12z_U19B/gate_c1/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12z_U19B/gate_c1/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12z_U19B/gate_c2/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12z_U19B/gate_c2/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/session-12/12z_open/gate_12z_open/host_snapshot.sh:3:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/session-12/12z_open/gate_12z_open/host_snapshot.sh:4:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/tools/launch_gate.sh:8:UNIT="gate-$SESSION"; [ "$(systemctl --user show -p LoadState --value "$UNIT.service")" != "loaded" ] || { echo "REFUSED: user unit $UNIT.service is loaded"; exit 2; }
+docs/session-reports/tools/launch_gate.sh:13:cat /proc/sys/kernel/random/boot_id; systemctl show ollama -p NRestarts -p ExecMainStartTimestamp
+docs/session-reports/tools/launch_gate.sh:14:echo "earlyoom: $(systemctl is-active earlyoom)"; ps -o args= -C earlyoom; echo "vm.min_free_kbytes $(cat /proc/sys/vm/min_free_kbytes)"
+docs/session-reports/tools/launch_gate.sh:36:MPID=$(systemctl show "user@$(id -u).service" -p MainPID --value); MHARD=$(awk '/^Max open files/{print $5}' "/proc/$MPID/limits"); SSOFT=$(ulimit -Sn)
+docs/session-reports/tools/launch_gate.sh:42:systemctl --user status "$UNIT.service" --no-pager || true
+engine/agents/extractor.py:744:def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> bool:
+engine/agents/extractor.py:747:    Uses ``sudo systemctl restart ollama`` to fully clear CUDA context
+engine/agents/extractor.py:759:    # (`ollama_client._restart_ollama_and_retry`). Skipping is a no-op, as below.
+engine/agents/extractor.py:785:        "[%s] Ollama restart (%s, %d papers done) — running sudo systemctl restart ollama",
+engine/agents/extractor.py:790:            ["sudo", "systemctl", "restart", "ollama"],
+engine/agents/extractor.py:1010:    tooling) stands down for its duration, and so `restart_ollama()` can tell
+engine/agents/extractor.py:1271:                restarted = restart_ollama(
+engine/agents/screener.py:119:    # Model, options, think, format and keep_alive come from the one resolver
+engine/core/effective_config.py:7:a model name, options, `think`, `format` or `keep_alive` from, and it reads
+engine/core/effective_config.py:13:`keep_alive` the one addition. Options a site does not send today (`seed`,
+engine/core/effective_config.py:120:    keep_alive: int | str | None
+engine/core/effective_config.py:137:        if "keep_alive" in self.sent_keys:
+engine/core/effective_config.py:138:            out["keep_alive"] = self.keep_alive
+engine/core/effective_config.py:186:            "keep_alive": self.keep_alive if "keep_alive" in self.sent_keys else UNSENT,
+engine/core/effective_config.py:256:def _freeze(stage, provider, model, options, think, fmt, keep_alive, sent, recorded, sources):
+engine/core/effective_config.py:261:        keep_alive=keep_alive, sent_keys=frozenset(sent),
+engine/core/effective_config.py:266:def _keep_alive(spec) -> tuple[Any, str]:
+engine/core/effective_config.py:268:    return rt.keep_alive, _src(src_block, "keep_alive")
+engine/core/effective_config.py:311:    sent = {"model", "messages", "options", "keep_alive"}
+engine/core/effective_config.py:312:    keep_alive, sources["keep_alive"] = _keep_alive(spec)
+engine/core/effective_config.py:381:                   keep_alive, sent, recorded, sources)
+engine/core/review_spec.py:675:    keep_alive: Union[StrictInt, str] = Field(
+engine/core/run_manifest.py:257:            "No paper was extracted under it. Read `systemctl show ollama "
+engine/core/run_manifest.py:285:            "digest. Read `ollama ps`, the Ollama journal's last load line, `systemctl show "
+engine/core/run_manifest.py:513:    as `systemctl show` printed it, read by the caller before this open, recorded
+engine/core/run_manifest.py:702:                "sent_keys_json, sources_json, keep_alive, format_schema_hash, prompt_hash) "
+engine/core/run_manifest.py:707:                 canonical_json(row["sources"]), row["keep_alive"],
+engine/core/run_manifest.py:809:        "keep_alive": str(cfg.keep_alive) if "keep_alive" in cfg.sent_keys else "unset",
+engine/migrations/020_run_manifest.py:11:  keep_alive, format-schema hash, prompt hash. Append-only.
+engine/migrations/020_run_manifest.py:178:    keep_alive      TEXT    NOT NULL,
+engine/utils/ollama_client.py:42:# monkeypatching `_restart_ollama_and_retry` from the outside; this is the
+engine/utils/ollama_client.py:164:# systemctl, which the test suite's service-call fence refuses by design.
+engine/utils/ollama_client.py:592:    """`_restart_ollama_and_retry` ended without a response. `detail` is one of
+engine/utils/ollama_client.py:811:                    response = _restart_ollama_and_retry(
+engine/utils/ollama_client.py:878:def _restart_ollama_and_retry(
+engine/utils/ollama_client.py:895:      `extractor.restart_ollama` uses, and deliberately the narrower
+engine/utils/ollama_client.py:932:            ["sudo", "systemctl", "restart", "ollama"],
+engine/utils/ollama_lock.py:5:Engine's own proactive `restart_ollama()` (RESTART_EVERY_N=25) killed the Arm P
+engine/utils/ollama_preflight.py:181:    """The Ollama unit's `Environment=` value as `systemctl show` prints it — the raw
+engine/utils/ollama_preflight.py:188:            ["systemctl", "show", "ollama", "--property=Environment"],
+engine/utils/ollama_preflight.py:207:    """The Ollama unit's configured environment as systemd has it loaded (`systemctl show
+engine/utils/ollama_preflight.py:314:    parser.add_argument("--review", required=True, help="Review id. The probe's options and keep_alive come from its spec's preflight and ollama blocks (U24).")
+tests/_event_store_fixture.py:124:                "sources_json, keep_alive, format_schema_hash, prompt_hash) "
+tests/_lock_census.py:43:    ("engine.utils.ollama_client", "_restart_ollama_and_retry"): "last-resort Ollama restart",
+tests/_lock_census.py:44:    ("engine.agents.extractor", "restart_ollama"): "proactive Ollama restart",
+tests/conftest.py:5:last-resort recovery fired it ran a real `sudo systemctl restart ollama`. A
+tests/conftest.py:24:    manager (`systemctl`, `service`, `sudo`, `shutdown`, `reboot`, `init`,
+tests/conftest.py:26:    flock holders in `test_ollama_lock.py` and `test_restart_ollama_guard.py`
+tests/conftest.py:30:    detail. `_restart_ollama_and_retry` wraps its restart in `except Exception`
+tests/conftest.py:63:# `/usr/bin/systemctl` and `systemctl` are both caught.
+tests/conftest.py:65:    "systemctl", "service", "sudo", "doas", "pkexec",
+tests/conftest.py:85:    Handles both the list form (`["sudo", "systemctl", ...]`) and the string
+tests/conftest.py:124:        f"Tests must never touch a system service — a real `systemctl restart "
+tests/migrations/test_022_run_kinds_and_audit_tables.py:382:        "sources_json, keep_alive, format_schema_hash, prompt_hash) VALUES "
+tests/test_cut_over.py:108:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_effective_config.py:53:    assert "model" in cfg.sources and "keep_alive" in cfg.sources
+tests/test_effective_config.py:57:def test_keep_alive_is_the_one_addition_and_equals_the_service_value(stage, spec):
+tests/test_effective_config.py:58:    assert _cfg(stage, spec).kwargs()["keep_alive"] == -1
+tests/test_extraction_run_link.py:156:              "sent_keys_json, sources_json, keep_alive, format_schema_hash, prompt_hash) "
+tests/test_extraction_run_link.py:158:              "options_hash, sent_keys_json, sources_json, keep_alive, format_schema_hash, "
+tests/test_extractor.py:20:    restart_ollama,
+tests/test_extractor.py:336:    # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
+tests/test_extractor.py:464:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:488:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:504:    @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+tests/test_extractor.py:520:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:563:    @patch("engine.agents.extractor.restart_ollama")
+tests/test_extractor.py:674:# ── H4: Graceful handling of restart_ollama failure ──────────────────
+tests/test_extractor.py:678:    """restart_ollama() failure in extraction loop must not crash the run."""
+tests/test_extractor.py:681:        """If restart_ollama raises RuntimeError, extraction continues."""
+tests/test_extractor.py:689:            patch("engine.agents.extractor.restart_ollama",
+tests/test_lock_census.py:41:_CLIENT = "def ollama_chat(**kw):\n    return _restart_ollama_and_retry()\n\ndef _restart_ollama_and_retry():\n    pass\n"
+tests/test_lock_census.py:43:_EXTRACTOR = "def restart_ollama():\n    pass\n"
+tests/test_lock_census.py:88:        extractor.restart_ollama()
+tests/test_lock_census.py:126:    assert "engine.agents.extractor::restart_ollama" in failures[0]
+tests/test_lock_census.py:168:            if "systemctl" in words and "restart" in words:
+tests/test_lock_census.py:174:                        and "systemctl" in a.value and "restart" in a.value:
+tests/test_lock_census.py:191:    assert set(SINKS) >= {("engine.agents.extractor", "restart_ollama"),
+tests/test_lock_census.py:192:                          ("engine.utils.ollama_client", "_restart_ollama_and_retry")}
+tests/test_lock_census.py:197:                    "subprocess.run(['sudo', 'systemctl', 'restart', 'ollama'])\n"
+tests/test_lock_census.py:198:                    "os.system('sudo systemctl restart ollama')\n")
+tests/test_ollama_client.py:14:    _restart_ollama_and_retry,
+tests/test_ollama_client.py:152:        retries drops into `_restart_ollama_and_retry`, and without this patch
+tests/test_ollama_client.py:153:        the assertion below was being satisfied by a **real** `sudo systemctl
+tests/test_ollama_client.py:212:        """After a request ends by the read timeout, should attempt sudo systemctl restart ollama."""
+tests/test_ollama_client.py:236:        assert restart_args == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_ollama_client.py:245:        # Test _restart_ollama_and_retry directly to avoid timing complexity
+tests/test_ollama_client.py:249:        result = _restart_ollama_and_retry(
+tests/test_ollama_client.py:307:           side_effect=OSError("systemctl not found"))
+tests/test_ollama_client.py:308:    def test_restart_ollama_and_retry_raises_on_restart_failure(self, mock_subprocess):
+tests/test_ollama_client.py:309:        """M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure."""
+tests/test_ollama_client.py:311:            _restart_ollama_and_retry(
+tests/test_ollama_client.py:321:    def test_restart_ollama_and_retry_raises_on_post_restart_failure(
+tests/test_ollama_client.py:324:        """M3: _restart_ollama_and_retry raises RuntimeError when post-restart call fails."""
+tests/test_ollama_client.py:334:            _restart_ollama_and_retry(
+tests/test_ollama_preflight.py:204:    def test_get_ollama_env_parses_systemctl_output(self):
+tests/test_ollama_preflight.py:215:                   side_effect=FileNotFoundError("no systemctl")):
+tests/test_ollama_preflight.py:337:        # `_get_ollama_env` shells out to `systemctl show ollama`, which the
+tests/test_qualgap01.py:103:        R.oc._restart_ollama_and_retry(
+tests/test_request_capture.py:14:   MANIFEST-01 Phase 1 P1 measured at that site, with `keep_alive=-1` the only
+tests/test_request_capture.py:67:    exactly as P1's table records it. `keep_alive` was absent at every site."""
+tests/test_request_capture.py:171:    # Against Phase 1: unchanged, keep_alive=-1 the one addition.
+tests/test_request_capture.py:174:    assert after.pop("keep_alive") == -1, stage
+tests/test_restart_ollama_guard.py:1:"""restart_ollama() must stand down for a FOREIGN experiment lock only (OPS-GUARD-01 C).
+tests/test_restart_ollama_guard.py:5:fragmentation. If restart_ollama() skipped whenever the lock was held at all, it
+tests/test_restart_ollama_guard.py:65:                extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25)
+tests/test_restart_ollama_guard.py:66:        # the whole point: no systemctl, no HTTP poll
+tests/test_restart_ollama_guard.py:83:            extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:85:        assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_restart_ollama_guard.py:92:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:102:            assert extractor.restart_ollama(reason="proactive", papers_done=25) is False  # U19: a skip says so
+tests/test_restart_ollama_guard.py:143:    """T1. Set, with the lock free: no systemctl, no poll, one skip line, None returned."""
+tests/test_restart_ollama_guard.py:149:            assert extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25) is False  # U19
+tests/test_restart_ollama_guard.py:166:        extractor.restart_ollama(reason="proactive", papers_done=25)
+tests/test_restart_ollama_guard.py:168:    assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_restart_ollama_guard.py:175:    `_extract_selected` zeroes `papers_since_restart` whenever `restart_ollama` returns
+tests/test_restart_recovery_guard.py:1:"""`_restart_ollama_and_retry` must respect the experiment lock and the opt-out.
+tests/test_restart_recovery_guard.py:3:OPSFIX-01. `extractor.restart_ollama` has been flock-gated since OPS-GUARD-01,
+tests/test_restart_recovery_guard.py:5:same `sudo systemctl restart ollama` — was not. That is the class of bug that
+tests/test_restart_recovery_guard.py:72:    return oc._restart_ollama_and_retry(**kwargs)
+tests/test_restart_recovery_guard.py:101:        assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+tests/test_run_calls_outcomes.py:64:        "sources_json, keep_alive, format_schema_hash, prompt_hash) VALUES "
+tests/test_run_interrupts.py:247:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_run_manifest.py:95:        assert r["model_digest"] == DIGEST and r["keep_alive"] == "-1"
+tests/test_run_manifest_migration.py:76:               sources_json="{}", keep_alive="-1", format_schema_hash="none",
+tests/test_run_pipeline_starts.py:111:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_run_pipeline_starts.py:167:    (`systemctl show`, the engine client's `ps`): the probe goes through `ollama_chat` and
+tests/test_selection_bound.py:121:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+tests/test_service_call_fence.py:3:OPSFIX-01's acceptance gate was "a deliberate probe hitting systemctl fails
+tests/test_service_call_fence.py:27:    """`sudo systemctl restart ollama` — what every offline run used to do."""
+tests/test_service_call_fence.py:28:    with pytest.raises(ServiceCallBlocked, match="systemctl"):
+tests/test_service_call_fence.py:29:        subprocess.run(["sudo", "systemctl", "restart", "ollama"], check=False)
+tests/test_service_call_fence.py:33:def test_bare_systemctl_is_blocked_without_sudo():
+tests/test_service_call_fence.py:35:        subprocess.run(["systemctl", "restart", "ollama"], check=False)
+tests/test_service_call_fence.py:40:    """The sudoers rule names /usr/bin/systemctl, so the path form must match too."""
+tests/test_service_call_fence.py:42:        subprocess.run(["/usr/bin/systemctl", "restart", "ollama"], check=False)
+tests/test_service_call_fence.py:48:        subprocess.run("sudo systemctl restart ollama", shell=True, check=False)
+tests/test_service_call_fence.py:54:        os.system("systemctl restart ollama")
+tests/test_service_call_fence.py:61:        getattr(subprocess, api)(["systemctl", "restart", "ollama"])
+tests/test_service_call_fence.py:68:    """`test_ollama_lock` and `test_restart_ollama_guard` spawn real helpers."""
+tests/test_service_call_fence.py:103:    `_restart_ollama_and_retry` wraps its restart in `except Exception` and
+tests/test_service_call_fence.py:114:            subprocess.run(["systemctl", "restart", "ollama"], check=False)
+tests/test_u18_one_host.py:85:        E.restart_ollama(reason="u18", papers_done=0)                            # the restart poll
+tests/test_u18_one_host.py:93:def test_u18_the_digest_read_uses_the_keep_alive_client(monkeypatch):
+tests/test_u19_env_recheck.py:6:The subprocess boundary is patched in every test: `systemctl show` answers from a
+tests/test_u19_env_recheck.py:7:hand-typed `Environment=` line in the form `systemctl show ollama --property=Environment`
+tests/test_u19_env_recheck.py:9:`test_restart_ollama_guard.py`'s T3 drives it; the manifests are opened as
+tests/test_u19_env_recheck.py:49:    """The subprocess boundary: answers `systemctl show ollama --property=Environment`
+tests/test_u19_env_recheck.py:56:        assert list(argv[:3]) == ["systemctl", "show", "ollama"], argv
+tests/test_u19_env_recheck.py:88:        monkeypatch.setattr(E, "restart_ollama", restart)
+tests/test_u19_env_recheck.py:177:    assert E.restart_ollama(reason="proactive", papers_done=0) is False   # a skip says so
+tests/test_u19_local_service.py:7:(`_OLLAMA_HOST`); the subprocess boundary answers `systemctl show` from a hand-typed
+tests/test_u19_local_service.py:30:# The §3.4 line (12z_U19A.md), as `systemctl show ollama --property=Environment` printed it.
+tests/test_u19_local_service.py:53:def _systemctl(raw):
+tests/test_u19_local_service.py:55:        assert list(argv[:3]) == ["systemctl", "show", "ollama"], argv
+tests/test_u19_local_service.py:89:    monkeypatch.setattr(pf.subprocess, "run", _systemctl(line))
+tests/test_u19_local_service.py:106:    monkeypatch.setattr(pf.subprocess, "run", _systemctl(RAW))
+tests/test_u24_preflight_spec.py:7:`systemctl show`, is replaced. No server, no database; the suite's fences stay on. Every captured
+tests/test_u24_preflight_spec.py:8:probe request must carry the options and `keep_alive` that `stage_config("preflight", spec,
+tests/test_u24_preflight_spec.py:64:        "ollama": OllamaRuntime(keep_alive="5m"),
+tests/test_u24_preflight_spec.py:88:            got = {"options": sent.get("options"), "keep_alive": sent.get("keep_alive")}
+tests/test_u24_preflight_spec.py:89:            exp = {"options": want["options"], "keep_alive": want["keep_alive"]}
+tests/test_undeclared_call.py:235:    monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)

@@ -19597,3 +19597,170 @@ R812(d) — This ruling states one standing rule, (a). The id list gains "A R812
 | 2026-11-16 | R812(a) — Rule from here, a standing rule, the PI's ruling in his words: "From session 12ah, the no-live-write window is 09:00–10:35 UTC Monday to Saturday (the 09:00 nightly suite and the 10:30 snapshot timer) and 07:00–10:35 UTC on Sunday (the full health sweep). A brief is valid outside the day's window, and a gate exits before the day's window opens. This amends R86 and R749(b) in timing only." With two sentences the architect recommended and the PI accepted ("yes with the two sentences"): the days are UTC days; and the clock that bounds the gate hold of R805(f), its "R86 clock", is the opening of the day's window. R812(b) — What does not change: the jobs an open or a closeout reads and the file that governs each (R749(b)); the stop on a model load in a gate's window (R696(b)); the hold's one wait, by pid, and its sixty minutes (R805(f)). From session 12ah, "07:00–10:35 UTC" and "before 07:00 UTC" in an earlier clause, a committed brief or an expected-values block are read as the day's window and its opening; none of them is edited (R102). A margin a brief sets before the window is set before the day's opening. R812(c) — Readings, no row. The window follows this ruling, not the health job: if the job's schedule changes again, the window is ruled again. CLAUDE.md's no-live-write line states the old window; (a) governs from here, and the line's correction is put to the PI as quoted text with the next brief that edits CLAUDE.md, not at 12ah-OPEN. R812(d) — This ruling states one standing rule, (a). The id list gains "A R812(a)" and STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling (R766(b)). R86, R749(b) and R805(f) stay in the list; R812(a) is read with them. R811(e) and R811(g) say the three rules files are untouched at 12ah-OPEN's item 0; that is read as R811's own effect, and the files change there by this ruling alone. | PI, 2026-11-16, during session 12ah, on architect recommendation, on the PI's report of his host changes of 2026-11-16 UTC (the dgx-infra lane; no Claude Code report) |
 
 The decision log in this file ends at R812.
+
+**Block 211.** *Transcribed 2026-11-19 (item 0 of the 12ah-OLRA-REC brief as resumed under R814), in its own commit with Block 212, the copy of the interim read-out's files and the brief file it orders, in the R597(e) form:* ruling R813, made by PI on architect recommendation on 2026-11-19 UTC, during session 12ah, on the 12ah-OPEN final report (item 0 `34ff8a7a20e90868f8622a58cf1e31a81f05a47d`; evidence `c4120330c7c8102d89d6c8298363e2624c7aca24`). The 12ah-OLRA-REC brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ah-R813] — 12ah-OPEN accepted; R812's basis measured; the gate's
+  978.22 s enters the series; the PI's ruling on the interim read-out's files: all twenty-one
+  committed behind a credential scan; readings on the findings; two tools items; no standing
+  rule
+STATUS: PI ruling, 2026-11-19 UTC, session 12ah, on architect recommendation, on the 12ah-OPEN
+  final report (item 0 34ff8a7a20e90868f8622a58cf1e31a81f05a47d; evidence
+  c4120330c7c8102d89d6c8298363e2624c7aca24). Transcribe at item 0 of the 12ah-OLRA-REC brief
+  below, by transcribe_ruling.py, in the block after R812's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ah-OPEN final report, quoted; its table's wrapped cells joined): item 0
+    "34ff8a7a20e90868f8622a58cf1e31a81f05a47d", parent "35a914b", ledger
+    "0e16bf71f75deb141ccf268e756b0eda7f70acab (parent 7d89d6b)"; evidence
+    "c4120330c7c8102d89d6c8298363e2624c7aca24", parent "34ff8a7", ledger
+    "d46c74db0d950d7a42bf11f8199eb3beaca5c9c9 (parent 0e16bf7)"; "r811.txt: c94df689…bb03,
+    8,430 B, 100 lines, equal to the architect's hash."; "r812.txt: dcc9e6e1…58f1, 3,606 B, 45
+    lines, equal to the architect's hash."; "brief_12ah_OPEN.md:
+    3ed2db46ae90ece0d63f4081670bfa49a02c4994149b65ea25111daded860bd8, 44,972 B, 603 lines"
+    (the architect's copy: the same sha256, bytes and lines); "Plan: +167 / −0"; "The new plan
+    is 90e5c6df…d3b5, 3,308,753 B, 19,599 lines."; "header before "Tier A 90, Tier B 8, 98 of
+    1694"; after "Tier A 91, Tier B 8, 99 of 1716""; "numstat +34 / −16"; "3 header lines, 1
+    new section (R812(a)), 13 "Named by" lines that only append ids, 0 other"; "one crontab
+    entry, 0 7 * * *; the box is on Etc/UTC"; "The scheduled job therefore loads models only
+    on Sunday (UTC), starting at 07:00. I5 holds."; "287 rows (94 / 57 / 136, 0 unclassed);
+    fix-unit dated lines 38 with 33 done; expected_holds true"; "213 rows at 35a914b and 213
+    at 34ff8a7; in 0, out 0, no class or package move"; "wall time 978.22 s, inside 894–1092
+    s"; "Hold: not needed."; "39 files, all additions, +15,988."; "NV_ERR_NO_MEMORY went from
+    37 to 55 this boot."; "the three lists hash to V4's values; 24 lines, 24 match, 0
+    mismatch".
+  READ (CC's): findings 1–12; the health script's light and full paths as CC read its lines,
+    not exercised by this lane; the lanes named for other lanes' commits, rows and model
+    loads.
+  READ (the architect's clone at c412033): the two full hashes in STATUS, each the parent
+    chain's; 12ah_open/brief_12ah_OPEN.md equal to the architect's copy by cmp; the plan's
+    sha256 90e5c6dfea08558322f1eadc4e0303065e72c4727b7800ff3306f5c849d1d3b5, 3,308,753 bytes,
+    19,599 lines, last line "The decision log in this file ends at R812."; in
+    12ah_open/between_sessions_read.txt, the listing of ~/scratch/12ah-olra/: twenty-one
+    regular files at its top level and a directory work/ holding six.
+  INFERRED: none.
+
+R813(a) — The 12ah-OPEN final report is accepted as printed: item 0 34ff8a7 (Blocks 209 and
+  210; r811.txt and r812.txt equal to the architect's hashes; "A R812(a)" on the list and the
+  rules file regenerated, every changed line within R766(b)'s kinds; the brief file equal to
+  the architect's copy), ledger 0e16bf7; the evidence commit c412033 (the gate's nineteen
+  files, the 2026-11-15 to 2026-11-18 job reads, the between-session readings), ledger
+  d46c74d. I1–I6 held. E2–E7 held; E1 held in part (finding 4). The first paste's stop on
+  2026-11-16 was the brief's own TIMING stop, nothing written, and is not a stop of the
+  session.
+R813(b) — R812's blocking item is verified as R812 required, before its transcription: the
+  scheduled health job loads models on Sunday by UTC only, from 07:00 UTC. R812(a) rests on
+  that measurement from here. R812's two expectation items are read from the script's lines
+  and held on the three weekday runs read (three GET requests, no load); the full mode's
+  stand-down on a held lock is read, not exercised.
+R813(c) — The gate's 978.22 s is the forty-third member of the series: a standard gate, the
+  second launched as a unit, with no hold and nothing beside it but surgical-cv's uvicorn. The
+  band stays 894–1092 s until the 12ah closeout cuts the next one in R683(c)'s form.
+R813(d) — The interim read-out's files, the PI's ruling in his word: "A". Of the three options
+  put to him, A is: all twenty-one regular files at the top level of ~/scratch/12ah-olra/ are
+  committed to docs/session-reports/session-12/12ah_OLRA/, behind a credential scan that
+  stops on any hit, and work/ stays in scratch, uncommitted. Two of the twenty-one come from
+  other lanes (OLR-1_REPORT.md, the workbench handoff; q10_7c74c2b_primer_diff.txt, a diff of
+  claude-config's primer); the PI accepts their publication. Once committed, the read-out
+  12ah_OLRA.md and its addendum are this lane's record and are not edited; the three lists
+  committed beside them are the record of their bytes.
+R813(e) — Readings, no row. Findings 1 and 2 are two tools items, carried with the others: the
+  open check's health section cannot read a light-check day, and with a count of zero it reads
+  the whole log; the open check has no key for the Ollama service start. Finding 3 (tool
+  paths written short) and finding 5 (the scratch directory described without its work/
+  subdirectory and without one listed file) are the architect's. Finding 4: the regeneration
+  model's command was not in scratch and was rebuilt from that commit's own inputs,
+  reproducing its file but for two path lines; accepted, and the command this report prints
+  is the record for the next regeneration. Findings 6, 7, 8, 11 and 12 are readings: the
+  2026-11-15 sweep ran on the old script; eighteen loads of other lanes' models outside the
+  health windows, none in a nightly window; a unit journal with a start line and no separate
+  stop line; a diff file equal by content; four job pairs read. The eighteen
+  NV_ERR_NO_MEMORY lines of the 2026-11-15 sweep are a reading for the dgx-infra item.
+  Findings 9 and 10 are CC's own slips, corrected or annotated in the files, which stand as
+  committed.
+R813(f) — The count so far in 12ah: no stop and no pause; two architect's errors (findings 3
+  and 5), neither reaching a commit. The interim CC session c72bc042 ran before the open,
+  read-only, and is counted with this session's record from the commit of its files.
+R813(g) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+  Next, in this order: the commit of the interim read-out's files (the brief below); the
+  restart change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum from the
+  committed files; its build as one engine-commit brief; the merge sha reported to the
+  workbench; then U30's build with N46.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-19 | R813(a) — The 12ah-OPEN final report is accepted as printed: item 0 34ff8a7 (Blocks 209 and 210; r811.txt and r812.txt equal to the architect's hashes; "A R812(a)" on the list and the rules file regenerated, every changed line within R766(b)'s kinds; the brief file equal to the architect's copy), ledger 0e16bf7; the evidence commit c412033 (the gate's nineteen files, the 2026-11-15 to 2026-11-18 job reads, the between-session readings), ledger d46c74d. I1–I6 held. E2–E7 held; E1 held in part (finding 4). The first paste's stop on 2026-11-16 was the brief's own TIMING stop, nothing written, and is not a stop of the session. R813(b) — R812's blocking item is verified as R812 required, before its transcription: the scheduled health job loads models on Sunday by UTC only, from 07:00 UTC. R812(a) rests on that measurement from here. R812's two expectation items are read from the script's lines and held on the three weekday runs read (three GET requests, no load); the full mode's stand-down on a held lock is read, not exercised. R813(c) — The gate's 978.22 s is the forty-third member of the series: a standard gate, the second launched as a unit, with no hold and nothing beside it but surgical-cv's uvicorn. The band stays 894–1092 s until the 12ah closeout cuts the next one in R683(c)'s form. R813(d) — The interim read-out's files, the PI's ruling in his word: "A". Of the three options put to him, A is: all twenty-one regular files at the top level of ~/scratch/12ah-olra/ are committed to docs/session-reports/session-12/12ah_OLRA/, behind a credential scan that stops on any hit, and work/ stays in scratch, uncommitted. Two of the twenty-one come from other lanes (OLR-1_REPORT.md, the workbench handoff; q10_7c74c2b_primer_diff.txt, a diff of claude-config's primer); the PI accepts their publication. Once committed, the read-out 12ah_OLRA.md and its addendum are this lane's record and are not edited; the three lists committed beside them are the record of their bytes. R813(e) — Readings, no row. Findings 1 and 2 are two tools items, carried with the others: the open check's health section cannot read a light-check day, and with a count of zero it reads the whole log; the open check has no key for the Ollama service start. Finding 3 (tool paths written short) and finding 5 (the scratch directory described without its work/ subdirectory and without one listed file) are the architect's. Finding 4: the regeneration model's command was not in scratch and was rebuilt from that commit's own inputs, reproducing its file but for two path lines; accepted, and the command this report prints is the record for the next regeneration. Findings 6, 7, 8, 11 and 12 are readings: the 2026-11-15 sweep ran on the old script; eighteen loads of other lanes' models outside the health windows, none in a nightly window; a unit journal with a start line and no separate stop line; a diff file equal by content; four job pairs read. The eighteen NV_ERR_NO_MEMORY lines of the 2026-11-15 sweep are a reading for the dgx-infra item. Findings 9 and 10 are CC's own slips, corrected or annotated in the files, which stand as committed. R813(f) — The count so far in 12ah: no stop and no pause; two architect's errors (findings 3 and 5), neither reaching a commit. The interim CC session c72bc042 ran before the open, read-only, and is counted with this session's record from the commit of its files. R813(g) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next, in this order: the commit of the interim read-out's files (the brief below); the restart change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum from the committed files; its build as one engine-commit brief; the merge sha reported to the workbench; then U30's build with N46. | PI, 2026-11-19, during session 12ah, on architect recommendation, on the 12ah-OPEN final report (item 0 34ff8a7; evidence c412033) |
+
+The decision log in this file ends at R813.
+
+**Block 212.** *Transcribed 2026-11-19 (item 0 of the 12ah-OLRA-REC brief as resumed under R814), in its own commit with Block 211 and the resume file it orders, in the R597(e) form:* ruling R814, made by PI on architect recommendation on 2026-11-19 UTC, during session 12ah, on the 12ah-OLRA-REC stop report (stopped at step 2c; nothing committed). The 12ah-OLRA-REC-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ah-R814] — the 12ah-OLRA-REC stop is correct and the architect's;
+  the PI's ruling: work/'s six files are committed too, behind the same scan; R813(d) amended
+  and two of R813's readings corrected; item 0 redone under the resume below; no standing
+  rule
+STATUS: PI ruling, 2026-11-19 UTC, session 12ah, on architect recommendation, on the
+  12ah-OLRA-REC stop report (stopped at step 2c; nothing committed, the tree restored to
+  c4120330c7c8102d89d6c8298363e2624c7aca24). Transcribe at item 0 of the 12ah-OLRA-REC
+  brief, redone under the resume below, by transcribe_ruling.py, in the block after R813's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted): "6 of its 18 lines name files under work/"; "SHA256SUMS
+    12 of 18; SHA256SUMS_add1 5 of 5; SHA256SUMS_close 1 of 1"; the six named,
+    "work/g4_window_end.txt, work/ledger_ee_at_HEAD.txt, work/ledger_ee_at_a2bbd81.txt,
+    work/olr1_sha_before.txt, work/primer_41_45_at_HEAD.txt and
+    work/primer_41_45_at_a2bbd81.txt"; "the 21 top-level files equal R3 by name and bytes";
+    "olra_check.py (sha256 9224a31d…1eec) reads 24 lines, 24 match"; "every one of the 17
+    classes was flagged on its planted line, and the clean fixture produced 0 hits"; "Scan of
+    all 21 files: all valid UTF-8, 0 stop-class hits"; "r813.txt:
+    cc073a2ec82cb00b2dd14b60a8120359e2a6298aad2a407f2aa9b00c776d10a9, 6,957 B, 87 lines,
+    equal to the architect's hash."; "I then restored the evidence-engine tree to HEAD
+    c412033 (plan sha256 back to 90e5c6df…d3b5, clean, level)"; "claude-config is untouched
+    at d46c74d"; "12ah_OLRA.md:13 lists "work/ (comparison inputs)" in its file inventory".
+  READ (CC's): finding 2, CC's correction of its own 12ah-OPEN finding 5; "two of its files
+    are copies of claude-config's ledger rows at 102,446 B each".
+  INFERRED — expectation (reported if false): work/'s six files hold this lane's ledger rows,
+    this lane's primer lines and two small records of the interim session. The architect has
+    read their names, not their content; the scan of (b) is the gate, not this item.
+
+R814(a) — The stop is correct, at the first point where the brief's gate could not hold, and
+  nothing was committed. The cause is the architect's: G3 required every line of the
+  committed lists to match a committed file while R813(d) kept six listed files out. Both
+  rested on one statement, that no list covers work/, which came from the 12ah-OPEN report's
+  finding 5 and was carried to the PI as the premise of his options without the list being
+  read. The restore of the tree to HEAD is accepted on its evidence: it removed only this
+  task's own uncommitted writes, each reproducible from scratch and from the paste.
+R814(b) — The PI's ruling, in his words: "1 then close". Option 1 of the three put to him:
+  work/'s six files are committed too, to docs/session-reports/session-12/12ah_OLRA/work/,
+  after the same scan has run on them with the same stop. This amends R813(d)'s "work/ stays
+  in scratch, uncommitted" and nothing else in it; the PI's acceptance of publication there
+  extends to these six, the two copies of this lane's ledger rows among them. With them
+  every line of the three lists matches a committed file, and G3 stands as the brief wrote
+  it.
+R814(c) — R813 stands as issued and is transcribed with this ruling; two of its readings are
+  corrected here. R813(e) on finding 5: the scratch directory's eighteen-entry list was
+  described rightly and did cover work/; the statement that no list covers work/ was CC's,
+  from a helper that looked at top-level names only, and CC has corrected it; the
+  architect's part is that it was passed on unchecked. R813(f)'s count now reads: one stop,
+  this one, the architect's; no pause; the architect's errors three (tool paths written
+  short; a premise passed on unchecked; a gate that contradicted the ruling beside it),
+  none reaching a commit.
+R814(d) — Reading, no row: with work/ committed, the read-out's inventory line naming work/
+  as comparison inputs is true of the record as well as of scratch.
+R814(e) — "then close": session 12ah closes after this task's report is read and accepted,
+  by a closeout brief and a wrap ruling of their own. The restart change's design ruling
+  opens the next session. R813(g)'s order is unchanged; the session boundary falls after its
+  first item.
+R814(f) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-19 | R814(a) — The stop is correct, at the first point where the brief's gate could not hold, and nothing was committed. The cause is the architect's: G3 required every line of the committed lists to match a committed file while R813(d) kept six listed files out. Both rested on one statement, that no list covers work/, which came from the 12ah-OPEN report's finding 5 and was carried to the PI as the premise of his options without the list being read. The restore of the tree to HEAD is accepted on its evidence: it removed only this task's own uncommitted writes, each reproducible from scratch and from the paste. R814(b) — The PI's ruling, in his words: "1 then close". Option 1 of the three put to him: work/'s six files are committed too, to docs/session-reports/session-12/12ah_OLRA/work/, after the same scan has run on them with the same stop. This amends R813(d)'s "work/ stays in scratch, uncommitted" and nothing else in it; the PI's acceptance of publication there extends to these six, the two copies of this lane's ledger rows among them. With them every line of the three lists matches a committed file, and G3 stands as the brief wrote it. R814(c) — R813 stands as issued and is transcribed with this ruling; two of its readings are corrected here. R813(e) on finding 5: the scratch directory's eighteen-entry list was described rightly and did cover work/; the statement that no list covers work/ was CC's, from a helper that looked at top-level names only, and CC has corrected it; the architect's part is that it was passed on unchecked. R813(f)'s count now reads: one stop, this one, the architect's; no pause; the architect's errors three (tool paths written short; a premise passed on unchecked; a gate that contradicted the ruling beside it), none reaching a commit. R814(d) — Reading, no row: with work/ committed, the read-out's inventory line naming work/ as comparison inputs is true of the record as well as of scratch. R814(e) — "then close": session 12ah closes after this task's report is read and accepted, by a closeout brief and a wrap ruling of their own. The restart change's design ruling opens the next session. R813(g)'s order is unchanged; the session boundary falls after its first item. R814(f) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. | PI, 2026-11-19, during session 12ah, on architect recommendation, on the 12ah-OLRA-REC stop report (stopped at step 2c; nothing committed) |
+
+The decision log in this file ends at R814.

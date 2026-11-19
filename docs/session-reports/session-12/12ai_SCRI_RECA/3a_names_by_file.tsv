@@ -1,0 +1,5 @@
+file	brand-theme-B	brand-theme-C	brand-theme-D	brand-theme-E	brand-theme-F	cm-read-1	cm105a	cm106a	cm106b	cm106b_failfirst_before.txt	cm106b_step0.marker	cm106b_step0_mtimes.txt	cm106d	council-A	dgx-infra-OHC-1	helloai-A	inv-a	inv-b	lists-A	llm-council-LCH-1	ollama-OLR-1	opreports-A	ebr-scratch	fd2-4-scratch	fd2-d2-scratch	phi-scratch	brand-theme-* (prefix form)	cm* (prefix form)
+12ai_SCRI.md	0	0	0	0	0	1	0	0	1	0	0	0	0	1	1	1	1	0	1	1	1	1	0	0	0	0	1	1
+g1_after.tsv	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	0	0	0
+g1_before.tsv	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	0	0	0
+s1_toplevel.tsv	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	0	0	0

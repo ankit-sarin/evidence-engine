@@ -1,0 +1,9 @@
+kind (CC's rule, kinds.py)	rows	bytes
+json	751	21072763
+logs	798	46342091
+other	331	9766216
+paper texts	6	0
+pytest basetemp content	5781	190830900
+scripts	1838	14919945
+sqlite db/sidecar/bak	82	0
+text/md/tsv	3373	101148346

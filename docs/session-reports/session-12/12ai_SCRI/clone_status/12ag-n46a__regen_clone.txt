@@ -1,0 +1,7 @@
+ M docs/plan/ENGINE_REFACTOR_PLAN.md
+ M docs/plan/STANDING_RULES.md
+ M docs/plan/standing_rules_glosses.json
+ M docs/plan/standing_rules_ids.txt
+?? docs/session-reports/session-12/12ag_open/r804.txt
+?? docs/session-reports/session-12/12ag_open/r805.txt
+!! docs/session-reports/session-12/12q_close/__pycache__/

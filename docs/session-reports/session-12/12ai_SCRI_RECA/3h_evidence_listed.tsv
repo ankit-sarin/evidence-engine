@@ -1,0 +1,27 @@
+line	name	listed
+13	g1_before.tsv	yes
+13	g1_after.tsv	yes
+13	g1_diff.txt	yes
+14	g1_mainstatus_before.txt	yes
+14	g1_mainstatus_after.txt	yes
+14	s1_toplevel.tsv	yes
+14	s2_citations.tsv	yes
+15	s3_clones.tsv	yes
+15	s3_clone_sizes.tsv	yes
+15	s3_modified_files.tsv	yes
+15	s3_untracked_ignored.tsv	yes
+16	s3_dirty_sentences.tsv	yes
+16	clone_status/	55 of 55 files under it
+16	patches/	17 of 17 files under it
+17	untracked/	1 of 1 files under it
+17	s4_entries.tsv	yes
+17	s4_records_with_committed_copy.tsv	yes
+18	s4_records_without_committed_copy.tsv	yes
+18	s4_unique_by_kind.tsv	yes
+18	s6_files.tsv	yes
+18	s7_classes.tsv	yes
+19	s7_class_totals.tsv	yes
+19	g3_match_proof.txt	yes
+19	g3_random.bin	yes
+19	g4_numstat_check.tsv	yes
+19	SHA256SUMS	no (the list itself)

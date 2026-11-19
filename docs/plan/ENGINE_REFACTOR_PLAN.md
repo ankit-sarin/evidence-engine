@@ -20232,3 +20232,109 @@ R817(i) — This ruling states no standing rule: the id list, the glosses file a
 | 2026-11-19 | R817(a) — The 12ai-OPEN final report is accepted as printed, the PI's word: "Accept the open and count the interim session." Item 0 7ff68fe (Block 214; r816.txt equal to the architect's hash; the 12ah lane-line copy; the rules files untouched; the brief file equal to the architect's copy), ledger 36c1732; the evidence commit 35fc9ec (the gate's nineteen files and its two side files, the 2026-11-19 job reads, the between-session readings), ledger 96cfd37. I1–I6 held. E1–E7 held; E8 held as to file content (finding 5). R817(b) — The gate's 995.53 s is the forty-fourth member of the series: a standard gate, the third launched as a unit, with no hold and nothing beside it but surgical-cv's uvicorn. The band stays 897–1095 s until the 12ai closeout cuts the next one in R683(c)'s form. R817(c) — The interim CC session bf3224f8-1d94-4728-9a0a-13db7c9ffb8d ran task 12ai-SCRI, a read-only inventory of this lane's scratch, between the 12ah wrap and this open, and committed nothing. It is counted with session 12ai's record from the commit of its files, as R813(f) counted 12ah-OLRA with 12ah. Its window is its record's: 2026-11-19 14:13:44 to 14:38:56 UTC. R817(d) — A finding, recorded: during the interim session CC ran one git fetch in ~/projects/evidence-engine that its brief forbade. Measured at this open before the open's own fetch: FETCH_HEAD alone was written, at 14:37:49 UTC inside that session's window; no reflog entry falls after the 12ah closeout's push; every ref was at b13b5eb. CC's deviation, without effect. No row and no rule. R817(e) — The interim read-out's publication, the PI's word: "Do the readout first". Nothing under ~/scratch/12ai-scri/ is copied or committed until a read-only publication read-out (the brief below) has been reported and the PI has ruled on it in words. That read-out runs a credential scan with a negative control, lists every name, path and quoted line that comes from outside this lane, and profiles the two large tables. It goes to scratch and to the report, not to the repository. The repository is public. R817(f) — The PI's decision of 2026-11-19 on the scratch clones, as he stated it to the architect: the scratch clones of evidence-engine are deleted late in session 12ai, under a brief of their own, after the interim read-out is committed. Every record, log and database stays until the freshman freeze, and test databases are not touched before it. That brief re-checks each clone against the inventory, confirms that no open or close step reads a clone, and prints the removal list for the PI's approval in words before anything is removed. A reading for it, from this open: each open and close makes its own recount clone and read no file content of an older one; this open made one more. R817(g) — Readings, no row. Finding 1: the interim window is the record's, as (c) gives it. Finding 2 is the architect's: the brief's R11 said no file named expected_12*.json is committed, which is true, in support of a wider point that is not; a committed expected-values config exists, 12aa_SETUP/open_expected_validation.json, and no value of the open came from it. Findings 3 and 4 are the two tools items of R813(e), unchanged. Finding 5: CC's git rev-parse in two older clones answered the brief's own request for a list of paths by kind; a metadata read, accepted. Finding 6: the three readings the step-1 helper omits were read (0 earlyoom kill lines, boot abf99132, NRestarts 0) and stand in the report. One more, the architect's, and it reached a commit: the committed 12ai-OPEN brief names four home folders of other lanes in its DO NOT TOUCH list, before the PI had been asked to accept publishing other lanes' names. The file stands as committed; the PI is told. R817(h) — The count so far in 12ai: no stop and no pause; two architect's errors (finding 2; the four folder names), the second reaching a commit. R817(i) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next, in this order: the publication read-out (the brief below); the PI's ruling on it; the commit of the interim read-out's files; the restart change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum; its build as one engine-commit brief; U30's build with N46; the clone deletion brief, before the close; then the report to the workbench of what was removed and of the restart change's merge sha. | PI, 2026-11-19, during session 12ai, on architect recommendation, on the 12ai-OPEN final report (item 0 7ff68fe; evidence 35fc9ec) |
 
 The decision log in this file ends at R817.
+
+**Block 216.** *Transcribed 2026-11-19 (item 0 of the 12ai-SCRI-REC brief), in its own commit with the copy of the interim read-out's files and the brief file it orders, in the R597(e) form:* ruling R818, made by PI on architect recommendation on 2026-11-19 UTC, during session 12ai, on the 12ai-SCRI-RECA final report (item 0 `bec3545d8740da769b764894f234b302d9fd0be6`). The 12ai-SCRI-REC brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ai-R818] — 12ai-SCRI-RECA accepted; the PI's ruling on the interim
+  read-out's files: all ninety-seven committed, unedited; the publication read-out's own
+  files committed beside them; the four folder names in the 12ai-OPEN brief stand; readings
+  on the findings; no standing rule
+STATUS: PI ruling, 2026-11-19 UTC, session 12ai, on architect recommendation, on the
+  12ai-SCRI-RECA final report (item 0 bec3545d8740da769b764894f234b302d9fd0be6). Transcribe
+  at item 0 of the 12ai-SCRI-REC brief below, by transcribe_ruling.py, in the block after
+  R817's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ai-SCRI-RECA final report, quoted; wrapped lines joined): "Commit
+    bec3545d8740da769b764894f234b302d9fd0be6 (parent 35fc9ec)"; "Ledger
+    427d54d54a7dbb36b79917b86eeb3de17dd2ecc7 (parent 96cfd37)"; "r817.txt: bc10edf7…0b64,
+    8,012 B, 100 lines. Equal to the architect's hash."; "Brief file:
+    124c700bc49762eb3d3d3dab02e17ad20de80deca2e1e2fa213556185a1218d5, 27,278 B, 377 lines."
+    (the architect's copy: the same sha256, bytes and lines); "Plan: +111 / −0 (I3 holds). Now
+    3ebc7552…f951, 3,394,246 B, 20,234 lines."; "97 files, 7,477,599 B, 9 directories."; "96
+    lines, 96 match, 0 mismatch"; "All 17 classes the header names were each flagged on their
+    own line"; "The clean file was silent."; "Stop classes: 0 hits in every class (E1
+    holds)."; "Reading classes: 10 hits, all abs_path_outside."; "The read-out is
+    OUT/12ai_SCRI_RECA.md (f0816d08…413e), with 14 TSVs beside it."; "No other file names any
+    of them (E4 holds)."; "None of the 97 files names the four home folders"; "No column
+    holds a cited line's text"; "E3 holds in both tables."; "g1_mainstatus_before.txt has 102
+    lines, all !!"; "Every touched path is under docs/, tests/, engine/ or scripts/, except
+    CLAUDE.md (12ae-u24b__invclone.patch, +1 −1)."; "Only g3_random.bin is not valid UTF-8 (E2
+    holds)."; "SHA256SUMS names every file the read-out cites as evidence".
+  READ (CC's, each marked so in the report): the 22 other-lane entry names; the four places
+    12ai_SCRI.md quotes a file this repository ignores; the reading that the ~/scratch paths
+    outside the in-scope names are this lane's retired paths; the twenty paper-text names
+    drawn; findings 1–9.
+  READ (the architect's clone at bec3545): the full hash in STATUS, its parent 35fc9ec;
+    12ai_SCRI_RECA/brief_12ai_SCRI_RECA.md and 12ai_open/r817.txt equal to the architect's
+    copies by cmp; the plan's sha256
+    3ebc755202c88ca0885a88683ea3318c4b1fbfe5db8a9b0d066efbd43aabf951, 3,394,246 bytes, 20,234
+    lines, last line "The decision log in this file ends at R817."; the commit's three files
+    and no other.
+  READ (the PI's paste of his own terminal, 2026-11-19: the line count and content of
+    ~/scratch/12ai-scri/g1_mainstatus_before.txt): "102", then 102 lines each beginning "!!",
+    read whole by the architect: cache directories, logs, database and backup file names,
+    the PI-audit file names by timestamp, the data/surgical_autonomy/ names; no person's
+    name.
+  INFERRED — expectation (reported if false): a file holding invented examples of key forms
+    could be acted on by the host's secret scanning when pushed. This is the reason (c)
+    leaves two things out, and nothing else rests on it.
+
+R818(a) — The 12ai-SCRI-RECA final report is accepted as printed: item 0 bec3545 (Block 215;
+  r817.txt equal to the architect's hash; the brief file equal to the architect's copy; the
+  rules files untouched), ledger 427d54d. I1–I3 held. E1–E4 and E6 held; E5 is false, a
+  reading ((e)). No file of ~/scratch/12ai-scri/ holds a stop-class hit, on a control that
+  flagged every class the scanner names.
+R818(b) — The interim read-out's files, the PI's ruling in his words: "option 1". Of the three
+  options put to him, option 1 is: all ninety-seven files of ~/scratch/12ai-scri/ are
+  committed, unedited, to docs/session-reports/session-12/12ai_SCRI/, each under its own
+  relative path, the list SHA256SUMS among them. The PI accepts the publication of what the
+  report shows they carry from outside this lane or from files this repository does not
+  track: the twenty-two scratch entry names of other lanes; the lines of the project
+  primer.md and of primer-history/ that 12ai_SCRI.md quotes, and its line numbers into
+  other repositories' files; the forty-seven citation rows whose source is primer.md; the
+  record paths of the two large tables, their paper-text file names among them; the
+  ignored-file names of the two g1_mainstatus files, which the PI read himself; the paths
+  the patches carry. Once committed, 12ai_SCRI.md is this lane's record and is not edited;
+  the list committed beside it is the record of the files' bytes.
+R818(c) — The publication read-out's own files are committed with them, to the directory that
+  already holds its brief, 12ai_SCRI_RECA/: 12ai_SCRI_RECA.md, the tables beside it, the
+  scan's output, and the helpers census.py, kinds.py and assemble.py, after the same scanner
+  has run on them with the same stop. What they print is drawn from the ninety-seven files,
+  so (b)'s acceptance covers it. Left out, and kept in scratch: the control's fixture and
+  control.py, which hold invented examples of key forms; control.py's sha256 is recorded.
+R818(d) — The four home-folder names in the committed 12ai-OPEN brief, the PI's word: "They
+  stand". No history is rewritten. A reading with it: the interim read-out does not name
+  those folders, so that brief is the one place in this repository that does.
+R818(e) — Readings, no row. Finding 2 (E5 false): one patch changes CLAUDE.md by one line; the
+  file is tracked and public, and the patch is committed with the others. Findings 3 and 6
+  are the architect's: the brief said 12ai_SCRI.md names the four home folders, and it does
+  not; the brief said twenty-three other top-level files, and there are twenty-two. The
+  first is a statement about a file the architect had read; the second a count made by
+  reading. Neither changed a step. Finding 4: the kind split of s4_unique_by_kind.tsv
+  cannot be reproduced, since the interim session recorded no rule for it; its figures,
+  the 2,103 paper texts among them, stand as that table's own and nothing is to rest on
+  them. Finding 5: one drawn paper-text name carries an author's surname and a year, the
+  form of a citation; accepted under (b). Findings 7, 8 and 9 are readings: the host and
+  the handover named in the read-out; CC's one change to its path rule, the first output
+  overwritten in scratch; one double match in a table, CC's.
+R818(f) — With this commit the interim session is counted with 12ai (R817(c)), and the content
+  the interim read-out found in no committed version — the patches of five clones and one
+  untracked file — is in the record. That is the condition R817(f) sets before the clone
+  deletion brief; the brief itself comes late in the session.
+R818(g) — The count so far in 12ai: no stop and no pause; four architect's errors (R817(h)'s
+  two; findings 3 and 6 here), one reaching a commit.
+R818(h) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+  Next, in this order: the commit of the files (the brief below); the restart change's
+  design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum; its build as one
+  engine-commit brief; U30's build with N46; the clone deletion brief, before the close;
+  then the report to the workbench.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-19 | R818(a) — The 12ai-SCRI-RECA final report is accepted as printed: item 0 bec3545 (Block 215; r817.txt equal to the architect's hash; the brief file equal to the architect's copy; the rules files untouched), ledger 427d54d. I1–I3 held. E1–E4 and E6 held; E5 is false, a reading ((e)). No file of ~/scratch/12ai-scri/ holds a stop-class hit, on a control that flagged every class the scanner names. R818(b) — The interim read-out's files, the PI's ruling in his words: "option 1". Of the three options put to him, option 1 is: all ninety-seven files of ~/scratch/12ai-scri/ are committed, unedited, to docs/session-reports/session-12/12ai_SCRI/, each under its own relative path, the list SHA256SUMS among them. The PI accepts the publication of what the report shows they carry from outside this lane or from files this repository does not track: the twenty-two scratch entry names of other lanes; the lines of the project primer.md and of primer-history/ that 12ai_SCRI.md quotes, and its line numbers into other repositories' files; the forty-seven citation rows whose source is primer.md; the record paths of the two large tables, their paper-text file names among them; the ignored-file names of the two g1_mainstatus files, which the PI read himself; the paths the patches carry. Once committed, 12ai_SCRI.md is this lane's record and is not edited; the list committed beside it is the record of the files' bytes. R818(c) — The publication read-out's own files are committed with them, to the directory that already holds its brief, 12ai_SCRI_RECA/: 12ai_SCRI_RECA.md, the tables beside it, the scan's output, and the helpers census.py, kinds.py and assemble.py, after the same scanner has run on them with the same stop. What they print is drawn from the ninety-seven files, so (b)'s acceptance covers it. Left out, and kept in scratch: the control's fixture and control.py, which hold invented examples of key forms; control.py's sha256 is recorded. R818(d) — The four home-folder names in the committed 12ai-OPEN brief, the PI's word: "They stand". No history is rewritten. A reading with it: the interim read-out does not name those folders, so that brief is the one place in this repository that does. R818(e) — Readings, no row. Finding 2 (E5 false): one patch changes CLAUDE.md by one line; the file is tracked and public, and the patch is committed with the others. Findings 3 and 6 are the architect's: the brief said 12ai_SCRI.md names the four home folders, and it does not; the brief said twenty-three other top-level files, and there are twenty-two. The first is a statement about a file the architect had read; the second a count made by reading. Neither changed a step. Finding 4: the kind split of s4_unique_by_kind.tsv cannot be reproduced, since the interim session recorded no rule for it; its figures, the 2,103 paper texts among them, stand as that table's own and nothing is to rest on them. Finding 5: one drawn paper-text name carries an author's surname and a year, the form of a citation; accepted under (b). Findings 7, 8 and 9 are readings: the host and the handover named in the read-out; CC's one change to its path rule, the first output overwritten in scratch; one double match in a table, CC's. R818(f) — With this commit the interim session is counted with 12ai (R817(c)), and the content the interim read-out found in no committed version — the patches of five clones and one untracked file — is in the record. That is the condition R817(f) sets before the clone deletion brief; the brief itself comes late in the session. R818(g) — The count so far in 12ai: no stop and no pause; four architect's errors (R817(h)'s two; findings 3 and 6 here), one reaching a commit. R818(h) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next, in this order: the commit of the files (the brief below); the restart change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum; its build as one engine-commit brief; U30's build with N46; the clone deletion brief, before the close; then the report to the workbench. | PI, 2026-11-19, during session 12ai, on architect recommendation, on the 12ai-SCRI-RECA final report (item 0 bec3545) |
+
+The decision log in this file ends at R818.

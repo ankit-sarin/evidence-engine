@@ -1,0 +1,10 @@
+kind	files	bytes
+sqlite db/sidecar/bak	7218	5166967080
+text/md/tsv	2423	409517123
+pytest basetemp content	16492	39682411
+logs	98	17970207
+paper texts	2103	16590031
+json	634	13960002
+other	708	9321741
+scripts	775	7490738
+patches	11	206907

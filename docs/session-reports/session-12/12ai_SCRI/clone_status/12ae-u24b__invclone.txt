@@ -1,0 +1,13 @@
+ M CLAUDE.md
+ M docs/architecture/modules.md
+ M docs/inventory/entry_points.json
+ M docs/inventory/entry_points.md
+ M engine/agents/ft_screener.py
+ M engine/agents/screener.py
+ M engine/utils/ollama_preflight.py
+ M tests/test_ollama_preflight.py
+ M tests/test_screener.py
+?? .venv
+?? tests/test_u24_preflight_spec.py
+!! engine/__pycache__/
+!! engine/tools/__pycache__/

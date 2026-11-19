@@ -1,0 +1,24 @@
+scanner /home/ankitsarin/projects/evidence-engine/docs/session-reports/session-12/12ah_OLRA/rec_scan.py exit 1; RESULT: stop-class hits 15; reading-class hits 5; files 4
+classes named in the header: 17
+PASS private_key_block: flagged on classes.txt:1 (classes on that line: ['private_key_block'])
+PASS key_anthropic: flagged on classes.txt:2 (classes on that line: ['key_anthropic'])
+PASS key_openai: flagged on classes.txt:3 (classes on that line: ['key_openai'])
+PASS key_google: flagged on classes.txt:4 (classes on that line: ['key_google'])
+PASS key_aws: flagged on classes.txt:5 (classes on that line: ['key_aws'])
+PASS key_github: flagged on classes.txt:6 (classes on that line: ['key_github'])
+PASS key_huggingface: flagged on classes.txt:7 (classes on that line: ['key_huggingface'])
+PASS key_slack: flagged on classes.txt:8 (classes on that line: ['key_slack'])
+PASS key_tailscale: flagged on classes.txt:9 (classes on that line: ['key_tailscale'])
+PASS auth_header: flagged on classes.txt:10 (classes on that line: ['auth_header'])
+PASS url_userinfo: flagged on classes.txt:11 (classes on that line: ['url_userinfo'])
+PASS secret_assignment: flagged on classes.txt:12 (classes on that line: ['secret_assignment'])
+PASS ssh_key_content: flagged on classes.txt:13 (classes on that line: ['ssh_key_content'])
+PASS email: flagged on classes.txt:14 (classes on that line: ['email'])
+PASS ipv4_non_loopback: flagged on classes.txt:15 (classes on that line: ['ipv4_non_loopback'])
+PASS sudoers_rule: flagged on classes.txt:16 (classes on that line: ['sudoers_rule'])
+PASS abs_path_outside: flagged on classes.txt:17 (classes on that line: ['abs_path_outside'])
+PASS long.txt: key_aws at line 30250 of 30500, nothing else
+PASS row.tsv: secret_assignment inside the tab-separated row 3, nothing else
+PASS clean.txt silent
+PASS scanner exit 1 on the fixture
+CONTROL: PASS

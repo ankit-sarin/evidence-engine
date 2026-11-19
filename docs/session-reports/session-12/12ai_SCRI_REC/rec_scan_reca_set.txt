@@ -1,0 +1,86 @@
+12ai_SCRI_RECA.md: 31842 B, 443 lines, utf-8; hits 21 (stop 0, reading 21)
+  READING 12ai_SCRI_RECA.md:45 abs_path_outside /hom…[16]
+  READING 12ai_SCRI_RECA.md:49 abs_path_outside /api…[7]
+  READING 12ai_SCRI_RECA.md:50 abs_path_outside /api…[9]
+  READING 12ai_SCRI_RECA.md:51 abs_path_outside /api…[12]
+  READING 12ai_SCRI_RECA.md:52 abs_path_outside /dev…[9]
+  READING 12ai_SCRI_RECA.md:57 abs_path_outside /pro…[11]
+  READING 12ai_SCRI_RECA.md:62 abs_path_outside /api…[7]
+  READING 12ai_SCRI_RECA.md:62 abs_path_outside /api…[7]
+  READING 12ai_SCRI_RECA.md:63 abs_path_outside /api…[9]
+  READING 12ai_SCRI_RECA.md:63 abs_path_outside /api…[9]
+  READING 12ai_SCRI_RECA.md:64 abs_path_outside /api…[12]
+  READING 12ai_SCRI_RECA.md:64 abs_path_outside /api…[12]
+  READING 12ai_SCRI_RECA.md:65 abs_path_outside /dev…[9]
+  READING 12ai_SCRI_RECA.md:65 abs_path_outside /dev…[9]
+  READING 12ai_SCRI_RECA.md:70 abs_path_outside /pro…[11]
+  READING 12ai_SCRI_RECA.md:70 abs_path_outside /pro…[11]
+  READING 12ai_SCRI_RECA.md:442 abs_path_outside /api…[7]
+  READING 12ai_SCRI_RECA.md:442 abs_path_outside /api…[9]
+  READING 12ai_SCRI_RECA.md:442 abs_path_outside /api…[12]
+  READING 12ai_SCRI_RECA.md:442 abs_path_outside /dev…[9]
+  READING 12ai_SCRI_RECA.md:442 abs_path_outside /pro…[11]
+2a_listing.tsv: 3498 B, 97 lines, utf-8; hits 0 (stop 0, reading 0)
+2a_open_listing.tsv: 3498 B, 97 lines, utf-8; hits 0 (stop 0, reading 0)
+3a_names_by_file.tsv: 663 B, 5 lines, utf-8; hits 0 (stop 0, reading 0)
+3b_distinct_paths.tsv: 954 B, 18 lines, utf-8; hits 10 (stop 0, reading 10)
+  READING 3b_distinct_paths.tsv:2 abs_path_outside /api…[7]
+  READING 3b_distinct_paths.tsv:2 abs_path_outside /api…[7]
+  READING 3b_distinct_paths.tsv:3 abs_path_outside /api…[9]
+  READING 3b_distinct_paths.tsv:3 abs_path_outside /api…[9]
+  READING 3b_distinct_paths.tsv:4 abs_path_outside /api…[12]
+  READING 3b_distinct_paths.tsv:4 abs_path_outside /api…[12]
+  READING 3b_distinct_paths.tsv:5 abs_path_outside /dev…[9]
+  READING 3b_distinct_paths.tsv:5 abs_path_outside /dev…[9]
+  READING 3b_distinct_paths.tsv:17 abs_path_outside /pro…[11]
+  READING 3b_distinct_paths.tsv:17 abs_path_outside /pro…[11]
+3b_paths_by_group_file.tsv: 1019 B, 19 lines, utf-8; hits 9 (stop 0, reading 9)
+  READING 3b_paths_by_group_file.tsv:1 abs_path_outside /hom…[16]
+  READING 3b_paths_by_group_file.tsv:2 abs_path_outside /api…[7]
+  READING 3b_paths_by_group_file.tsv:3 abs_path_outside /api…[7]
+  READING 3b_paths_by_group_file.tsv:4 abs_path_outside /api…[7]
+  READING 3b_paths_by_group_file.tsv:5 abs_path_outside /api…[7]
+  READING 3b_paths_by_group_file.tsv:6 abs_path_outside /api…[9]
+  READING 3b_paths_by_group_file.tsv:7 abs_path_outside /api…[12]
+  READING 3b_paths_by_group_file.tsv:8 abs_path_outside /dev…[9]
+  READING 3b_paths_by_group_file.tsv:16 abs_path_outside /pro…[11]
+3c_citations_by_source.tsv: 305 B, 5 lines, utf-8; hits 0 (stop 0, reading 0)
+3c_scri_md_refs.tsv: 930 B, 19 lines, utf-8; hits 0 (stop 0, reading 0)
+3d_s4_records_with_committed_copy_entries.tsv: 1881 B, 155 lines, utf-8; hits 0 (stop 0, reading 0)
+3d_s4_records_with_committed_copy_kinds.tsv: 223 B, 9 lines, utf-8; hits 0 (stop 0, reading 0)
+3d_s4_records_without_committed_copy_entries.tsv: 1969 B, 160 lines, utf-8; hits 0 (stop 0, reading 0)
+3d_s4_records_without_committed_copy_kinds.tsv: 260 B, 10 lines, utf-8; hits 0 (stop 0, reading 0)
+3e_mainstatus_ignored.tsv: 4658 B, 103 lines, utf-8; hits 0 (stop 0, reading 0)
+3e_untracked_ignored_names.tsv: 3766 B, 59 lines, utf-8; hits 0 (stop 0, reading 0)
+3f_patch_numstat.tsv: 2548 B, 33 lines, utf-8; hits 0 (stop 0, reading 0)
+3g_groups.tsv: 5674 B, 98 lines, utf-8; hits 0 (stop 0, reading 0)
+3h_evidence_listed.tsv: 755 B, 27 lines, utf-8; hits 0 (stop 0, reading 0)
+reca_credential_scan.txt: 8403 B, 126 lines, utf-8; hits 1 (stop 0, reading 1)
+  READING reca_credential_scan.txt:124 sudoers_rule sudo…[7]
+census.py: 20022 B, 263 lines, utf-8; hits 3 (stop 0, reading 3)
+  READING census.py:10 abs_path_outside /hom…[16]
+  READING census.py:77 abs_path_outside /hom…[16]
+  READING census.py:80 abs_path_outside /hom…[16]
+kinds.py: 2200 B, 29 lines, utf-8; hits 0 (stop 0, reading 0)
+assemble.py: 1861 B, 19 lines, utf-8; hits 2 (stop 0, reading 2)
+  READING assemble.py:12 abs_path_outside /pro…[79]
+  READING assemble.py:14 abs_path_outside /scr…[40]
+-- totals per class
+  STOP    private_key_block: 0
+  STOP    key_anthropic: 0
+  STOP    key_openai: 0
+  STOP    key_google: 0
+  STOP    key_aws: 0
+  STOP    key_github: 0
+  STOP    key_huggingface: 0
+  STOP    key_slack: 0
+  STOP    key_tailscale: 0
+  STOP    auth_header: 0
+  STOP    url_userinfo: 0
+  STOP    secret_assignment: 0
+  STOP    ssh_key_content: 0
+  READING email: 0
+  READING ipv4_non_loopback: 0
+  READING sudoers_rule: 1
+  READING abs_path_outside: 45
+RESULT: stop-class hits 0; reading-class hits 46; files 21

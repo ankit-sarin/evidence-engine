@@ -1,0 +1,19 @@
+line	file referenced	tracked_at_HEAD	line quotes text
+37	primer.md (this repo)	no (ignored)	number/name only
+37	CLAUDE.md (this repo)	yes	number/name only
+37	surgical-cv primer.md	no (another repository)	number/name only
+37	surgical-cv CLAUDE.md	no (another repository)	number/name only
+37	claude-config primer.md	no (another repository)	number/name only
+53	primer.md (this repo)	no (ignored)	number/name only
+53	CLAUDE.md (this repo)	yes	number/name only
+80	primer.md (this repo)	no (ignored)	number/name only
+142	primer.md (this repo)	no (ignored)	number/name only
+144	fence open		
+152	fence close		
+154	primer.md (this repo)	no (ignored)	quote
+155	primer-history/…	no	quote
+171	CLAUDE.md (this repo)	yes	number/name only
+174	CLAUDE.md (this repo)	yes	number/name only
+179	primer.md (this repo)	no (ignored)	number/name only
+198	primer.md (this repo)	no (ignored)	quote
+218	primer.md (this repo)	no (ignored)	number/name only

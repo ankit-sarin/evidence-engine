@@ -1,0 +1,33 @@
+repo	status	path	plus	minus	working_blob	in_main_HEAD_tree	object_in_main_repo	commits_in_main_with_this_blob_at_path
+12ab-close/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	144	0	605f10698b704dfc7576c8c009cc458526134a6d	no	yes	bc1da26,228ee31
+12ab-u21p/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	62	0	16d453a492172373e3cdd51ad7e08881bc836cdb	no	no	
+12ab-u21p/clone	M	docs/session-reports/session-12/12w_close/recount_12w_r707.json	16	8	edf17016b7434018de3b379c709fe58696d087ec	no	no	
+12ac-close/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	125	0	5669490bc7c3af49f73cbe8da6854cb35d2b9b92	no	yes	483ecbb,6095e6c
+12ae-close/pre_clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	144	2	0c6a54e1509973a4cf69515d916600fa330dd2cd	no	no	
+12ae-u24b/invclone	M	CLAUDE.md	1	1	bddcd2680430a48cba33bb469ba518cc3137bbd8	no	yes	24ce26b,94ab7a8
+12ae-u24b/invclone	M	docs/architecture/modules.md	2	2	d8a7d83029e16c58eaf7a62a98c0223f47feee7c	docs/architecture/modules.md	yes	94ab7a8
+12ae-u24b/invclone	M	docs/inventory/entry_points.json	47	20	5cc77b17344db0289300ed638c5aa0aa284b099a	no	no	
+12ae-u24b/invclone	M	docs/inventory/entry_points.md	9	13	58fc66cdb9c25f8dfe23752ab5fae5f74eae4a72	no	no	
+12ae-u24b/invclone	M	engine/agents/ft_screener.py	1	0	993ff814d6410dc29b30283a64aec93cba74d939	engine/agents/ft_screener.py	yes	94ab7a8
+12ae-u24b/invclone	M	engine/agents/screener.py	2	2	ec8866df23ffe946d08265b91ebd4bfe8b55b2a0	engine/agents/screener.py	yes	94ab7a8
+12ae-u24b/invclone	M	engine/utils/ollama_preflight.py	9	1	9ef8cdf9d664132947f5c6ed1a3c1060810ddb01	no	no	
+12ae-u24b/invclone	M	tests/test_ollama_preflight.py	1	0	1551af509f9c1653b45c79a2d64ed5d3ef5b0fef	tests/test_ollama_preflight.py	yes	94ab7a8
+12ae-u24b/invclone	M	tests/test_screener.py	2	0	a603955776dc04b107acd26b85c045d6046e4ab1	tests/test_screener.py	yes	94ab7a8
+12af-u29a/clone	M	docs/session-reports/session-12/12ae_close/recount_12ae_close.json	16	9	31b79cfca26783b16538c6f369c38dbc3acf5e40	no	no	
+12af-u30a/clone	M	docs/session-reports/session-12/12ae_close/recount_12ae_close.json	16	9	510384e478b0fb8035899e0cce3ae838087e2ffb	no	no	
+12ag-n46a/regen_clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	138	0	c2f21a017b8b77aed710cb60782ff962194bf2ee	no	yes	12c1108,dcf623e
+12ag-n46a/regen_clone	M	docs/plan/STANDING_RULES.md	53	21	3bebba333af5a5dcabcda48276cbbc74ef3dbfe8	no	yes	b7e5fb1,dcf623e
+12ag-n46a/regen_clone	M	docs/plan/standing_rules_glosses.json	3	1	2702392701d0f5377e662063560c7de7dfb2787a	no	yes	b7e5fb1,dcf623e
+12ag-n46a/regen_clone	M	docs/plan/standing_rules_ids.txt	2	0	140c6bd41559ba309072bbe6783fc6c6ab7aee91	no	yes	b7e5fb1,dcf623e
+12r-open/pc_clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	69	0	5f421c13ac0d0035266202797b248a350f33d08b	no	yes	15b7ef9,c748129
+12r-open/pc_clone	A	docs/session-reports/session-12/12q_close/lane_line_12q.txt	10	0	9ca07efd892c91c28e57657f5ac6c0e3733a7ba2	docs/session-reports/session-12/12q_close/lane_line_12q.txt	yes	c748129
+12s-close/clone2	M	docs/plan/ENGINE_REFACTOR_PLAN.md	183	2	b04962e747785b38e0bd675b4d6bf98a46b594ea	no	yes	4485778,54499d5
+12s-open/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	63	1	5f4cf5fdcd8b672ebde70c65afd274a46fc33455	no	yes	134f41b,1ddff37
+12s-u14b/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	94	2	b7cd126cf7930de3fce115a426502d5400b9c8c0	no	yes	01751e7,4938501
+12s-u14b/oldclone	M	tests/test_audit_events.py	17	0	e5d0a13b4f7bb3c8e7569943ff053c4c19dbb66a	no	yes	9cfd726,7074305
+12s-u14b/oldclone	M	tests/test_auditor.py	15	0	a1f95e7d1c81c805e81d77b6281226ecb233e6dd	tests/test_auditor.py	yes	7074305
+12s-u14b/oldclone	M	tests/test_locator.py	160	1	a302810abce1593107927fd8f24bd2a75fe23bcc	tests/test_locator.py	yes	7074305
+12s-u15a/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	74	4	bbaacd9c345a82abe1dc4a08fc56da9d280cef41	no	yes	54499d5,01751e7
+12u-close/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	175	2	e46b31f60ad2531ee98de0dd1f43ce4edbefc7ae	no	yes	9673aff,0ceec48
+12w-close/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	125	1	5bcaf579949fbd61559daaace2b345912c71159b	no	yes	e83611d,f7a16f3
+12w-u17b/clone	M	docs/plan/ENGINE_REFACTOR_PLAN.md	3	1	48da75e59eea5324bfb8df6059cd11f18612bf31	no	yes	287a9c7,c5ab505

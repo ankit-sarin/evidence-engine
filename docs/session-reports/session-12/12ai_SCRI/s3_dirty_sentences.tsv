@@ -1,0 +1,31 @@
+# one sentence per non-clean clone; CC reading of s3_modified_files.tsv and s3_untracked_ignored.tsv ("committed" = the working file's git blob exists in the main repository; the commit named is the one git log --find-object lists as introducing it)
+clone	status_lines_excl_ignored	diff_files	unique_content	sentence
+12ab-close/clone	2	1	no	The 12ab closeout draft of the plan (+144) and its recount pair; the plan is byte-identical to the version introduced at 228ee31 and both untracked files are committed.
+12ab-u21b/parent	1	0	no	One untracked test, tests/test_u21_no_overlap.py, byte-identical to the committed file; the rest is __pycache__.
+12ab-u21p/clone	2	2	YES	A rehearsal of the R757 transcription (Block 155 and row INT-ab12-1, plan +62) and a regenerated 12w recount JSON (+16/−8); neither file is byte-identical to any committed version, though Block 155 and INT-ab12-1 are in the plan at HEAD.
+12ac-close/clone	2	1	no	The 12ac closeout draft of the plan (+125) and its recount pair; plan byte-identical to the version introduced at 6095e6c, both untracked files committed.
+12ad-close/recount/clone	1	0	no	The untracked 12ad_close recount pair, both committed.
+12ae-close/recount	1	0	no	The untracked 12ae_close recount pair, both committed.
+12ae-close/pre_clone	2	1	YES	A 12ae-CLOSE item 0 draft of the plan (Block 193 with the B9 and C28 notes, +144/−2), not byte-identical to any committed version, and a recount JSON that differs from the committed one in two values (expected_holds false, done 30), copied to untracked/.
+12ae-u24b/invclone	11	9	YES	The U24 preflight-from-spec work in progress: six of nine modified files are byte-identical to 94ab7a8's, while docs/inventory/entry_points.json/.md and engine/utils/ollama_preflight.py (a --review/--spec CLI) match no committed version; the untracked test is committed and .venv is a symlink to the main repo's venv.
+12af-close/clone	1	0	no	The untracked 12af_close recount pair, both committed.
+12af-u29a/clone	1	1	YES	recount_12ae_close.json regenerated against a later plan (rows 287, done 32, expected_holds false); a generated output that matches no committed version.
+12af-u30a/clone	1	1	YES	The same regenerated recount_12ae_close.json, with done 33; matches no committed version.
+12ag-n46a/regen_clone	6	4	no	A regeneration of the plan, STANDING_RULES.md, the glosses and the ids file, plus untracked r804.txt and r805.txt; every file is byte-identical to the version introduced at dcf623e (12ag-N46A item 0).
+12r-open/pc_clone	2	2	no	Staged plan (+69) and lane_line_12q.txt, both byte-identical to the versions introduced at c748129.
+12s-close/clone2	2	1	no	Staged 12s closeout plan (+183/−2), byte-identical to 54499d5's, and the recount pair, committed.
+12s-close/clone	1	0	no	The untracked 12s_close recount pair, both committed.
+12s-open/clone	1	1	no	Staged plan (+63/−1), byte-identical to 1ddff37's.
+12s-u14b/clone	1	1	no	Staged plan (+94/−2), byte-identical to 4938501's.
+12s-u14b/oldclone	3	3	no	Three test files modified (+192/−1), each byte-identical to a committed version (7074305); the rest is __pycache__.
+12s-u15a/clone	1	1	no	Staged plan (+74/−4), byte-identical to 01751e7's.
+12t-u15b/prefix	1	0	no	One untracked test, tests/test_audit_admitted_set.py, byte-identical to the committed file; the rest is __pycache__.
+12u-close/clone	1	1	no	12u closeout draft of the plan (+175/−2), byte-identical to 0ceec48's.
+12u-u16b/checkout	1	0	no	One untracked tests/test_audit_stage_completion.py, byte-identical to the committed 12u_U16B/test_audit_stage_completion_phase1.py; the rest is __pycache__.
+12v-close/clone	1	0	no	Only a .venv symlink to the main repository's venv.
+12v-open/clone	1	0	no	Only a .venv symlink to the main repository's venv.
+12v-u37b/clone	3	0	no	The .venv symlink and the untracked recount_12v_r694 pair, both committed.
+12v-u38a/clone	1	0	no	Only a .venv symlink to the main repository's venv.
+12v-u38b/clone	1	0	no	Only a .venv symlink to the main repository's venv.
+12w-close/clone	2	1	no	12w closeout draft of the plan (+125/−1), byte-identical to f7a16f3's, and four untracked files, all committed (the recount JSON under 12aa_close/recount_close_run.json).
+12w-u17b/clone	1	1	no	One dated INT-i12-45 line in the plan (+3/−1), byte-identical to c5ab505's.

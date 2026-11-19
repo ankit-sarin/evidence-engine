@@ -1,0 +1,3 @@
+?? .venv
+?? docs/session-reports/session-12/12v_U37A/recount_12v_r694.json
+?? docs/session-reports/session-12/12v_U37A/recount_12v_r694.py

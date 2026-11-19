@@ -1,0 +1,121 @@
+# label = CC reading (LEDGER / CONSUMER / HISTORY), not a computed value; CONSUMER takes precedence where a ledger row also governs (ledger_row column filled)
+source_file:line	cited_path	exists_now	label_reading	ledger_row	reader
+primer.md:14	~/scratch/12ah-close/lane_line_12ah.txt	yes	HISTORY		
+primer.md:64	~/scratch/12ag-close/lane_line_12ag.txt	yes	HISTORY		
+primer.md:110	~/scratch/wr5-b/	yes	HISTORY		
+primer.md:132	~/scratch/12af-close/lane_line_12af.txt	yes	HISTORY		
+primer.md:176	~/scratch/12ae-close/lane_line_12ae.txt	yes	HISTORY		
+primer.md:213	~/scratch/12ad-close/lane_line_12ad.txt	yes	HISTORY		
+primer.md:255	~/scratch/12ac-close/lane_line_12ac.txt	yes	HISTORY		
+primer.md:296	~/scratch/12ab-close/lane_line_12ab.txt	yes	HISTORY		
+primer.md:332	~/scratch/12aa-close/lane_line_12aa.txt	yes	HISTORY		
+primer.md:386	~/scratch/12z-close/lane_line_12z.txt	yes	HISTORY		
+primer.md:439	~/scratch/12y-close/lane_line_12y.txt	yes	HISTORY		
+primer.md:488	~/scratch/12x-close/lane_line_12x.txt	yes	HISTORY		
+primer.md:490	~/scratch/12x-open/gate/	yes	HISTORY		
+primer.md:536	~/scratch/12w-close/lane_line_12w.txt	yes	HISTORY		
+primer.md:582	~/scratch/12v-close/lane_line_12v.txt	yes	HISTORY		
+primer.md:609	~/scratch/12v-u37r/	yes	CONSUMER		session_open_check.py "probe_scratch" (requests_dir, responses[0])
+primer.md:609	~/scratch/12v-u37r2/	yes	CONSUMER		session_open_check.py "probe_scratch" (responses[1])
+primer.md:626	~/scratch/12u-close/lane_line_12u.txt	yes	HISTORY		
+primer.md:678	~/scratch/12t-close/lane_line_12t.txt	yes	HISTORY		
+primer.md:725	~/scratch/12s-close/lane_line_12s.txt	yes	HISTORY		
+primer.md:775	~/scratch/12r-close/lane_line_12r.txt	yes	HISTORY		
+primer.md:800	~/scratch/12r-u13/run/ra_12q/	yes	CONSUMER		session_open_check.py "retention" (absolute path in retention_close.txt)
+primer.md:801	~/scratch/12q-u13-build/stage/	yes	CONSUMER		session_open_check.py "stage" (path) and the 12ai expected-values block
+primer.md:831	~/scratch/12q-close/lane_line_12q.txt	yes	HISTORY		
+primer.md:851	~/scratch/12q-u13-build/stage/ra_12q/	NO	HISTORY		
+primer.md:859	~/scratch/	yes	HISTORY		
+primer.md:970	~/scratch/12o-close/lane_line_12o.txt	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**	
+primer.md:1012	~/scratch/12i-scope/pins.py	yes	LEDGER	plan:1700 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1021	~/scratch/12l-u06/throwaway/u06_floor_20261012/	yes	CONSUMER		session_open_check.py "retention" (absolute path in retention_close.txt)
+primer.md:1033	~/scratch/12l-close/lane_line_12l.txt	yes	HISTORY		
+primer.md:1077	~/scratch/12k-close/lane_line_12k.txt	yes	HISTORY		
+primer.md:1082	~/scratch/12k-open/	yes	HISTORY		
+primer.md:1089	~/scratch/12i-scope/dbchecks.py	yes	LEDGER	plan:1700 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1090	~/scratch/12k-open/	yes	HISTORY		
+primer.md:1098	~/scratch/12j-open/	yes	HISTORY		
+primer.md:1126	~/scratch/12j-w2/	yes	LEDGER	plan:1702 12j-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1128	~/scratch/12j-open/	yes	HISTORY		
+primer.md:1174	~/scratch/12i-scope/	yes	LEDGER	plan:1700 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1174	~/scratch/12i-w1/	yes	LEDGER	plan:1701 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1177	~/scratch/12i-scope/	yes	LEDGER	plan:1700 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1222	~/scratch/12h-rd/	yes	LEDGER	plan:1699 12h-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1227	~/scratch/12h-rd/	yes	LEDGER	plan:1699 12h-CLOSE (R31) **RETAINED to the freshman freeze.**	
+primer.md:1258	~/scratch/retained/ra_12g/	yes	CONSUMER	plan:1694 R550, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+primer.md:1258	~/scratch/retained/rb_12g/	yes	CONSUMER	plan:1695 R564, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+primer.md:1259	~/scratch/12g-ra/	yes	LEDGER	plan:1696 12g-CLOSE (R31; R550, R551) **RETAINED to the freshman freeze.**	
+primer.md:1261	~/scratch/12g-ra/launch_locked.py	yes	LEDGER	plan:1696 12g-CLOSE (R31; R550, R551) **RETAINED to the freshman freeze.**	
+primer.md:1287	~/scratch/12f/	yes	LEDGER	plan:1693 12f-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/STANDING_RULES.md:160	~/scratch/	yes	HISTORY		
+docs/plan/STANDING_RULES.md:963	~/scratch/12z-open/	yes	HISTORY		
+docs/plan/STANDING_RULES.md:1022	~/scratch/12z-open/gate	yes	HISTORY		
+docs/plan/STANDING_RULES.md:1141	~/scratch/12aa-u20a/r738_first_write.txt	yes	HISTORY		
+docs/plan/ENGINE_REFACTOR_PLAN.md:1667	~/scratch/rehearsal-10b/source_copy.db	NO	LEDGER	plan:1667 R238 (R31, R55) **Retired 2026-09-29**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1669	~/scratch/rehearsal-10b-2/source_copy.db	NO	LEDGER	plan:1669 R238 (R31, R55) **Retired 2026-09-29**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1670	~/scratch/rehearsal-10b/fresh/fresh10b/review.db	NO	LEDGER	plan:1670 R238 (R31, R55) **Retired 2026-09-29**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1670	~/scratch/rehearsal-10b-2/fresh/fresh10b2/review.db	NO	LEDGER	plan:1670 R238 (R31, R55) **Retired 2026-09-29**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1671	~/scratch/p3ii-fresh/fresh_p3ii/review.db	NO	LEDGER	plan:1671 R238 as amended (R31, R55) **Retired 2026-09-29**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1673	~/scratch/backup-review-10b/	NO	LEDGER	plan:1673 R238 (R31, R88) **Retired 2026-09-29**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1679	~/scratch/retained/surgical_autonomy_smoke10b/	yes	CONSUMER	plan:1679 R238 as amended, R241(iv) (R31) **RETAINED to the freshman freeze (session 12)**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1683	~/scratch/retained/bridge_smoke_11b/review.db.bak-smoke11b-source-20260930-092559	NO	LEDGER	plan:1683 R299 (R31, R238) **Retired 2026-09-30**; plan:1685 R299 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	(retired file; not read)
+docs/plan/ENGINE_REFACTOR_PLAN.md:1684	~/scratch/retained/adj_smoke_11b/review.db.bak-smoke11c-source-20260930-114627	NO	LEDGER	plan:1684 R299 (R31, R238) **Retired 2026-09-30**; plan:1686 R299 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	(retired file; not read)
+docs/plan/ENGINE_REFACTOR_PLAN.md:1685	~/scratch/retained/bridge_smoke_11b/	yes	CONSUMER	plan:1685 R299 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1686	~/scratch/retained/adj_smoke_11b/	yes	CONSUMER	plan:1686 R299 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1687	~/scratch/retained/ee_smoke_11c/	yes	CONSUMER	plan:1687 R327 (R31, R241(iv), R309) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1687	~/scratch/ee_smoke_11c_input/…	NO	HISTORY		
+docs/plan/ENGINE_REFACTOR_PLAN.md:1688	~/scratch/retained/se_smoke_11c/	yes	CONSUMER	plan:1688 R327 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1689	~/scratch/retained/ee_extract_smoke_11c/	yes	CONSUMER	plan:1689 R327 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1691	~/scratch/e_exec_probe/	yes	LEDGER	plan:1691 R368 (12a-E-EXEC-A) **RETAINED to the freshman freeze**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1693	~/scratch/12f/	yes	LEDGER	plan:1693 12f-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1694	~/scratch/retained/ra_12g/	yes	CONSUMER	plan:1694 R550, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1694	~/scratch/12g-ra/input/	yes	LEDGER	plan:1694 R550, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**; plan:1696 12g-CLOSE (R31; R550, R551) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1695	~/scratch/retained/rb_12g/	yes	CONSUMER	plan:1695 R564, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1695	~/scratch/12g-rb/input/entry.json	yes	LEDGER	plan:1695 R564, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**; plan:1697 12g-CLOSE (R31; R564) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1696	~/scratch/12g-ra/	yes	LEDGER	plan:1696 12g-CLOSE (R31; R550, R551) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1697	~/scratch/12g-rb/	yes	LEDGER	plan:1697 12g-CLOSE (R31; R564) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1698	~/scratch/12g-meas/	yes	LEDGER	plan:1698 12g-CLOSE (R31; R548) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1699	~/scratch/12h-rd/	yes	LEDGER	plan:1699 12h-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1700	~/scratch/12i-scope/	yes	LEDGER	plan:1700 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1701	~/scratch/12i-w1/	yes	LEDGER	plan:1701 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1702	~/scratch/12j-w2/	yes	LEDGER	plan:1702 12j-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1703	~/scratch/12j-open/	yes	HISTORY		
+docs/plan/ENGINE_REFACTOR_PLAN.md:1703	~/scratch/12j-open/	yes	HISTORY		
+docs/plan/ENGINE_REFACTOR_PLAN.md:1716	~/scratch/12o-open/	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1716	~/scratch/12o-c6a/	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1716	~/scratch/12o-c7/	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1716	~/scratch/12o-c8/	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1716	~/scratch/12o-close/	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1717	~/scratch/12o-c8/c8_work.patch	yes	LEDGER	plan:1716 12o-CLOSE (R31) **Present at this closeout; retained to the freshman freeze.**; plan:1717 R644(d) (R31) **Superseded by `5dbd3c4`**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1726	~/scratch/e_exec_probe/	yes	LEDGER	plan:1691 R368 (12a-E-EXEC-A) **RETAINED to the freshman freeze**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1744	~/scratch/e_exec_probe/	yes	LEDGER	plan:1691 R368 (12a-E-EXEC-A) **RETAINED to the freshman freeze**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1744	~/scratch/12f/	yes	LEDGER	plan:1693 12f-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1746	~/scratch/12h-rd/	yes	LEDGER	plan:1699 12h-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1746	~/scratch/retained/	yes	CONSUMER		session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1748	~/scratch/12i-w1/repro/	yes	LEDGER	plan:1701 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1748	~/scratch/12i-scope/	yes	LEDGER	plan:1700 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1748	~/scratch/12i-w1/	yes	LEDGER	plan:1701 12i-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1748	~/scratch/retained/	yes	CONSUMER		session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:1750	~/scratch/12j-w2/repro/	yes	LEDGER	plan:1702 12j-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1750	~/scratch/12j-w2/	yes	LEDGER	plan:1702 12j-CLOSE (R31) **RETAINED to the freshman freeze.**	
+docs/plan/ENGINE_REFACTOR_PLAN.md:1750	~/scratch/retained/	yes	CONSUMER		session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/plan/ENGINE_REFACTOR_PLAN.md:5867	~/scratch/12q-u13-build/stage/	yes	CONSUMER		session_open_check.py "stage" (path) and the 12ai expected-values block
+docs/session-reports/session-12/12ah_close/retention_close.txt:2	~/scratch/retained/ra_12g/review.db	yes	CONSUMER	plan:1694 R550, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:3	~/scratch/retained/rb_12g/review.db	yes	CONSUMER	plan:1695 R564, R31, R235, R241(iv), R309 **RETAINED to the freshman freeze.**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:4	~/scratch/retained/surgical_autonomy_smoke10b/review.db	yes	CONSUMER	plan:1679 R238 as amended, R241(iv) (R31) **RETAINED to the freshman freeze (session 12)**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:5	~/scratch/retained/adj_smoke_11b/surgical_autonomy_smoke11c/review.db	yes	CONSUMER	plan:1686 R299 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:6	~/scratch/retained/bridge_smoke_11b/surgical_autonomy_smoke11b/review.db	yes	CONSUMER	plan:1685 R299 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:7	~/scratch/retained/ee_extract_smoke_11c/ee_smoke_11c/review.db	yes	CONSUMER	plan:1689 R327 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:8	~/scratch/retained/ee_smoke_11c/ee_smoke_11c/review.db	yes	CONSUMER	plan:1687 R327 (R31, R241(iv), R309) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:9	~/scratch/retained/se_smoke_11c/se_smoke_11c/review.db	yes	CONSUMER	plan:1688 R327 (R31, R241(iv)) **RETAINED to the freshman freeze (session 12).**	session_open_check.py "retention" (root, per expected_12ah.json) and the retention_close.txt it compares
+docs/session-reports/session-12/12ah_close/retention_close.txt:10	/home/ankitsarin/scratch/12r-u13/run/ra_12q/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute path in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:11	/home/ankitsarin/scratch/12l-u06/throwaway/u06_floor_20261012/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute path in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:17	/home/ankitsarin/scratch/12u-u16a/run1/r624b/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:18	/home/ankitsarin/scratch/12u-u16a/run1/u16_declined/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:19	/home/ankitsarin/scratch/12u-u16a/run1/u16_second_arm/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:20	/home/ankitsarin/scratch/12u-u16a/run1/u16_states/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:21	/home/ankitsarin/scratch/12u-u16a/run2/r624b/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:22	/home/ankitsarin/scratch/12u-u16a/run2/u16_declined/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:23	/home/ankitsarin/scratch/12u-u16a/run2/u16_second_arm/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:24	/home/ankitsarin/scratch/12u-u16a/run2/u16_states/u16a/review.db	yes	CONSUMER		session_open_check.py "retention" (absolute paths in retention_close.txt)
+docs/session-reports/session-12/12ah_close/retention_close.txt:29	~/scratch/12q-u13-build/stage/	yes	CONSUMER		session_open_check.py "stage" (path) and the 12ai expected-values block

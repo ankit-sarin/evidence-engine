@@ -1,0 +1,17 @@
+patches/12ab-close__clone.patch	1	144	0	1	144	0	1	144	0
+patches/12ab-u21p__clone.patch	2	78	8	2	78	8	2	78	8
+patches/12ac-close__clone.patch	1	125	0	1	125	0	1	125	0
+patches/12ae-close__pre_clone.patch	1	144	2	1	144	2	1	144	2
+patches/12ae-u24b__invclone.patch	9	74	39	9	74	39	9	74	39
+patches/12af-u29a__clone.patch	1	16	9	1	16	9	1	16	9
+patches/12af-u30a__clone.patch	1	16	9	1	16	9	1	16	9
+patches/12ag-n46a__regen_clone.patch	4	196	22	4	196	22	4	196	22
+patches/12r-open__pc_clone.patch	2	79	0	2	79	0	2	79	0
+patches/12s-close__clone2.patch	1	183	2	1	183	2	1	183	2
+patches/12s-open__clone.patch	1	63	1	1	63	1	1	63	1
+patches/12s-u14b__clone.patch	1	94	2	1	94	2	1	94	2
+patches/12s-u14b__oldclone.patch	3	192	1	3	192	1	3	192	1
+patches/12s-u15a__clone.patch	1	74	4	1	74	4	1	74	4
+patches/12u-close__clone.patch	1	175	2	1	175	2	1	175	2
+patches/12w-close__clone.patch	1	125	1	1	125	1	1	125	1
+patches/12w-u17b__clone.patch	1	3	1	1	3	1	1	3	1

@@ -19764,3 +19764,74 @@ R814(f) — This ruling states no standing rule: the id list, the glosses file a
 | 2026-11-19 | R814(a) — The stop is correct, at the first point where the brief's gate could not hold, and nothing was committed. The cause is the architect's: G3 required every line of the committed lists to match a committed file while R813(d) kept six listed files out. Both rested on one statement, that no list covers work/, which came from the 12ah-OPEN report's finding 5 and was carried to the PI as the premise of his options without the list being read. The restore of the tree to HEAD is accepted on its evidence: it removed only this task's own uncommitted writes, each reproducible from scratch and from the paste. R814(b) — The PI's ruling, in his words: "1 then close". Option 1 of the three put to him: work/'s six files are committed too, to docs/session-reports/session-12/12ah_OLRA/work/, after the same scan has run on them with the same stop. This amends R813(d)'s "work/ stays in scratch, uncommitted" and nothing else in it; the PI's acceptance of publication there extends to these six, the two copies of this lane's ledger rows among them. With them every line of the three lists matches a committed file, and G3 stands as the brief wrote it. R814(c) — R813 stands as issued and is transcribed with this ruling; two of its readings are corrected here. R813(e) on finding 5: the scratch directory's eighteen-entry list was described rightly and did cover work/; the statement that no list covers work/ was CC's, from a helper that looked at top-level names only, and CC has corrected it; the architect's part is that it was passed on unchecked. R813(f)'s count now reads: one stop, this one, the architect's; no pause; the architect's errors three (tool paths written short; a premise passed on unchecked; a gate that contradicted the ruling beside it), none reaching a commit. R814(d) — Reading, no row: with work/ committed, the read-out's inventory line naming work/ as comparison inputs is true of the record as well as of scratch. R814(e) — "then close": session 12ah closes after this task's report is read and accepted, by a closeout brief and a wrap ruling of their own. The restart change's design ruling opens the next session. R813(g)'s order is unchanged; the session boundary falls after its first item. R814(f) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. | PI, 2026-11-19, during session 12ah, on architect recommendation, on the 12ah-OLRA-REC stop report (stopped at step 2c; nothing committed) |
 
 The decision log in this file ends at R814.
+
+**Block 213.** *Transcribed 2026-11-19 (item 0 of the 12ah-CLOSE brief), in its own commit with the brief file it orders, in the R597(e) form:* ruling R815, made by PI on architect recommendation on 2026-11-19 UTC, during session 12ah, on the 12ah-OLRA-REC-R1 final report (item 0 `6dc36b312879bdd16c682093d86a9e2b3c331c86`). The 12ah-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ah-R815] — 12ah-OLRA-REC-R1 accepted: the interim read-out's
+  twenty-seven files are in the record, scanned and verified by their own lists; readings;
+  no closeout gate; no standing rule; the session closes by the brief below
+STATUS: PI ruling, 2026-11-19 UTC, session 12ah, on architect recommendation, on the
+  12ah-OLRA-REC-R1 final report (item 0 6dc36b312879bdd16c682093d86a9e2b3c331c86).
+  Transcribe at item 0 of the 12ah-CLOSE brief below, by transcribe_ruling.py, in the block
+  after R814's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ah-OLRA-REC-R1 final report, quoted): item 0
+    "6dc36b312879bdd16c682093d86a9e2b3c331c86", parent "c412033"; ledger
+    "b0bb0bad95c64d0c70c90eb2db01bfb5c12dc4f0", parent "d46c74d"; "Result: 0 stop-class hits
+    on all six files."; "Reading-class hits: 12, all abs_path_outside"; "the control flagged
+    all 17 classes and the clean fixture gave nothing; the 21 top-level files gave 0
+    stop-class hits and 235 reading-class hits"; "r813.txt: cc073a2e…10a9, 6,957 B, 87
+    lines."; "r814.txt: d8223ede…ddf1, 4,587 B, 58 lines."; "Both equal the architect's
+    hashes."; "Plan: +167 / −0"; "now
+    ec03dc26cf44a022233afd534dbef064176abc13054fd93c7cf85c4325f2366e, 3,328,199 B, 19,766
+    lines"; "SHA256SUMS 18 of 18, SHA256SUMS_add1 5 of 5, SHA256SUMS_close 1 of 1";
+    "brief_12ah_OLRA_REC.md: 86a9e5f06d8ddee28cf5b94229559dbbf84779ce124a7b9234e0f14dc1017141,
+    22,449 B, 315 lines, equal to the architect's copy."; "brief_12ah_OLRA_REC_R1.md:
+    ef71492456f49dea253433be3248504286abe2c6e08cda810f49aefba7c56fab, 19,414 B, 258 lines.";
+    "It confirmed 36 staged paths: the plan plus 35 new files, with exactly the six work/
+    paths SHA256SUMS names."; "12ah_OLRA.md" "f054eedb…d3c09790"; "12ah_OLRA_add1.md"
+    "568b179d…62e34ef1".
+  READ (CC's): findings 1–3; what each of work/'s six files holds; that rec_scan.py is the
+    file the first run used.
+  READ (the architect's clone at 6dc36b3): the full hash in STATUS and its parent
+    c4120330c7c8102d89d6c8298363e2624c7aca24; both brief files under 12ah_OLRA/ equal to the
+    architect's copies by cmp (the resume's sha256, bytes and lines as the report gives
+    them); the plan's sha256, bytes and lines as the report gives them, last line "The
+    decision log in this file ends at R814."; the three rules files at the hashes they
+    had after 12ah-OPEN's item 0; 12ah_OLRA/ holding thirty-three files.
+  INFERRED: none.
+
+R815(a) — The 12ah-OLRA-REC-R1 final report is accepted as printed: item 0 6dc36b3 (Blocks
+  211 and 212; r813.txt and r814.txt equal to the architect's hashes; twenty-seven copies,
+  each equal to its source; every line of the three committed lists a match; four evidence
+  files; both brief files equal to the architect's copies), ledger b0bb0ba. R0 and R1 held.
+  With the first run's report, 12ah-OLRA-REC's gates G1–G3 are met.
+R815(b) — The scan: no stop-class hit in any of the twenty-seven files, on a control that
+  flagged every class. The reading-class hits (paths, quoted sudoers lines, the
+  all-interfaces address, one no-reply address) are what R813(d) and R814(b) accepted for
+  publication. R814's expectation item held as CC read the six files.
+R815(c) — The interim read-out is in the record: docs/session-reports/session-12/12ah_OLRA/
+  12ah_OLRA.md and 12ah_OLRA_add1.md, with their briefs, their evidence and the three lists.
+  The restart change's design ruling quotes them from there. Nothing of that design is
+  ruled in session 12ah.
+R815(d) — Readings, no row. Finding 1: the scratch helper's "files no list names" line looks
+  at top-level names only; its line-by-line check is sound; the helper is not a tool of the
+  repository and nothing rests on that line now. Finding 2: the resume file's hash is the
+  architect's copy's, compared here. The scan helper's sha256 is first printed in this
+  report; the committed file is its record.
+R815(e) — No closeout gate: nothing under engine, tests, scripts, analysis, review_specs or
+  the tools has changed since the 12ah-OPEN gate ran on the same tree, and the three commits
+  since are docs. The 12ah-OPEN gate (12ah_open/gate_12ah_open/, 978.22 s) is the session's
+  gate of record and the reference for 12ai's.
+R815(f) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+  Session 12ah closes by the brief below and a wrap ruling after its report (R814(e)).
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-19 | R815(a) — The 12ah-OLRA-REC-R1 final report is accepted as printed: item 0 6dc36b3 (Blocks 211 and 212; r813.txt and r814.txt equal to the architect's hashes; twenty-seven copies, each equal to its source; every line of the three committed lists a match; four evidence files; both brief files equal to the architect's copies), ledger b0bb0ba. R0 and R1 held. With the first run's report, 12ah-OLRA-REC's gates G1–G3 are met. R815(b) — The scan: no stop-class hit in any of the twenty-seven files, on a control that flagged every class. The reading-class hits (paths, quoted sudoers lines, the all-interfaces address, one no-reply address) are what R813(d) and R814(b) accepted for publication. R814's expectation item held as CC read the six files. R815(c) — The interim read-out is in the record: docs/session-reports/session-12/12ah_OLRA/ 12ah_OLRA.md and 12ah_OLRA_add1.md, with their briefs, their evidence and the three lists. The restart change's design ruling quotes them from there. Nothing of that design is ruled in session 12ah. R815(d) — Readings, no row. Finding 1: the scratch helper's "files no list names" line looks at top-level names only; its line-by-line check is sound; the helper is not a tool of the repository and nothing rests on that line now. Finding 2: the resume file's hash is the architect's copy's, compared here. The scan helper's sha256 is first printed in this report; the committed file is its record. R815(e) — No closeout gate: nothing under engine, tests, scripts, analysis, review_specs or the tools has changed since the 12ah-OPEN gate ran on the same tree, and the three commits since are docs. The 12ah-OPEN gate (12ah_open/gate_12ah_open/, 978.22 s) is the session's gate of record and the reference for 12ai's. R815(f) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Session 12ah closes by the brief below and a wrap ruling after its report (R814(e)). | PI, 2026-11-19, during session 12ah, on architect recommendation, on the 12ah-OLRA-REC-R1 final report (item 0 6dc36b3) |
+
+The decision log in this file ends at R815.

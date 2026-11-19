@@ -20005,3 +20005,119 @@ R815(f) — This ruling states no standing rule: the id list, the glosses file a
 | 2026-11-19 | R815(a) — The 12ah-OLRA-REC-R1 final report is accepted as printed: item 0 6dc36b3 (Blocks 211 and 212; r813.txt and r814.txt equal to the architect's hashes; twenty-seven copies, each equal to its source; every line of the three committed lists a match; four evidence files; both brief files equal to the architect's copies), ledger b0bb0ba. R0 and R1 held. With the first run's report, 12ah-OLRA-REC's gates G1–G3 are met. R815(b) — The scan: no stop-class hit in any of the twenty-seven files, on a control that flagged every class. The reading-class hits (paths, quoted sudoers lines, the all-interfaces address, one no-reply address) are what R813(d) and R814(b) accepted for publication. R814's expectation item held as CC read the six files. R815(c) — The interim read-out is in the record: docs/session-reports/session-12/12ah_OLRA/ 12ah_OLRA.md and 12ah_OLRA_add1.md, with their briefs, their evidence and the three lists. The restart change's design ruling quotes them from there. Nothing of that design is ruled in session 12ah. R815(d) — Readings, no row. Finding 1: the scratch helper's "files no list names" line looks at top-level names only; its line-by-line check is sound; the helper is not a tool of the repository and nothing rests on that line now. Finding 2: the resume file's hash is the architect's copy's, compared here. The scan helper's sha256 is first printed in this report; the committed file is its record. R815(e) — No closeout gate: nothing under engine, tests, scripts, analysis, review_specs or the tools has changed since the 12ah-OPEN gate ran on the same tree, and the three commits since are docs. The 12ah-OPEN gate (12ah_open/gate_12ah_open/, 978.22 s) is the session's gate of record and the reference for 12ai's. R815(f) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Session 12ah closes by the brief below and a wrap ruling after its report (R814(e)). | PI, 2026-11-19, during session 12ah, on architect recommendation, on the 12ah-OLRA-REC-R1 final report (item 0 6dc36b3) |
 
 The decision log in this file ends at R815.
+
+**Block 214.** *Transcribed 2026-11-19 (item 0 of the 12ai-OPEN brief), in its own commit with the lane-line copy and the brief file it orders, in the R597(e) form:* ruling R816, made by PI on architect recommendation on 2026-11-19 UTC, during session 12ah, on the 12ah-CLOSE closeout report (item 0 `9fed14881a114107f65090f17aa77a432dc8dc80`; closeout `b13b5eb23c86c5da9df566d9e59a9764c7831335`). The 12ai-OPEN brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ah-R816] — wrap ruling: closeout accepted; the band set 897–1095 s;
+  one stop this session, the architect's, and no pause; readings on the closeout's findings
+  and choices; no standing rule; lane line approved on one condition and applied; close now
+STATUS: PI ruling, 2026-11-19 UTC, session 12ah, on architect recommendation, on the 12ah-CLOSE
+  closeout report (item 0 9fed14881a114107f65090f17aa77a432dc8dc80; closeout
+  b13b5eb23c86c5da9df566d9e59a9764c7831335). Transcribe as item 0 of 12ai-OPEN by
+  transcribe_ruling.py, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the closeout report, quoted; its table's wrapped cells joined): item 0
+    "9fed14881a114107f65090f17aa77a432dc8dc80", parent "6dc36b3", ledger
+    "43473fc32768e6e62703d829a04f6b37ed3a8644 (parent b0bb0ba)"; closeout
+    "b13b5eb23c86c5da9df566d9e59a9764c7831335", parent "9fed148", ledger
+    "5a261b8a895582ba8cbfc9e94af3f796fbaf1602 (parent 43473fc)"; "r815.txt: 9dd24501…21c0,
+    4,562 B, 60 lines, equal to the architect's hash."; "Plan: +71 / −0"; "brief_12ah_CLOSE.md,
+    f860358d1b8f80876430d6cf57e946b32faea91cc0af57059fb763a70d5aaa6a, 28,059 B, 377 lines"
+    (the architect's copy: the same sha256, bytes and lines); "Measurements (12ah_close/, 17
+    files)"; "Retention: 23 MATCH / 0 MISMATCH; probe scratch 10/10 and 53/53"; "Jobs: none
+    ran after the 2026-11-18 pair."; "Recount: 287 (94 / 57 / 136, 0 unclassed), dated lines
+    38 with 33 done, expected_holds true"; "R510: 213 at 35a914b and at 9fed148, in 0, out
+    0"; "mean 995.81 s; x0.9 896.231; x1.1 1095.394"; "rounded inward: 897–1095 s";
+    "(+170 / −0)"; "Plan now:
+    7722074c3760b4c7025cba659773d55a05886c9b00d50d7785bedd2a29b6b3ad, 3,366,202 B, 20,007
+    lines."; "55 NV_ERR_NO_MEMORY lines this boot"; the lane line
+    "5319f267abcf984bc2f44394052f0a327cd095c5fb136ac9eb8851646d29fa0b, 7,979 B, 10 lines";
+    "Its five "−" lines equal primer.md 41–45."
+  READ (CC's): the five choices of section (3) and findings 1–4; "This session's start is
+    stated as 2026-11-19 04:39 UTC".
+  READ (the architect's clone at b13b5eb): the two full hashes in STATUS, each with its
+    parent; 12ah_CLOSE/brief_12ah_CLOSE.md equal to the architect's copy by cmp; the plan's
+    sha256, bytes and lines as the report gives them, last line "The decision log in this
+    file ends at R815."; "Expected values at session-12ai open" at plan :5846–:5885, read
+    whole; the closure's range as the report gives it, :5717–:5844; 12ah_close/'s seventeen
+    files listed; band_computation.txt "mean 995.81 s; x0.9 896.231; x1.1 1095.394" and
+    "rounded inward: 897–1095 s".
+  INFERRED — BLOCKING (verified before R816(f) is carried out; false = STOP, nothing applied):
+    the lane-line file's fifth "+" line, read from the file, is the line the report quotes,
+    word for word. The report's quotation reads whole; the file decides.
+
+R816(a) — The 12ah-CLOSE closeout is accepted as committed: item 0 9fed148 (Block 213; the
+  brief file equal to the architect's copy; the rules files untouched), the closeout b13b5eb
+  (the closure and the 12ai expected-values block, +170 / −0 at the matched position;
+  12ah_close/'s seventeen files; the recount; the band computation), ledgers 43473fc and
+  5a261b8. I1 and I2 held. E1–E7 held. Five committed brief and resume files this session,
+  five equal to the architect's copies; the interim session's four are recorded by their own
+  lists.
+R816(b) — The band for 12ai is 897–1095 s: ±10% of 995.81 s, the mean of the last four standard
+  gates on this host state (979.95, 1042.65, 982.43, 978.22), rounded inward. The second is
+  the confounded member carried under R677(f) with its confounder named (R805(b)); the last
+  two were launched as units. The series stands at forty-three. A 12ai gate outside the band
+  is reported with its concurrent jobs, not adapted to.
+R816(c) — The stops, counted from the rulings: one, the architect's — 12ah-OLRA-REC at its step
+  2c (R814(a)). Pauses: none. CC's stops: none. The first paste of 12ah-OPEN stopped on its
+  own TIMING, nothing written, and is not counted (R813(a)). The architect's errors this
+  session, three, none reaching a commit (R814(c)): tool paths written short; a premise passed
+  to the PI unchecked; a gate that contradicted the ruling beside it. The second and third
+  are one failure seen twice: a statement about a file that no one had read the file for. The
+  session's measured point for the estimate: one CC session (the open at 04:39 UTC on
+  2026-11-19 to this wrap) and one interim read-only session before it; no fix unit landed;
+  one standing rule; the window's basis measured; the interim read-out committed after a
+  scan; one stop, no pause.
+R816(d) — Readings, no row. The closeout's five choices are accepted as made, the two lines it
+  added to the 12ai block among them (the window rule; a light-check day read by the explicit
+  step). Its findings 1 and 2 are CC's own slips, each refused by its own guard before
+  anything was written; finding 3 (the interim session's start taken from the 12ah-OPEN
+  record) is a reading.
+R816(e) — Carried to 12ai and the plan, from the closure's "Carried forward": the restart
+  change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum, then its build as
+  one engine-commit brief and its merge sha reported to the workbench; U30's build with N46,
+  one brief, with the notes R805(d) and R807(c) order; then U31–U36; the tools items, the two
+  of R813(e) among them; the correction of CLAUDE.md's no-live-write line (R812(c)); the
+  cross-lane readings for dgx-infra; the 2026-11-19 and later jobs against
+  12af_close/expected_nightly_20261111.md. This ruling states no standing rule: the id list,
+  the glosses file and STANDING_RULES.md are untouched at 12ai-OPEN's item 0, asserted by
+  content.
+R816(f) — The lane line (sha256 5319f267abcf984bc2f44394052f0a327cd095c5fb136ac9eb8851646d29fa0b,
+  7,979 bytes, 10 lines, ~/scratch/12ah-close/lane_line_12ah.txt) is approved on the condition
+  above. First verify the file's sha256 and quote its fifth "+" line whole from the file, its
+  code marks shown. If it is the line the closeout report quotes — its "next:" clause running
+  from 12ai-OPEN through the restart change's design ruling and build and U30's build with
+  N46 to the freeze, the tag and Run 7 with no words missing — apply it: replace lines 41–45
+  of ~/claude-config/primer.md (which must equal its five "−" lines, taken from primer.md
+  itself) with its five "+" lines, applied from the file, not from a paste; commit primer.md
+  with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign
+  rows counted from the diff and named by hash); push; level. If the line differs in the
+  file, STOP before anything is applied and report the line as it stands; the architect then
+  rules its text.
+R816(g) — 12ai-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or
+  a child carrying only hook rows, reported), level and clean but for other lanes' hook rows.
+  Its item 0 writes this ruling with transcribe_ruling.py as the next block (Block 214) and
+  copies lane_line_12ah.txt into docs/session-reports/session-12/12ah_close/, with r816.txt
+  beside it; no standing rule, the three rules files untouched by content. It runs
+  session_open_check.py and the steps R747(b) keeps explicit, a light-check day's health read
+  among them, against the "Expected values at session-12ai open" block, the recount by
+  12af_close/recount_12af_close.py (287; 38 done 33; R510 0 / 0); reads the 2026-11-19 and
+  every later job run before it against 12af_close/expected_nightly_20261111.md; the gate by
+  the wrapper as a unit, against 897–1095 s, its references
+  12ah_close/collected_ids_12ah_close.txt and durations_12ah_open.txt. Its brief is committed
+  at its item 0 as brief_12ai_OPEN.md (R784(g)(v)), in 12ah_open/brief_12ah_OPEN.md's form.
+  Then the restart change's design ruling.
+R816(h) — Session 12ah closes now. After R816(f) has landed, run /wrap; this ruling authorizes
+  /wrap's own commits and pushes and nothing else. The project primer and the global primer
+  record the session as the lane line states it. Lane status: closed clean; next, 12ai-OPEN.
+  Report the lane-line commit's hash and parent, the fifth "+" line as quoted from the file,
+  the wrap's verdict, and the archive command to be run after /exit.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-19 | R816(a) — The 12ah-CLOSE closeout is accepted as committed: item 0 9fed148 (Block 213; the brief file equal to the architect's copy; the rules files untouched), the closeout b13b5eb (the closure and the 12ai expected-values block, +170 / −0 at the matched position; 12ah_close/'s seventeen files; the recount; the band computation), ledgers 43473fc and 5a261b8. I1 and I2 held. E1–E7 held. Five committed brief and resume files this session, five equal to the architect's copies; the interim session's four are recorded by their own lists. R816(b) — The band for 12ai is 897–1095 s: ±10% of 995.81 s, the mean of the last four standard gates on this host state (979.95, 1042.65, 982.43, 978.22), rounded inward. The second is the confounded member carried under R677(f) with its confounder named (R805(b)); the last two were launched as units. The series stands at forty-three. A 12ai gate outside the band is reported with its concurrent jobs, not adapted to. R816(c) — The stops, counted from the rulings: one, the architect's — 12ah-OLRA-REC at its step 2c (R814(a)). Pauses: none. CC's stops: none. The first paste of 12ah-OPEN stopped on its own TIMING, nothing written, and is not counted (R813(a)). The architect's errors this session, three, none reaching a commit (R814(c)): tool paths written short; a premise passed to the PI unchecked; a gate that contradicted the ruling beside it. The second and third are one failure seen twice: a statement about a file that no one had read the file for. The session's measured point for the estimate: one CC session (the open at 04:39 UTC on 2026-11-19 to this wrap) and one interim read-only session before it; no fix unit landed; one standing rule; the window's basis measured; the interim read-out committed after a scan; one stop, no pause. R816(d) — Readings, no row. The closeout's five choices are accepted as made, the two lines it added to the 12ai block among them (the window rule; a light-check day read by the explicit step). Its findings 1 and 2 are CC's own slips, each refused by its own guard before anything was written; finding 3 (the interim session's start taken from the 12ah-OPEN record) is a reading. R816(e) — Carried to 12ai and the plan, from the closure's "Carried forward": the restart change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum, then its build as one engine-commit brief and its merge sha reported to the workbench; U30's build with N46, one brief, with the notes R805(d) and R807(c) order; then U31–U36; the tools items, the two of R813(e) among them; the correction of CLAUDE.md's no-live-write line (R812(c)); the cross-lane readings for dgx-infra; the 2026-11-19 and later jobs against 12af_close/expected_nightly_20261111.md. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at 12ai-OPEN's item 0, asserted by content. R816(f) — The lane line (sha256 5319f267abcf984bc2f44394052f0a327cd095c5fb136ac9eb8851646d29fa0b, 7,979 bytes, 10 lines, ~/scratch/12ah-close/lane_line_12ah.txt) is approved on the condition above. First verify the file's sha256 and quote its fifth "+" line whole from the file, its code marks shown. If it is the line the closeout report quotes — its "next:" clause running from 12ai-OPEN through the restart change's design ruling and build and U30's build with N46 to the freeze, the tag and Run 7 with no words missing — apply it: replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines, taken from primer.md itself) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows counted from the diff and named by hash); push; level. If the line differs in the file, STOP before anything is applied and report the line as it stands; the architect then rules its text. R816(g) — 12ai-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean but for other lanes' hook rows. Its item 0 writes this ruling with transcribe_ruling.py as the next block (Block 214) and copies lane_line_12ah.txt into docs/session-reports/session-12/12ah_close/, with r816.txt beside it; no standing rule, the three rules files untouched by content. It runs session_open_check.py and the steps R747(b) keeps explicit, a light-check day's health read among them, against the "Expected values at session-12ai open" block, the recount by 12af_close/recount_12af_close.py (287; 38 done 33; R510 0 / 0); reads the 2026-11-19 and every later job run before it against 12af_close/expected_nightly_20261111.md; the gate by the wrapper as a unit, against 897–1095 s, its references 12ah_close/collected_ids_12ah_close.txt and durations_12ah_open.txt. Its brief is committed at its item 0 as brief_12ai_OPEN.md (R784(g)(v)), in 12ah_open/brief_12ah_OPEN.md's form. Then the restart change's design ruling. R816(h) — Session 12ah closes now. After R816(f) has landed, run /wrap; this ruling authorizes /wrap's own commits and pushes and nothing else. The project primer and the global primer record the session as the lane line states it. Lane status: closed clean; next, 12ai-OPEN. Report the lane-line commit's hash and parent, the fifth "+" line as quoted from the file, the wrap's verdict, and the archive command to be run after /exit. | PI, 2026-11-19, during session 12ah, on architect recommendation, on the 12ah-CLOSE closeout report (item 0 9fed148; closeout b13b5eb) |
+
+The decision log in this file ends at R816.

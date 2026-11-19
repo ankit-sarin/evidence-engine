@@ -94,6 +94,7 @@ A R784(g)
 A R805(c)
 A R805(f)
 A R808(d)
+A R812(a)
 
 # Tier B — engine governance, pending the adoption ruling
 B R25

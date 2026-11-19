@@ -1,0 +1,45 @@
+RULING [evidence-engine 12ah-R812] — the no-live-write window from session 12ah: 09:00–10:35 UTC
+  Monday to Saturday and 07:00–10:35 UTC on Sunday, by UTC day; the gate hold's clock follows
+  it; one standing rule; amends R86 and R749(b) in timing only
+STATUS: PI ruling, 2026-11-16 UTC, session 12ah, before its open, on architect recommendation, on
+  the PI's report of his host changes of 2026-11-16 UTC (the dgx-infra lane; no Claude Code
+  report). Transcribe at item 0 of the 12ah-OPEN brief below, by transcribe_ruling.py, in the
+  block after R811's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED: none. No Claude Code report of this lane has read the health job's new schedule.
+  READ (the architect's clone at 35a914b, docs/plan/STANDING_RULES.md): R86 "The no-live-write
+    window is 07:00–10:35 UTC"; R749(b) "A brief is valid at any time outside 07:00–10:35 UTC
+    (R86), and a gate must exit before 07:00 UTC."; R805(f) "bounded at sixty minutes and by
+    the R86 clock". CLAUDE.md, one line beginning "- **No live write to review.db between
+    07:00 and 10:35 UTC**".
+  INFERRED — BLOCKING (the PI's report; verified at 12ah-OPEN's step 0 from the job's own
+    schedule and script on the box, before item 0; false = STOP, nothing transcribed): the
+    health job loads models on one day of the week only, and that day is the day (a) gives the
+    longer window. The day and the hour as the box states them are readings, quoted.
+  INFERRED — expectation (reported if false): on its other six days the health job sends
+    read-only requests only and takes no lock; on its sweep day it stands down when the
+    experiment lock is held.
+
+R812(a) — Rule from here, a standing rule, the PI's ruling in his words: "From session 12ah, the
+  no-live-write window is 09:00–10:35 UTC Monday to Saturday (the 09:00 nightly suite and the
+  10:30 snapshot timer) and 07:00–10:35 UTC on Sunday (the full health sweep). A brief is
+  valid outside the day's window, and a gate exits before the day's window opens. This amends
+  R86 and R749(b) in timing only." With two sentences the architect recommended and the PI
+  accepted ("yes with the two sentences"): the days are UTC days; and the clock that bounds
+  the gate hold of R805(f), its "R86 clock", is the opening of the day's window.
+R812(b) — What does not change: the jobs an open or a closeout reads and the file that governs
+  each (R749(b)); the stop on a model load in a gate's window (R696(b)); the hold's one wait,
+  by pid, and its sixty minutes (R805(f)). From session 12ah, "07:00–10:35 UTC" and "before
+  07:00 UTC" in an earlier clause, a committed brief or an expected-values block are read as
+  the day's window and its opening; none of them is edited (R102). A margin a brief sets
+  before the window is set before the day's opening.
+R812(c) — Readings, no row. The window follows this ruling, not the health job: if the job's
+  schedule changes again, the window is ruled again. CLAUDE.md's no-live-write line states
+  the old window; (a) governs from here, and the line's correction is put to the PI as quoted
+  text with the next brief that edits CLAUDE.md, not at 12ah-OPEN.
+R812(d) — This ruling states one standing rule, (a). The id list gains "A R812(a)" and
+  STANDING_RULES.md is regenerated at the item 0 that transcribes this ruling (R766(b)). R86,
+  R749(b) and R805(f) stay in the list; R812(a) is read with them. R811(e) and R811(g) say
+  the three rules files are untouched at 12ah-OPEN's item 0; that is read as R811's own
+  effect, and the files change there by this ruling alone.

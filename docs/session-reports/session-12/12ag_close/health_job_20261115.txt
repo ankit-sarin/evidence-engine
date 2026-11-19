@@ -1,0 +1,49 @@
+# health job reads, 2026-11-15, read at 12ah-OPEN (2026-11-19T04:44:11Z). FORM: full sweep (the dated log carries no 'Mode:' line; the light/full script landed later, dgx-infra b5af93d 2026-11-15T23:55:39Z). From /home/ankitsarin/logs/ollama_health_cron.log (mtime 2026-11-18 07:00:01.149373 +0000); the log carries no date lines, so the 2026-11-15 run is the 20-line block starting at line 4126 (the last of 116 blocks each opening 'Testing qwen3.6:35b-a3b'), confirmed against the same run's dated log /home/ankitsarin/logs/ollama_health_20261115.log (mtime 2026-11-15 07:06:42.987873 +0000): model, status and elapsed equal line for line: True (R737(c))
+loads OK/total: 20/20; FAIL lines: 0
+-- dated log: Ollama Health Check — Sun Nov 15 07:00:01 AM UTC 2026; Resident at start: none; Done: Sun Nov 15 07:06:42 AM UTC 2026
+-- journal 06:59–07:12 (health_journal_20261115.txt)
+lines 2712
+GIN 72
+GIN non-200 0
+GIN by method and path: GET /api/ps x50; GET /api/tags x1; HEAD / x1; POST /api/generate x20
+model loads (starting runner --model) 20
+-- kernel NV_ERR_NO_MEMORY lines inside 06:59–07:12: 18
+2026-11-15T07:00:04+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:00:07+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:02:44+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:03:18+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:03:18+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:03:19+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:03:19+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+2026-11-15T07:03:19+00:00 spark-59e4 kernel: NVRM: nvCheckOkFailedNoLog: Check failed: Out of memory [NV_ERR_NO_MEMORY] (0x00000051) returned from _memdescAllocInternal(pMemDesc) @ mem_desc.c:1359
+-- the 20 lines
+Testing qwen3.6:35b-a3b                (300s) ... OK 13.8s
+Testing qwen3.6:27b                    (300s) ... OK 20.1s
+Testing gpt-oss:20b                    (300s) ... OK 6.1s
+Testing gemma4:26b                     (300s) ... OK 6.6s
+Testing qwen3:30b-instruct             (300s) ... OK 4.8s
+Testing gemma4:31b                     (300s) ... OK 10.1s
+Testing qwen3.5:27b                    (300s) ... OK 21.2s
+Testing gemma3:27b                     (300s) ... OK 5.7s
+Testing qwen2.5vl:7b                   (120s) ... OK 4.3s
+Testing qwen3:8b                       (120s) ... OK 6.9s
+Testing qwen3:32b                      (300s) ... OK 23.3s
+Testing minicpm-v:latest               (120s) ... OK 6.4s
+Testing qwen3-vl:8b                    (120s) ... OK 16.6s
+Testing qwen2.5:7b-instruct            (120s) ... OK 5.9s
+Testing deepseek-r1:32b                (300s) ... OK 20.9s
+Testing mistral:7b                     (120s) ... OK 4.9s
+Testing gemma2:27b                     (300s) ... OK 21.2s
+Testing qwen2.5:32b                    (300s) ... OK 44.0s
+Testing llama3.3:70b                   (600s) ... OK 153.7s
+Testing llama3.2:3b                    (120s) ... OK 4.5s

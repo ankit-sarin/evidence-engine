@@ -1,0 +1,222 @@
+# 12ah-OPEN step 0h — between-session readings (read-only). Each command with its UTC timestamp, output beneath.
+## (i) the health job (I5)
+
+$ crontab -l | grep -n ollama_health    # 2026-11-19T04:40:49.940Z
+7:0 7 * * * /bin/bash /home/ankitsarin/scripts/ollama_health_check.sh >> /home/ankitsarin/logs/ollama_health_cron.log 2>&1
+
+$ crontab -l | grep -cE "^[A-Za-z_]+="    # 2026-11-19T04:40:49.944Z
+0
+
+$ readlink -f ~/scripts/ollama_health_check.sh; sha256sum ~/projects/dgx-infra/scripts/ollama_health_check.sh ~/projects/dgx-infra/scripts/ollama_check_one.py    # 2026-11-19T04:40:49.948Z
+/home/ankitsarin/projects/dgx-infra/scripts/ollama_health_check.sh
+42c11f18ba8d3411b79196cc7c39c893ed67331669fc9cc7fa1ae058cd7de50b  /home/ankitsarin/projects/dgx-infra/scripts/ollama_health_check.sh
+971a03f96d001deae09fb35dd20109e9feda8468cd9f778ecf4305a373e8188b  /home/ankitsarin/projects/dgx-infra/scripts/ollama_check_one.py
+
+$ git -C ~/projects/dgx-infra log -1 --format="%H %cI %s" -- scripts/ollama_health_check.sh scripts/ollama_check_one.py; git -C ~/projects/dgx-infra status --porcelain -- scripts/    # 2026-11-19T04:40:49.953Z
+b5af93d854060402a33bdf767adfa0ff286d8dbe 2026-11-15T23:55:39+00:00 ollama health check: daily light check, full sweep on Sundays (PI 2026-11-15, OHC-1)
+
+$ sed -n "11,18p;44,50p;56,57p;144,159p;187,189p;211,227p;242,242p;256,260p" ~/projects/dgx-infra/scripts/ollama_health_check.sh | cat -A | sed "s/\\$$//" | head -0; awk "NR>=11&&NR<=18||NR>=44&&NR<=50||NR>=56&&NR<=57||NR>=144&&NR<=159||NR>=187&&NR<=189||NR>=211&&NR<=227||NR==242||NR>=256&&NR<=260{printf \"%4d  %s\\n\",NR,\$0}" ~/projects/dgx-infra/scripts/ollama_health_check.sh    # 2026-11-19T04:40:49.969Z
+sed: -e expression #1, char 12: Invalid back reference
+  11  # Light / full split (PI 2026-11-15, decision 5; OHC-1). Cron runs this with no
+  12  # arguments every day at 07:00; the mode is chosen here, so crontab is unchanged:
+  13  #   full  — Sundays (UTC): the sweep above, every installed model, keep_alive 0,
+  14  #           standing down while the experiment lock is held.
+  15  #   light — every other day: GET /api/version, /api/ps and /api/tags only, no
+  16  #           POST. Records the resident model and FAILs on any model listed in
+  17  #           ollama_lane_models.txt that is missing from /api/tags. It sends no
+  18  #           load, so it neither consults nor holds the experiment lock.
+  44  if [[ -z "$MODE" ]]; then
+  45    if [[ "$(date -u +%u)" == 7 ]]; then
+  46      MODE=full;  MODE_WHY="Sunday (UTC) full sweep"
+  47    else
+  48      MODE=light; MODE_WHY="weekday light check; full sweep on Sundays (UTC)"
+  49    fi
+  50  fi
+  56  LOGDIR="${OLLAMA_HEALTH_LOGDIR:-$HOME/logs}"
+  57  LOGFILE="$LOGDIR/ollama_health_$(date +%Y%m%d).log"
+ 144  # Light mode sends no load, so it neither opens nor holds the lock: holding it
+ 145  # would only block an experiment from starting during the check.
+ 146  LOCKFILE="${OLLAMA_EXPERIMENT_LOCK:-$HOME/.ollama_experiment.lock}"
+ 147  if [[ "$MODE" == light ]]; then
+ 148    LOCK_STATE="NOT_CONSULTED"
+ 149  else
+ 150    LOCK_OK=true
+ 151    exec 9>>"$LOCKFILE" 2>/dev/null || LOCK_OK=false
+ 152    if ! $LOCK_OK; then
+ 153      LOCK_STATE="ERROR"
+ 154    elif flock -n 9; then
+ 155      LOCK_STATE="ACQUIRED"
+ 156    else
+ 157      LOCK_STATE="HELD"
+ 158    fi
+ 159  fi
+ 187  # ── Light mode: GET only, then the same footer as a full run ─────────────
+ 188  if [[ "$MODE" == light ]]; then
+ 189    light_out=$(timeout "${LIGHT_BACKSTOP_S}s" python3 -I "$CHECK_ONE" light "$LANE_MODELS" 2>/dev/null) && rc=0 || rc=$?
+ 211  # Skip all inference when an experiment owns the box. Note the systemd env
+ 212  # snapshot above still runs: `systemctl show` touches systemd, not Ollama, and
+ 213  # the env-drop canary is the one check worth keeping on a skipped day.
+ 214  if [[ "$LOCK_STATE" == "HELD" ]]; then
+ 215    # Wording matters: morning_digest.sh greps the log for /TIMEOUT|FAIL/i and
+ 216    # reports FAIL on any hit, so this line must contain neither substring. It
+ 217    # must also be non-empty and fresh, or is_stale() reports STALE instead.
+ 218    msg="SKIPPED — experiment lock held ($LOCKFILE)"
+ 219    printf '%s\n' "$msg"
+ 220    {
+ 221      printf '%s\n' "$msg"
+ 222      echo "No models were exercised; no Ollama requests were issued."
+ 223      echo "$SEPARATOR"
+ 224      echo "Done: $(date)"
+ 225    } >> "$LOGFILE"
+ 226    exit 0
+ 227  fi
+ 242  MODELS=$(ollama list 2>/dev/null | tail -n +2 | awk '{print $1}')
+ 256  for model in $MODELS; do
+ 257    model_timeout=${TIMEOUTS[$model]:-$DEFAULT_TIMEOUT}
+ 258    printf "Testing %-30s (%ss) ... " "$model" "$model_timeout"
+ 259    started=$EPOCHREALTIME
+ 260    status=$(timeout "$((model_timeout + BACKSTOP_S))s" python3 -I "$CHECK_ONE" check "$model" "$model_timeout" 2>/dev/null) && rc=0 || rc=$?
+
+$ awk "NR>=118&&NR<=135||NR>=177&&NR<=189{printf \"%4d  %s\\n\",NR,\$0}" ~/projects/dgx-infra/scripts/ollama_check_one.py    # 2026-11-19T04:40:49.974Z
+ 118  def light(lane_file: str) -> tuple[list[str], bool]:
+ 119      """Lines for the log, and whether every line is clean."""
+ 120      lines: list[str] = []
+ 121      ok = True
+ 122  
+ 123      try:
+ 124          version = _get_json("/api/version")["version"]
+ 125          lines.append("Ollama version: " + _clean(str(version))[:ERROR_CHARS])
+ 126      except Exception:  # noqa: BLE001
+ 127          lines.append("Ollama version: FAIL (/api/version unreadable)")
+ 128          ok = False
+ 129  
+ 130      try:
+ 131          resident = _get_json("/api/ps")["models"]
+ 132          if not resident:
+ 133              lines.append("Resident: none")
+ 134          for m in resident:
+ 135              name = _clean(str(m.get("name") or m.get("model") or "?"))
+ 177  def check(model: str, timeout_s: int) -> str:
+ 178      payload = json.dumps({
+ 179          "model": model,
+ 180          "prompt": PROMPT,
+ 181          "stream": False,
+ 182          "keep_alive": KEEP_ALIVE,
+ 183          "options": {"num_ctx": NUM_CTX},
+ 184      }).encode()
+ 185      req = urllib.request.Request(
+ 186          HOST + "/api/generate", data=payload,
+ 187          headers={"Content-Type": "application/json"}, method="POST")
+ 188      try:
+ 189          with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+
+$ grep -nE "urlopen|method=" ~/projects/dgx-infra/scripts/ollama_check_one.py    # 2026-11-19T04:40:49.979Z
+76:    with urllib.request.urlopen(HOST + "/api/ps", timeout=PS_TIMEOUT_S) as resp:
+87:    with urllib.request.urlopen(HOST + path, timeout=PS_TIMEOUT_S) as resp:
+187:        headers={"Content-Type": "application/json"}, method="POST")
+189:        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+
+$ cat /etc/timezone; timedatectl | grep "Time zone"    # 2026-11-19T04:40:49.983Z
+Etc/UTC
+                Time zone: Etc/UTC (UTC, +0000)
+## (ii) the snapshot timer
+
+$ systemctl cat dgx-snapshot-user.timer | grep -E "^OnCalendar|^Persistent|^RandomizedDelay"    # 2026-11-19T04:40:50.000Z
+OnCalendar=*-*-* 10:30:00 UTC
+RandomizedDelaySec=120
+Persistent=true
+
+$ systemctl show dgx-snapshot-user.timer -p LastTriggerUSec -p NextElapseUSecRealtime    # 2026-11-19T04:40:50.006Z
+NextElapseUSecRealtime=Thu 2026-11-19 10:31:02 UTC
+LastTriggerUSec=Wed 2026-11-18 10:31:25 UTC
+
+$ systemctl list-timers dgx-snapshot-user.timer --no-pager    # 2026-11-19T04:40:50.010Z
+NEXT                            LEFT LAST                         PASSED UNIT                    ACTIVATES
+Thu 2026-11-19 10:31:02 UTC 5h 50min Wed 2026-11-18 10:31:25 UTC 18h ago dgx-snapshot-user.timer dgx-snapshot-user.service
+
+1 timers listed.
+Pass --all to see loaded but inactive timers, too.
+## (iii) ollama.service (E7)
+
+$ systemctl show ollama -p ExecMainStartTimestamp -p MainPID -p NRestarts -p RestartUSec    # 2026-11-19T04:40:50.017Z
+RestartUSec=10s
+MainPID=3633749
+NRestarts=0
+ExecMainStartTimestamp=Mon 2026-11-16 00:06:51 UTC
+
+$ systemctl show ollama -p Environment --value | tr " " "\n" | grep "^OLLAMA_KEEP_ALIVE="    # 2026-11-19T04:40:50.023Z
+OLLAMA_KEEP_ALIVE=30m
+
+$ curl -s -m 10 http://127.0.0.1:11434/api/version; echo; curl -s -m 10 http://127.0.0.1:11434/api/ps; echo    # 2026-11-19T04:40:50.029Z
+{"version":"0.21.0"}
+{"models":[]}
+## (iv) ~/scratch/12ah-olra/ (V4, E6)
+
+$ ls -la --time-style=full-iso ~/scratch/12ah-olra/    # 2026-11-19T04:40:50.043Z
+total 284
+drwxr-xr-x   3 ankitsarin ankitsarin  4096 2026-11-16 00:40:40.479490366 +0000 .
+drwxr-xr-x 180 ankitsarin ankitsarin  4096 2026-11-19 04:40:06.767912820 +0000 ..
+-rw-r--r--   1 ankitsarin ankitsarin 45380 2026-11-16 00:08:04.305885290 +0000 12ah_OLRA.md
+-rw-r--r--   1 ankitsarin ankitsarin 20164 2026-11-16 00:25:37.053090429 +0000 12ah_OLRA_add1.md
+-rw-r--r--   1 ankitsarin ankitsarin 36768 2026-11-15 23:30:40.915547074 +0000 OLR-1_REPORT.md
+-rw-r--r--   1 ankitsarin ankitsarin  1698 2026-11-16 00:08:09.826901248 +0000 SHA256SUMS
+-rw-r--r--   1 ankitsarin ankitsarin   459 2026-11-16 00:25:54.477144882 +0000 SHA256SUMS_add1
+-rw-r--r--   1 ankitsarin ankitsarin    97 2026-11-16 00:40:40.479617391 +0000 SHA256SUMS_close
+-rw-r--r--   1 ankitsarin ankitsarin 11298 2026-11-15 23:58:03.158295718 +0000 brief_12ah_OLRA.md
+-rw-r--r--   1 ankitsarin ankitsarin  2849 2026-11-16 00:40:40.317489901 +0000 brief_12ah_OLRA_CLOSE.md
+-rw-r--r--   1 ankitsarin ankitsarin  4898 2026-11-15 23:58:18.933331956 +0000 brief_12ah_OLRA_R1.md
+-rw-r--r--   1 ankitsarin ankitsarin  5472 2026-11-16 00:21:09.857258408 +0000 brief_12ah_OLRA_R2.md
+-rw-r--r--   1 ankitsarin ankitsarin    17 2026-11-16 00:25:44.849114790 +0000 g4_add1_ollama_journal.txt
+-rw-r--r--   1 ankitsarin ankitsarin  5163 2026-11-16 00:07:34.744800122 +0000 g4_ollama_journal.txt
+-rw-r--r--   1 ankitsarin ankitsarin  4639 2026-11-16 00:03:55.883186959 +0000 q10_7c74c2b_primer_diff.txt
+-rw-r--r--   1 ankitsarin ankitsarin   523 2026-11-16 00:03:44.266155420 +0000 q10_commits.txt
+-rw-r--r--   1 ankitsarin ankitsarin  1683 2026-11-16 00:21:48.230377479 +0000 q11_callers.txt
+-rw-r--r--   1 ankitsarin ankitsarin  5510 2026-11-16 00:21:30.465322334 +0000 q11_grep_raw.txt
+-rw-r--r--   1 ankitsarin ankitsarin 18057 2026-11-16 00:00:52.019703289 +0000 q2_entry_census.json
+-rw-r--r--   1 ankitsarin ankitsarin 37198 2026-11-15 23:59:11.374455324 +0000 q2_grep_raw.txt
+-rw-r--r--   1 ankitsarin ankitsarin  1363 2026-11-16 00:00:57.945718303 +0000 q2_restart_reach.txt
+-rw-r--r--   1 ankitsarin ankitsarin 19022 2026-11-16 00:00:19.029620511 +0000 q6_test_grep.txt
+-rw-r--r--   1 ankitsarin ankitsarin  2489 2026-11-16 00:02:40.396195878 +0000 q7_text_grep.txt
+drwxr-xr-x   2 ankitsarin ankitsarin  4096 2026-11-16 00:07:34.748800134 +0000 work
+
+$ cd ~/scratch/12ah-olra && sha256sum SHA256SUMS SHA256SUMS_add1 SHA256SUMS_close && wc -l SHA256SUMS SHA256SUMS_add1 SHA256SUMS_close    # 2026-11-19T04:40:50.046Z
+85850dccb00d6baeec7cb8201eb51ff09358439f2fcd87fd655cb58b624f7e5f  SHA256SUMS
+9cd077bc85069836344948dca79efe7880f3a8b010f619ae5978420cc2d20baa  SHA256SUMS_add1
+22868d549d55c9ed9c0f96041d317689e5d35185c92fd952c54390252b5958c2  SHA256SUMS_close
+  18 SHA256SUMS
+   5 SHA256SUMS_add1
+   1 SHA256SUMS_close
+  24 total
+
+$ python3 -I ~/scratch/12ah-open/helpers/olra_check.py ~/scratch/12ah-olra SHA256SUMS SHA256SUMS_add1 SHA256SUMS_close    # 2026-11-19T04:40:50.049Z
+SHA256SUMS: lines 18 match 18 mismatch 0
+SHA256SUMS_add1: lines 5 match 5 mismatch 0
+SHA256SUMS_close: lines 1 match 1 mismatch 0
+total: lines 24 match 24 mismatch 0
+files no list names: 3: ['SHA256SUMS', 'SHA256SUMS_add1', 'SHA256SUMS_close']
+
+$ find ~/scratch/12ah-olra/work -type f -printf "%s %p\n" | sort -k2    # 2026-11-19T04:41:07.189Z
+20 /home/ankitsarin/scratch/12ah-olra/work/g4_window_end.txt
+102446 /home/ankitsarin/scratch/12ah-olra/work/ledger_ee_at_HEAD.txt
+102446 /home/ankitsarin/scratch/12ah-olra/work/ledger_ee_at_a2bbd81.txt
+114 /home/ankitsarin/scratch/12ah-olra/work/olr1_sha_before.txt
+3839 /home/ankitsarin/scratch/12ah-olra/work/primer_41_45_at_HEAD.txt
+3839 /home/ankitsarin/scratch/12ah-olra/work/primer_41_45_at_a2bbd81.txt
+
+## notes and readings (CC's, from the lines above)
+- The "sed: -e expression #1, char 12: Invalid back reference" line under the awk quotation is from an unused sed stage in that
+  same command line (its output went to head -0); the awk that follows it printed the quoted lines. Nothing was retried.
+- (i) Schedule: one crontab entry, line 7, "0 7 * * *", no environment line in the crontab; box time zone Etc/UTC, so 07:00 UTC daily.
+  Mode (script :44-50): full only when `date -u +%u` is 7 (Sunday, UTC), else light; no argument and no OLLAMA_HEALTH_MODE in
+  the cron line. Models are loaded only in full mode (the one POST, /api/generate, is check(), helper :177-189, called from the
+  loop at :256-260); light mode calls light() (helper :118ff), whose requests go through _get_json / urlopen of a URL (GET):
+  /api/version, /api/ps, /api/tags. Light mode sets LOCK_STATE=NOT_CONSULTED (:147-148) and takes no lock. Full mode opens fd 9 on
+  the lock and flock -n; HELD -> logs "SKIPPED — experiment lock held" and exits before any Ollama request (:214-227). The log is
+  ~/logs/ollama_health_<date>.log (:56-57); cron also appends stdout to ~/logs/ollama_health_cron.log.
+  So the scheduled job loads models on Sunday UTC only, starting at 07:00 UTC, inside R812(a)'s Sunday window 07:00-10:35:
+  I5 TRUE. (A manual run with --full or OLLAMA_HEALTH_MODE=full can load on any day; that is not the scheduled job — a reading.)
+- (ii) dgx-snapshot-user.timer: OnCalendar 10:30:00 UTC, RandomizedDelaySec 120; last 2026-11-18 10:31:25 UTC, next 2026-11-19 10:31:02 UTC.
+- (iii) ollama.service: start Mon 2026-11-16 00:06:51 UTC, MainPID 3633749, NRestarts 0, RestartUSec 10s, OLLAMA_KEEP_ALIVE=30m;
+  version 0.21.0; /api/ps empty. Equal to V6.
+- (iv) the three lists hash to V4's values; 24 lines, 24 match, 0 mismatch; the files no list names are the three lists themselves.
+  The directory also holds a subdirectory work/ (listed above), which no list covers.

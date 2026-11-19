@@ -1,0 +1,32 @@
+Running as unit: gate-12ah_open.service; invocation ID: 369fb6632fbd4d28b3319bacc9b2a76d
+2026-11-19T04:51:40.930190072Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-12ah_open --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt 
+● gate-12ah_open.service - /usr/bin/bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-12ah_open.service; transient)
+  Transient: yes
+     Active: active (running) since Thu 2026-11-19 04:51:40 UTC; 5ms ago
+   Main PID: 3647967 (bash)
+      Tasks: 3 (limit: 153552)
+     Memory: 1.5M (peak: 1.6M)
+        CPU: 4ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-12ah_open.service
+             ├─3647967 /usr/bin/bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt
+             └─3647975 date -u +%FT%T.%NZ
+
+Nov 19 04:51:40 spark-59e4 systemd[2694]: Started gate-12ah_open.service - /usr/bin/bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt.
+Linger=yes
+● gate-12ah_open.service - /usr/bin/bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-12ah_open.service; transient)
+  Transient: yes
+     Active: active (running) since Thu 2026-11-19 04:51:40 UTC; 1s ago
+   Main PID: 3647967 (bash)
+      Tasks: 21 (limit: 153552)
+     Memory: 158.0M (peak: 158.0M)
+        CPU: 2.126s
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-12ah_open.service
+             ├─3647967 /usr/bin/bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt
+             └─3647977 .venv/bin/python -m pytest tests/ -v --tb=short --durations=0 -m "not network and not ollama and not integration"
+
+Nov 19 04:51:40 spark-59e4 systemd[2694]: Started gate-12ah_open.service - /usr/bin/bash /home/ankitsarin/scratch/12ah-open/gate_12ah_open/run_gate.sh /home/ankitsarin/scratch/12ah-open/gate_12ah_open 12ah_open docs/session-reports/session-12/12ag_close/collected_ids_12ag_close.txt docs/session-reports/session-12/12ag_close/durations_12ag_unit.txt.
+Linger=yes
+launcher rc=0

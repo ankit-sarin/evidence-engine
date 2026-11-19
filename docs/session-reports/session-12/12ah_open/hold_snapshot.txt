@@ -1,0 +1,3 @@
+Thu Nov 19 04:51:23 UTC 2026
+4130743 ppid 1 start 2026-11-16T07:06:03Z /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+user processes scanned 117 (ancestry [2800596, 3642524, 3642532, 3642541, 3642559, 3642619, 3642709, 3642713, 3642770, 3642982, 3643289, 3647753, 3647771] excluded); matching 1

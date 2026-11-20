@@ -1,0 +1,34 @@
+# 12ai-U30B 2c — tests/test_u30_cloud_interrupt.py on the parent (HEAD b998dfb, engine tree 339370d's), 2026-11-20T21:17:57Z
+# command: .venv/bin/python -m pytest tests/test_u30_cloud_interrupt.py -p no:cacheprovider -q -rA --tb=line
+PASSED tests/test_u30_cloud_interrupt.py::test_7_an_exception_from_the_store_closes_failed_and_commits_nothing_of_the_paper
+PASSED tests/test_u30_cloud_interrupt.py::test_8_a_run_that_returns_closes_completed_with_no_reason
+FAILED tests/test_u30_cloud_interrupt.py::test_1_an_interrupt_between_the_extraction_and_span_inserts_leaves_nothing
+FAILED tests/test_u30_cloud_interrupt.py::test_2_an_interrupt_inside_the_event_writers_savepoint_leaves_nothing
+FAILED tests/test_u30_cloud_interrupt.py::test_3_an_interrupt_inside_the_provider_call_is_recorded
+FAILED tests/test_u30_cloud_interrupt.py::test_4_a_signal_interrupt_closes_interrupted_with_its_reason[SIGTERM]
+FAILED tests/test_u30_cloud_interrupt.py::test_4_a_signal_interrupt_closes_interrupted_with_its_reason[SIGHUP]
+FAILED tests/test_u30_cloud_interrupt.py::test_5_the_cloud_main_handles_sigterm_and_sighup_as_the_local_main_does[SIGTERM]
+FAILED tests/test_u30_cloud_interrupt.py::test_5_the_cloud_main_handles_sigterm_and_sighup_as_the_local_main_does[SIGHUP]
+FAILED tests/test_u30_cloud_interrupt.py::test_6_an_interrupt_between_the_closes_update_and_its_commit_does_not_leave_the_run_open
+FAILED tests/test_u30_cloud_interrupt.py::test_9_a_cited_field_outside_the_codebook_is_dropped_before_any_write
+FAILED tests/test_u30_cloud_interrupt.py::test_10_an_uncited_field_outside_the_codebook_no_longer_costs_the_paper
+# failure lines:
+tests/test_u30_cloud_interrupt.py:217: AssertionError: assert {'claim_input...0, 'spans': 0} == {'claim_input...0, 'spans': 0}
+tests/test_u30_cloud_interrupt.py:229: AssertionError: assert {'claim_input..., 'spans': 20} == {'claim_input...0, 'spans': 0}
+tests/test_u30_cloud_interrupt.py:242: AssertionError: []
+tests/test_u30_cloud_interrupt.py:257: AssertionError: assert ('failed', 'R...: SIGTERM', 1) == ('interrupted...t:SIGTERM', 1)
+tests/test_u30_cloud_interrupt.py:257: AssertionError: assert ('failed', 'R...d: SIGHUP', 1) == ('interrupted...pt:SIGHUP', 1)
+tests/test_u30_cloud_interrupt.py:279: AssertionError: SIGTERM: <Handlers.SIG_DFL: 0> is not a handler
+tests/test_u30_cloud_interrupt.py:279: AssertionError: SIGTERM: <Handlers.SIG_DFL: 0> is not a handler
+tests/test_u30_cloud_interrupt.py:305: AssertionError: assert (None, None, 0) == ('interrupted...pt:SIGINT', 1)
+tests/test_u30_cloud_interrupt.py:360: AssertionError: assert ['autonomy_le...itation', ...] == ['autonomy_le..._metric', ...]
+tests/test_u30_cloud_interrupt.py:379: assert 0 == 1
+10 failed, 2 passed in 7.24s
+
+# I3 — the connection's in_transaction at each seam and what run_arm leaves, on the parent (i3_probe.py, the file's own seams):
+ROW row4_run_calls: in_transaction at the seam = True; after run_arm: paper {'cloud_extractions': 0, 'spans': 0, 'field_events': 0, 'claim_inputs': 0}, run_calls [('completed', None)], close ('failed', 'KeyboardInterrupt', 1)
+.ROW row7_span_insert: in_transaction at the seam = True; after run_arm: paper {'cloud_extractions': 1, 'spans': 0, 'field_events': 0, 'claim_inputs': 0}, run_calls [('completed', None)], close ('failed', 'KeyboardInterrupt', 1)
+.ROW row8_second_span: in_transaction at the seam = True; after run_arm: paper {'cloud_extractions': 1, 'spans': 1, 'field_events': 0, 'claim_inputs': 0}, run_calls [('completed', None)], close ('failed', 'KeyboardInterrupt', 1)
+.ROW row9_field_events: in_transaction at the seam = True; after run_arm: paper {'cloud_extractions': 1, 'spans': 20, 'field_events': 0, 'claim_inputs': 0}, run_calls [('completed', None)], close ('failed', 'KeyboardInterrupt', 1)
+.ROW row12_close_update: in_transaction at the seam = True; after run_arm: paper {'cloud_extractions': 0, 'spans': 0, 'field_events': 0, 'claim_inputs': 0}, run_calls [], close (None, None, 0)
+5 passed in 4.06s

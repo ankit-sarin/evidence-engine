@@ -1,0 +1,17 @@
+Running as unit: gate-12ai_u30b.service; invocation ID: c4e309b063954990bd7f62bdfb15c8bc
+2026-11-20T21:23:27.184611623Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-12ai_u30b --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ai-u30b/gate_u30b/run_gate.sh /home/ankitsarin/scratch/12ai-u30b/gate_u30b 12ai_u30b docs/session-reports/session-12/12ai_U41B/gate_u41b/collected_ids.txt docs/session-reports/session-12/12ai_U41B/gate_u41b/durations_12ai_u41b.txt 
+● gate-12ai_u30b.service - /usr/bin/bash /home/ankitsarin/scratch/12ai-u30b/gate_u30b/run_gate.sh /home/ankitsarin/scratch/12ai-u30b/gate_u30b 12ai_u30b docs/session-reports/session-12/12ai_U41B/gate_u41b/collected_ids.txt docs/session-reports/session-12/12ai_U41B/gate_u41b/durations_12ai_u41b.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-12ai_u30b.service; transient)
+  Transient: yes
+     Active: active (running) since Fri 2026-11-20 21:23:27 UTC; 6ms ago
+   Main PID: 1661853 (bash)
+      Tasks: 3 (limit: 153552)
+     Memory: 2.2M (peak: 2.2M)
+        CPU: 5ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-12ai_u30b.service
+             ├─1661853 /usr/bin/bash /home/ankitsarin/scratch/12ai-u30b/gate_u30b/run_gate.sh /home/ankitsarin/scratch/12ai-u30b/gate_u30b 12ai_u30b docs/session-reports/session-12/12ai_U41B/gate_u41b/collected_ids.txt docs/session-reports/session-12/12ai_U41B/gate_u41b/durations_12ai_u41b.txt
+             └─1661861 date -u +%FT%T.%NZ
+
+Nov 20 21:23:27 spark-59e4 systemd[2694]: Started gate-12ai_u30b.service - /usr/bin/bash /home/ankitsarin/scratch/12ai-u30b/gate_u30b/run_gate.sh /home/ankitsarin/scratch/12ai-u30b/gate_u30b 12ai_u30b docs/session-reports/session-12/12ai_U41B/gate_u41b/collected_ids.txt docs/session-reports/session-12/12ai_U41B/gate_u41b/durations_12ai_u41b.txt.
+Linger=yes

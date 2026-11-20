@@ -1,0 +1,33 @@
+gate ids 3608 ref 3594
+only-gate: 16; only-ref: 2
+  only-gate tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.core.run_manifest0]
+  only-gate tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.core.run_manifest1]
+  only-gate tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.core.run_manifest2]
+  only-gate tests/test_failed_close_reason.py::test_a_cloud_arm_interrupted_closes_interrupted_with_its_signals_reason
+  only-gate tests/test_u30_cloud_interrupt.py::test_10_an_uncited_field_outside_the_codebook_no_longer_costs_the_paper
+  only-gate tests/test_u30_cloud_interrupt.py::test_1_an_interrupt_between_the_extraction_and_span_inserts_leaves_nothing
+  only-gate tests/test_u30_cloud_interrupt.py::test_2_an_interrupt_inside_the_event_writers_savepoint_leaves_nothing
+  only-gate tests/test_u30_cloud_interrupt.py::test_3_an_interrupt_inside_the_provider_call_is_recorded
+  only-gate tests/test_u30_cloud_interrupt.py::test_4_a_signal_interrupt_closes_interrupted_with_its_reason[SIGHUP]
+  only-gate tests/test_u30_cloud_interrupt.py::test_4_a_signal_interrupt_closes_interrupted_with_its_reason[SIGTERM]
+  only-gate tests/test_u30_cloud_interrupt.py::test_5_the_cloud_main_handles_sigterm_and_sighup_as_the_local_main_does[SIGHUP]
+  only-gate tests/test_u30_cloud_interrupt.py::test_5_the_cloud_main_handles_sigterm_and_sighup_as_the_local_main_does[SIGTERM]
+  only-gate tests/test_u30_cloud_interrupt.py::test_6_an_interrupt_between_the_closes_update_and_its_commit_does_not_leave_the_run_open
+  only-gate tests/test_u30_cloud_interrupt.py::test_7_an_exception_from_the_store_closes_failed_and_commits_nothing_of_the_paper
+  only-gate tests/test_u30_cloud_interrupt.py::test_8_a_run_that_returns_closes_completed_with_no_reason
+  only-gate tests/test_u30_cloud_interrupt.py::test_9_a_cited_field_outside_the_codebook_is_dropped_before_any_write
+  only-ref tests/test_api_parity.py::test_engine_import_resolves[run_cloud_extraction.py::engine.core.run_manifest]
+  only-ref tests/test_failed_close_reason.py::test_a_cloud_arm_interrupted_closes_failed_naming_the_interrupt
+phases ref 2683 gate 2721
+slower by >10 s: 0
+-- summary line
+==== 3607 passed, 17 deselected, 1 xfailed, 2 warnings in 975.67s (0:16:15) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

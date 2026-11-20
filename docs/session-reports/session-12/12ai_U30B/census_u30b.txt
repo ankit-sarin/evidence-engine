@@ -1,0 +1,166 @@
+== set A: 10 files
+== set B: 15 files
+== set C: 9 files
+== set D: 2 files
+== set E: 2 files
+
+### tests/test_citation_guard.py  sets B  class: (n) unless the selected run is red
+  B :156  E.extract_paper(pid, "The paper reports a trial.", spec, db,
+### tests/test_cloud_extraction.py  sets ABC  class: (n) unless the selected run is red
+  A :152  `scripts/run_cloud_extraction.run_arm` opens it — `rm.open_run(…, cloud_arms=[arm])`
+  A :614  from scripts.run_cloud_extraction import show_progress
+  A :620  from scripts.run_cloud_extraction import dry_run
+  B :16  from engine.cloud.base import CloudExtractorBase
+  B :17  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :18  from engine.cloud.anthropic_extractor import AnthropicExtractor
+  B :69  # B5 (READERS-01 Phase 2a). `CloudExtractorBase.get_pending_papers` and
+  B :178  class _ProviderInstance(OpenAIExtractor):
+  B :180  the OpenAI transport with only `CloudExtractorBase.__init__` run (no SDK client) and its
+  B :184  CloudExtractorBase.__init__(self, db_path, spec_path)
+  B :200  base.send(pid, "prompt text")
+  B … 46 more
+  C :219  assert "cloud_evidence_spans" in tables
+  C :229  r[1] for r in conn.execute("PRAGMA table_info(cloud_evidence_spans)").fetchall()
+  C :406  "SELECT * FROM cloud_evidence_spans WHERE cloud_extraction_id = ?",
+### tests/test_codebook_review_at_open.py  sets A  class: (n) unless the selected run is red
+  A :129  def test_run_cloud_extractions_run_arm_refuses_before_any_row_or_send(review, spec,
+  A :131  from scripts import run_cloud_extraction as cli
+  A :156  cli.run_arm(arm, review.db_path, str(spec_path), None, None)
+### tests/test_completeness_guard.py  sets BE  class: (n) unless the selected run is red
+  B :229  """Minimal stand-in exercising CloudExtractorBase.extract_with_completeness."""
+  B :248  from engine.cloud.base import CloudExtractorBase
+  B :250  return CloudExtractorBase.extract_with_completeness(fake, 277, "text")
+  E :122  def test_unexpected_fields_are_dropped_and_duplicates_are_retryable(expected, caplog):
+  E :123  """R118 (9b-2c R2). 'Title' and 'field_1' — the local arm's junk field names —
+  E :124  still surface in the report; at the write boundary an unexpected field is
+  E :126  from engine.core.completeness import DuplicateFieldError, drop_unexpected
+  E :127  junk = {"field_name": "Title", "value": "x", "source_snippet": "", "confidence": 1.0,
+  E :131  r = check_completeness(_complete(expected) + [junk, dup], expected)
+  E :133  assert r.unexpected == ("Title",)
+  E :137  enforce_completeness(_complete(expected) + [junk, dup], expected, paper_id=1, arm="a")
+  E … 2 more
+### tests/test_corpus_authority.py  sets B  class: (n) unless the selected run is red
+  B :137  """A CloudExtractorBase with only the connection wired.
+  B :143  from engine.cloud.base import CloudExtractorBase
+  B :145  ext = object.__new__(CloudExtractorBase)
+### tests/test_effective_config.py  sets B  class: (n) unless the selected run is red
+  B :200  from engine.cloud.anthropic_extractor import AnthropicExtractor
+  B :201  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :202  assert not hasattr(OpenAIExtractor, "ARM") and not hasattr(AnthropicExtractor, "ARM")
+### tests/test_elicitation_pipeline.py  sets B  class: (n) unless the selected run is red
+  B :326  E.extract_paper(7, PAPER, _Spec(), _DB(review), run_id=1)  # 9b-2b: required
+### tests/test_extraction_events.py  sets BCDE  class: (n) unless the selected run is red
+  B :139  return E.extract_paper(PID, "The paper reports a trial.", spec, db, attempt=attempt,
+  C :398  can show the rollback is scoped to the paper that failed."""
+  C :425  event, the last write, fails. Nothing for the paper survives — the rollback
+  C :452  assert not db._conn.in_transaction
+  C :462  On this path the rollback comes from `write_field_event`'s own handler
+  C :463  (`conn.rollback()`, which ends the whole transaction), not from the writer's
+  C :490  assert not db._conn.in_transaction
+  D :526  E.MissingThinkingChannelError("m"), KeyboardInterrupt(), ValueError("v")]
+  D :547  ki = X.outcome_for_exception(KeyboardInterrupt(), paper_id=PID, arm="a", run_id=1,
+  E :256  def test_t5_an_unexpected_field_is_dropped_and_logged(db, spec, run_id, expected, caplog):
+### tests/test_extraction_run_link.py  sets BC  class: (n) unless the selected run is red
+  B :119  lambda db, spec: E.extract_paper(PID, "text", spec, db),
+  B :230  E.extract_paper(PID, "text", elicited, db, unit_map_dir_name="run_X", run_id=1)
+  C :1  """The extractor's run link (WRITE-PATH-01 9b-2b: R116, R117, run_calls.paper_id).
+  C :6  and records `run_calls` exactly as in production.
+  C :168  assert _count(db, "run_calls") == 0 and _count(db, "extractions") == 0
+  C :177  rows = db._conn.execute("SELECT run_id, stage, paper_id FROM run_calls "
+### tests/test_failed_close_reason.py  sets ACD  class: (c) its cloud interrupt test pins a 'failed' close, superseded by R805(d)(1) (E2)
+  A :92  from scripts import run_cloud_extraction as cli
+  A :119  cli.run_arm(arm, str(db_path), str(spec_path), None, None)
+  C :74  "end_status TEXT, end_reason TEXT)")
+  C :77  rm.close_run(conn, 1, "failed", reason=reason)
+  C :78  assert conn.execute("SELECT end_status, end_reason FROM run_manifests").fetchone() == ("failed", reason)
+  C :127  return conn.execute("SELECT end_status, end_reason, ended_at IS NOT NULL "
+  D :46  (KeyboardInterrupt(), None, "KeyboardInterrupt"),                       # a BaseException
+  D :150  with pytest.raises(KeyboardInterrupt):
+  D :151  run(_raise(KeyboardInterrupt()))
+  D :152  assert _end(db_path) == [("failed", "KeyboardInterrupt", 1)]
+### tests/test_parsed_text_resolver.py  sets B  class: (n) unless the selected run is red
+  B :111  from engine.cloud.base import CloudExtractorBase
+  B :113  got = CloudExtractorBase.load_parsed_text(SimpleNamespace(_conn=db._conn), 7)
+  B :116  CloudExtractorBase.load_parsed_text(SimpleNamespace(_conn=db._conn), 8)
+### tests/test_request_capture.py  sets B  class: (n) unless the selected run is red
+  B :351  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :364  ex = OpenAIExtractor(_cloud_db(tmp_path), str(REPO / "review_specs" / "surgical_autonomy.yaml"),
+  B :366  ex.extract_paper(1, "Paper text.")
+  B :379  from engine.cloud.anthropic_extractor import AnthropicExtractor
+  B :391  ex = AnthropicExtractor(_cloud_db(tmp_path),
+  B :394  ex.extract_paper(1, "Paper text.")
+### tests/test_review_paths.py  sets A  class: (n) unless the selected run is red
+  A :203  "scripts/run_cloud_extraction.py",
+### tests/test_run_manifest.py  sets ABC  class: (n) unless the selected run is red
+  A :343  from scripts import run_cloud_extraction as cli
+  A :352  cli.main()
+  A :357  from scripts import run_cloud_extraction as cli
+  A :363  cli.main()
+  A :368  from scripts import run_cloud_extraction as cli
+  B :378  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :393  ex = OpenAIExtractor(db.db_path, str(SPEC_PATH), api_key="k", arm_name=arm)
+  B :395  ex.send(None, "prompt text")
+  C :103  its stage rows are already committed; the call itself lands in run_calls."""
+  C :134  call = db._conn.execute("SELECT * FROM run_calls").fetchone()
+  C :161  rm.close_run(db._conn, h.run_id, "completed")
+  C :163  rm.close_run(db._conn, h.run_id, "failed")
+  C :374  """C16: run_calls.request_hash is over system message, user turn AND parameters.
+  C :396  call = ex._conn.execute("SELECT stage, request_hash FROM run_calls").fetchone()
+### tests/test_u19_env_recheck.py  sets AC  class: (n) unless the selected run is red
+  A :243  """run_cloud_extraction's open is `open_run(kind="extraction", stages=(), cloud_arms=[arm],
+  C :147  status, reason = conn.execute("SELECT end_status, end_reason FROM run_manifests "
+### tests/test_u27_cloud_run_faults.py  sets ABC  class: (n) unless the selected run is red
+  A :12  `scripts.run_cloud_extraction.run_arm`, with `cli.EXTRACTORS` pointing at a thin subclass that passes a placeholder key (so
+  A :102  from scripts import run_cloud_extraction as cli
+  A :191  cli.run_arm(arm, str(db_path), str(spec_path), None, None)
+  B :4  8  OpenAIExtractor.run, the retry loop's `except Exception as exc:`        (openai_extractor.py:179)
+  B :5  9  AnthropicExtractor.run, the retry loop's `except Exception as exc:`     (anthropic_extractor.py:205)
+  B :6  10 OpenAIExtractor.run, around store_result                              (openai_extractor.py:209)
+  B :7  11 AnthropicExtractor.run, around store_result                           (anthropic_extractor.py:237)
+  C :26  at 8-9 three sends per paper, waits [2, 4, 2, 4], failed 2, manifest `completed`; at 10-11 failed 2, run_calls 2, manifest `completed`.
+  C :198  calls = conn.execute("SELECT COUNT(*) FROM run_calls").fetchone()[0]
+  C :199  end = conn.execute("SELECT end_status, end_reason FROM run_manifests ORDER BY run_id DESC LIMIT 1").fetchone()
+### tests/test_u28_cloud_gate_and_boundary.py  sets AB  class: (n) unless the selected run is red
+  A :7  `scripts/run_cloud_extraction.run_arm` calls it, which registers and pins the arm, its run_id set on the instance as the runner sets it;
+  B :8  `store_result` called on the OpenAI transport with only `CloudExtractorBase.__init__` run and `_create` faked (U29, R800(g); no SDK
+  B :13  (i)   D — the cloud gate (`CloudExtractorBase.run_distribution_check`) skips by the arm's live-claim population, a failed paper recorded,
+  B :31  from engine.cloud.base import CloudExtractorBase
+  B :32  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :61  class _ProviderInstance(OpenAIExtractor):
+  B :63  `CloudExtractorBase.__init__` run (no SDK client) and its provider seam, `_create`, answering one response in the SDK's shape."""
+  B :66  CloudExtractorBase.__init__(self, db_path, spec_path, arm_name=arm_name)
+  B :118  base.send(pid, "prompt text")  # U29, R800(g): the instance's own send keeps the chain
+  B … 1 more
+### tests/test_u29_cloud_call_record.py  sets ABC  class: (n) unless the selected run is red
+  A :6  `scripts/run_cloud_extraction.run_arm` opens it, its run_id set on the instance as the runner sets it. Each instance is the real transport
+  B :7  class with only `CloudExtractorBase.__init__` run (no SDK client) and its one provider seam, `_create`, replaced: it raises the exception
+  B :40  from engine.cloud.anthropic_extractor import AnthropicExtractor
+  B :41  from engine.cloud.base import CloudExtractorBase
+  B :42  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :94  CloudExtractorBase.__init__(self, db_path, spec_path, arm_name=arm_name)
+  B :104  TRANSPORT = {"openai": _transport(OpenAIExtractor), "anthropic": _transport(AnthropicExtractor)}
+  B :174  i.extract_paper(pids[0], text)
+  B :207  i.extract_paper(pids[1], i.load_parsed_text(pids[1]))
+  B … 9 more
+  C :18  (4) after a raise, then a success and a store, every hash in the stored claims' chain has a run_calls row.
+  C :155  return conn.execute("SELECT request_hash, response_digest, outcome, outcome_detail FROM run_calls ORDER BY call_id").fetchall()
+  C :166  """(1), the entry's test (C24, Wave 2 row 28; R800(b)): inside an open run, a provider call that raises leaves one run_calls row,
+  C :236  def test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row(world, provider):
+  C :238  context_chain names a run_calls row."""
+  C :255  recorded = Counter(h for (h,) in conn.execute("SELECT request_hash FROM run_calls"))
+### tests/test_u40_cloud_claim_events.py  sets ABC  class: (n) unless the selected run is red
+  A :7  `scripts/run_cloud_extraction.run_arm` opens it, which registers and pins the arm, and its run_id set on the instance as the runner sets
+  B :8  it. The instance is the OpenAI transport with its constructor's client step skipped (`CloudExtractorBase.__init__` only) and its one
+  B :37  from engine.cloud.base import CloudExtractorBase
+  B :38  from engine.cloud.openai_extractor import OpenAIExtractor
+  B :65  class _FakeTransport(OpenAIExtractor):
+  B :69  CloudExtractorBase.__init__(self, db_path, spec_path, arm_name=arm_name)
+  B :128  result = inst.extract_paper(pid, text)
+  B :134  return inst.store_result(paper_id=pid, arm=inst.arm_name, model_string=inst.model_string,
+  B :223  result = inst.extract_paper(pid, "Paper text the instance did not load.")
+  C :146  "cloud_evidence_spans": conn.execute(
+  C :147  f"SELECT COUNT(*) FROM cloud_evidence_spans s JOIN cloud_extractions e ON e.id = s.cloud_extraction_id "
+  C :243  assert before == {"cloud_extractions": 0, "cloud_evidence_spans": 0, "field_events": 0, "claim_inputs": 0}
+  C :247  """(4), R798(d)(iii): for a stored paper, the cloud_evidence_spans rows and the arm's asserted claims hold the same field and value,
+  C :256  "SELECT s.field_name, s.value, s.source_snippet FROM cloud_evidence_spans s JOIN cloud_extractions e "
+  C :295  assert not conn.in_transaction

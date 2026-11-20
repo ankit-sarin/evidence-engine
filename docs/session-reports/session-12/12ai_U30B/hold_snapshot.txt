@@ -1,0 +1,6 @@
+2026-11-20T21:23:20Z
+NRestarts=0
+ExecMainStartTimestamp=Mon 2026-11-16 00:06:51 UTC
+-- concurrent jobs (ffmpeg / nvenc / surgical-cv / uvicorn / pytest):
+ 498334 Thu Nov 19 22:37:52 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+ 21:23:20 up 33 days, 22:19,  3 users,  load average: 0.94, 0.79, 0.43

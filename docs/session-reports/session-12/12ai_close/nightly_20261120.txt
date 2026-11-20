@@ -1,0 +1,17 @@
+-- lines
+12:collecting ... collected 3611 items / 17 deselected / 3594 selected
+6327:==== 3593 passed, 17 deselected, 1 xfailed, 2 warnings in 959.73s (0:15:59) ====
+6329:pytest exit code: 0
+last line: pytest exit code: 0
+durations: 2705 lines, 285758 B
+-- journal ollama 09:00–09:25
+-- No entries --
+-- the HEAD it ran on (read at 12ai-CLOSE): log Run line; reflog: HEAD@ last move before the run, and the first after it
+Run: 2026-11-20 09:00:01 UTC
+03abfaf HEAD@{2026-11-20 06:09:40 +0000}: commit: docs(session-reports): 12ai-U41B — the build's evidence: the parent acceptance run, the census, the gate, the pins, the key-set read
+next move: b998dfb HEAD@{2026-11-20 21:12:54 +0000}: commit: docs(plan): 12ai-U30B item 0 — R820 as Block 218; INT-ai12-1 CLOSED with its note; the note on INT-i12-71; the dated units line; the brief file
+so the 2026-11-20 09:00:01 UTC run read 03abfaf's tree; its engine tree equals 339370d's (git diff --stat 339370d 03abfaf -- engine tests scripts analysis review_specs: (empty))
+-- lock
+2026-07-27 23:22:08.906609268 +0000 /home/ankitsarin/.ollama_experiment.lock
+-- set against the gate of its tree, docs/session-reports/session-12/12ai_U41B/gate_u41b: 'collected 3611 items / 17 deselected / 3594 selected', '==== 3593 passed, 17 deselected, 1 xfailed, 2 warnings ====', 'pytest exit code: 0' last; ids against its collected_ids.txt (3594)
+-- match: collection True; summary True; exit-last True; durations True; journal-empty True; ids True; tree True

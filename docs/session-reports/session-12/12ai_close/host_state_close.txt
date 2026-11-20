@@ -1,0 +1,76 @@
+# host state for the 12ai closeout, 2026-11-20T23:03:48Z (R657(d), R663(a)); no closeout gate (R824(d))
+uname -r: 6.17.0-1032-nvidia
+python: Python 3.12.3
+libsqlite3-0: ii libsqlite3-0:arm64 3.45.1-1ubuntu2.8 arm64 SQLite 3 shared library
+nvidia driver: 580.173.02
+ollama: ollama version is 0.21.0
+NRestarts=0
+ActiveEnterTimestamp=Mon 2026-11-16 00:06:51 UTC
+# readings: boot id abf99132-fd8b-41f9-b9fd-62241e40110c
+# earlyoom: active, argv: /usr/bin/earlyoom -r 3600 -m 6 -s 100,100 --avoid ^(sshd|tailscaled|cloudflared|systemd|systemd-journal|NetworkManager|Xorg|gnome-shell|gdm.*)$ --prefer ^ollama$
+# vm.min_free_kbytes = 1048576; ollama oom_score_adj 0
+# MemAvailable: MemAvailable:   111356964 kB
+# earlyoom kill lines this boot ("sending SIG… to process"): 0
+# kernel NV_ERR_NO_MEMORY lines this boot: 55
+#   2026-10-18T22:14:28+00:00
+#   2026-10-19T01:28:24+00:00
+#   2026-10-19T07:02:57+00:00
+#   2026-10-19T07:03:31+00:00
+#   2026-10-20T07:03:35+00:00
+#   2026-10-20T07:04:05+00:00
+#   2026-10-21T07:00:03+00:00
+#   2026-10-21T07:02:34+00:00
+#   2026-10-21T07:02:55+00:00
+#   2026-10-21T07:03:24+00:00
+#   2026-10-22T07:04:43+00:00
+#   2026-10-23T04:56:08+00:00
+#   2026-10-23T04:56:09+00:00
+#   2026-10-23T07:03:08+00:00
+#   2026-10-23T07:03:30+00:00
+#   2026-10-25T07:03:49+00:00
+#   2026-10-28T07:04:06+00:00
+#   2026-10-29T07:03:38+00:00
+#   2026-10-31T07:02:52+00:00
+#   2026-10-31T07:02:52+00:00
+#   2026-10-31T07:03:00+00:00
+#   2026-10-31T07:03:43+00:00
+#   2026-11-01T07:00:04+00:00
+#   2026-11-01T07:03:40+00:00
+#   2026-11-01T07:04:02+00:00
+#   2026-11-01T07:05:22+00:00
+#   2026-11-02T07:00:03+00:00
+#   2026-11-03T07:03:20+00:00
+#   2026-11-05T07:03:13+00:00
+#   2026-11-08T07:03:07+00:00
+#   2026-11-08T07:03:51+00:00
+#   2026-11-11T07:03:16+00:00
+#   2026-11-11T07:04:00+00:00
+#   2026-11-13T07:02:39+00:00
+#   2026-11-14T07:01:44+00:00
+#   2026-11-14T07:03:17+00:00
+#   2026-11-14T07:04:59+00:00
+#   2026-11-15T07:00:04+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:00:07+00:00
+#   2026-11-15T07:02:44+00:00
+#   2026-11-15T07:03:18+00:00
+#   2026-11-15T07:03:18+00:00
+#   2026-11-15T07:03:19+00:00
+#   2026-11-15T07:03:19+00:00
+#   2026-11-15T07:03:19+00:00
+# readings (R808(e)): user manager degraded; failed user units: run-u134.scope; update-notifier-crash.service
+# readings: gate-* user units loaded: 0
+# readings: Linger yes
+# readings (12ai): ollama.service ExecMainStartTimestamp=Mon 2026-11-16 00:06:51 UTC; MainPID=3633749; NRestarts=0; RestartUSec=10s; OLLAMA_KEEP_ALIVE=30m (no other environment value)
+# readings: health job crontab line: 0 7 * * * /bin/bash /home/ankitsarin/scripts/ollama_health_check.sh >> /home/ankitsarin/logs/ollama_health_cron.log 2>&1
+# readings: health job script /home/ankitsarin/projects/dgx-infra/scripts/ollama_health_check.sh sha256 42c11f18ba8d3411b79196cc7c39c893ed67331669fc9cc7fa1ae058cd7de50b
+# not read by this lane: whether the sudoers grant for restarting Ollama exists (no sudo; R821(e) records the dgx-infra lane's removal, that lane's statement)

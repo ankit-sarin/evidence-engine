@@ -1,0 +1,14 @@
+# temp root at the 12ai closeout, 2026-11-20T23:04:22Z (R647(c)); a reading, nothing emptied
+total 548
+drwx------    5 ankitsarin ankitsarin   4096 2026-11-20 21:39:43.789183287 +0000 .
+drwxrwxrwt  602 root       root        81920 2026-11-20 23:04:06.754668434 +0000 ..
+drwx------  474 ankitsarin ankitsarin  57344 2026-11-20 21:22:22.017973091 +0000 pytest-1179
+drwx------   31 ankitsarin ankitsarin   4096 2026-11-20 21:22:53.736040524 +0000 pytest-1180
+drwx------ 3610 ankitsarin ankitsarin 401408 2026-11-20 21:39:43.790183292 +0000 pytest-1181
+lrwxrwxrwx    1 ankitsarin ankitsarin     37 2026-11-20 21:23:30.921119395 +0000 pytest-current -> /tmp/pytest-of-ankitsarin/pytest-1181
+173446949	/tmp/pytest-of-ankitsarin/pytest-1179
+6461058	/tmp/pytest-of-ankitsarin/pytest-1180
+1448589452	/tmp/pytest-of-ankitsarin/pytest-1181
+37	/tmp/pytest-of-ankitsarin/pytest-current
+0	/tmp/pytest-of-ankitsarin
+1628497496	/tmp/pytest-of-ankitsarin   (du -sb of the root alone, read 2026-11-20T23:04:35Z)

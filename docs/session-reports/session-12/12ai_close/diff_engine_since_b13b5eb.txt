@@ -1,0 +1,20 @@
+# git diff --stat b13b5eb HEAD -- engine tests scripts analysis review_specs, at 2026-11-20T23:03:18Z, HEAD 45980ced45fc58a36107d16ad4c6ea9627946ae2
+ analysis/eval/elicit01/runner.py        |   6 +-
+ analysis/eval/run_capture01.py          |   6 +-
+ engine/acquisition/pdf_quality_check.py |  27 ++
+ engine/agents/extractor.py              |  12 +-
+ engine/cloud/base.py                    |  21 +-
+ engine/core/review_spec.py              |   6 +-
+ engine/core/run_manifest.py             |  32 +-
+ engine/utils/ollama_client.py           |  50 ++-
+ scripts/run_cloud_extraction.py         |  48 ++-
+ scripts/run_pipeline.py                 |  54 +++-
+ tests/test_failed_close_reason.py       |   8 +-
+ tests/test_ollama_client.py             | 144 +++++----
+ tests/test_restart_ollama_guard.py      |   4 +-
+ tests/test_restart_recovery_guard.py    |  27 +-
+ tests/test_selection_bound.py           |   3 +-
+ tests/test_u21_no_overlap.py            |  58 +++-
+ tests/test_u30_cloud_interrupt.py       | 380 +++++++++++++++++++++++
+ tests/test_u41_restart_opt_in.py        | 517 ++++++++++++++++++++++++++++++++
+ 18 files changed, 1282 insertions(+), 121 deletions(-)

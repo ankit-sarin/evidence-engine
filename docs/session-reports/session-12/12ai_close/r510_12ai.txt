@@ -1,0 +1,5 @@
+# R510 for session 12ai: six-cell INT- rows at b13b5eb (HEAD at the 12ai open, the 12ah closeout) and at 45980ce (12ai-CLOSE item 0)
+b13b5eb: 213; 45980ce: 215; rows in 2 ['INT-ai12-1', 'INT-ai12-2']; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first token of the Owning-package cell compared, row by row)
+the rows in: INT-ai12-1 class 2 package P1; INT-ai12-2 class 2 package P4
+method: lines starting '| INT-' with six ' | '-separated cells, as 12ah_close/r510_12ah.txt's method line

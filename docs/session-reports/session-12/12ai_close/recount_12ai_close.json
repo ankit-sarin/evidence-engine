@@ -1,0 +1,124 @@
+{
+ "baseline_12af": {
+  "class_1": 94,
+  "class_2": 57,
+  "class_3": 136,
+  "rows": 287,
+  "without_class": 0
+ },
+ "baseline_json_sha256": "3657ce2f219c9fc130d5248295e99071855245d87dc2b7ab6d80e9b5c16d15a5",
+ "by_package_and_class": {
+  "whole_list": {
+   "P1": {
+    "class_1": 25,
+    "class_2": 26,
+    "class_3": 12,
+    "rows": 63
+   },
+   "P2": {
+    "class_1": 12,
+    "class_2": 7,
+    "class_3": 1,
+    "rows": 20
+   },
+   "P3": {
+    "class_1": 10,
+    "class_2": 2,
+    "class_3": 2,
+    "rows": 14
+   },
+   "P4": {
+    "class_1": 24,
+    "class_2": 11,
+    "class_3": 0,
+    "rows": 35
+   },
+   "P5": {
+    "class_1": 15,
+    "class_2": 9,
+    "class_3": 0,
+    "rows": 24
+   },
+   "P6": {
+    "class_1": 8,
+    "class_2": 3,
+    "class_3": 1,
+    "rows": 12
+   },
+   "P7": {
+    "class_1": 0,
+    "class_2": 1,
+    "class_3": 120,
+    "rows": 121
+   }
+  }
+ },
+ "class_moves": [],
+ "closed_this_session_still_counted": [
+  "INT-ai12-1",
+  "INT-i12-71",
+  "INT-j12-51"
+ ],
+ "expected": {
+  "P1_rows": 63,
+  "P4_rows": 35,
+  "P5_rows": 24,
+  "P6_rows": 12,
+  "P7_rows": 121,
+  "class_1": 94,
+  "class_2": 59,
+  "class_3": 136,
+  "dated_done": 35,
+  "dated_units": 39,
+  "fix_units": 35,
+  "rows": 289,
+  "rows_opened": [
+   "INT-ai12-1",
+   "INT-ai12-2"
+  ],
+  "without_class": 0
+ },
+ "expected_holds": true,
+ "fix_units": 35,
+ "fix_units_dated_lines": {
+  "done": 35,
+  "units": 39
+ },
+ "fix_units_literal_12w": {
+  "done": 19,
+  "units": 37
+ },
+ "now": {
+  "class_1": 94,
+  "class_2": 59,
+  "class_3": 136,
+  "rows": 289,
+  "without_class": 0
+ },
+ "r510_session_12ai": {
+  "class_moves": 0,
+  "rows_in": 2,
+  "rows_in_ids": [
+   "INT-ai12-1",
+   "INT-ai12-2"
+  ],
+  "rows_out": 0
+ },
+ "rows_opened": {
+  "count": 2,
+  "rows": [
+   {
+    "class": "2",
+    "id": "INT-ai12-1",
+    "package": "P1",
+    "ruling": "R819(b)"
+   },
+   {
+    "class": "2",
+    "id": "INT-ai12-2",
+    "package": "P4",
+    "ruling": "R819(i)"
+   }
+  ]
+ }
+}

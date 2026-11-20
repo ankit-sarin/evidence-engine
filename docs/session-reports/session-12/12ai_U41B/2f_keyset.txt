@@ -1,0 +1,5 @@
+# parent (edits stashed):
+default run manifest keys: ['cloud_arms', 'codebook', 'engine_state', 'git', 'host', 'libraries', 'lineage_check', 'ollama_environment', 'ollama_host', 'payload_description', 'pins', 'review_id', 'run_kind', 'run_uid', 'spec_hash', 'stages', 'started_at']
+# after the edit:
+default run manifest keys: ['cloud_arms', 'codebook', 'engine_state', 'git', 'host', 'libraries', 'lineage_check', 'ollama_environment', 'ollama_host', 'payload_description', 'pins', 'review_id', 'run_kind', 'run_uid', 'spec_hash', 'stages', 'started_at']
+EQUAL

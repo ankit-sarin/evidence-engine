@@ -1,0 +1,352 @@
+== set A: 34 files
+== set B: 36 files
+== set C: 6 files
+== set D: 15 files
+
+### tests/_event_store_fixture.py  sets B  class: (n) unless the selected run is red
+  B :112  "host, started_at, manifest_json, manifest_sha256) "
+  B :371  handle = rm.open_run(
+### tests/_lock_census.py  sets A  class: (n) unless the selected run is red
+  A :43  ("engine.utils.ollama_client", "_restart_ollama_and_retry"): "last-resort Ollama restart",
+  A :44  ("engine.agents.extractor", "restart_ollama"): "proactive Ollama restart",
+### tests/conftest.py  sets A  class: (n) unless the selected run is red
+  A :5  last-resort recovery fired it ran a real `sudo systemctl restart ollama`. A
+  A :24  manager (`systemctl`, `service`, `sudo`, `shutdown`, `reboot`, `init`,
+  A :26  flock holders in `test_ollama_lock.py` and `test_restart_ollama_guard.py`
+  A :30  detail. `_restart_ollama_and_retry` wraps its restart in `except Exception`
+  A :63  # `/usr/bin/systemctl` and `systemctl` are both caught.
+  A :65  "systemctl", "service", "sudo", "doas", "pkexec",
+  A :85  Handles both the list form (`["sudo", "systemctl", ...]`) and the string
+  A :124  f"Tests must never touch a system service — a real `systemctl restart "
+### tests/migrations/test_022_run_kinds_and_audit_tables.py  sets B  class: (n) unless the selected run is red
+  B :76  assert "'import'" in manifests_sql
+  B :77  assert "'aborted'" in manifests_sql
+  B :78  assert "end_reason" in manifests_sql
+  B :200  hang a claim/verdict/call off of — not exercising open_run() itself."""
+  B :204  "library_versions_json, host, started_at, manifest_json, manifest_sha256) "
+  B :229  """R214: open_run(kind='import', stages=()) — the review_session precedent,
+  B :241  handle = rm.open_run(db._conn, spec, kind="import", stages=(), codebook=codebook,
+### tests/test_arm_pinned_at_extract.py  sets B  class: (n) unless the selected run is red
+  B :171  return rm.open_run(db._conn, spec, kind="extraction", codebook=cb, git=CLEAN,
+### tests/test_citation_record.py  sets ABD  class: (n) unless the selected run is red
+  A :171  restart_every=0, run_id=handle.run_id)
+  B :165  handle = rm.open_run(
+  D :171  restart_every=0, run_id=handle.run_id)
+### tests/test_cloud_extraction.py  sets B  class: (n) unless the selected run is red
+  B :152  `scripts/run_cloud_extraction.run_arm` opens it — `rm.open_run(…, cloud_arms=[arm])`
+  B :169  handle = rm.open_run(conn, load_review_spec(spec_copy), kind="extraction", stages=(),
+### tests/test_codebook_review_at_open.py  sets B  class: (n) unless the selected run is red
+  B :80  return rm.open_run(db._conn, spec, kind="extraction",
+### tests/test_cut_over.py  sets AD  class: (n) unless the selected run is red
+  A :108  monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+  A :161  stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  A :184  E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  A :202  stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  A :244  stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id,
+  A :269  E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  D :161  stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  D :184  E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  D :202  stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+  D :244  stats = E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id,
+  D :269  E.run_extraction(db, spec, "flip", restart_every=0, run_id=run_id)
+### tests/test_duplicate_on_pass1_attempt_2.py  sets AD  class: (n) unless the selected run is red
+  A :116  stats = E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+  A :217  E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+  A :238  E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+  D :116  stats = E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+  D :217  E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+  D :238  E.run_extraction(db, elicited, "dup", experiment_lock=False, restart_every=0,
+### tests/test_effective_config.py  sets C  class: (n) unless the selected run is red
+  C :160  "engine/parsers/pdf_parser.py", "engine/acquisition/pdf_quality_check.py",
+### tests/test_elicitation_sentinel.py  sets B  class: (n) unless the selected run is red
+  B :96  rm.open_run(db._conn, elicited, kind="extraction",
+### tests/test_engine_state.py  sets B  class: (n) unless the selected run is red
+  B :50  return rm.open_run(db._conn, spec, kind="extraction", stages=EXTRACTION, codebook=cb,
+  B :55  row = db._conn.execute("SELECT engine_state, manifest_json FROM run_manifests "
+### tests/test_event_writer_refusals.py  sets B  class: (n) unless the selected run is red
+  B :360  "started_at, manifest_json, manifest_sha256) VALUES ('rs', 'r', 'review_session', "
+### tests/test_extraction_run_link.py  sets ABD  class: (n) unless the selected run is red
+  A :109  restart_every=0, run_id=run_id, **kw)
+  B :148  "host, started_at, manifest_json, manifest_sha256) SELECT 'mismatch', "
+  B :150  "codebook_sha256, library_versions_json, host, started_at, manifest_json, "
+  B :198  handle = rm.open_run(
+  D :109  restart_every=0, run_id=run_id, **kw)
+### tests/test_extraction_signatures.py  sets C  class: (n) unless the selected run is red
+  C :21  from engine.acquisition import pdf_quality_check as QC
+  C :40  patch("engine.acquisition.pdf_quality_check.ollama_chat", _no_model_call):
+### tests/test_extractor.py  sets AD  class: (n) unless the selected run is red
+  A :20  restart_ollama,
+  A :336  # out to `systemctl show ollama` and loads deepseek-r1:32b against the live
+  A :464  @patch("engine.agents.extractor.restart_ollama")
+  A :476  """Proactive restart fires after restart_every papers are processed."""
+  A :481  run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
+  A :483  # 5 papers processed, restart_every=3 → should fire once (after paper 3)
+  A :488  @patch("engine.agents.extractor.restart_ollama")
+  A :492  def test_restart_disabled_when_zero(
+  A :495  """restart_every=0 disables proactive restarts entirely."""
+  A :499  run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+  A :504  @patch("engine.agents.extractor.restart_ollama", side_effect=RuntimeError("Failed to restart Ollama: systemctl failed"))
+  A :515  stats = run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
+  A … 9 more
+  D :476  """Proactive restart fires after restart_every papers are processed."""
+  D :481  run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
+  D :483  # 5 papers processed, restart_every=3 → should fire once (after paper 3)
+  D :495  """restart_every=0 disables proactive restarts entirely."""
+  D :499  run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+  D :515  stats = run_extraction(db, spec, "test_review", restart_every=3, run_id=self.run_id)
+  D :547  stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+  D :592  stats = run_extraction(db, spec, "test_review", restart_every=0, run_id=self.run_id)
+  D :693  stats = run_extraction(db, spec, "test_review", restart_every=1, run_id=self.run_id)
+### tests/test_floor_and_stored_attempt.py  sets ABD  class: (n) unless the selected run is red
+  A :100  restart_every=0, run_id=run_id)
+  B :441  handle = rm.open_run(conn, spec, kind="extraction",
+  D :100  restart_every=0, run_id=run_id)
+### tests/test_ft_adjudication_import.py  sets B  class: (n) unless the selected run is red
+  B :96  "SELECT run_id, run_kind, end_status, end_reason, ended_at, manifest_json "
+  B :122  body = json.loads(_manifests(db)[0]["manifest_json"])
+  B :328  h = rm.open_run(db._conn, spec, kind="import", stages=(), codebook=cb, git=CLEAN,
+  B :330  return json.loads(_one(db, "SELECT manifest_json FROM run_manifests WHERE run_id = ?",
+  B :354  run_id = rm.open_run(db._conn, spec, kind="screening",
+### tests/test_ft_screening.py  sets B  class: (n) unless the selected run is red
+  B :95  return rm.open_run(db._conn, spec, kind="screening",
+### tests/test_import_extraction_entry.py  sets B  class: (n) unless the selected run is red
+  B :106  "SELECT run_id, run_kind, end_status, end_reason, manifest_json "
+  B :348  inputs = json.loads(_manifests(db)[0]["manifest_json"])["inputs"]
+  B :405  "m.manifest_json FROM parsed_text_refs r "
+  B :412  assert r["parsed_text_sha256"] in json.loads(r["manifest_json"])["inputs"].values()
+### tests/test_import_screening_entry.py  sets B  class: (n) unless the selected run is red
+  B :86  "SELECT run_id, run_kind, end_status, end_reason, manifest_json "
+  B :115  inputs = json.loads(m[0]["manifest_json"])["inputs"]
+### tests/test_lock_census.py  sets A  class: (n) unless the selected run is red
+  A :41  _CLIENT = "def ollama_chat(**kw):\n    return _restart_ollama_and_retry()\n\ndef _restart_ollama_and_retry():\n    pass\n"
+  A :43  _EXTRACTOR = "def restart_ollama():\n    pass\n"
+  A :88  extractor.restart_ollama()
+  A :126  assert "engine.agents.extractor::restart_ollama" in failures[0]
+  A :168  if "systemctl" in words and "restart" in words:
+  A :174  and "systemctl" in a.value and "restart" in a.value:
+  A :191  assert set(SINKS) >= {("engine.agents.extractor", "restart_ollama"),
+  A :192  ("engine.utils.ollama_client", "_restart_ollama_and_retry")}
+  A :197  "subprocess.run(['sudo', 'systemctl', 'restart', 'ollama'])\n"
+  A :198  "os.system('sudo systemctl restart ollama')\n")
+### tests/test_ollama_client.py  sets A  class: (c) read-timeout -> restart tests assume armed by default; argv pin without -n (Q6)
+  A :14  _restart_ollama_and_retry,
+  A :62  raise httpx.ReadTimeout("read timed out")
+  A :91  raise httpx.ReadTimeout("read timed out")
+  A :152  retries drops into `_restart_ollama_and_retry`, and without this patch
+  A :153  the assertion below was being satisfied by a **real** `sudo systemctl
+  A :160  raise httpx.ReadTimeout("read timed out")
+  A :212  """After a request ends by the read timeout, should attempt sudo systemctl restart ollama."""
+  A :219  raise httpx.ReadTimeout("read timed out")
+  A :236  assert restart_args == ["sudo", "systemctl", "restart", "ollama"]
+  A :245  # Test _restart_ollama_and_retry directly to avoid timing complexity
+  A :249  result = _restart_ollama_and_retry(
+  A :266  raise httpx.ReadTimeout("read timed out")
+  A … 9 more
+### tests/test_ollama_input_fit.py  sets A  class: (n) unless the selected run is red
+  A :58  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+### tests/test_ollama_preflight.py  sets A  class: (n) unless the selected run is red
+  A :204  def test_get_ollama_env_parses_systemctl_output(self):
+  A :215  side_effect=FileNotFoundError("no systemctl")):
+  A :337  # `_get_ollama_env` shells out to `systemctl show ollama`, which the
+### tests/test_parsed_text_resolver.py  sets AD  class: (n) unless the selected run is red
+  A :135  run_extraction(db, spec, "resolver", experiment_lock=False, restart_every=0,
+  D :135  run_extraction(db, spec, "resolver", experiment_lock=False, restart_every=0,
+### tests/test_pdf_quality_import.py  sets C  class: (n) unless the selected run is red
+  C :173  "SELECT pdf_quality_check_status FROM papers WHERE id = ?",
+  C :176  assert row["pdf_quality_check_status"] == "HUMAN_CONFIRMED"
+  C :220  "SELECT status, pdf_quality_check_status FROM papers WHERE id = ?",
+  C :224  assert row["pdf_quality_check_status"] is None
+  C :258  "UPDATE papers SET pdf_quality_check_status = 'HUMAN_CONFIRMED' WHERE id = ?",
+  C :285  "SELECT status, pdf_quality_check_status FROM papers WHERE id = ?",
+  C :289  assert row["pdf_quality_check_status"] is None
+  C :302  "SELECT pdf_quality_check_status FROM papers WHERE id = ?",
+  C :305  assert row["pdf_quality_check_status"] is None
+  C :382  BEFORE UPDATE OF pdf_quality_check_status ON papers
+  C :383  WHEN NEW.pdf_quality_check_status = 'HUMAN_CONFIRMED'
+  C :405  "SELECT pdf_quality_check_status FROM papers WHERE id = ?",
+  C … 1 more
+### tests/test_pin_records.py  sets B  class: (n) unless the selected run is red
+  B :66  return rm.open_run(db._conn, spec, kind="extraction",
+### tests/test_presented_context.py  sets B  class: (n) unless the selected run is red
+  B :75  h = rm.open_run(db._conn, spec, kind=kw.pop("kind", "extraction"), codebook=cb, **kw)
+### tests/test_qualgap01.py  sets A  class: (n) unless the selected run is red
+  A :30  monkeypatch.delenv(R.oc.RESTART_OPT_OUT_ENV, raising=False)
+  A :101  assert R.oc.restart_disabled() is True
+  A :102  with pytest.raises(RuntimeError, match=R.oc.RESTART_OPT_OUT_ENV):
+  A :103  R.oc._restart_ollama_and_retry(
+### tests/test_request_capture.py  sets C  class: (n) unless the selected run is red
+  C :302  from engine.acquisition.pdf_quality_check import _classify_page
+### tests/test_restart_ollama_guard.py  sets AD  class: (c) argv pins without -n, if any; proactive gates otherwise (n) (Q6; decided by the run)
+  A :1  """restart_ollama() must stand down for a FOREIGN experiment lock only (OPS-GUARD-01 C).
+  A :5  fragmentation. If restart_ollama() skipped whenever the lock was held at all, it
+  A :8  The explicit opt-out (`EVIDENCE_ENGINE_NO_OLLAMA_RESTART`, N17) is checked before
+  A :34  monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+  A :65  extractor.restart_ollama(reason="proactive after 25 papers", papers_done=25)
+  A :66  # the whole point: no systemctl, no HTTP poll
+  A :83  extractor.restart_ollama(reason="proactive", papers_done=25)
+  A :85  assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+  A :92  extractor.restart_ollama(reason="proactive", papers_done=25)
+  A :102  assert extractor.restart_ollama(reason="proactive", papers_done=25) is False  # U19: a skip says so
+  A :112  def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
+  A :126  def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
+  A … 10 more
+  D :112  def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
+  D :126  def fake_inner(db, spec, review_name, restart_every, *, run_id, selection=None):
+### tests/test_restart_recovery_guard.py  sets A  class: (c) 'proceeds' and unset-leaves-armed tests assume armed by default (Q6)
+  A :1  """`_restart_ollama_and_retry` must respect the experiment lock and the opt-out.
+  A :3  OPSFIX-01. `extractor.restart_ollama` has been flock-gated since OPS-GUARD-01,
+  A :5  same `sudo systemctl restart ollama` — was not. That is the class of bug that
+  A :32  monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+  A :72  return oc._restart_ollama_and_retry(**kwargs)
+  A :101  assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+  A :126  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+  A :128  with pytest.raises(RuntimeError, match=oc.RESTART_OPT_OUT_ENV):
+  A :135  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, value)
+  A :136  assert oc.restart_disabled() is True
+  A :141  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, value)
+  A :142  assert oc.restart_disabled() is False
+  A … 4 more
+### tests/test_review_paths.py  sets C  class: (n) unless the selected run is red
+  C :183  "engine/acquisition/pdf_quality_check.py",
+### tests/test_review_spec.py  sets C  class: (n) unless the selected run is red
+  C :148  (["pdf_quality_check"], "pdf_quality_check.bogus_key"),
+### tests/test_run_calls_outcomes.py  sets AB  class: (n) unless the selected run is red
+  A :25  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+  B :56  "library_versions_json, host, started_at, manifest_json, manifest_sha256) "
+### tests/test_run_fault_predicate.py  sets AD  class: (n) unless the selected run is red
+  A :102  pytest.param(lambda: httpx.ReadTimeout("read timed out"),
+  A :103  "model_call_failed", id="ReadTimeout"),
+  A :129  restart_every=0, run_id=run_id)
+  D :129  restart_every=0, run_id=run_id)
+### tests/test_run_interrupts.py  sets A  class: (n) unless the selected run is red
+  A :247  monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+### tests/test_run_manifest.py  sets B  class: (n) unless the selected run is red
+  B :66  return rm.open_run(db._conn, spec, kind=kw.pop("kind", "extraction"), codebook=cb, **kw)
+  B :211  assert json.loads(db._conn.execute("SELECT manifest_json FROM run_manifests WHERE run_id = ?",
+### tests/test_run_manifest_migration.py  sets B  class: (n) unless the selected run is red
+  B :65  manifest_json="{}", manifest_sha256="h")
+### tests/test_run_pipeline_starts.py  sets A  class: (n) unless the selected run is red
+  A :111  monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+  A :167  (`systemctl show`, the engine client's `ps`): the probe goes through `ollama_chat` and
+### tests/test_run_scoped_field_names.py  sets B  class: (n) unless the selected run is red
+  B :60  return rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+### tests/test_selection_bound.py  sets AB  class: (n) unless the selected run is red
+  A :121  monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+  B :75  def injected_open_run(monkeypatch):
+  B :133  "SELECT manifest_json FROM run_manifests WHERE run_id = ?", (run_id,)).fetchone()[0])
+  B :161  assert "selection_bound" not in _manifest(db, run_id)
+### tests/test_selection_refusals.py  sets AD  class: (n) unless the selected run is red
+  A :145  restart_every=0, run_id=run_id)
+  D :145  restart_every=0, run_id=run_id)
+### tests/test_service_call_fence.py  sets A  class: (n) unless the selected run is red
+  A :3  OPSFIX-01's acceptance gate was "a deliberate probe hitting systemctl fails
+  A :27  """`sudo systemctl restart ollama` — what every offline run used to do."""
+  A :28  with pytest.raises(ServiceCallBlocked, match="systemctl"):
+  A :29  subprocess.run(["sudo", "systemctl", "restart", "ollama"], check=False)
+  A :33  def test_bare_systemctl_is_blocked_without_sudo():
+  A :35  subprocess.run(["systemctl", "restart", "ollama"], check=False)
+  A :40  """The sudoers rule names /usr/bin/systemctl, so the path form must match too."""
+  A :42  subprocess.run(["/usr/bin/systemctl", "restart", "ollama"], check=False)
+  A :48  subprocess.run("sudo systemctl restart ollama", shell=True, check=False)
+  A :54  os.system("systemctl restart ollama")
+  A :61  getattr(subprocess, api)(["systemctl", "restart", "ollama"])
+  A :68  """`test_ollama_lock` and `test_restart_ollama_guard` spawn real helpers."""
+  A … 2 more
+### tests/test_text_refusal_at_selection.py  sets AD  class: (n) unless the selected run is red
+  A :95  restart_every=0, run_id=run_id)
+  D :95  restart_every=0, run_id=run_id)
+### tests/test_u17_cross_lineage.py  sets B  class: (n) unless the selected run is red
+  B :8  per declared stage in manifest_json, and no server-family key.
+  B :60  return rm.open_run(db._conn, spec, kind=kw.pop("kind", "extraction"), stages=stages,
+  B :70  "SELECT manifest_json FROM run_manifests WHERE run_id = ?", (run_id,)).fetchone()[0])
+### tests/test_u18_digest_per_call.py  sets B  class: (n) unless the selected run is red
+  B :121  return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  B :271  run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+### tests/test_u18_one_host.py  sets AB  class: (n) unless the selected run is red
+  A :76  monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+  A :85  E.restart_ollama(reason="u18", papers_done=0)                            # the restart poll
+  B :197  handle = rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+  B :200  raw, sha = review._conn.execute("SELECT manifest_json, manifest_sha256 FROM run_manifests "
+  B :208  def test_u18_a_non_loopback_host_is_refused_at_open_run(review, spec, monkeypatch):
+  B :212  rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+  B :221  def test_u18_a_rebound_client_at_a_fake_host_is_not_refused_at_open_run(review, spec, monkeypatch):
+  B :236  handle = rm.open_run(review._conn, spec, kind="extraction", stages=_stages(spec),
+### tests/test_u19_env_recheck.py  sets AB  class: (n) unless the selected run is red
+  A :6  The subprocess boundary is patched in every test: `systemctl show` answers from a
+  A :7  hand-typed `Environment=` line in the form `systemctl show ollama --property=Environment`
+  A :9  `test_restart_ollama_guard.py`'s T3 drives it; the manifests are opened as
+  A :49  """The subprocess boundary: answers `systemctl show ollama --property=Environment`
+  A :56  assert list(argv[:3]) == ["systemctl", "show", "ollama"], argv
+  A :88  monkeypatch.setattr(E, "restart_ollama", restart)
+  A :102  return [e for e in read_run_events(tmp_path) if e["kind"] == "ollama_env_after_restart"]
+  A :175  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+  A :177  assert E.restart_ollama(reason="proactive", papers_done=0) is False   # a skip says so
+  B :132  run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  B :164  raw, sha = db._conn.execute("SELECT manifest_json, manifest_sha256 FROM run_manifests "
+  B :191  run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+  B :194  body = json.loads(db._conn.execute("SELECT manifest_json FROM run_manifests "
+  B :235  body = json.loads(db._conn.execute("SELECT manifest_json FROM run_manifests "
+  B :243  """run_cloud_extraction's open is `open_run(kind="extraction", stages=(), cloud_arms=[arm],
+  B :250  run_id = rm.open_run(db._conn, spec, kind="extraction", stages=(), codebook=cb,
+  B :252  body = json.loads(db._conn.execute("SELECT manifest_json FROM run_manifests "
+### tests/test_u19_local_service.py  sets AB  class: (n) unless the selected run is red
+  A :7  (`_OLLAMA_HOST`); the subprocess boundary answers `systemctl show` from a hand-typed
+  A :30  # The §3.4 line (12z_U19A.md), as `systemctl show ollama --property=Environment` printed it.
+  A :53  def _systemctl(raw):
+  A :55  assert list(argv[:3]) == ["systemctl", "show", "ollama"], argv
+  A :89  monkeypatch.setattr(pf.subprocess, "run", _systemctl(line))
+  A :106  monkeypatch.setattr(pf.subprocess, "run", _systemctl(RAW))
+  B :61  def test_u19_a_loopback_host_on_another_port_is_refused_at_open_run(review, spec, monkeypatch):
+  B :67  rm.open_run(review._conn, spec, kind="extraction", stages=("extract_pass1",),
+  B :80  handle = rm.open_run(review._conn, spec, kind="extraction", stages=("extract_pass1",),
+### tests/test_u20_loaded_context.py  sets B  class: (n) unless the selected run is red
+  B :121  return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  B :227  run_id = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+### tests/test_u20_modelfile_num_ctx.py  sets A  class: (n) unless the selected run is red
+  A :68  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+### tests/test_u21_no_overlap.py  sets AB  class: (c) restart-reaching tests outside a run; the six-ending exact-set pin :279-282 (Q6)
+  A :89  raise httpx.ReadTimeout("read timed out")
+  A :92  raise httpx.ReadTimeout("read timed out")
+  A :102  monkeypatch.delenv(oc.RESTART_OPT_OUT_ENV, raising=False)
+  A :173  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+  A :250  row = [r for r in rows if r["kind"] == "ollama_env_after_restart"][-1]
+  A :262  (row,) = [r for r in rows if r["kind"] == "ollama_env_after_restart"]
+  A :280  assert rm.RUN_CALL_ENDING_DETAILS == (
+  A :298  monkeypatch.setenv(oc.RESTART_OPT_OUT_ENV, "1")
+  A :300  assert detail.startswith(rm.DETAIL_RESTART_REFUSED_OPT_OUT + ": TimeoutError: ")
+  A :307  assert detail.startswith(rm.DETAIL_RESTART_REFUSED_LOCK + ": TimeoutError: ")
+  A :314  assert detail.startswith(rm.DETAIL_RESTART_COMMAND_FAILED + ": TimeoutError: ")
+  A :320  assert detail.startswith(rm.DETAIL_POST_RESTART_FAILED + ": TimeoutError: ")
+  A … 1 more
+  B :160  return rm.open_run(db._conn, spec, kind="screening", stages=("audit",), codebook=cb,
+### tests/test_u24_preflight_spec.py  sets A  class: (n) unless the selected run is red
+  A :7  `systemctl show`, is replaced. No server, no database; the suite's fences stay on. Every captured
+### tests/test_u28_cloud_gate_and_boundary.py  sets B  class: (n) unless the selected run is red
+  B :6  `rm.git_state` patched clean; `rm.open_run(conn, spec, kind="extraction", stages=(), codebook=…, cloud_arms=[arm], …)` exactly as
+  B :106  handle = rm.open_run(db._conn, load_review_spec(spec_path), kind="extraction", stages=(), codebook=cbk,
+### tests/test_u29_cloud_call_record.py  sets B  class: (n) unless the selected run is red
+  B :5  `enabled_arms: []` names both cloud arms; `rm.git_state` patched clean; the cloud run opened by `rm.open_run(… cloud_arms=[both] …)` as
+  B :140  handle = rm.open_run(db._conn, load_review_spec(spec_path), kind="extraction", stages=(),
+### tests/test_u40_cloud_claim_events.py  sets B  class: (n) unless the selected run is red
+  B :6  patched clean; the cloud run opened by `rm.open_run(conn, spec, kind="extraction", stages=(), codebook=…, cloud_arms=[arm], …)` as
+  B :111  handle = rm.open_run(db._conn, load_review_spec(spec_path), kind="extraction", stages=(), codebook=cbk,
+### tests/test_undeclared_call.py  sets ABD  class: (n) unless the selected run is red
+  A :235  monkeypatch.setattr(E, "restart_ollama", lambda **kw: None)
+  A :239  E.run_extraction(db, other, "undeclared_loop", restart_every=0, run_id=run_id)
+  B :102  return rm.open_run(db._conn, spec, kind="screening", stages=stages, codebook=cb,
+  D :239  E.run_extraction(db, other, "undeclared_loop", restart_every=0, run_id=run_id)
+### tests/test_undeclared_override.py  sets B  class: (n) unless the selected run is red
+  B :65  return rm.open_run(db._conn, spec, kind="screening", stages=("vision_parse",),
+  B :148  h = rm.open_run(db._conn, spec, kind="screening",
+### tests/test_units_as_source_slices.py  sets ABD  class: (n) unless the selected run is red
+  A :252  restart_every=0, run_id=handle.run_id)
+  B :235  handle = rm.open_run(
+  D :252  restart_every=0, run_id=handle.run_id)
+### tests/test_unknown_field_name.py  sets B  class: (n) unless the selected run is red
+  B :56  h = rm.open_run(db._conn, spec, kind="extraction", stages=("extract_pass1",),
+### tests/test_value_divergence.py  sets AD  class: (n) unless the selected run is red
+  A :87  restart_every=0, run_id=run_id)
+  D :87  restart_every=0, run_id=run_id)
+### tests/test_write_boundary_guard.py  sets AD  class: (n) unless the selected run is red
+  A :91  restart_every=0, run_id=run_id)
+  D :91  restart_every=0, run_id=run_id)

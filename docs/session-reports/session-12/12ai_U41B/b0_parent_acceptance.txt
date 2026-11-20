@@ -1,0 +1,65 @@
+# 12ai-U41B 2c — tests/test_u41_restart_opt_in.py on the parent (the engine, script and analysis edits stashed; HEAD ee20dba, engine tree 483969d's), 2026-11-20T05:33:19Z
+# command: .venv/bin/python -m pytest tests/test_u41_restart_opt_in.py -p no:cacheprovider -q -rA --tb=line
+ERROR    pipeline:run_pipeline.py:214 Pipeline failed: stop after extract
+ERROR    engine.agents.extractor:extractor.py:1277 Proactive Ollama restart failed — continuing without restart. Monitor for instability.
+ERROR    engine.agents.extractor:extractor.py:1277 Proactive Ollama restart failed — continuing without restart. Monitor for instability.
+ERROR    engine.agents.extractor:extractor.py:1277 Proactive Ollama restart failed — continuing without restart. Monitor for instability.
+ERROR    engine.agents.extractor:extractor.py:1277 Proactive Ollama restart failed — continuing without restart. Monitor for instability.
+ERROR    engine.agents.extractor:extractor.py:1277 Proactive Ollama restart failed — continuing without restart. Monitor for instability.
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-001: FAILED — Ollama call timed out (EE-001)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-002: FAILED — Ollama call timed out (EE-002)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-003: FAILED — Ollama call timed out (EE-003)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-004: FAILED — Ollama call timed out (EE-004)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-005: FAILED — Ollama call timed out (EE-005)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-006: FAILED — Ollama call timed out (EE-006)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-007: FAILED — Ollama call timed out (EE-007)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-008: FAILED — Ollama call timed out (EE-008)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-009: FAILED — Ollama call timed out (EE-009)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-010: FAILED — Ollama call timed out (EE-010)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-001: FAILED — Failed to connect to Ollama
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-001: FAILED — run refused
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-001: FAILED — PDF has 0 pages: /tmp/pytest-of-ankitsarin/pytest-1161/test_10c_render_failures_do_no0/qc/EE-001.pdf
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-002: FAILED — PDF has 0 pages: /tmp/pytest-of-ankitsarin/pytest-1161/test_10c_render_failures_do_no0/qc/EE-002.pdf
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-003: FAILED — PDF has 0 pages: /tmp/pytest-of-ankitsarin/pytest-1161/test_10c_render_failures_do_no0/qc/EE-003.pdf
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-001: FAILED — Ollama call timed out (EE-001)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-003: FAILED — Ollama call timed out (EE-003)
+ERROR    engine.acquisition.pdf_quality_check:pdf_quality_check.py:255   EE-004: FAILED — Ollama call timed out (EE-004)
+PASSED tests/test_u41_restart_opt_in.py::test_4_the_opt_out_wins_over_a_run_that_asked
+PASSED tests/test_u41_restart_opt_in.py::test_10c_render_failures_do_not_stop_the_loop
+PASSED tests/test_u41_restart_opt_in.py::test_10d_a_success_resets_the_count
+FAILED tests/test_u41_restart_opt_in.py::test_1_inside_a_run_that_did_not_ask_a_read_timeout_runs_no_command
+FAILED tests/test_u41_restart_opt_in.py::test_2_outside_any_run_a_read_timeout_runs_no_command
+FAILED tests/test_u41_restart_opt_in.py::test_3_inside_a_run_that_asked_the_command_runs_once_with_dash_n
+FAILED tests/test_u41_restart_opt_in.py::test_11_a_thread_without_the_runs_context_is_not_enabled
+FAILED tests/test_u41_restart_opt_in.py::test_5_the_call_endings_are_the_six_then_restart_not_enabled
+FAILED tests/test_u41_restart_opt_in.py::test_6_run_pipeline_with_neither_flag_records_no_key_and_passes_zero
+FAILED tests/test_u41_restart_opt_in.py::test_6_run_pipeline_with_both_flags_records_the_key_and_passes_the_cadence
+FAILED tests/test_u41_restart_opt_in.py::test_6_run_pipeline_with_one_flag_records_the_other_member_off[flags0-key0]
+FAILED tests/test_u41_restart_opt_in.py::test_6_run_pipeline_with_one_flag_records_the_other_member_off[flags1-key1]
+FAILED tests/test_u41_restart_opt_in.py::test_6_the_cli_parses_both_flags_and_refuses_a_negative_cadence
+FAILED tests/test_u41_restart_opt_in.py::test_7_the_proactive_default_is_zero_in_the_engine_and_both_harnesses
+FAILED tests/test_u41_restart_opt_in.py::test_8_a_failing_proactive_restart_is_tried_every_restart_every_papers
+FAILED tests/test_u41_restart_opt_in.py::test_9_elicit01_continues_when_the_restart_fails
+FAILED tests/test_u41_restart_opt_in.py::test_9_capture01_continues_when_the_restart_fails
+FAILED tests/test_u41_restart_opt_in.py::test_10a_three_read_timeouts_in_a_row_stop_the_loop_and_exit_non_zero
+FAILED tests/test_u41_restart_opt_in.py::test_10b_a_run_fault_on_the_first_paper_stops_the_loop_after_one_call[refused_connection]
+FAILED tests/test_u41_restart_opt_in.py::test_10b_a_run_fault_on_the_first_paper_stops_the_loop_after_one_call[run_refused]
+# failure lines:
+tests/test_u41_restart_opt_in.py:134: Failed: DID NOT RAISE <class 'TimeoutError'>
+tests/test_u41_restart_opt_in.py:147: Failed: DID NOT RAISE <class 'TimeoutError'>
+tests/test_u41_restart_opt_in.py:161: AssertionError: assert ['sudo', 'sys...rt', 'ollama'] == ['sudo', '-n'...rt', 'ollama']
+/usr/lib/python3.12/unittest/mock.py:905: AssertionError: Expected 'run' to not have been called. Called 1 times.
+tests/test_u41_restart_opt_in.py:205: AssertionError: assert ('restart_ref...read_timeout') == ('restart_ref...timeout', ...)
+tests/test_u41_restart_opt_in.py:265: AssertionError: assert None == 0
+tests/test_u41_restart_opt_in.py:251: TypeError: run_pipeline() got an unexpected keyword argument 'restart_every'
+tests/test_u41_restart_opt_in.py:251: TypeError: run_pipeline() got an unexpected keyword argument 'restart_every'
+tests/test_u41_restart_opt_in.py:251: TypeError: run_pipeline() got an unexpected keyword argument 'restart_on_read_timeout'
+/usr/lib/python3.12/argparse.py:2664: SystemExit: 2
+tests/test_u41_restart_opt_in.py:333: assert 25 == 0
+tests/test_u41_restart_opt_in.py:358: AssertionError: attempts: 5
+/usr/lib/python3.12/unittest/mock.py:1193: RuntimeError: Failed to restart Ollama
+/usr/lib/python3.12/unittest/mock.py:1193: RuntimeError: Failed to restart Ollama
+tests/test_u41_restart_opt_in.py:488: assert (None is not None)
+tests/test_u41_restart_opt_in.py:500: AssertionError: assert ['EE-001', 'E...02', 'EE-003'] == ['EE-001']
+tests/test_u41_restart_opt_in.py:500: AssertionError: assert ['EE-001', 'E...02', 'EE-003'] == ['EE-001']
+17 failed, 3 passed in 9.18s

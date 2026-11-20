@@ -1,0 +1,55 @@
+2026-11-20T05:52:14Z
+NRestarts=0
+ExecMainStartTimestamp=Mon 2026-11-16 00:06:51 UTC
+-- concurrent jobs (ffmpeg / nvenc / surgical-cv / uvicorn / pytest):
+ 498334 Thu Nov 19 22:37:52 2026 /home/ankitsarin/projects/surgical-cv/.venv/bin/python3 /home/ankitsarin/projects/surgical-cv/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 7865
+ 856623 Fri Nov 20 05:52:13 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1795144259481-fcxeqh.sh 2>/dev/null || true && \builtin shopt -u extglob 2>/dev/null || true
+ 856627 Fri Nov 20 05:52:13 2026 /bin/bash -c source /home/ankitsarin/.claude/shell-snapshots/snapshot-bash-1795144259481-fcxeqh.sh 2>/dev/null || true && \builtin shopt -u extglob 2>/dev/null || true
+-- user units:
+  at-spi-dbus-bus.service                                          loaded active running Accessibility services bus
+  dbus.service                                                     loaded active running D-Bus User Message Bus
+  dconf.service                                                    loaded active running User preferences database
+  evolution-addressbook-factory.service                            loaded active running Evolution address book service
+  evolution-calendar-factory.service                               loaded active running Evolution calendar service
+  evolution-source-registry.service                                loaded active running Evolution source registry
+  filter-chain.service                                             loaded active running PipeWire filter chain daemon
+  gcr-ssh-agent.service                                            loaded active running GCR ssh-agent wrapper
+  gnome-keyring-daemon.service                                     loaded active running GNOME Keyring daemon
+  gnome-session-manager@ubuntu.service                             loaded active running GNOME Session Manager (session:
+  gnome-session-monitor.service                                    loaded active running Monitor Session leader for GNOM
+  gvfs-afc-volume-monitor.service                                  loaded active running Virtual filesystem service - Ap
+  gvfs-daemon.service                                              loaded active running Virtual filesystem service
+  gvfs-goa-volume-monitor.service                                  loaded active running Virtual filesystem service - GN
+  gvfs-gphoto2-volume-monitor.service                              loaded active running Virtual filesystem service - di
+  gvfs-metadata.service                                            loaded active running Virtual filesystem metadata ser
+  gvfs-mtp-volume-monitor.service                                  loaded active running Virtual filesystem service - Me
+  gvfs-udisks2-volume-monitor.service                              loaded active running Virtual filesystem service - di
+  org.freedesktop.IBus.session.GNOME.service                       loaded active running IBus Daemon for GNOME
+  org.gnome.SettingsDaemon.A11ySettings.service                    loaded active running GNOME accessibility service
+  org.gnome.SettingsDaemon.Color.service                           loaded active running GNOME color management service
+  org.gnome.SettingsDaemon.Datetime.service                        loaded active running GNOME date & time service
+  org.gnome.SettingsDaemon.Housekeeping.service                    loaded active running GNOME maintenance of expirable 
+  org.gnome.SettingsDaemon.Keyboard.service                        loaded active running GNOME keyboard configuration se
+  org.gnome.SettingsDaemon.MediaKeys.service                       loaded active running GNOME keyboard shortcuts servic
+  org.gnome.SettingsDaemon.Power.service                           loaded active running GNOME power management service
+  org.gnome.SettingsDaemon.PrintNotifications.service              loaded active running GNOME printer notifications ser
+  org.gnome.SettingsDaemon.Rfkill.service                          loaded active running GNOME RFKill support service
+  org.gnome.SettingsDaemon.ScreensaverProxy.service                loaded active running GNOME FreeDesktop screensaver s
+  org.gnome.SettingsDaemon.Sharing.service                         loaded active running GNOME file sharing service
+  org.gnome.SettingsDaemon.Smartcard.service                       loaded active running GNOME smartcard service
+  org.gnome.SettingsDaemon.Sound.service                           loaded active running GNOME sound sample caching serv
+  org.gnome.SettingsDaemon.Wacom.service                           loaded active running GNOME Wacom tablet support serv
+  org.gnome.SettingsDaemon.XSettings.service                       loaded active running GNOME XSettings service
+  org.gnome.Shell@x11.service                                      loaded active running GNOME Shell on X11
+  pipewire-pulse.service                                           loaded active running PipeWire PulseAudio
+  pipewire.service                                                 loaded active running PipeWire Multimedia Service
+  snap.firmware-updater.firmware-notifier.service                  loaded active running Service for snap application fi
+  snap.snapd-desktop-integration.snapd-desktop-integration.service loaded active running Service for snap application sn
+  tracker-miner-fs-3.service                                       loaded active running Tracker file system data miner
+  wireplumber.service                                              loaded active running Multimedia Service Session Mana
+  xdg-desktop-portal-gnome.service                                 loaded active running Portal service (GNOME implement
+  xdg-desktop-portal-gtk.service                                   loaded active running Portal service (GTK/GNOME imple
+  xdg-desktop-portal.service                                       loaded active running Portal service
+  xdg-document-portal.service                                      loaded active running flatpak document portal service
+  xdg-permission-store.service                                     loaded active running sandboxed app permission store
+ 05:52:14 up 33 days,  6:48,  4 users,  load average: 1.08, 1.24, 0.86

@@ -1,0 +1,17 @@
+Running as unit: gate-12ai_u41b.service; invocation ID: aa4d0414508a41d3ba79434f2989e630
+2026-11-20T05:52:27.418372748Z launched by the line below, written into the evidence directory at launch (R731(b), R738(c), R808(d)); the unit has no memory cap (R808(b)(2)); its open-files limit is the smaller of the launching shell's soft limit 524288 and the user manager's hard limit 500000 (R809(b))
+systemd-run --user --unit=gate-12ai_u41b --collect --property=LimitNOFILE=500000 --setenv=LANG=C.UTF-8 bash /home/ankitsarin/scratch/12ai-u41b/gate_u41b/run_gate.sh /home/ankitsarin/scratch/12ai-u41b/gate_u41b 12ai_u41b docs/session-reports/session-12/12ai_open/gate_12ai_open/collected_ids.txt docs/session-reports/session-12/12ai_open/gate_12ai_open/durations_12ai_open.txt 
+● gate-12ai_u41b.service - /usr/bin/bash /home/ankitsarin/scratch/12ai-u41b/gate_u41b/run_gate.sh /home/ankitsarin/scratch/12ai-u41b/gate_u41b 12ai_u41b docs/session-reports/session-12/12ai_open/gate_12ai_open/collected_ids.txt docs/session-reports/session-12/12ai_open/gate_12ai_open/durations_12ai_open.txt
+     Loaded: loaded (/run/user/1000/systemd/transient/gate-12ai_u41b.service; transient)
+  Transient: yes
+     Active: active (running) since Fri 2026-11-20 05:52:27 UTC; 8ms ago
+   Main PID: 856774 (bash)
+      Tasks: 2 (limit: 153552)
+     Memory: 2.4M (peak: 2.4M)
+        CPU: 7ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/gate-12ai_u41b.service
+             ├─856774 /usr/bin/bash /home/ankitsarin/scratch/12ai-u41b/gate_u41b/run_gate.sh /home/ankitsarin/scratch/12ai-u41b/gate_u41b 12ai_u41b docs/session-reports/session-12/12ai_open/gate_12ai_open/collected_ids.txt docs/session-reports/session-12/12ai_open/gate_12ai_open/durations_12ai_open.txt
+             └─856786 .venv/bin/python -m pytest tests/ -v --tb=short --durations=0 -m "not network and not ollama and not integration"
+
+Nov 20 05:52:27 spark-59e4 systemd[2694]: Started gate-12ai_u41b.service - /usr/bin/bash /home/ankitsarin/scratch/12ai-u41b/gate_u41b/run_gate.sh /home/ankitsarin/scratch/12ai-u41b/gate_u41b 12ai_u41b docs/session-reports/session-12/12ai_open/gate_12ai_open/collected_ids.txt docs/session-reports/session-12/12ai_open/gate_12ai_open/durations_12ai_open.txt.
+Linger=yes

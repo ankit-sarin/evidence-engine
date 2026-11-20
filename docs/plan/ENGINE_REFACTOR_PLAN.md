@@ -20755,3 +20755,78 @@ R822(g) — This ruling states no standing rule: the id list, the glosses file a
 | 2026-11-20 | R822(a) — The stop is correct, at the step the brief set, and nothing of step 2 was committed. The cause is the architect's: the brief gave GIT_OPTIONAL_LOCKS=0 as what keeps every git command of the check from writing, and ordered git diff HEAD inside the clones; what that setting does for git diff was not read. A mechanism's behaviour stated from its name. Item 0 f4427d5 stands and is accepted as committed (Block 219; INT-i12-71 and INT-j12-51 CLOSED on 7fad72a; fix units 39, done 35; CLAUDE.md changed in the lines on the grant only), ledger 8af21ef. R822(b) — The PI's ruling, in his word: "1". Of the two options put to him, 1 is: the two index rewrites are accepted and the read-out is committed as it stands, with the failed no-write test recorded in it as a finding. The check is not run again. R822(c) — What the failure touches, from the measured lines: two .git/index files, both in clones this session made, both KEEP by the list's rule; their HEAD and tracked content unchanged. No clone of the committed inventory and no other entry under ~/scratch changed, by the same test that failed for those two. The measurements of the fifty-three inventory clones stand. R822(d) — Nothing is removed by the resume. Its report prints the removal list whole; the PI approves it in words, or not; a removal brief follows only on that. A removal names each clone's own top directory and never its parent entry. The bytes freed are a lower bound. R822(e) — Readings, no row. Finding 2: a later read-only pass over clones reads a diff without git diff in the clone, or through a copy of the index; this is task guidance, not a rule, until the cause is measured. Finding 4 is the architect's: the brief expected the 12ah open's and close's clones among those not in the inventory, and they are in it. R822(f) — The count so far in 12ai: one stop, this one, the architect's; no pause; eleven architect's errors (R821(g)'s nine; the setting of (a); finding 4), one reaching a commit. R822(g) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched in the commit that transcribes it, asserted by content. | PI, 2026-11-20, during session 12ai, on architect recommendation, on the 12ai-CLNA stop report (item 0 f4427d5) |
 
 The decision log in this file ends at R822.
+
+**Block 221.** *Transcribed 2026-11-20 (item 0 of the 12ai-CLNB brief), in its own commit with the brief file it orders, in the R597(e) form:* ruling R823, made by PI on architect recommendation on 2026-11-20 UTC, during session 12ai, on the 12ai-CLNA-R1 final report (commit `b20464906be863cc3612aa28b5c1a61c0da5bd56`). The 12ai-CLNB brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ai-R823] — 12ai-CLNA-R1 accepted; the PI approves the removal list:
+  the fifty-three scratch clones are removed, each by its own top directory; four clones and
+  every record, log and database stay; readings on the findings; no standing rule
+STATUS: PI ruling, 2026-11-20 UTC, session 12ai, on architect recommendation, on the
+  12ai-CLNA-R1 final report (commit b20464906be863cc3612aa28b5c1a61c0da5bd56). Transcribe at
+  item 0 of the 12ai-CLNB brief below, by transcribe_ruling.py, in the block after R822's,
+  not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ai-CLNA-R1 final report, quoted; wrapped lines joined): "Commit:
+    b20464906be863cc3612aa28b5c1a61c0da5bd56 (parent f4427d5)."; "Ledger: ccbb6db (parent
+    8af21ef)."; "r822.txt: 59c2435d…a347, 4,777 B, 61 lines. Equal to the architect's hash.";
+    "brief_12ai_CLNA_R1.md,
+    6cd57dd6f2c4a33aa39714ba1277e69bdc59ca12bee0647c3127ad34d12dc549, 11,669 B, 159 lines"
+    (the architect's copy: the same); "Index mtimes, by stat only: 58 of 58 equal to 2j's
+    after values, so none moved again."; "removal_list.tsv is 799f82dc…62d1e7"; "staged set
+    exactly 25 files"; "REMOVE: 53 clones; 4,933,649,532 B freed at least, of 8,044,632,155 B
+    apparent."; "KEEP: 4 clones"; the reason on every REMOVE row, "in INV and UNCHANGED;
+    nothing unique; no reader; not in use; not this session's".
+  READ (CC's): findings 1–3.
+  READ (the architect's clone at b204649): the full hash in STATUS, its parent f4427d5;
+    12ai_CLNA/brief_12ai_CLNA_R1.md and 12ai_open/r822.txt equal to the architect's copies
+    by cmp; the plan's last line "The decision log in this file ends at R822.";
+    12ai_CLNA/removal_list.tsv, sha256
+    799f82dc533f5ce31286595123f94f906672752698f522e02f194c83f262d1e7, its header "top, head,
+    apparent, nlink1, nlink_many, verdict, reason, parent, beside_files, beside_bytes" and
+    57 rows; set by the architect against the report's printed table row by row, by top
+    directory, head, bytes and verdict: 57 of 57 equal; 53 rows REMOVE and 4 KEEP; the
+    REMOVE rows' nlink1 sum 4,933,649,532.
+  INFERRED — expectation (reported if false): removing a clone's directory leaves the main
+    repository whole, the two sharing files by hard link and the main repository borrowing
+    no object (12ai_CLNA/i1.txt). The brief's checks after the removal are the test.
+
+R823(a) — The 12ai-CLNA-R1 final report is accepted as printed: commit b204649 (Block 220;
+  r822.txt and the resume file equal to the architect's copies; the read-out with its
+  tables, the removal list and the helpers), ledger ccbb6db. No clone's index moved after
+  step 2j.
+R823(b) — The removal, the PI's words: "Approve the 53". The list is the fifty-three rows
+  whose verdict is REMOVE in the committed 12ai_CLNA/removal_list.tsv at the sha256 above,
+  and no other path. Each is removed by its own top directory, the value of the row's "top"
+  column, never by its parent entry, never by a pattern. Not removed: the four clones this
+  session made; the two pytest fixture repositories; every record, log, database and test
+  database, inside those entries or anywhere else under ~/scratch (R817(f)).
+R823(c) — Each clone is checked again immediately before it is removed, without any git
+  command: it is the directory the row names, a real directory under ~/scratch and not a
+  link; its HEAD, read from its files, is the row's; its index time and its bytes are the
+  check's; no process uses it. A clone that fails any of these is not removed and is
+  reported; the others go on. After each removal its parent entry's other files are
+  counted again against the row; a difference stops the task at once.
+R823(d) — What is given up, as put to the PI: the working copies. Their uncommitted content
+  is in the record (12ai_SCRI/patches/ and untracked/), set against the clones byte for
+  byte on 2026-11-20 (12ai_CLNA/t2d_patch_bytes.tsv). A clone can be made again from its
+  commit and its patch.
+R823(e) — Readings, no row. Findings 1 and 2 are the architect's: the resume ordered a
+  section appended to a read-out file the stop had not yet written, and said fifty-one
+  inventory clones where there are fifty-three. Finding 3: one untracked test file in
+  12ab-u21b/parent matches a commit on origin/main and no longer HEAD's tree, since U41
+  rewrote that test; its content is in the record.
+R823(f) — The count so far in 12ai: one stop, the architect's; no pause; thirteen
+  architect's errors (R822(f)'s eleven; findings 1 and 2), one reaching a commit.
+R823(g) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+  Next: the removal (the brief below); the PI's report to the workbench of what was
+  removed; then the closeout.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-20 | R823(a) — The 12ai-CLNA-R1 final report is accepted as printed: commit b204649 (Block 220; r822.txt and the resume file equal to the architect's copies; the read-out with its tables, the removal list and the helpers), ledger ccbb6db. No clone's index moved after step 2j. R823(b) — The removal, the PI's words: "Approve the 53". The list is the fifty-three rows whose verdict is REMOVE in the committed 12ai_CLNA/removal_list.tsv at the sha256 above, and no other path. Each is removed by its own top directory, the value of the row's "top" column, never by its parent entry, never by a pattern. Not removed: the four clones this session made; the two pytest fixture repositories; every record, log, database and test database, inside those entries or anywhere else under ~/scratch (R817(f)). R823(c) — Each clone is checked again immediately before it is removed, without any git command: it is the directory the row names, a real directory under ~/scratch and not a link; its HEAD, read from its files, is the row's; its index time and its bytes are the check's; no process uses it. A clone that fails any of these is not removed and is reported; the others go on. After each removal its parent entry's other files are counted again against the row; a difference stops the task at once. R823(d) — What is given up, as put to the PI: the working copies. Their uncommitted content is in the record (12ai_SCRI/patches/ and untracked/), set against the clones byte for byte on 2026-11-20 (12ai_CLNA/t2d_patch_bytes.tsv). A clone can be made again from its commit and its patch. R823(e) — Readings, no row. Findings 1 and 2 are the architect's: the resume ordered a section appended to a read-out file the stop had not yet written, and said fifty-one inventory clones where there are fifty-three. Finding 3: one untracked test file in 12ab-u21b/parent matches a commit on origin/main and no longer HEAD's tree, since U41 rewrote that test; its content is in the record. R823(f) — The count so far in 12ai: one stop, the architect's; no pause; thirteen architect's errors (R822(f)'s eleven; findings 1 and 2), one reaching a commit. R823(g) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next: the removal (the brief below); the PI's report to the workbench of what was removed; then the closeout. | PI, 2026-11-20, during session 12ai, on architect recommendation, on the 12ai-CLNA-R1 final report (commit b204649) |
+
+The decision log in this file ends at R823.

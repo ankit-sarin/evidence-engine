@@ -1,0 +1,136 @@
+# 12ai-CLNB 2a, 2026-11-20T22:48:58Z
+LIST sha256 799f82dc533f5ce31286595123f94f906672752698f522e02f194c83f262d1e7 (expected 799f82dc533f5ce31286595123f94f906672752698f522e02f194c83f262d1e7)
+REMOVE rows: 53
+I1: alternates absent; worktree list: '/home/ankitsarin/projects/evidence-engine  3a65641 [main]'; holds: True
+# reads at 2026-11-20T22:48:58Z
+main HEAD: 3a65641ee9c16cf1e50e40eb9560adf375cecc3e
+main status --porcelain lines: 0
+main count-objects -v:
+count: 4340
+size: 144484
+in-pack: 7128
+packs: 1
+size-pack: 10652
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+main .git/objects/pack: 3 files, 10936541 B
+df -B1 (the filesystem holding ~/scratch):
+Filesystem         1B-blocks         Used         Avail
+/dev/nvme0n1p2 4031871553536 762295123968 3064735580160
+# parents (each REMOVE row's parent) and their top-level entries: files, bytes
+ENTRY	/home/ankitsarin/scratch/12aa-close	5214	164499347
+ENTRY	/home/ankitsarin/scratch/12aa-open	4730	153044475
+ENTRY	/home/ankitsarin/scratch/12ab-close	5813	180951626
+ENTRY	/home/ankitsarin/scratch/12ab-open	5293	168446403
+ENTRY	/home/ankitsarin/scratch/12ab-u21b	5906	184023377
+ENTRY	/home/ankitsarin/scratch/12ab-u21p	5572	168405644
+ENTRY	/home/ankitsarin/scratch/12ac-close	6160	194591529
+ENTRY	/home/ankitsarin/scratch/12ac-open/recount	5835	183296584
+ENTRY	/home/ankitsarin/scratch/12ac-open	5890	185019876
+ENTRY	/home/ankitsarin/scratch/12ad-close/recount	6347	209721440
+ENTRY	/home/ankitsarin/scratch/12ad-close	6380	210008420
+ENTRY	/home/ankitsarin/scratch/12ad-open/recount	6129	196579170
+ENTRY	/home/ankitsarin/scratch/12ad-open	6179	198285682
+ENTRY	/home/ankitsarin/scratch/12ae-close	14127	460390353
+ENTRY	/home/ankitsarin/scratch/12ae-open/recount	6374	208559651
+ENTRY	/home/ankitsarin/scratch/12ae-open	6470	212740012
+ENTRY	/home/ankitsarin/scratch/12ae-u24b	6619	205869067
+ENTRY	/home/ankitsarin/scratch/12af-close	3894	140422673
+ENTRY	/home/ankitsarin/scratch/12af-open	7188	244064611
+ENTRY	/home/ankitsarin/scratch/12af-u29a	3856	118175299
+ENTRY	/home/ankitsarin/scratch/12af-u30a	3891	120683479
+ENTRY	/home/ankitsarin/scratch/12ag-close	7902	271199487
+ENTRY	/home/ankitsarin/scratch/12ag-n46a	7647	247997303
+ENTRY	/home/ankitsarin/scratch/12ag-open	7631	263876096
+ENTRY	/home/ankitsarin/scratch/12ah-close	8131	279141850
+ENTRY	/home/ankitsarin/scratch/12ah-open	8041	279422266
+ENTRY	/home/ankitsarin/scratch/12r-open	1676	49125253
+ENTRY	/home/ankitsarin/scratch/12s-close	18258	274253424
+ENTRY	/home/ankitsarin/scratch/12s-open	17968	264290442
+ENTRY	/home/ankitsarin/scratch/12s-u14b	18126	268693858
+ENTRY	/home/ankitsarin/scratch/12s-u15a	9129	142855291
+ENTRY	/home/ankitsarin/scratch/12t-close	9283	145151839
+ENTRY	/home/ankitsarin/scratch/12t-open	9204	142890849
+ENTRY	/home/ankitsarin/scratch/12t-u15b	9454	158698175
+ENTRY	/home/ankitsarin/scratch/12u-close	9512	150865635
+ENTRY	/home/ankitsarin/scratch/12u-open	9366	147170008
+ENTRY	/home/ankitsarin/scratch/12u-u16b	9973	205698835
+ENTRY	/home/ankitsarin/scratch/12v-close	2799	98392522
+ENTRY	/home/ankitsarin/scratch/12v-open	9593	151719277
+ENTRY	/home/ankitsarin/scratch/12v-u37b	10018	179847388
+ENTRY	/home/ankitsarin/scratch/12v-u38a	2680	94734593
+ENTRY	/home/ankitsarin/scratch/12v-u38b	3557	174702706
+ENTRY	/home/ankitsarin/scratch/12w-close	3419	115670645
+ENTRY	/home/ankitsarin/scratch/12w-open	2879	102968698
+ENTRY	/home/ankitsarin/scratch/12w-u17b	9746	1607993271
+ENTRY	/home/ankitsarin/scratch/12x-close	3897	129780967
+ENTRY	/home/ankitsarin/scratch/12x-open	3497	116327468
+ENTRY	/home/ankitsarin/scratch/12x-u39b	3720	121743044
+ENTRY	/home/ankitsarin/scratch/12x-u39c	3879	125564478
+ENTRY	/home/ankitsarin/scratch/12y-close	4329	138861432
+ENTRY	/home/ankitsarin/scratch/12y-open	3995	130730323
+ENTRY	/home/ankitsarin/scratch/12z-close	4627	148439493
+ENTRY	/home/ankitsarin/scratch/12z-open	4398	141776670
+# the four KEEP clones and two fixture repositories: files, bytes, .git/index mtime ns
+KEEP	12ai-clna/clone	8633	283516214	1795212500654025749
+KEEP	12ai-open/recount	8139	264092216	1795100921023603478
+KEEP	12ai-u30b/clone	8548	280572731	1795212793131805356
+KEEP	12ai-u41b/clone	8440	277495419	1795212793232805623
+KEEP	12aa-u20c/bt_sweep/test_t6_git_state_reads_the_st0/repo	32	27312	1793398631939284706
+KEEP	12w-u17b/census/basetemp/test_t6_git_state_reads_the_st0/repo	32	27312	1792862250768788068
+# the parent check proved (now vs the row): top, files, bytes, row files, row bytes, verdict
+PARENTCHECK	/home/ankitsarin/scratch/12aa-close/clone	30	7001578	30	7001578	equal
+PARENTCHECK	/home/ankitsarin/scratch/12aa-open/clone	74	8997133	74	8997133	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ab-close/clone	39	9574235	39	9574235	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ab-open/clone	52	8215766	52	8215766	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ab-u21b/parent	173	15172132	173	15172132	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ab-u21p/clone	135	2761563	135	2761563	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ac-close/clone	90	9936592	90	9936592	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ac-open/recount/clone	7	9513555	7	9513555	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ad-close/recount/clone	11	14936442	11	14936442	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ad-open/recount/clone	7	9476293	7	9476293	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ae-close/pre_clone	7096	238271195	7096	238271195	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ae-close/recount	7083	237220442	7083	237220442	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ae-open/recount/clone	8	12141250	8	12141250	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ae-u24b/invclone	111	2634544	111	2634544	equal
+PARENTCHECK	/home/ankitsarin/scratch/12af-close/clone	45	21169296	45	21169296	equal
+PARENTCHECK	/home/ankitsarin/scratch/12af-open/recount	79	16677217	79	16677217	equal
+PARENTCHECK	/home/ankitsarin/scratch/12af-u29a/clone	51	641732	51	641732	equal
+PARENTCHECK	/home/ankitsarin/scratch/12af-u30a/clone	53	1586079	53	1586079	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ag-close/clone	51	18452515	51	18452515	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ag-n46a/regen_clone	54	1801974	54	1801974	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ag-open/recount	110	20635320	110	20635320	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ah-close/clone	44	18029298	44	18029298	equal
+PARENTCHECK	/home/ankitsarin/scratch/12ah-open/recount	122	23232241	122	23232241	equal
+PARENTCHECK	/home/ankitsarin/scratch/12r-open/pc_clone	34	3511323	34	3511323	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-close/clone	9139	141533185	9139	141533185	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-close/clone2	9138	140913085	9138	140913085	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-open/clone	9012	135263828	9012	135263828	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-open/clone_head	9001	135242931	9001	135242931	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-u14b/clone	9129	138347592	9129	138347592	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-u14b/oldclone	9033	137207411	9033	137207411	equal
+PARENTCHECK	/home/ankitsarin/scratch/12s-u15a/clone	46	10336332	46	10336332	equal
+PARENTCHECK	/home/ankitsarin/scratch/12t-close/clone	30	7535559	30	7535559	equal
+PARENTCHECK	/home/ankitsarin/scratch/12t-open/clone	51	8090581	51	8090581	equal
+PARENTCHECK	/home/ankitsarin/scratch/12t-u15b/prefix	233	23210891	233	23210891	equal
+PARENTCHECK	/home/ankitsarin/scratch/12u-close/clone	30	5968893	30	5968893	equal
+PARENTCHECK	/home/ankitsarin/scratch/12u-open/clone	68	7383306	68	7383306	equal
+PARENTCHECK	/home/ankitsarin/scratch/12u-u16b/checkout	514	62033562	514	62033562	equal
+PARENTCHECK	/home/ankitsarin/scratch/12v-close/clone	10	5012208	10	5012208	equal
+PARENTCHECK	/home/ankitsarin/scratch/12v-open/clone	46	4449446	46	4449446	equal
+PARENTCHECK	/home/ankitsarin/scratch/12v-u37b/clone	392	30134892	392	30134892	equal
+PARENTCHECK	/home/ankitsarin/scratch/12v-u38a/clone	6	4986505	6	4986505	equal
+PARENTCHECK	/home/ankitsarin/scratch/12v-u38b/clone	816	83210897	816	83210897	equal
+PARENTCHECK	/home/ankitsarin/scratch/12w-close/clone	30	9581303	30	9581303	equal
+PARENTCHECK	/home/ankitsarin/scratch/12w-open/clone	52	7596028	52	7596028	equal
+PARENTCHECK	/home/ankitsarin/scratch/12w-u17b/clone	6726	1509679330	6726	1509679330	equal
+PARENTCHECK	/home/ankitsarin/scratch/12x-close/clone	61	13063035	61	13063035	equal
+PARENTCHECK	/home/ankitsarin/scratch/12x-open/clone	52	8156163	52	8156163	equal
+PARENTCHECK	/home/ankitsarin/scratch/12x-u39b/clone	55	10242561	55	10242561	equal
+PARENTCHECK	/home/ankitsarin/scratch/12x-u39c/clone	60	10281420	60	10281420	equal
+PARENTCHECK	/home/ankitsarin/scratch/12y-close/clone	50	8995824	50	8995824	equal
+PARENTCHECK	/home/ankitsarin/scratch/12y-open/clone	59	9957670	59	9957670	equal
+PARENTCHECK	/home/ankitsarin/scratch/12z-close/clone	30	7043930	30	7043930	equal
+PARENTCHECK	/home/ankitsarin/scratch/12z-open/clone	54	8256153	54	8256153	equal
+parent check: 53 of 53 equal

@@ -1,0 +1,17 @@
+session_open_check 2026-11-20T22:49:50Z on /home/ankitsarin/scratch/12ai-clnb/3b_config.json
+SKIPPED   repos: not in the expected file
+SKIPPED   plan: not in the expected file
+SKIPPED   fingerprint: not in the expected file
+SKIPPED   hashes: not in the expected file
+SKIPPED   pins: not in the expected file
+SKIPPED   dbchecks: not in the expected file
+MATCH     retention MATCH / MISMATCH: [23, 0]
+MATCH     probe requests equal: [10, 10]
+MATCH     probe responses files / name-equal / committed-equal: [53, 53, 53]
+MATCH     stage ~/scratch/12q-u13-build/stage: ['RESTORE.txt']
+SKIPPED   nightly: not in the expected file
+SKIPPED   health: not in the expected file
+SKIPPED   ollama: not in the expected file
+SKIPPED   temp_root: not in the expected file
+SKIPPED   cc_sessions: not in the expected file
+RESULT: PASS (0 mismatches)

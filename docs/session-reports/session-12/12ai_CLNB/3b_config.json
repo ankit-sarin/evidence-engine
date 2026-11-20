@@ -1,0 +1,29 @@
+{
+ "retention": {
+  "reference": "docs/session-reports/session-12/12ah_close/retention_close.txt",
+  "root": "~/scratch/retained",
+  "match": 23
+ },
+ "probe_scratch": {
+  "requests_index": "docs/session-reports/session-12/12v_U37R/requests_index.json",
+  "requests_dir": "~/scratch/12v-u37r/requests",
+  "requests": 10,
+  "response_files": 53,
+  "responses": [
+   [
+    "~/scratch/12v-u37r/out/responses",
+    "docs/session-reports/session-12/12v_U37R/responses"
+   ],
+   [
+    "~/scratch/12v-u37r2/out/responses",
+    "docs/session-reports/session-12/12v_U37R2/responses"
+   ]
+  ]
+ },
+ "stage": {
+  "path": "~/scratch/12q-u13-build/stage",
+  "entries": [
+   "RESTORE.txt"
+  ]
+ }
+}

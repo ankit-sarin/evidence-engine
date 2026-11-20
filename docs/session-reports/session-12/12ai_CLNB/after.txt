@@ -1,0 +1,83 @@
+# reads at 2026-11-20T22:49:28Z
+main HEAD: 3a65641ee9c16cf1e50e40eb9560adf375cecc3e
+main status --porcelain lines: 0
+main count-objects -v:
+count: 4340
+size: 144484
+in-pack: 7128
+packs: 1
+size-pack: 10652
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+main .git/objects/pack: 3 files, 10936541 B
+df -B1 (the filesystem holding ~/scratch):
+Filesystem         1B-blocks         Used         Avail
+/dev/nvme0n1p2 4031871553536 756648239104 3070382465024
+# parents (each REMOVE row's parent) and their top-level entries: files, bytes
+ENTRY	/home/ankitsarin/scratch/12aa-close	30	7001578
+ENTRY	/home/ankitsarin/scratch/12aa-open	74	8997133
+ENTRY	/home/ankitsarin/scratch/12ab-close	39	9574235
+ENTRY	/home/ankitsarin/scratch/12ab-open	52	8215766
+ENTRY	/home/ankitsarin/scratch/12ab-u21b	173	15172132
+ENTRY	/home/ankitsarin/scratch/12ab-u21p	135	2761563
+ENTRY	/home/ankitsarin/scratch/12ac-close	90	9936592
+ENTRY	/home/ankitsarin/scratch/12ac-open/recount	7	9513555
+ENTRY	/home/ankitsarin/scratch/12ac-open	62	11236847
+ENTRY	/home/ankitsarin/scratch/12ad-close/recount	11	14936442
+ENTRY	/home/ankitsarin/scratch/12ad-close	44	15223422
+ENTRY	/home/ankitsarin/scratch/12ad-open/recount	7	9476293
+ENTRY	/home/ankitsarin/scratch/12ad-open	57	11182805
+ENTRY	/home/ankitsarin/scratch/12ae-close	52	15101284
+ENTRY	/home/ankitsarin/scratch/12ae-open/recount	8	12141250
+ENTRY	/home/ankitsarin/scratch/12ae-open	104	16321611
+ENTRY	/home/ankitsarin/scratch/12ae-u24b	111	2634544
+ENTRY	/home/ankitsarin/scratch/12af-close	45	21169296
+ENTRY	/home/ankitsarin/scratch/12af-open	79	16677217
+ENTRY	/home/ankitsarin/scratch/12af-u29a	51	641732
+ENTRY	/home/ankitsarin/scratch/12af-u30a	53	1586079
+ENTRY	/home/ankitsarin/scratch/12ag-close	51	18452515
+ENTRY	/home/ankitsarin/scratch/12ag-n46a	54	1801974
+ENTRY	/home/ankitsarin/scratch/12ag-open	110	20635320
+ENTRY	/home/ankitsarin/scratch/12ah-close	44	18029298
+ENTRY	/home/ankitsarin/scratch/12ah-open	122	23232241
+ENTRY	/home/ankitsarin/scratch/12r-open	34	3511323
+ENTRY	/home/ankitsarin/scratch/12s-close	19	8192846
+ENTRY	/home/ankitsarin/scratch/12s-open	45	6216317
+ENTRY	/home/ankitsarin/scratch/12s-u14b	36	6861145
+ENTRY	/home/ankitsarin/scratch/12s-u15a	46	10336332
+ENTRY	/home/ankitsarin/scratch/12t-close	30	7535559
+ENTRY	/home/ankitsarin/scratch/12t-open	51	8090581
+ENTRY	/home/ankitsarin/scratch/12t-u15b	233	23210891
+ENTRY	/home/ankitsarin/scratch/12u-close	30	5968893
+ENTRY	/home/ankitsarin/scratch/12u-open	68	7383306
+ENTRY	/home/ankitsarin/scratch/12u-u16b	514	62033562
+ENTRY	/home/ankitsarin/scratch/12v-close	10	5012208
+ENTRY	/home/ankitsarin/scratch/12v-open	46	4449446
+ENTRY	/home/ankitsarin/scratch/12v-u37b	392	30134892
+ENTRY	/home/ankitsarin/scratch/12v-u38a	6	4986505
+ENTRY	/home/ankitsarin/scratch/12v-u38b	816	83210897
+ENTRY	/home/ankitsarin/scratch/12w-close	30	9581303
+ENTRY	/home/ankitsarin/scratch/12w-open	52	7596028
+ENTRY	/home/ankitsarin/scratch/12w-u17b	6726	1509679330
+ENTRY	/home/ankitsarin/scratch/12x-close	61	13063035
+ENTRY	/home/ankitsarin/scratch/12x-open	52	8156163
+ENTRY	/home/ankitsarin/scratch/12x-u39b	55	10242561
+ENTRY	/home/ankitsarin/scratch/12x-u39c	60	10281420
+ENTRY	/home/ankitsarin/scratch/12y-close	50	8995824
+ENTRY	/home/ankitsarin/scratch/12y-open	59	9957670
+ENTRY	/home/ankitsarin/scratch/12z-close	30	7043930
+ENTRY	/home/ankitsarin/scratch/12z-open	54	8256153
+# the four KEEP clones and two fixture repositories: files, bytes, .git/index mtime ns
+KEEP	12ai-clna/clone	8633	283516214	1795212500654025749
+KEEP	12ai-open/recount	8139	264092216	1795100921023603478
+KEEP	12ai-u30b/clone	8548	280572731	1795212793131805356
+KEEP	12ai-u41b/clone	8440	277495419	1795212793232805623
+KEEP	12aa-u20c/bt_sweep/test_t6_git_state_reads_the_st0/repo	32	27312	1793398631939284706
+KEEP	12w-u17b/census/basetemp/test_t6_git_state_reads_the_st0/repo	32	27312	1792862250768788068
+# 2e, 2026-11-20T22:49:28Z
+REMOVE tops absent: 53 of 53; present and not SKIPPED: []
+every parent present: True
+KEEP clones and fixture repositories as 2a read them: True
+df avail before 3064735580160 B, after 3070382465024 B, rise 5646884864 B; used before 762295123968, after 756648239104, fall 5646884864 B
+the removed rows' nlink1 sum 4933649532 B; rise >= sum: True (E4)

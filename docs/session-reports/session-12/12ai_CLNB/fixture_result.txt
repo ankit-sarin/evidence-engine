@@ -1,0 +1,8 @@
+# 12ai-CLNB 2b, 2026-11-20T22:49:04Z
+command (argv): ['rm', '-rf', '--one-file-system', '--', '/home/ankitsarin/scratch/12ai-clnb/fixture/victim']
+exit 0; stderr ''
+victim listing before: ['victim', 'victim/file.txt', 'victim/hardlink.txt', 'victim/sub', 'victim/sub/deep.txt', 'victim/symlink_dir']
+victim exists after: False; fixture dir exists after: True
+outside targets before (path: sha256, nlink): {'target_dir/inner.txt': ('de4734af29e3ae89d62f631c7fe0fe3a13e6aef6438ceb5104ff619a8454a5dc', 1), 'target_file.txt': ('20a51c324c9b6f2c6d3616756846b0b0874f8b389557501a6f534845d0032b0a', 2)}
+outside targets after: {'target_dir/inner.txt': ('de4734af29e3ae89d62f631c7fe0fe3a13e6aef6438ceb5104ff619a8454a5dc', 1), 'target_file.txt': ('20a51c324c9b6f2c6d3616756846b0b0874f8b389557501a6f534845d0032b0a', 1)}
+outside targets present and unchanged by sha256: True (the hard-linked file's link count falls by one, its content unchanged)

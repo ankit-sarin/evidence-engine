@@ -933,6 +933,8 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 
 *Dated 2026-11-11 (12af-U30A item 0, R801):* U29 landed at `977c499`; C24 CLOSED on it and counted until P1 closes (R514, R607(d), R801(c)). P1's fix units 38, done 33 (U01–U29, U37, U38, U39, U40). Rows 287 (94 / 57 / 136, 0 unclassed), measured on this plan by `recount_12ae_close.py`'s count, the method the 12af-U29A line names (run in a scratch clone, R673(b); it reads every section-L row after its table head, the 12af table's row included); rows in 0, rows out 0.
 
+*Dated 2026-11-20 (12ai-U41B item 0, R819):* U41 entered by R819(b) ("The Ollama restart paths are opt-in"; INT-ai12-1; before U30). P1's fix units 39, done 33 (U01–U29, U37–U40). Rows 289 (94 / 59 / 136, 0 unclassed), measured on this plan by `recount_12ae_close.py`'s count, the method the 12af-U29A line names (run in a scratch clone, R673(b); it reads every section-L row after its table head, the 12af and 12ai tables' rows included, and exits 1 because its own expectation, the 12ae close's 286, no longer holds); rows in 2 (INT-ai12-1, INT-ai12-2), rows out 0.
+
 **L (12w additions, R707).** *Opened 2026-10-25 (12w-CLOSE item 0) under R509, R707(e) and R708(b).* One row from INT-v12-1's Phase A read-out (`12w_V1A_q4_stopped.md`, `8659035`): `INT-w12-1` for its §Q3 census finding that a change made at a stage's call site after its shared builder returns is invisible to that stage's prompt hash, placed in its own table so that the 12v recount's bounds are unchanged. The text cell is R708's sentence (a), quoted unchanged (its line wrap joined); class and package are R707(e)'s; the evidence cell is R708(b)'s and R708(c)'s. Its fix is B's equality test extended to every hashed stage on the local run path, in U39 (R707(e)).
 
 | # | On disk (`12w_V1A_q4_stopped.md` §Q3, quoted) | Class | Owning package | Governing ruling | Evidence |
@@ -967,6 +969,13 @@ Not rows, recorded here as ruled (R612(p): "Every other side finding takes the d
 | # | On disk (`12af_U40A.md` §8 F5, under R799(d)) | Class | Owning package | Governing ruling | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | INT-af12-1 | `export_disagreement_pairs.arms_in_scope` refuses any registry holding a model arm outside `ARM_VALUE_COLUMN`'s three pre-manifest names, the spec's own local arm included (`analysis/paper1/export_disagreement_pairs.py:38–42`, `:70–77`). It does not fire on live today, whose registry holds the three pre-manifest arms only; it fires from the first manifest run that registers an arm, Run 7 included. The refusal is loud and no stored value is wrong. | 2 | P5 | R799(d) | `12af_U40A.md` §8 F5 and its FAKE (iii-b); `12ae_close/dbchecks_close.txt:2` for the live registry |
+
+**L (12ai additions, R819).** *Opened 2026-11-20 (12ai-U41B item 0) under R509, R819(b) and R819(i).* Two rows: `INT-ai12-1` from the restart read-out (`12ah_OLRA/12ah_OLRA.md`, `6dc36b3`) §Q1–Q5 (R819(b)), and `INT-ai12-2` from R819's "THE ARCHITECT'S RUN" and `pdf_quality_check.py`'s `main()` (R819(i)), placed in their own table so that the 12ae recount's bounds are unchanged (R649(a), R651(a)). The text cells are the architect's, as the 12ai-U41B brief carries them; class, package and evidence are R819(b)'s and R819(i)'s. INT-ai12-2's package is P4, "screening and acquisition" in the plan's package list (R819(i)).
+
+| # | On disk (`12ah_OLRA.md` §Q1–Q5 under R819(b); R819's run under R819(i)) | Class | Owning package | Governing ruling | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| INT-ai12-1 | Both Ollama restart paths are armed by default on a host other lanes share: `extractor.restart_ollama` every `RESTART_EVERY_N = 25` papers and `ollama_client._restart_ollama_and_retry` on the first read timeout of any call, each `sudo systemctl restart ollama`. With them off, `pdf_quality_check`'s loop has no bound on a hung server. | 2 | P1, with U41 | R819(b) | `12ah_OLRA/12ah_OLRA.md` §Q1–Q5 (`6dc36b3`) |
+| INT-ai12-2 | `engine/acquisition/pdf_quality_check.py`'s entry point exits 0 when papers failed and the loop was not stopped: `main()` prints "Failed: N" and returns. | 2 | P4 | R819(i) | R819's "THE ARCHITECT'S RUN" ("main() returned normally with 3 of 3 papers failed"; off the box, not a CC measurement); `engine/acquisition/pdf_quality_check.py` `main()` |
 
 ### Not engine defects — plan v50 wording
 
@@ -20338,3 +20347,144 @@ R818(h) — This ruling states no standing rule: the id list, the glosses file a
 | 2026-11-19 | R818(a) — The 12ai-SCRI-RECA final report is accepted as printed: item 0 bec3545 (Block 215; r817.txt equal to the architect's hash; the brief file equal to the architect's copy; the rules files untouched), ledger 427d54d. I1–I3 held. E1–E4 and E6 held; E5 is false, a reading ((e)). No file of ~/scratch/12ai-scri/ holds a stop-class hit, on a control that flagged every class the scanner names. R818(b) — The interim read-out's files, the PI's ruling in his words: "option 1". Of the three options put to him, option 1 is: all ninety-seven files of ~/scratch/12ai-scri/ are committed, unedited, to docs/session-reports/session-12/12ai_SCRI/, each under its own relative path, the list SHA256SUMS among them. The PI accepts the publication of what the report shows they carry from outside this lane or from files this repository does not track: the twenty-two scratch entry names of other lanes; the lines of the project primer.md and of primer-history/ that 12ai_SCRI.md quotes, and its line numbers into other repositories' files; the forty-seven citation rows whose source is primer.md; the record paths of the two large tables, their paper-text file names among them; the ignored-file names of the two g1_mainstatus files, which the PI read himself; the paths the patches carry. Once committed, 12ai_SCRI.md is this lane's record and is not edited; the list committed beside it is the record of the files' bytes. R818(c) — The publication read-out's own files are committed with them, to the directory that already holds its brief, 12ai_SCRI_RECA/: 12ai_SCRI_RECA.md, the tables beside it, the scan's output, and the helpers census.py, kinds.py and assemble.py, after the same scanner has run on them with the same stop. What they print is drawn from the ninety-seven files, so (b)'s acceptance covers it. Left out, and kept in scratch: the control's fixture and control.py, which hold invented examples of key forms; control.py's sha256 is recorded. R818(d) — The four home-folder names in the committed 12ai-OPEN brief, the PI's word: "They stand". No history is rewritten. A reading with it: the interim read-out does not name those folders, so that brief is the one place in this repository that does. R818(e) — Readings, no row. Finding 2 (E5 false): one patch changes CLAUDE.md by one line; the file is tracked and public, and the patch is committed with the others. Findings 3 and 6 are the architect's: the brief said 12ai_SCRI.md names the four home folders, and it does not; the brief said twenty-three other top-level files, and there are twenty-two. The first is a statement about a file the architect had read; the second a count made by reading. Neither changed a step. Finding 4: the kind split of s4_unique_by_kind.tsv cannot be reproduced, since the interim session recorded no rule for it; its figures, the 2,103 paper texts among them, stand as that table's own and nothing is to rest on them. Finding 5: one drawn paper-text name carries an author's surname and a year, the form of a citation; accepted under (b). Findings 7, 8 and 9 are readings: the host and the handover named in the read-out; CC's one change to its path rule, the first output overwritten in scratch; one double match in a table, CC's. R818(f) — With this commit the interim session is counted with 12ai (R817(c)), and the content the interim read-out found in no committed version — the patches of five clones and one untracked file — is in the record. That is the condition R817(f) sets before the clone deletion brief; the brief itself comes late in the session. R818(g) — The count so far in 12ai: no stop and no pause; four architect's errors (R817(h)'s two; findings 3 and 6 here), one reaching a commit. R818(h) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next, in this order: the commit of the files (the brief below); the restart change's design ruling, quoting 12ah_OLRA/12ah_OLRA.md and its addendum; its build as one engine-commit brief; U30's build with N46; the clone deletion brief, before the close; then the report to the workbench. | PI, 2026-11-19, during session 12ai, on architect recommendation, on the 12ai-SCRI-RECA final report (item 0 bec3545) |
 
 The decision log in this file ends at R818.
+
+**Block 217.** *Transcribed 2026-11-20 (item 0 of the 12ai-U41B brief), in its own commit with the rows INT-ai12-1 and INT-ai12-2, the dated units line and the brief file it orders, in the R597(e) form:* ruling R819, made by PI on architect recommendation on 2026-11-20 UTC, during session 12ai, on the 12ai-SCRI-REC final report (item 0 `483969d524b081c83b21deba2fda9c095a09b158`; read-out `6dc36b312879bdd16c682093d86a9e2b3c331c86`). The 12ai-U41B brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12ai-R819] — 12ai-SCRI-REC accepted; the Ollama restart change's design:
+  both restart paths opt-in and off by default; a run asks through two flags recorded under
+  one manifest key; a seventh call ending; a bound on pdf_quality_check; U41, Class 2, before
+  U30; two rows; no standing rule
+STATUS: PI ruling, 2026-11-20 UTC, session 12ai, on architect recommendation, on the
+  12ai-SCRI-REC final report (item 0 483969d524b081c83b21deba2fda9c095a09b158) and on the
+  committed read-out docs/session-reports/session-12/12ah_OLRA/12ah_OLRA.md (sha256
+  f054eedbacc34d22168bf1c3b9d70a1fcbbc4dfe222f67410bd351bed3c09790) with its addendum
+  12ah_OLRA_add1.md (sha256 568b179dc23253d0e4e285a06e564145b7b32d460a71d2a41af46a9c62e34ef1).
+  Transcribe at item 0 of the 12ai-U41B brief below, by transcribe_ruling.py, in the block
+  after R818's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ai-SCRI-REC final report, quoted): "Commit
+    483969d524b081c83b21deba2fda9c095a09b158 (parent bec3545)"; "Ledger
+    a84a03e7ab9fbb07f581b0e14acec66851fc8d93 (parent 427d54d)"; "r818.txt: 5a83b282…eef0,
+    7,638 B, 95 lines. Equal to the architect's hash."; "Brief file:
+    e3257f3cdfb9dde6e9c0db5fe65e7a89ec6d8361ecb5a9727386d3134e58164a, 25,004 B, 350 lines."
+    (the architect's copy: the same); "Now
+    d81e330644285b58dc2897560108d934b0f7b8d21828a4dee21a474ada1ab243, 3,406,820 B, 20,340
+    lines."; "12ai_SCRI/SHA256SUMS 96 of 96 match; 12ai_SCRI_RECA/SHA256SUMS 21 of 21 match";
+    "The push went through with no refusal".
+  READ (12ah_OLRA/12ah_OLRA.md at its committed bytes, each line the read-out's own):
+    Q1.1 "engine/agents/extractor.py:61:   RESTART_EVERY_N = 25"; "**No `-n`.**"; Q1.2 "A read
+    timeout is never retried inside `ollama_chat`"; Q3 "No spec field and no environment
+    variable sets the cadence."; "changing `RESTART_EVERY_N` from 25 to 0, or making the
+    recovery restart default-off through code, moves **no pin, no body key set and no
+    prompt_hash or request_hash**"; Q4 "**No retry and no restart.**"; "`pdf_quality_check`
+    has no bound."; Q5 "**`papers_since_restart` is not reset**" (CC's reading) and, for
+    elicit01 and capture01, "**not caught**"; Q6 "**No test pins the value 25.**" and its
+    "(c) coupled" rows; Q8's option D and "D alone does not reach any entry point that
+    calls `ollama_chat` outside an active run (finding 8)"; finding 8 "hits only
+    `engine/agents/ft_screener.py` (1) and `scripts/run_pipeline.py` (3)"; Q7's list of
+    text. From the addendum: Q11 "The only load-capable send is `_client.chat`".
+  READ (the architect's clone at 483969d, whose engine tree equals 977c499's):
+    engine/core/run_manifest.py:93–96, the tuple of six; engine/migrations/
+    022_run_kinds_and_audit_tables.py:33 "`outcome_detail TEXT` (nullable, unconstrained)";
+    engine/utils/ollama_client.py:822 "Ollama call timed out after {attempt + 1} attempts
+    + restart "; :55–56, joined, "this ends a request (U21, R761(c)(i)), the watchdog only
+    marks it late"; engine/acquisition/pdf_quality_check.py:42 "MAX_RETRIES = 1", its
+    per-paper "except Exception as exc:" and a main() with no exit status after its report;
+    engine/core/review_spec.py:734–735 "default=120" and "Ollama request timeout in
+    seconds"; engine/core/extraction_events.py:138 "CONSECUTIVE_FAILURE_ABORT = 3" and its
+    run_fault_classes(); scripts/parse_expanded_corpus.py:63 "AND
+    p.pdf_quality_check_status = 'HUMAN_CONFIRMED'"; engine/core/run_manifest.py:1062
+    "_ACTIVE: contextvars.ContextVar"; under engine/, analysis/, scripts/, tests/ and
+    docs/session-reports/tools/, only run_manifest.py, ollama_client.py and
+    tests/test_u21_no_overlap.py hold a call-ending name.
+  THE ARCHITECT'S RUN (off the box, in a clone at 483969d with the model call stubbed; not
+    a CC measurement; the build's fail-first tests re-measure it): pdf_quality_check's loop
+    with every call raising TimeoutError made 20 calls for 10 papers and 200 for 100 and
+    returned normally; the same with ConnectionError and with RunRefused; main() returned
+    normally with 3 of 3 papers failed.
+  INFERRED — BLOCKING (the build reads each at HEAD before any edit; false = STOP):
+    (i) _extract_selected's proactive restart runs inside the run's active context; (ii)
+    the manifest body carries no key-set version or hash that a new optional key must
+    move; (iii) the read-out's reading of extractor.py:1267–1280, that a failed restart
+    leaves the counter unreset; (iv) which exception classes reach pdf_quality_check's
+    loop from ollama_chat for a read timeout and for a refused connection.
+  INFERRED — expectation (reported if false): sudo -n fails at once where sudo would
+    prompt; the fifteen entry points finding 8 names open no run by any path.
+
+R819(a) — The 12ai-SCRI-REC final report is accepted as printed: item 0 483969d (Block 216;
+  the ninety-seven files and the publication read-out's twenty-one with its list; r818.txt
+  and the brief file equal to the architect's copies), ledger a84a03e. Finding 1 (sixteen
+  tables, not fourteen) and finding 4 (two words short in a header's wording) are the
+  architect's, each settled by the brief's own rule; findings 2 and 3 are readings. The
+  count so far in 12ai: no stop, no pause; six architect's errors, one reaching a commit.
+R819(b) — The unit and its row, the PI's words: "4 U41 Class 2". A new fix unit, U41, "The
+  Ollama restart paths are opt-in", in P1, built before U30; P1's fix units 39, done 33. A
+  new row, INT-ai12-1, Class 2, P1 with U41: both Ollama restart paths are armed by default
+  on a host other lanes share, and with them off pdf_quality_check has no bound on a hung
+  server. Class 2 because nothing stored is made wrong: a performed restart is followed by
+  the environment re-check, and a paper whose quality check failed stays unmarked.
+R819(c) — The direction, the PI's decision of 2026-11-15 as plan v106 §5.2 lists it: both
+  restart paths are opt-in and off by default. RESTART_EVERY_N becomes 0. The recovery
+  restart runs only for a run that asked for it; a call outside any run never restarts.
+  With it, as §5.2 lists them: no retry is added for a read timeout; the restart command
+  is run with sudo -n in both paths; elicit01 and capture01 default to 0 and a failed
+  restart no longer ends them; the engine's keep_alive −1 stays and the analysis harnesses
+  accept the host's default; no per-model unload replaces a restart.
+R819(d) — How a run asks, the PI's words: "2 two flags, one key". scripts/run_pipeline.py
+  gains --restart-every N (default 0), passed to run_extraction, and
+  --restart-on-read-timeout (default off). When either is given, open_run records one
+  optional body key, ollama_restarts, with two members, proactive_every (the integer) and
+  on_read_timeout (true or false); when neither is given the key is absent, as
+  selection_bound is. The recovery path reads the active run's recorded value; no active
+  run, no key, or on_read_timeout false means not enabled. No Review Spec field is added.
+  No other entry point gains a flag. EVIDENCE_ENGINE_NO_OLLAMA_RESTART stays and wins over
+  the key.
+R819(e) — A seventh call ending, the PI's word: "3yes". restart_not_enabled is added to
+  RUN_CALL_ENDING_DETAILS after the six, whose names and order do not change; this amends
+  the closed set of R761(c)(iv) and R762(c) from six to seven. The recovery path's order:
+  the opt-out variable (restart_refused_opt_out, as now), then not enabled
+  (restart_not_enabled), then the foreign lock, then the command. The TimeoutError raised
+  where no restart was attempted does not say "+ restart".
+R819(f) — A failed proactive restart resets the cadence counter, so the next attempt comes
+  after restart_every more papers and not on every paper. It is logged as now.
+R819(g) — pdf_quality_check's bound, the PI's words: "1 A", and "proceed" on the two
+  additions put to him. Three papers in a row ending in a read timeout stop the loop,
+  CONSECUTIVE_FAILURE_ABORT reused. A run fault, by the engine's own run_fault_classes(),
+  stops it at the first paper and is not retried. A stopped loop ends the process with a
+  non-zero status and a message naming the papers and the cause. Any other per-paper
+  failure is counted and the loop continues, as now, and does not count toward the three;
+  a success resets the count. The one retry of a failed call stays for everything but a
+  run fault. PDFQualityCheck.timeout's description is corrected to the fact.
+R819(h) — Withdrawn by the architect before the build: the check at run open that the host
+  permits the restart. It needs a third sudo call site, which CLAUDE.md's invariant and
+  tests/test_lock_census.py forbid, and a sudo command Claude Code may not run to measure
+  it. A run that asks for a restart the host refuses records restart_command_failed, or
+  logs the failed proactive restart, at the first attempt.
+R819(i) — A second row, INT-ai12-2, Class 2, P4 by the precedent of INT-j12-8 (the package
+  is read at item 0 against the plan's package list; if acquisition's rows are not P4's,
+  STOP before the commit): pdf_quality_check's entry point exits 0 when papers failed and
+  the loop was not stopped. Not U41's.
+R819(j) — Text. In the build: CLAUDE.md's "Ops Invariants — Ollama service safety" lines
+  that state the restart paths' behaviour, each to the fact; engine/core/review_spec.py's
+  sentence "-1 equals the service value, so behaviour is unchanged."; and CLAUDE.md's
+  no-live-write line, replaced by the text the brief carries, which the PI has before him
+  with this ruling (R812(c)). The docs/architecture lines stay with HK-ARCH.
+R819(k) — Readings, no row. Before the freeze, a read-only read-out of what the record shows
+  restarts have done: calls ended restart_recovered, restarts in the journal, per-call wall
+  time across a long run. It informs whether Ollama is restarted by hand before Run 7 and
+  whether both paths are removed after the tag. Run 7 runs with no restart available once
+  the sudoers rule is gone; a hung server then aborts the run after three papers, loudly
+  and resumably.
+R819(l) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+  Next: U41's build (the brief below); its engine commit's hash reported to the workbench;
+  INT-ai12-1 closed at the item 0 after it lands; then U30's build with N46.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-20 | R819(a) — The 12ai-SCRI-REC final report is accepted as printed: item 0 483969d (Block 216; the ninety-seven files and the publication read-out's twenty-one with its list; r818.txt and the brief file equal to the architect's copies), ledger a84a03e. Finding 1 (sixteen tables, not fourteen) and finding 4 (two words short in a header's wording) are the architect's, each settled by the brief's own rule; findings 2 and 3 are readings. The count so far in 12ai: no stop, no pause; six architect's errors, one reaching a commit. R819(b) — The unit and its row, the PI's words: "4 U41 Class 2". A new fix unit, U41, "The Ollama restart paths are opt-in", in P1, built before U30; P1's fix units 39, done 33. A new row, INT-ai12-1, Class 2, P1 with U41: both Ollama restart paths are armed by default on a host other lanes share, and with them off pdf_quality_check has no bound on a hung server. Class 2 because nothing stored is made wrong: a performed restart is followed by the environment re-check, and a paper whose quality check failed stays unmarked. R819(c) — The direction, the PI's decision of 2026-11-15 as plan v106 §5.2 lists it: both restart paths are opt-in and off by default. RESTART_EVERY_N becomes 0. The recovery restart runs only for a run that asked for it; a call outside any run never restarts. With it, as §5.2 lists them: no retry is added for a read timeout; the restart command is run with sudo -n in both paths; elicit01 and capture01 default to 0 and a failed restart no longer ends them; the engine's keep_alive −1 stays and the analysis harnesses accept the host's default; no per-model unload replaces a restart. R819(d) — How a run asks, the PI's words: "2 two flags, one key". scripts/run_pipeline.py gains --restart-every N (default 0), passed to run_extraction, and --restart-on-read-timeout (default off). When either is given, open_run records one optional body key, ollama_restarts, with two members, proactive_every (the integer) and on_read_timeout (true or false); when neither is given the key is absent, as selection_bound is. The recovery path reads the active run's recorded value; no active run, no key, or on_read_timeout false means not enabled. No Review Spec field is added. No other entry point gains a flag. EVIDENCE_ENGINE_NO_OLLAMA_RESTART stays and wins over the key. R819(e) — A seventh call ending, the PI's word: "3yes". restart_not_enabled is added to RUN_CALL_ENDING_DETAILS after the six, whose names and order do not change; this amends the closed set of R761(c)(iv) and R762(c) from six to seven. The recovery path's order: the opt-out variable (restart_refused_opt_out, as now), then not enabled (restart_not_enabled), then the foreign lock, then the command. The TimeoutError raised where no restart was attempted does not say "+ restart". R819(f) — A failed proactive restart resets the cadence counter, so the next attempt comes after restart_every more papers and not on every paper. It is logged as now. R819(g) — pdf_quality_check's bound, the PI's words: "1 A", and "proceed" on the two additions put to him. Three papers in a row ending in a read timeout stop the loop, CONSECUTIVE_FAILURE_ABORT reused. A run fault, by the engine's own run_fault_classes(), stops it at the first paper and is not retried. A stopped loop ends the process with a non-zero status and a message naming the papers and the cause. Any other per-paper failure is counted and the loop continues, as now, and does not count toward the three; a success resets the count. The one retry of a failed call stays for everything but a run fault. PDFQualityCheck.timeout's description is corrected to the fact. R819(h) — Withdrawn by the architect before the build: the check at run open that the host permits the restart. It needs a third sudo call site, which CLAUDE.md's invariant and tests/test_lock_census.py forbid, and a sudo command Claude Code may not run to measure it. A run that asks for a restart the host refuses records restart_command_failed, or logs the failed proactive restart, at the first attempt. R819(i) — A second row, INT-ai12-2, Class 2, P4 by the precedent of INT-j12-8 (the package is read at item 0 against the plan's package list; if acquisition's rows are not P4's, STOP before the commit): pdf_quality_check's entry point exits 0 when papers failed and the loop was not stopped. Not U41's. R819(j) — Text. In the build: CLAUDE.md's "Ops Invariants — Ollama service safety" lines that state the restart paths' behaviour, each to the fact; engine/core/review_spec.py's sentence "-1 equals the service value, so behaviour is unchanged."; and CLAUDE.md's no-live-write line, replaced by the text the brief carries, which the PI has before him with this ruling (R812(c)). The docs/architecture lines stay with HK-ARCH. R819(k) — Readings, no row. Before the freeze, a read-only read-out of what the record shows restarts have done: calls ended restart_recovered, restarts in the journal, per-call wall time across a long run. It informs whether Ollama is restarted by hand before Run 7 and whether both paths are removed after the tag. Run 7 runs with no restart available once the sudoers rule is gone; a hung server then aborts the run after three papers, loudly and resumably. R819(l) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next: U41's build (the brief below); its engine commit's hash reported to the workbench; INT-ai12-1 closed at the item 0 after it lands; then U30's build with N46. | PI, 2026-11-20, during session 12ai, on architect recommendation, on the 12ai-SCRI-REC final report (item 0 483969d; read-out 6dc36b3) |
+
+The decision log in this file ends at R819.

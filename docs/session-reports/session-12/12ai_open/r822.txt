@@ -1,0 +1,61 @@
+RULING [evidence-engine 12ai-R822] — the 12ai-CLNA stop is correct and the architect's; the
+  PI's ruling: the clone check's read-out is committed as it stands, its failed no-write test
+  recorded in it; nothing is removed until the PI approves the list in words; no standing
+  rule
+STATUS: PI ruling, 2026-11-20 UTC, session 12ai, on architect recommendation, on the 12ai-CLNA
+  stop report (item 0 f4427d5306582823c6a7b63cfc3e7900d1bca5f1 committed; stopped at step
+  2j, before step 3; nothing of step 2 committed; nothing removed). Transcribe in the commit
+  of the resume below, by transcribe_ruling.py, in the block after R821's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted; wrapped lines joined): "Commit:
+    f4427d5306582823c6a7b63cfc3e7900d1bca5f1 (parent d7a0bf7). Numstat: plan +102 −2,
+    CLAUDE.md +5 −3, r821.txt +87, brief +364."; "Ledger: 8af21ef."; "r821.txt: ce0f18c0…c2e5,
+    6,976 B, 87 lines. Equal to the architect's hash."; "Brief file:
+    e64ff22ae1d3dc679cedeb09cae30accdf750c7c60c94d6042c59161c877d71b, 26,660 B, 364 lines."
+    (the architect's copy: the same); "~/scratch/12ai-u30b/clone/.git/index:
+    1795209061260464430 → 1795212793131805356 ns"; "~/scratch/12ai-u41b/clone/.git/index:
+    1795152047054457187 → 1795212793232805623 ns"; "(i2_diff.txt: 8 lines, all these two)";
+    "I1 holds: .git/objects/info/alternates is absent; one worktree."; "59 repositories: 57
+    clones, 2 fixture repositories, 0 other."; "None of INV's 55 is missing."; "All 53 INV
+    clones are UNCHANGED, 0 CHANGED"; "equal to git diff HEAD byte for byte"; "112 reader
+    paths"; "0 lie inside a clone."; "0 processes use a clone."; "53 REMOVE, 4 KEEP."; "the 53
+    REMOVE clones' link-count-1 bytes total 4,933,649,532 B, of 8,044,632,155 B apparent";
+    "Every REMOVE clone's parent entry holds other files beside it (79,482 files,
+    3,395,304,236 B in all)".
+  READ (CC's, marked so in the report): the cause, "git diff seems to have refreshed and
+    rewritten the index anyway in the two clones whose working files were stat-dirty", not
+    tested; findings 1–4.
+  READ (the architect's clone at f4427d5): the full hash in STATUS, its parent d7a0bf7;
+    12ai_CLNA/brief_12ai_CLNA.md and 12ai_open/r821.txt equal to the architect's copies by
+    cmp; the plan's last line "The decision log in this file ends at R821."; CLAUDE.md's
+    lines on the grant as the brief carried them.
+  INFERRED: none that a clause below rests on. The cause of the two rewrites is not
+    established; (c) does not rest on it.
+
+R822(a) — The stop is correct, at the step the brief set, and nothing of step 2 was
+  committed. The cause is the architect's: the brief gave GIT_OPTIONAL_LOCKS=0 as what
+  keeps every git command of the check from writing, and ordered git diff HEAD inside the
+  clones; what that setting does for git diff was not read. A mechanism's behaviour stated
+  from its name. Item 0 f4427d5 stands and is accepted as committed (Block 219; INT-i12-71
+  and INT-j12-51 CLOSED on 7fad72a; fix units 39, done 35; CLAUDE.md changed in the lines
+  on the grant only), ledger 8af21ef.
+R822(b) — The PI's ruling, in his word: "1". Of the two options put to him, 1 is: the two
+  index rewrites are accepted and the read-out is committed as it stands, with the failed
+  no-write test recorded in it as a finding. The check is not run again.
+R822(c) — What the failure touches, from the measured lines: two .git/index files, both in
+  clones this session made, both KEEP by the list's rule; their HEAD and tracked content
+  unchanged. No clone of the committed inventory and no other entry under ~/scratch
+  changed, by the same test that failed for those two. The measurements of the fifty-three
+  inventory clones stand.
+R822(d) — Nothing is removed by the resume. Its report prints the removal list whole; the PI
+  approves it in words, or not; a removal brief follows only on that. A removal names each
+  clone's own top directory and never its parent entry. The bytes freed are a lower bound.
+R822(e) — Readings, no row. Finding 2: a later read-only pass over clones reads a diff
+  without git diff in the clone, or through a copy of the index; this is task guidance, not
+  a rule, until the cause is measured. Finding 4 is the architect's: the brief expected the
+  12ah open's and close's clones among those not in the inventory, and they are in it.
+R822(f) — The count so far in 12ai: one stop, this one, the architect's; no pause; eleven
+  architect's errors (R821(g)'s nine; the setting of (a); finding 4), one reaching a commit.
+R822(g) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched in the commit that transcribes it, asserted by content.

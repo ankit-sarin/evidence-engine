@@ -1,0 +1,39 @@
+{
+ "class_rule": "clone of evidence-engine: `origin` is the main repository's path (with or without a trailing '/.' or '/') or its GitHub remote (git@github.com:ankit-sarin/evidence-engine.git); fixture repository: no `origin` remote; anything else: named as other",
+ "origin_main": "f4427d5306582823c6a7b63cfc3e7900d1bca5f1",
+ "repos": 59,
+ "by_class": {
+  "clone": 57,
+  "fixture": 2,
+  "other": 0
+ },
+ "inv_rows": 55,
+ "missing": [],
+ "new": [
+  "12ai-clna/clone",
+  "12ai-open/recount",
+  "12ai-u30b/clone",
+  "12ai-u41b/clone"
+ ],
+ "d_verdicts": {
+  "UNCHANGED": 53,
+  "CHANGED": 0
+ },
+ "e_files": 28,
+ "e_links": 6,
+ "e_unique": 3,
+ "e_unique_nonzero": 3,
+ "readers": 112,
+ "reader_hits": 0,
+ "in_use": 0,
+ "sizes_total": {
+  "files": 364039,
+  "apparent": 9150308735,
+  "nlink1": 5481292041,
+  "nlink_many": 3669016694
+ },
+ "remove": 53,
+ "keep": 4,
+ "bytes_freed": 4933649532,
+ "apparent_remove": 8044632155
+}

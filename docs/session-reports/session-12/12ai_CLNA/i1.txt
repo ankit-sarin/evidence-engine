@@ -1,0 +1,4 @@
+alternates: 'absent'
+worktree list:
+/home/ankitsarin/projects/evidence-engine  f4427d5 [main]
+I1 holds: True

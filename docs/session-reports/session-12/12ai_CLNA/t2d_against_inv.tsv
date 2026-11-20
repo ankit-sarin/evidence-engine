@@ -1,0 +1,54 @@
+repo	head	reachable	own_commits	stash	status_file	status_equal	patch	verdict	difference
+12aa-close/clone	afd179ee26d54c1c2859859375b1bb42bd88a883	yes	0	0	12aa-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12aa-open/clone	6cb33367e3da1d602f98e72d04a01e180929cd17	yes	0	0	12aa-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ab-close/clone	52be363527b44f789106e1918dd84aded07f40e0	yes	0	0	12ab-close__clone.txt	True	patch numstat equal	UNCHANGED	
+12ab-open/clone	e397be4c8619e528d66046bed055e7763c1a9649	yes	0	0	12ab-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ab-u21b/parent	8abaedc2308f5958f9dc4d8825f85ed885d7160d	yes	0	0	12ab-u21b__parent.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ab-u21p/clone	8b7573c05acba40743355460e69e7bfd9a212961	yes	0	0	12ab-u21p__clone.txt	True	patch numstat equal	UNCHANGED	
+12ac-close/clone	95873b58f95aaf2a395ea0fce66e69d3535788ec	yes	0	0	12ac-close__clone.txt	True	patch numstat equal	UNCHANGED	
+12ac-open/recount/clone	bc1da2681fc9dd1493f74cda1cce5d9ddef95945	yes	0	0	12ac-open__recount__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ad-close/recount/clone	2f73fd6db2e26ebe26a69c14fd5d36bac957f994	yes	0	0	12ad-close__recount__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ad-open/recount/clone	483ecbb8f389e2ae8d2d4eddf00fc2caa01770a9	yes	0	0	12ad-open__recount__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ae-close/pre_clone	b14d0da8cb40f3830f9443ac377cfda616e6a706	yes	0	0	12ae-close__pre_clone.txt	True	patch numstat equal	UNCHANGED	
+12ae-close/recount	df3e7214cc421a627add3271bbd049da2fafb757	yes	0	0	12ae-close__recount.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ae-open/recount/clone	ca9d3486ae0a7c0d3291bb477f4e894d5cc5a247	yes	0	0	12ae-open__recount__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ae-u24b/invclone	b8becaaa7bbc4f386f82da8e12b9ad06daa0c97d	yes	0	0	12ae-u24b__invclone.txt	True	patch numstat equal	UNCHANGED	
+12af-close/clone	4884bc3e794be1b1c136c73cd87a56d726f93641	yes	0	0	12af-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12af-open/recount	91a619b833d177e27b2570d030e4e9e476238f81	yes	0	0	12af-open__recount.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12af-u29a/clone	0814545c6be6f0fdeb84ab89682f4b0896b28a1b	yes	0	0	12af-u29a__clone.txt	True	patch numstat equal	UNCHANGED	
+12af-u30a/clone	2b68cd4c659e5402c9fd4efc3c3d2541d7cc0d80	yes	0	0	12af-u30a__clone.txt	True	patch numstat equal	UNCHANGED	
+12ag-close/clone	e329cedc280e8136cc825e56dc59c54fd9329968	yes	0	0	12ag-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ag-n46a/regen_clone	60a63314118dc9f9ea41a009e5b5197676922b4c	yes	0	0	12ag-n46a__regen_clone.txt	True	patch numstat equal	UNCHANGED	
+12ag-open/recount	16cb307164c9203c695c3a4f842cf6d294c771ad	yes	0	0	12ag-open__recount.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ah-close/clone	9fed14881a114107f65090f17aa77a432dc8dc80	yes	0	0	12ah-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12ah-open/recount	34ff8a7a20e90868f8622a58cf1e31a81f05a47d	yes	0	0	12ah-open__recount.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12r-open/pc_clone	e5ec600c2c2efa306a61f819879f4c80e749e58b	yes	0	0	12r-open__pc_clone.txt	True	patch numstat equal	UNCHANGED	
+12s-close/clone	8b2c388684e66a780168c211a97db3f2ad2142a9	yes	0	0	12s-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12s-close/clone2	8b2c388684e66a780168c211a97db3f2ad2142a9	yes	0	0	12s-close__clone2.txt	True	patch numstat equal	UNCHANGED	
+12s-open/clone	15b7ef9bd85885f5d1ef25d4b1c5dfcad625d32d	yes	0	0	12s-open__clone.txt	True	patch numstat equal	UNCHANGED	
+12s-open/clone_head	1ddff37637531fb8e22d8c69309f47caf0f0001c	yes	0	0	12s-open__clone_head.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12s-u14b/clone	2d8823e4a42cf8fb9e8330116cefa9a8cb6a1a45	yes	0	0	12s-u14b__clone.txt	True	patch numstat equal	UNCHANGED	
+12s-u14b/oldclone	9f1809ad8e9bc45a121eef1205858006fbe94d57	yes	0	0	12s-u14b__oldclone.txt	True	patch numstat equal	UNCHANGED	
+12s-u15a/clone	cb274942708c56347f6be0dadc3d3faaff422039	yes	0	0	12s-u15a__clone.txt	True	patch numstat equal	UNCHANGED	
+12t-close/clone	a2e637842b7dd2aff6ceab9c0eefaa0db6069b56	yes	0	0	12t-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12t-open/clone	4485778b4b8b080539807cf3e64d1918dd5523c0	yes	0	0	12t-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12t-u15b/prefix	8b2c388684e66a780168c211a97db3f2ad2142a9	yes	0	0	12t-u15b__prefix.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12u-close/clone	2579f7c354841d089952396337cdb5b2c5657625	yes	0	0	12u-close__clone.txt	True	patch numstat equal	UNCHANGED	
+12u-open/clone	45ba35369f97d7a5877262951c80a51492d6542f	yes	0	0	12u-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12u-u16b/checkout	97e50798b854dab26d0206e8421411241810b68a	yes	0	0	12u-u16b__checkout.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12v-close/clone	4738ebfa8ab84b34c3ac0c919fed460aa69602fb	yes	0	0	12v-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12v-open/clone	049cec81857d55fb50b2f6bb5283eb806669a778	yes	0	0	12v-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12v-u37b/clone	1e15b50784ee145973223da6ba7be7b935e6ed99	yes	0	0	12v-u37b__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12v-u38a/clone	b3157339fdb2cb8b0994442104d4eb389c4afafa	yes	0	0	12v-u38a__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12v-u38b/clone	731ebf2cc9df39ee2406907b0ad2c74c79a6442b	yes	0	0	12v-u38b__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12w-close/clone	86590355357b9711a6f91952a9aad92824bc7378	yes	0	0	12w-close__clone.txt	True	patch numstat equal	UNCHANGED	
+12w-open/clone	15576007eff9577cef76f6d296528b0b7d363752	yes	0	0	12w-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12w-u17b/clone	e81d699602a0240238fbe3a7562e4f0b0ae9935a	yes	0	0	12w-u17b__clone.txt	True	patch numstat equal	UNCHANGED	
+12x-close/clone	2b11a572c15af94329b7b854e8c05eba0e146e72	yes	0	0	12x-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12x-open/clone	a5892c914a30ac4e50c0bf8db2e5107898a1530e	yes	0	0	12x-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12x-u39b/clone	1ebb3ae9584ad88015dfcd17df4bf75678026765	yes	0	0	12x-u39b__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12x-u39c/clone	f3f552e581e5345b9e93693c2729220366841f29	yes	0	0	12x-u39c__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12y-close/clone	0f83f4674a36a0cc96d53adcc2d9454b3480d322	yes	0	0	12y-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12y-open/clone	ec544a251369971040fe084a56efb63ef32d4562	yes	0	0	12y-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12z-close/clone	237c321c6eada89ff77aec8b26790d482d6fc1ea	yes	0	0	12z-close__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	
+12z-open/clone	81db498a1e6f17155a067d126a9d92c252700141	yes	0	0	12z-open__clone.txt	True	no patch; diff HEAD empty	UNCHANGED	

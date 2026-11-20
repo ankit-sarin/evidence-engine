@@ -245,10 +245,10 @@ python -m engine.agents.ft_screener ... --verify-only
 3. **OpenAI arm:** `chat.completions.create()` with reasoning_effort=high, json_object format. Reasoning trace from `message.reasoning_content`
 4. **Anthropic arm:** `messages.create()` with extended thinking (budget_tokens=10000), max_tokens=16000. Thinking blocks separated from text blocks. Markdown fence stripping
 5. Response JSON parsed via `parse_response_to_spans()` (8+ alternate key names, flat dict restructuring, null → "NR")
-6. `store_result()` — one transaction: the insert to cloud_extractions + cloud_evidence_spans and the arm's claim events (`write_extraction_events(…, paper_event=False)`: no paper event, so the paper's processing axis does not move; U40, R798). Rejects 0-span results and, through `enforce_citations` (LEGACY), uncited or empty values
+6. `store_result()` — one transaction: the insert to cloud_extractions + cloud_evidence_spans and the arm's claim events (`write_extraction_events(…, paper_event=False)`: no paper event, so the paper's processing axis does not move; U40, R798), rolled back on any exit that did not commit, an interrupt included (U30, R805(d)(2)). A span whose field the codebook did not ask for is dropped first (`drop_unexpected`, N46, R807(b)); `extracted_data` keeps the response as received. Rejects 0-span results and, through `enforce_citations` (LEGACY), uncited or empty values
 7. Post-extraction: `run_distribution_check()` for the arm
 
-**No paper status change:** a cloud extraction is stored in the two cloud tables and as the arm's claim events, with no paper event (U40, R798). **Every provider call inside a run is one `run_calls` row** (U29, R800): a call that raises is `error` with `Class: message`; a returned response is `completed` when complete, or `error` with `truncated: <field>=<value>` / `refused: <field>=<value>`, and carries `rm.response_digest` of its text and thinking (each transport's `read_response`). Both SDK clients are built with `max_retries=0`, so one recorded call is one HTTP send
+**No paper status change:** a cloud extraction is stored in the two cloud tables and as the arm's claim events, with no paper event (U40, R798). **Every provider call inside a run is one `run_calls` row** (U29, R800): a call that raises is `error` with `Class: message`, and so is one an interrupt ends, the interrupt re-raised (U30, R805(d)(3)); an interrupted run rolls back and closes `interrupted` with its signal's reason (R805(d)(1), (2)); a returned response is `completed` when complete, or `error` with `truncated: <field>=<value>` / `refused: <field>=<value>`, and carries `rm.response_digest` of its text and thinking (each transport's `read_response`). Both SDK clients are built with `max_retries=0`, so one recorded call is one HTTP send
 
 **Cost tracking:** Per-extraction `cost_usd` = (input_tokens × rate / 1M) + (output_tokens × rate / 1M). Batch runs accept `--max-cost` to cap total spend
 
@@ -413,7 +413,7 @@ These cross-cutting patterns are enforced throughout the codebase.
 
 All multi-step database writes use explicit `BEGIN`/`COMMIT`/`ROLLBACK` transactions:
 - `update_status()` — uses `BEGIN IMMEDIATE` (write lock acquired before validation read, preventing TOCTOU races)
-- `store_result()` (cloud) — cloud_extraction + all cloud_evidence_spans in one transaction
+- `store_result()` (cloud) — cloud_extraction + all cloud_evidence_spans + the arm's claim events in one transaction, rolled back on any exit that did not commit, an interrupt included (U30)
 - `import_dispositions()` (PDF quality) — full rollback on any failure
 - Import functions (adjudication, audit review) — validate 100% of input before any write; reject entire batch on any error
 - All 6 exporters (CSV, Excel, DOCX, JSON, Markdown, PRISMA) — atomic temp-file-then-rename write

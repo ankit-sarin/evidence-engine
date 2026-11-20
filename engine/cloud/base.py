@@ -17,6 +17,7 @@ from engine.core.completeness import (
     MAX_COMPLETENESS_ATTEMPTS,
     IncompleteExtractionError,
     check_completeness,
+    drop_unexpected,
     enforce_completeness,
     expected_field_names,
 )
@@ -172,7 +173,13 @@ class CloudExtractorBase:
         `completed`; truncated or refused → `error` with `truncated: <field>=<value>`
         / `refused: <field>=<value>`; its digest is `rm.response_digest` of its
         text and thinking. A response the accessor cannot read is recorded
-        `error` and raised. Outside a run nothing is read or recorded."""
+        `error` and raised. Outside a run nothing is read or recorded.
+
+        U30 (R805(d)(3), amending R800(b) for interrupts): a provider call that an
+        interrupt ends (KeyboardInterrupt, `rm.RunInterrupted`) is recorded `error`
+        in the same `Class: message` form and the interrupt re-raised. Only the
+        provider call: an interrupt in the reading or recording of a returned
+        response is not recorded a second time."""
         from engine.core import run_manifest as rm
         payload = self.request_payload(prompt)
         self.last_request_hash = sha256_canonical(payload)
@@ -192,6 +199,10 @@ class CloudExtractorBase:
         try:
             response = self._create(**payload)
         except Exception as exc:
+            if self.run_id is not None:
+                record(None, "error", f"{type(exc).__name__}: {exc}")
+            raise
+        except (KeyboardInterrupt, rm.RunInterrupted) as exc:
             if self.run_id is not None:
                 record(None, "error", f"{type(exc).__name__}: {exc}")
             raise
@@ -426,6 +437,10 @@ class CloudExtractorBase:
             arm=arm,
             salvage=self._last_salvage,
         )
+        # N46 (R807(b)): a field the codebook did not ask for is dropped before any
+        # write, as the local path drops it (extractor.py); enforce_completeness has
+        # logged it. extracted_data below stays the response as received.
+        spans = drop_unexpected(spans, tuple(self.expected_fields))
         # U28 (R794(f)): the local legacy write boundary's citation guard, its tokens
         # read from the codebook as extractor.py reads them (_absence_tokens,
         # _contract_unmet_token): an uncited non-sentinel value or an empty value is
@@ -504,7 +519,9 @@ class CloudExtractorBase:
                 self._request_chain = None
             return ext_id
 
-        except Exception:
+        except BaseException:
+            # U30 (R805(d)(2)): any exit that did not commit, an interrupt included,
+            # leaves nothing of the paper.
             self._conn.rollback()
             raise
 

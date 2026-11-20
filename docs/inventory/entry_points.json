@@ -4186,7 +4186,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 615,
+            "line": 632,
             "role": "code",
             "text": "extraction_codebook.yaml"
           }
@@ -4196,7 +4196,7 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 90,
+            "line": 91,
             "scope": "CloudExtractorBase.__init__"
           }
         ],
@@ -6532,7 +6532,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 136,
+            "line": 151,
             "names": [
               "--review"
             ],
@@ -6541,7 +6541,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 141,
+            "line": 156,
             "names": [
               "--arm"
             ],
@@ -6550,7 +6550,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 147,
+            "line": 162,
             "names": [
               "--spec"
             ],
@@ -6559,7 +6559,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 152,
+            "line": 167,
             "names": [
               "--db"
             ],
@@ -6568,7 +6568,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 157,
+            "line": 172,
             "names": [
               "--max-papers"
             ],
@@ -6577,7 +6577,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 163,
+            "line": 178,
             "names": [
               "--max-cost"
             ],
@@ -6586,7 +6586,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 169,
+            "line": 184,
             "names": [
               "--progress"
             ],
@@ -6595,7 +6595,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 174,
+            "line": 189,
             "names": [
               "--dry-run"
             ],
@@ -6609,13 +6609,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 150,
+            "line": 165,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           },
           {
             "kind": "literal",
-            "line": 155,
+            "line": 170,
             "role": "help_text",
             "text": "Path to database (default: data/<review>/review.db)"
           }
@@ -6625,22 +6625,22 @@
         "spec_access": [
           {
             "func": "load_review_spec",
-            "line": 109,
+            "line": 110,
             "scope": "run_arm"
           },
           {
             "func": "load_spec_for",
-            "line": 185,
+            "line": 200,
             "scope": "main"
           },
           {
             "func": "data_root_for",
-            "line": 186,
+            "line": 201,
             "scope": "main"
           },
           {
             "func": "spec_path_for",
-            "line": 187,
+            "line": 202,
             "scope": "main"
           }
         ],
@@ -6889,7 +6889,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "ee20dbab3b7ec37c31b9ca44a3ac8afea47131de",
+    "generated_at_commit": "b998dfb33b8c2c804dd9597bcd76c002d4596eea",
     "scan_roots": [
       "engine",
       "scripts",

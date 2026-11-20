@@ -17,6 +17,7 @@ Usage:
 
 import argparse
 import logging
+import signal
 import sqlite3
 import sys
 from pathlib import Path
@@ -115,16 +116,30 @@ def run_arm(
             extractor._conn, spec, kind="extraction", stages=(), codebook=codebook,
             cloud_arms=[arm_name], payload_description=PAYLOAD_DESCRIPTION)
         extractor.run_id = handle.run_id
-        status, reason = "completed", None
+        conn = extractor._conn
         try:
             extractor.run(max_papers=max_papers, max_cost_usd=max_cost)
-        except BaseException as exc:
-            # Any exit but a return closes the run 'failed', an interrupt
-            # included, with the exception's class and message (R625(a)(8)).
-            status, reason = "failed", rm.failure_reason(exc)
+            rm.close_run(conn, handle.run_id, "completed")
+        except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+            # U30 (R805(d)(1), (2)): an interrupt closes the run 'interrupted' with its
+            # signal's reason, as run_pipeline does (C47). Roll back first, then check:
+            # an uncommitted write is never committed by the close, and a close the
+            # interrupt caught before its commit is rolled back with it. Then the
+            # interrupt propagates to main().
+            if conn.in_transaction:
+                conn.rollback()
+            if not rm.is_closed(conn, handle.run_id):
+                rm.close_run(conn, handle.run_id, "interrupted", reason=rm.interrupt_reason(exc))
+            exc.run_id = handle.run_id
             raise
-        finally:
-            rm.close_run(extractor._conn, handle.run_id, status, reason=reason)
+        except BaseException as exc:
+            # Any other exit closes the run 'failed' with the exception's class and
+            # message (R625(a)(8)), after the same rollback and check (R805(d)(2)).
+            if conn.in_transaction:
+                conn.rollback()
+            if not rm.is_closed(conn, handle.run_id):
+                rm.close_run(conn, handle.run_id, "failed", reason=rm.failure_reason(exc))
+            raise
     finally:
         extractor.close()
 
@@ -207,9 +222,24 @@ def main():
         dry_run(db_path, spec_path, arms)
         return
 
-    for arm in arms:
-        run_arm(arm, db_path, spec_path, args.max_papers, args.max_cost)
+    # U30 (R805(d)(4)): SIGTERM and SIGHUP raise RunInterrupted while the arms run, as
+    # in run_pipeline's and the FT CLI's mains (C47); the run closes 'interrupted' in
+    # run_arm and main returns 128 + signum for exit_process.
+    from engine.core import run_manifest as rm
+    try:
+        with rm.interrupt_signals():
+            for arm in arms:
+                run_arm(arm, db_path, spec_path, args.max_papers, args.max_cost)
+    except (KeyboardInterrupt, rm.RunInterrupted) as exc:
+        signum = rm.interrupt_signum(exc)
+        run_id = getattr(exc, "run_id", None)
+        logger.error("Interrupted by %s — %s.", signal.Signals(signum).name,
+                     f"run_id {run_id} is closed" if run_id is not None
+                     else "no run manifest was open")
+        return 128 + signum
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    from engine.core import run_manifest as rm
+    rm.exit_process(main())

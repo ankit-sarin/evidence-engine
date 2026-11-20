@@ -143,13 +143,13 @@ def test_a_cloud_arm_that_raises_closes_failed_with_the_class_and_message(cloud)
     assert _end(db_path) == [("failed", "RuntimeError: provider down", 1)]
 
 
-def test_a_cloud_arm_interrupted_closes_failed_naming_the_interrupt(cloud):
-    """This runner has no interrupt handling of its own (C47 covers run_pipeline and the FT
-    CLI): an interrupt is a failed close here, as before, and now it says so."""
+def test_a_cloud_arm_interrupted_closes_interrupted_with_its_signals_reason(cloud):
+    """Superseded by R805(d)(1) (U30): an interrupted cloud run closes 'interrupted' with its
+    signal's reason, the form run_pipeline and the FT CLI use (C47); it no longer closes 'failed'."""
     run, db_path = cloud
     with pytest.raises(KeyboardInterrupt):
         run(_raise(KeyboardInterrupt()))
-    assert _end(db_path) == [("failed", "KeyboardInterrupt", 1)]
+    assert _end(db_path) == [("interrupted", "interrupt:SIGINT", 1)]
 
 
 def test_a_cloud_arm_that_returns_closes_completed_with_no_reason(cloud):

@@ -153,10 +153,12 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 
 ## Ops Invariants — Ollama service safety
 
-Two independent code paths can run `sudo -n systemctl restart ollama`, and a
-`NOPASSWD` sudoers rule for exactly that command means both can fire. Both are off
+Two independent code paths can run `sudo -n systemctl restart ollama`. Both are off
 by default and run only for a run that asks (U41, R819(c)–(e)); both are gated, and
-the suite is fenced. Do not add a third ungated path.
+the suite is fenced. On the DGX the passwordless grant for that command was removed
+on 2026-11-20 by the dgx-infra lane (R821(e)), so there a run that asks has its
+restart refused: the call ends `restart_command_failed`, or the proactive failure
+is logged and tried again later. Do not add a third ungated path.
 
 - **Experiment flock** (`engine/utils/ollama_lock.py`, OPS-GUARD-01): `flock(2)` on
   `~/.ollama_experiment.lock`, never an existence check, so a dead holder releases

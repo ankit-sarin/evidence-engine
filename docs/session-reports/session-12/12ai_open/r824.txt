@@ -1,0 +1,62 @@
+RULING [evidence-engine 12ai-R824] — 12ai-CLNB accepted: the fifty-three clones removed; the
+  PI's word to wrap; session 12ai closes by a closeout and a wrap ruling of its own; no
+  closeout gate; the kept clones left as they are; readings on the findings; no standing rule
+STATUS: PI ruling, 2026-11-20 UTC, session 12ai, on architect recommendation, on the 12ai-CLNB
+  final report (item 0 3a65641ee9c16cf1e50e40eb9560adf375cecc3e; evidence
+  366de1e7b60e37d804fab9c8161a3d41be2e1b41). Transcribe at item 0 of the 12ai-CLOSE brief
+  below, by transcribe_ruling.py, in the block after R823's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ai-CLNB final report, quoted; wrapped lines joined): "Commit:
+    3a65641ee9c16cf1e50e40eb9560adf375cecc3e (parent b204649)."; "Ledger: a9ae0c2."; "r823.txt:
+    66956e9b…28e0, 4,870 B, 64 lines. Equal to the architect's hash."; "Brief file:
+    619a8f3975857ce7ddbf579b304f3afb84408b841a4deca490997b013369dda6, 20,546 B, 303 lines."
+    (the architect's copy: the same); "53 of 53"; "53 removed, 0 skipped; every one of the 7
+    checks passed for every row."; "First removal 22:49:17Z (12aa-close/clone), last
+    22:49:22Z (12z-open/clone)."; "The four KEEP clones and the two fixture repositories read
+    exactly as at 2a."; "a rise of 5,646,884,864 B, against the link-count-1 sum of
+    4,933,649,532 B"; "git fsck --connectivity-only exits 0"; "497 "dangling" lines and
+    nothing missing or broken"; "MATCH retention MATCH / MISMATCH: [23, 0]"; "RESULT: PASS (0
+    mismatches)"; "Commit: 366de1e7b60e37d804fab9c8161a3d41be2e1b41 (parent 3a65641), 11
+    files, +1,190 −0"; "Ledger: 78bd0eb."
+  READ (CC's): findings 1–3; the cause of the space freed beyond the list's figure, "not
+    measured".
+  READ (the architect's clone at 366de1e): the two hashes in STATUS in a straight chain on
+    b204649; 12ai_CLNB/brief_12ai_CLNB.md and 12ai_open/r823.txt equal to the architect's
+    copies by cmp; the plan's last line "The decision log in this file ends at R823.";
+    12ai_CLNB/removal_log.tsv, fifty-three rows; 12ai_CLNB/3a_main_repo.txt, 497 lines
+    beginning "dangling" and no line holding "missing" or "broken"; git diff --stat
+    7fad72a HEAD on engine tests scripts analysis review_specs, empty.
+  INFERRED: none that a clause below rests on.
+
+R824(a) — The 12ai-CLNB final report is accepted as printed. Item 0 3a65641 (Block 221;
+  r823.txt and the brief file equal to the architect's copies), ledger a9ae0c2. The
+  fifty-three clones of R823(b) are removed, each by its own top directory after its seven
+  checks, none skipped; the four kept clones, the two fixture repositories and every
+  parent entry's other files read as before; the main repository whole; the retention,
+  probe and stage rows MATCH; the fingerprint IDENTICAL. The evidence commit 366de1e,
+  ledger 78bd0eb. I1 and I2 held; E1–E4 held. 5,646,884,864 bytes were freed by df's
+  reading.
+R824(b) — Readings, no row. Finding 2 is the architect's: the brief ordered the repository
+  check after the removal and no count of dangling objects before it, so the 497 has
+  nothing to be set against; a removal of directories outside .git makes none, which is
+  reasoning and not a measurement. Finding 1: the space freed beyond the list's lower
+  bound is unexplained by measurement. Finding 3: the fixture's leftovers stay in this
+  session's scratch directory.
+R824(c) — The PI's word: "wrap". Session 12ai closes: a closeout brief (below), its report
+  read and accepted, then a wrap ruling of its own. Nothing else is started in 12ai. U31
+  opens the next session with its Phase A.
+R824(d) — No closeout gate. The engine tree at HEAD is 7fad72a's, gated at 12ai-U30B
+  (R821(b)); every later commit is under docs/. The band for the next session is computed
+  at the closeout from the last four standard gates and set by the wrap ruling.
+R824(e) — The four clones this session made, and the one the closeout makes for its recount,
+  are left as they are. They are not ruled for removal; a later session lists them if the
+  PI asks.
+R824(f) — What this lane owed the workbench is the PI's to send: the restart change's hash
+  (R820(f)) and the removal's block as the report prints it. Still owed by the workbench:
+  the merge sha for deepseek-r1:32b in dgx-infra's scripts/ollama_lane_models.txt.
+R824(g) — The count for 12ai, to be confirmed by the wrap ruling: one stop, the architect's
+  (12ai-CLNA at its step 2j, R822(a)); no pause; fourteen architect's errors (R823(f)'s
+  thirteen; finding 2), one reaching a commit.
+R824(h) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.

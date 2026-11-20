@@ -1,0 +1,82 @@
+RULING [evidence-engine 12ai-R820] — 12ai-U41B accepted; U41 landed; the two foreign-lock tests
+  classed coupled, on the PI's word; INT-ai12-1 closes at the next item 0; the gate's 963.33 s
+  enters the series; readings on the findings; U30's build with N46 next; no standing rule
+STATUS: PI ruling, 2026-11-20 UTC, session 12ai, on architect recommendation, on the 12ai-U41B
+  final report (item 0 ee20dbab3b7ec37c31b9ca44a3ac8afea47131de; engine
+  339370dd92a766ff45ad7abc44e7ec2faab1362b; evidence
+  03abfaf5b16b577d0a089338c787a988db7e6fa5). Transcribe at item 0 of the 12ai-U30B brief
+  below, by transcribe_ruling.py, in the block after R819's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12ai-U41B final report, quoted; wrapped lines joined): "Commit:
+    ee20dbab3b7ec37c31b9ca44a3ac8afea47131de (parent 483969d), +839 −0 over 3 files."; "Ledger:
+    ef77495 (parent a84a03e)."; "r819.txt: b962a519…03e6, 10,574 B, 130 lines. Equal to the
+    architect's hash."; "Brief file:
+    f981a4516f61ed8529a06e189c480c58eab4c542c8405b922c6090bbb8fb8849, 41,998 B, 559 lines."
+    (the architect's copy: the same); "339370dd92a766ff45ad7abc44e7ec2faab1362b (parent
+    ee20dbab3b7ec37c31b9ca44a3ac8afea47131de)"; "On the parent, 17 are red and 3 green (cases
+    4, 10c, 10d), which is E1."; "After the edits all 20 pass."; "pin_tuples_u41b.json is
+    byte-identical to 12ah_close/pin_tuples_close.json"; "Live spec_hash: 9b18f36c…58fb
+    before and after."; "equal to the parent's; there is no ollama_restarts key"; "exactly
+    two restart sites, each with -n"; "3593 passed, 17 deselected, 1 xfailed, 2 warnings in
+    961.45s"; "wall 963.3 s, inside 897–1095"; "collected 3,611 = 3,591 + 20"; "selected
+    3,594 = 3,574 + 20"; "NRestarts=0, unit start unchanged since 2026-11-16: no restart and
+    no model load"; "Commit: 03abfaf5b16b577d0a089338c787a988db7e6fa5 (parent 339370d), 27
+    files, +13,436 −0"; "Ledgers: 124d44c for the engine commit and b967485 for the evidence
+    commit."; "Rows 289 (94 / 59 / 136, 0 unclassed)".
+  READ (CC's): findings 1–8; I2–I7 as the report gives them.
+  READ (the architect's clone at 03abfaf): the three hashes in STATUS in a straight chain on
+    483969d; 12ai_U41B/brief_12ai_U41B.md and 12ai_open/r819.txt equal to the architect's
+    copies by cmp; the plan's last line "The decision log in this file ends at R819.";
+    12ai_U41B/gate_u41b/gate_wall.txt "wall: 963.330798171 s"; the engine commit's diff of
+    the eight files, read whole against R819(c)–(g); in
+    tests/test_restart_recovery_guard.py and tests/test_u21_no_overlap.py, the two
+    foreign-lock tests' assertions unchanged, a run that asked added; text that still
+    states the old behaviour at analysis/eval/run_qualgap01.py:21,
+    docs/architecture/models.md:62 and :66, modules.md:146, pipeline.md:223 and :231.
+  INFERRED: none.
+
+R820(a) — The 12ai-U41B final report is accepted as printed. Item 0 ee20dba (Block 217; rows
+  INT-ai12-1 and INT-ai12-2; U41 entered; r819.txt and the brief file equal to the
+  architect's copies), ledger ef77495. The engine commit 339370d, as R819(c)–(g) and (j)
+  rule it, read by the architect clause by clause: the default 0; sudo -n at both sites;
+  the cadence counter reset outside its try; restart_not_enabled the seventh ending; the
+  recovery order opt-out, not enabled, foreign lock, command; ollama_restarts written only
+  when asked; pdf_quality_check stopped by a run fault at once and by three read timeouts
+  in a row, exiting non-zero. Ledger 124d44c. The evidence commit 03abfaf, ledger b967485.
+  I1–I7 held; E1–E6 held. U41 has landed: P1's fix units 39, done 34.
+R820(b) — The gate's 963.33 s is the forty-fifth member of the series: a standard gate
+  launched as a unit, no hold, on a tree with twenty more tests. The band stays 897–1095 s
+  until the closeout cuts the next.
+R820(c) — Finding 2, the PI's word: "finding 2 agree". The two foreign-lock tests that went
+  red are coupled tests, not regressions, and their rewrite stands: R819(e) puts the
+  not-enabled ending before the lock, so the lock is reached only from a run that asked;
+  each test's assertion is unchanged. The brief's stop list named "any test of the
+  foreign-lock stand-down" as a regression, against the order the ruling beside it set:
+  the architect's error, of the kind R816(c) records. CC went on by its own judgement past
+  a stated stop and said so first in its report; accepted here, no rule.
+R820(d) — Readings, no row. Finding 1 is the architect's: case 1 forbade the word the edit
+  step required; CC met both by wording, and the three endings in which no restart was
+  attempted no longer say "+ restart". Finding 5: a docstring, a log line, a gate list and
+  a comment brought to the fact beyond the named edits, accepted. Finding 7: the old recount
+  script's expectation no longer holds, as its rows moved; the closeout writes the next
+  one. Finding 8: CC stashed the tree while a selected run was going, discarded that run
+  and ran the whole set again; its own slip, without effect. Two readings from the
+  architect's read of the diff: ollama_client's table of endings without a restart is
+  keyed by string literals, not by run_manifest's names; run_pipeline opens its manifest
+  through two branches so as not to pass an empty value.
+R820(e) — INT-ai12-1 closes at the item 0 that transcribes this ruling, in the record's
+  CLOSED form, on 339370d. With it, one dated note on the row: text that states the old
+  restart behaviour remains at analysis/eval/run_qualgap01.py:21 and, in
+  docs/architecture/, at models.md:62 and :66, modules.md:146 and pipeline.md:223 and
+  :231; the architecture lines are HK-ARCH's (R819(j)) and the first goes with them. The
+  count's effect is the recount's to state.
+R820(f) — The hash owed to the workbench is 339370dd92a766ff45ad7abc44e7ec2faab1362b; the PI
+  sends it. The removal of the sudoers rule is the workbench's.
+R820(g) — The count so far in 12ai: no stop, no pause; eight architect's errors (R819(a)'s
+  six; finding 1 and the stop list of (c)), one reaching a commit.
+R820(h) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+  Next: U30's build with N46 (the brief below), from 12af_U30A/12af_U30A.md,
+  12ag_N46A/12ag_N46A.md, R805(d) and R807(b); INT-j12-51 closed at the item 0 after it
+  lands (R807(c)); the clone deletion brief, before the close; the report to the workbench.

@@ -677,7 +677,8 @@ class OllamaRuntime(_SpecModel):
         description=(
             "Sent per request so the manifest's value is the one in force (the "
             "service's OLLAMA_KEEP_ALIVE lives in a systemd drop-in the manifest "
-            "cannot see). -1 equals the service value, so behaviour is unchanged."
+            "cannot see). The service's default is no longer -1; -1 is still the value "
+            "sent on every request, so the request's keep_alive is the manifest's."
         ),
     )
 
@@ -732,7 +733,8 @@ class PDFQualityCheck(_UnsentOptions):
     )
     timeout: int = Field(
         default=120, ge=10, le=600,
-        description="Ollama request timeout in seconds",
+        description=("Seconds before the watchdog marks the call late; the request itself "
+                     "ends by the client's read timeout, not by this value"),
     )
     exclude_reasons: list[str] = Field(
         default=["NON_ENGLISH", "NOT_MANUSCRIPT", "INACCESSIBLE", "OTHER"],

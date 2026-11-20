@@ -142,7 +142,8 @@ def _capture_selection(monkeypatch):
     """Stub run_extraction and keep the selection the stage handed it."""
     seen = {}
 
-    def fake(db, spec, review_name, *, selection, run_id):
+    def fake(db, spec, review_name, *, selection, run_id, restart_every):
+        # restart_every: the stage hands run_extraction the run's cadence, 0 by default (U41)
         seen["ids"] = tuple(pid for pid, _ in selection.to_extract)
         return {"extracted": 0, "failed": 0}
     monkeypatch.setattr(rp, "run_extraction", fake)

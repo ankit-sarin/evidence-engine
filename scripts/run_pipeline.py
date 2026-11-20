@@ -67,6 +67,8 @@ def run_pipeline(
     skip_to: str | None = None,
     limit: int | None = None,
     max_papers: int | None = None,
+    restart_every: int = 0,
+    restart_on_read_timeout: bool = False,
 ) -> None:
     """Run the full evidence engine pipeline.
 
@@ -77,6 +79,11 @@ def run_pipeline(
     `max_papers` (10b-C2) bounds the EXTRACT stage only: declared in the run
     manifest before the first call, applied after selection's reuse-key skip.
     None is unbounded. See `check_max_papers` and `bound_selection`.
+
+    `restart_every` and `restart_on_read_timeout` (U41, R819(d)) ask for the Ollama
+    restarts, both off by default: the proactive cadence handed to `run_extraction`, and
+    the recovery restart after a read timeout. When either is set the manifest records
+    them under `ollama_restarts`; when neither is, no such key.
     """
     t_start = time.time()
     if max_papers is not None:
@@ -113,7 +120,11 @@ def run_pipeline(
     # Before the first model call, and instead of a review_runs row: the
     # manifest records the resolved configuration of every stage this run can
     # call, and refuses a dirty tree or a pre-manifest arm before anything runs.
-    run_id = _open_run_manifest(db, spec, start_idx, max_papers=max_papers)
+    restarts = ({"proactive_every": restart_every, "on_read_timeout": restart_on_read_timeout}
+                if restart_every or restart_on_read_timeout else None)
+    run_id = (_open_run_manifest(db, spec, start_idx, max_papers=max_papers, ollama_restarts=restarts)
+              if restarts is not None
+              else _open_run_manifest(db, spec, start_idx, max_papers=max_papers))
     # R225a: the field set is registered by open_run itself, keyed by run_id
     # (engine/core/run_manifest.py) — activation carries no codebook of its own.
     run_token = rm.activate(db._conn, run_id)
@@ -157,7 +168,8 @@ def run_pipeline(
         # ── EXTRACT ──────────────────────────────────────────
         if start_idx <= STAGES.index("extract"):
             results["extract"] = _stage_extract(db, spec, review_name, run_id=run_id,
-                                                max_papers=max_papers)
+                                                max_papers=max_papers,
+                                                restart_every=restart_every)
 
         # ── AUDIT ────────────────────────────────────────────
         if start_idx <= STAGES.index("audit"):
@@ -358,7 +370,7 @@ def _stage_parse(db: ReviewDatabase, review_name: str, *, spec: ReviewSpec,
 
 
 def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
-                   run_id: int, max_papers: int | None = None) -> dict:
+                   run_id: int, max_papers: int | None = None, restart_every: int = 0) -> dict:
     t = time.time()
     logger.info("=" * 60)
     logger.info("STAGE: EXTRACT")
@@ -401,7 +413,8 @@ def _stage_extract(db: ReviewDatabase, spec: ReviewSpec, review_name: str, *,
             db, spec, review_name, run_id=run_id, stats=stats)
         return {**stats, "elapsed": time.time() - t}
 
-    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id)
+    stats = run_extraction(db, spec, review_name, selection=selection, run_id=run_id,
+                           restart_every=restart_every)
     stats["distribution_check"] = _distribution_check(
         db, spec, review_name, run_id=run_id, stats=stats)
     elapsed = time.time() - t
@@ -500,6 +513,17 @@ _PIPELINE_STAGE_CONFIGS = {
 }
 
 
+def _non_negative_int(text: str) -> int:
+    """argparse type for --restart-every: refuses negatives and non-integers."""
+    try:
+        value = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"not an integer: {text!r}")
+    if value < 0:
+        raise argparse.ArgumentTypeError(f"must be >= 0, got {value}")
+    return value
+
+
 def _positive_int(text: str) -> int:
     """argparse type for --max-papers: refuses 0, negatives and non-integers."""
     try:
@@ -512,7 +536,8 @@ def _positive_int(text: str) -> int:
 
 
 def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
-                       max_papers: int | None = None) -> int:
+                       max_papers: int | None = None,
+                       ollama_restarts: dict | None = None) -> int:
     """Write this run's manifest before its first call (S3a, R73).
 
     `review_runs` is no longer written: it linked to nothing, recorded no
@@ -554,7 +579,8 @@ def _open_run_manifest(db: ReviewDatabase, spec: ReviewSpec, start_idx: int, *,
     environment, _ = pf.read_ollama_env()
     handle = rm.open_run(db._conn, spec, kind=kind, stages=stages, codebook=codebook,
                          preflight_models=sorted(set(preflight)),
-                         selection_bound=bound, ollama_environment=environment)
+                         selection_bound=bound, ollama_environment=environment,
+                         ollama_restarts=ollama_restarts)
     logger.info("Run manifest %d (%s) written: %d stage rows", handle.run_id,
                 handle.run_uid, len(handle.stages))
     return handle.run_id
@@ -624,6 +650,19 @@ def main():
               "reuse-key skip, ascending paper_id). Recorded in the run manifest. "
               "Absent: unbounded."),
     )
+    parser.add_argument(
+        "--restart-every",
+        type=_non_negative_int,
+        default=0,
+        help=("Restart the Ollama service after every N extracted papers (sudo -n). "
+              "Default 0: never. Recorded in the run manifest (U41, R819(d))."),
+    )
+    parser.add_argument(
+        "--restart-on-read-timeout",
+        action="store_true",
+        help=("Allow the recovery restart of the Ollama service after a request ends "
+              "by the read timeout (sudo -n). Default: off. Recorded in the run manifest."),
+    )
     args = parser.parse_args()
 
     if "--name" in sys.argv:
@@ -639,7 +678,8 @@ def main():
         with rm.interrupt_signals():
             with hold_experiment_lock():
                 run_pipeline(args.review, args.spec, skip_to=args.skip_to, limit=args.limit,
-                             max_papers=args.max_papers)
+                             max_papers=args.max_papers, restart_every=args.restart_every,
+                             restart_on_read_timeout=args.restart_on_read_timeout)
     except ExperimentLockHeld as exc:
         raise SystemExit(str(exc)) from None
     except (KeyboardInterrupt, rm.RunInterrupted) as exc:

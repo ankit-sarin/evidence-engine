@@ -11,8 +11,10 @@ own `time`.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import shutil
+import sqlite3
 import threading
 import time
 from pathlib import Path
@@ -43,6 +45,23 @@ A, B = "a" * 64, "b" * 64
 MESSAGES = [{"role": "user", "content": "hello"}]
 CEILING = 131_072  # gemma3:27b's trained context, the audit model's (12aa-U20B)
 WATCHDOG = 0.05
+#: U41 (R819(d)): the recovery restart runs only inside a run whose manifest records this.
+ASKED = {"proactive_every": 0, "on_read_timeout": True}
+
+
+@contextlib.contextmanager
+def _asked_run():
+    """A run that asked for the recovery restart, with nothing else registered: its manifest
+    records `ollama_restarts.on_read_timeout` true, and a call naming no stage is otherwise
+    unrecorded and unchecked, as one outside a run is."""
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE run_manifests (run_id INTEGER PRIMARY KEY, manifest_json TEXT)")
+    conn.execute("INSERT INTO run_manifests VALUES (1, ?)", (json.dumps({"ollama_restarts": ASKED}),))
+    try:
+        with rm.active_run(conn, 1):
+            yield
+    finally:
+        conn.close()
 
 
 def _answer():
@@ -155,10 +174,12 @@ def _call(spec, wall=WATCHDOG, **kw):
                           **{**ec.stage_config("audit", spec).kwargs(), **kw})
 
 
-def _run(review, spec, digests):
+def _run(review, spec, digests, restarts=None):
+    """`restarts`: the run's `ollama_restarts` request (U41, R819(d)); absent, the run did not ask."""
     db, cb = review
+    kw = {} if restarts is None else {"ollama_restarts": restarts}
     return rm.open_run(db._conn, spec, kind="screening", stages=("audit",), codebook=cb,
-                       preflight_models=(), git=CLEAN, digest_fn=digests).run_id
+                       preflight_models=(), git=CLEAN, digest_fn=digests, **kw).run_id
 
 
 def _rows(db):
@@ -211,7 +232,7 @@ def test_a_read_timed_out_request_reaches_the_restart_once_and_the_final_attempt
     db, _ = review
     events = []
     digests = Digests(A, events=events)
-    run_id = _run(review, spec, digests)
+    run_id = _run(review, spec, digests, ASKED)
     events.clear()
     fake.events = events
     service.side_effect = lambda *a, **k: (events.append("restart"), MagicMock(returncode=0))[1]
@@ -228,7 +249,7 @@ def test_a_digest_changed_by_the_restart_refuses_the_final_send(install, review,
     fake = install("read_timeout")
     db, _ = review
     monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading())
-    run_id = _run(review, spec, Digests(A, A, B))
+    run_id = _run(review, spec, Digests(A, A, B), ASKED)
     with rm.active_run(db._conn, run_id):
         with pytest.raises(rm.ModelDigestChanged):
             _call(spec)
@@ -241,7 +262,7 @@ def test_an_env_drift_after_the_restart_refuses_the_final_send_and_writes_its_re
     db, _ = review
     drift = {"OLLAMA_NUM_PARALLEL": ("1", "2")}
     monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading(drift))
-    run_id = _run(review, spec, Digests(A))
+    run_id = _run(review, spec, Digests(A), ASKED)
     with rm.active_run(db._conn, run_id):
         with pytest.raises(rm.ServerEnvChanged, match="recovery Ollama restart"):
             _call(spec)
@@ -255,7 +276,7 @@ def test_the_post_restart_path_writes_the_env_record(install, review, spec, serv
     install("read_timeout", "answer")
     db, _ = review
     monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading())
-    run_id = _run(review, spec, Digests(A))
+    run_id = _run(review, spec, Digests(A), ASKED)
     with rm.active_run(db._conn, run_id):
         _call(spec)
     rows = [json.loads(l) for l in telemetry_path(Path(db.db_path).parent).read_text().splitlines()]
@@ -266,9 +287,11 @@ def test_the_post_restart_path_writes_the_env_record(install, review, spec, serv
 
 
 def test_outside_a_run_the_env_recheck_writes_nothing_and_says_so(install, service, monkeypatch, caplog):
+    """Outside a registered run the restart no longer runs at all (U41, R819(c)); the recheck's own
+    no-run branch is reached from a run that asked and has nothing else registered (`_asked_run`)."""
     install("read_timeout", "answer")
     monkeypatch.setattr(pf, "recheck_ollama_env", lambda: pytest.fail("not outside a run"))
-    with caplog.at_level("INFO", logger="engine.core.run_manifest"):
+    with caplog.at_level("INFO", logger="engine.core.run_manifest"), _asked_run():
         oc.ollama_chat(model="m:8b", messages=MESSAGES, wall_timeout=WATCHDOG, max_retries=0)
     assert "nothing recorded" in caplog.text
 
@@ -276,16 +299,19 @@ def test_outside_a_run_the_env_recheck_writes_nothing_and_says_so(install, servi
 # ── the closed set of details ───────────────────────────────────────────────
 
 
-def test_the_detail_set_is_the_six_endings():
+def test_the_detail_set_is_the_seven_endings():
+    """The closed set of R761(c)(iv) and R762(c), amended from six to seven by R819(e):
+    `restart_not_enabled` after the six, whose names and order do not change."""
     assert rm.RUN_CALL_ENDING_DETAILS == (
         "restart_refused_opt_out", "restart_refused_foreign_lock", "restart_command_failed",
-        "post_restart_call_failed", "restart_recovered", "worker_alive_at_read_timeout")
+        "post_restart_call_failed", "restart_recovered", "worker_alive_at_read_timeout",
+        "restart_not_enabled")
 
 
-def _ended(install, review, spec, script):
+def _ended(install, review, spec, script, restarts=None):
     fake = install(*script)
     db, _ = review
-    run_id = _run(review, spec, Digests(A))
+    run_id = _run(review, spec, Digests(A), restarts)
     with rm.active_run(db._conn, run_id):
         with pytest.raises(TimeoutError):
             _call(spec)
@@ -303,20 +329,21 @@ def test_the_opt_out_ending_is_recorded(install, review, spec, service, monkeypa
 
 def test_the_foreign_lock_ending_is_recorded(install, review, spec, service, monkeypatch):
     monkeypatch.setattr(oc, "foreign_lock_held", lambda: True)
-    _, detail = _ended(install, review, spec, ["read_timeout"])
+    _, detail = _ended(install, review, spec, ["read_timeout"], ASKED)
     assert detail.startswith(rm.DETAIL_RESTART_REFUSED_LOCK + ": TimeoutError: ")
     service.assert_not_called()
 
 
 def test_the_restart_command_ending_is_recorded(install, review, spec, service):
     service.side_effect = OSError("sudo not available")
-    _, detail = _ended(install, review, spec, ["read_timeout"])
+    _, detail = _ended(install, review, spec, ["read_timeout"], ASKED)
     assert detail.startswith(rm.DETAIL_RESTART_COMMAND_FAILED + ": TimeoutError: ")
 
 
 def test_the_post_restart_ending_is_recorded(install, review, spec, service, monkeypatch):
     monkeypatch.setattr(pf, "recheck_ollama_env", lambda: _reading())
-    fake, detail = _ended(install, review, spec, ["read_timeout", ollama.ResponseError("runner crashed", 500)])
+    fake, detail = _ended(install, review, spec, ["read_timeout", ollama.ResponseError("runner crashed", 500)],
+                          ASKED)
     assert detail.startswith(rm.DETAIL_POST_RESTART_FAILED + ": TimeoutError: ")
     assert fake.sends == 2
     service.assert_called_once()
@@ -363,6 +390,7 @@ def test_no_executor_outlives_its_call(install, service, monkeypatch):
     install("answer")
     oc.ollama_chat(model="m:8b", messages=MESSAGES, wall_timeout=5.0, max_retries=0)
     install("read_timeout", "answer")
-    oc.ollama_chat(model="m:8b", messages=MESSAGES, wall_timeout=WATCHDOG, max_retries=0)
+    with _asked_run():  # U41: the recovery's final send needs a run that asked
+        oc.ollama_chat(model="m:8b", messages=MESSAGES, wall_timeout=WATCHDOG, max_retries=0)
     assert len(CountingExecutor.made) == 3
     assert all(e.shut for e in CountingExecutor.made)

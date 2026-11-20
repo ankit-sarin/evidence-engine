@@ -1,5 +1,8 @@
 """Tests for the shared Ollama client wrapper with watchdog timeouts."""
 
+import contextlib
+import json
+import sqlite3
 import time
 from unittest.mock import MagicMock, patch, call
 
@@ -17,6 +20,23 @@ from engine.utils.ollama_client import (
     ollama_chat,
 )
 from engine.utils import ollama_client as _oc
+from engine.core import run_manifest as _rm
+
+
+@contextlib.contextmanager
+def _asked_run():
+    """A run that asked for the recovery restart (U41, R819(d)): its manifest records
+    `ollama_restarts.on_read_timeout` true, so the recovery path is armed. The calls made
+    inside it name no stage, so nothing but the restart's gate reads the run."""
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE run_manifests (run_id INTEGER PRIMARY KEY, manifest_json TEXT)")
+    conn.execute("INSERT INTO run_manifests VALUES (1, ?)", (json.dumps(
+        {"ollama_restarts": {"proactive_every": 0, "on_read_timeout": True}}),))
+    try:
+        with _rm.active_run(conn, 1):
+            yield
+    finally:
+        conn.close()
 
 
 @pytest.fixture(autouse=True)
@@ -93,14 +113,15 @@ class TestWatchdogTimeout:
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
 
-        with pytest.raises(TimeoutError):
-            ollama_chat(
-                model="qwen3:8b",
-                messages=[{"role": "user", "content": "hello"}],
-                max_retries=2,
-                wall_timeout=1.0,
-                retry_delay=0.1,
-            )
+        with _asked_run():
+            with pytest.raises(TimeoutError):
+                ollama_chat(
+                    model="qwen3:8b",
+                    messages=[{"role": "user", "content": "hello"}],
+                    max_retries=2,
+                    wall_timeout=1.0,
+                    retry_delay=0.1,
+                )
 
         assert call_count == 2  # one request, then one post-restart request
 
@@ -209,7 +230,8 @@ class TestOllamaRestartRecovery:
     @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
     def test_restart_attempted_after_retries_exhausted(self, mock_client, mock_subprocess):
-        """After a request ends by the read timeout, should attempt sudo systemctl restart ollama."""
+        """After a request ends by the read timeout, inside a run that asked (U41, R819(d)),
+        should attempt sudo -n systemctl restart ollama."""
         call_count = 0
 
         def hang(**kwargs):
@@ -221,19 +243,20 @@ class TestOllamaRestartRecovery:
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
 
-        with pytest.raises(TimeoutError):
-            ollama_chat(
-                model="qwen3:8b",
-                messages=[{"role": "user", "content": "hello"}],
-                max_retries=0,
-                wall_timeout=1.0,
-                retry_delay=0.1,
-            )
+        with _asked_run():
+            with pytest.raises(TimeoutError):
+                ollama_chat(
+                    model="qwen3:8b",
+                    messages=[{"role": "user", "content": "hello"}],
+                    max_retries=0,
+                    wall_timeout=1.0,
+                    retry_delay=0.1,
+                )
 
         # Verify restart was called
         mock_subprocess.assert_called_once()
         restart_args = mock_subprocess.call_args[0][0]
-        assert restart_args == ["sudo", "systemctl", "restart", "ollama"]
+        assert restart_args == ["sudo", "-n", "systemctl", "restart", "ollama"]  # R819(c)
 
     @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
@@ -246,13 +269,14 @@ class TestOllamaRestartRecovery:
         mock_client.chat.return_value = mock_response
         mock_subprocess.return_value = MagicMock(returncode=0)
 
-        result = _restart_ollama_and_retry(
-            model="qwen3:8b",
-            messages=[{"role": "user", "content": "hello"}],
-            paper_label="paper_id=1",
-            effective_timeout=30.0,
-            max_retries=1,
-        )
+        with _asked_run():
+            result = _restart_ollama_and_retry(
+                model="qwen3:8b",
+                messages=[{"role": "user", "content": "hello"}],
+                paper_label="paper_id=1",
+                effective_timeout=30.0,
+                max_retries=1,
+            )
 
         assert result.message.content == '{"result": "ok"}'
         mock_subprocess.assert_called_once()
@@ -268,14 +292,15 @@ class TestOllamaRestartRecovery:
         mock_client.chat.side_effect = hang
         mock_subprocess.side_effect = OSError("sudo not available")
 
-        with pytest.raises(TimeoutError, match="timed out"):
-            ollama_chat(
-                model="qwen3:8b",
-                messages=[{"role": "user", "content": "hello"}],
-                max_retries=0,
-                wall_timeout=1.0,
-                retry_delay=0.1,
-            )
+        with _asked_run():
+            with pytest.raises(TimeoutError, match="timed out"):
+                ollama_chat(
+                    model="qwen3:8b",
+                    messages=[{"role": "user", "content": "hello"}],
+                    max_retries=0,
+                    wall_timeout=1.0,
+                    retry_delay=0.1,
+                )
 
         # Restart was attempted even though it failed
         mock_subprocess.assert_called_once()
@@ -291,15 +316,16 @@ class TestOllamaRestartRecovery:
         mock_client.chat.side_effect = hang
         mock_subprocess.return_value = MagicMock(returncode=0)
 
-        with pytest.raises(TimeoutError):
-            with caplog.at_level("WARNING", logger="engine.utils.ollama_client"):
-                ollama_chat(
-                    model="gemma3:27b",
-                    messages=[{"role": "user", "content": "test"}],
-                    max_retries=0,
-                    wall_timeout=1.0,
-                    retry_delay=0.1,
-                )
+        with _asked_run():
+            with pytest.raises(TimeoutError):
+                with caplog.at_level("WARNING", logger="engine.utils.ollama_client"):
+                    ollama_chat(
+                        model="gemma3:27b",
+                        messages=[{"role": "user", "content": "test"}],
+                        max_retries=0,
+                        wall_timeout=1.0,
+                        retry_delay=0.1,
+                    )
 
         assert "restarting ollama service" in caplog.text.lower()
 
@@ -307,14 +333,15 @@ class TestOllamaRestartRecovery:
            side_effect=OSError("systemctl not found"))
     def test_restart_ollama_and_retry_raises_on_restart_failure(self, mock_subprocess):
         """M3: _restart_ollama_and_retry raises RuntimeError (not None) on restart failure."""
-        with pytest.raises(RuntimeError, match="Ollama restart failed"):
-            _restart_ollama_and_retry(
-                model="qwen3:8b",
-                messages=[{"role": "user", "content": "hello"}],
-                paper_label="paper_id=1",
-                effective_timeout=30.0,
-                max_retries=1,
-            )
+        with _asked_run():
+            with pytest.raises(RuntimeError, match="Ollama restart failed"):
+                _restart_ollama_and_retry(
+                    model="qwen3:8b",
+                    messages=[{"role": "user", "content": "hello"}],
+                    paper_label="paper_id=1",
+                    effective_timeout=30.0,
+                    max_retries=1,
+                )
 
     @patch("engine.utils.ollama_client.subprocess.run")
     @patch("engine.utils.ollama_client._client")
@@ -330,14 +357,15 @@ class TestOllamaRestartRecovery:
 
         mock_client.chat.side_effect = hang
 
-        with pytest.raises(RuntimeError, match="Post-restart Ollama call failed"):
-            _restart_ollama_and_retry(
-                model="qwen3:8b",
-                messages=[{"role": "user", "content": "hello"}],
-                paper_label="paper_id=1",
-                effective_timeout=1.0,
-                max_retries=1,
-            )
+        with _asked_run():
+            with pytest.raises(RuntimeError, match="Post-restart Ollama call failed"):
+                _restart_ollama_and_retry(
+                    model="qwen3:8b",
+                    messages=[{"role": "user", "content": "hello"}],
+                    paper_label="paper_id=1",
+                    effective_timeout=1.0,
+                    max_retries=1,
+                )
 
 
 # ── Model digest ───────────────────────────────────────────────────

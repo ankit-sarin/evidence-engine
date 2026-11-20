@@ -818,11 +818,20 @@ def ollama_chat(
                         **kwargs,
                     )
                 except RuntimeError as ended:
-                    error = TimeoutError(
-                        f"Ollama call timed out after {attempt + 1} attempts + restart "
-                        f"(model={model}, {paper_label}, limit={effective_timeout}s)"
-                    )
-                    error.run_call_detail = getattr(ended, "detail", None)
+                    detail = getattr(ended, "detail", None)
+                    no_restart = _NO_RESTART_ATTEMPTED.get(detail)
+                    if no_restart is None:
+                        error = TimeoutError(
+                            f"Ollama call timed out after {attempt + 1} attempts + restart "
+                            f"(model={model}, {paper_label}, limit={effective_timeout}s)"
+                        )
+                    else:
+                        # R819(e): no restart was attempted, so the text does not say one was.
+                        error = TimeoutError(
+                            f"Ollama call timed out after {attempt + 1} attempts; {no_restart} "
+                            f"(model={model}, {paper_label}, limit={effective_timeout}s)"
+                        )
+                    error.run_call_detail = detail
                     raise error from ended
                 return _finish(response, late_by=late[0] if late else None, restarted=True)
 
@@ -874,6 +883,14 @@ def ollama_chat(
 
 # ── Ollama restart recovery (Layer 3) ────────────────────────────────
 
+#: The recovery endings in which no restart was attempted, each with the words the
+#: TimeoutError uses for it (R819(e)). Keyed by `run_manifest`'s detail strings.
+_NO_RESTART_ATTEMPTED = {
+    "restart_refused_opt_out": "recovery refused by the opt-out variable",
+    "restart_not_enabled": "recovery not enabled for this call",
+    "restart_refused_foreign_lock": "recovery refused: another process holds the experiment lock",
+}
+
 
 def _restart_ollama_and_retry(
     *, model, messages, paper_label, effective_timeout, max_retries, stage=None, late=None, **kwargs,
@@ -888,8 +905,13 @@ def _restart_ollama_and_retry(
     the functions a first send uses (F7, R734(e), R762(b)). A refusal they raise is a
     `RunRefused`, not a RuntimeError, so it reaches the run as itself.
 
-    Two gates run before the restart, both of which make this branch refuse
-    rather than proceed (OPSFIX-01):
+    Three gates run before the restart, each of which makes this branch refuse
+    rather than proceed (OPSFIX-01; U41), in this order: the opt-out variable, the
+    run's request, the experiment flock (R819(e)):
+
+    * **The run's request (U41, R819(d)).** Only a call inside a run whose manifest
+      records `ollama_restarts.on_read_timeout` true may restart; any other call ends
+      `restart_not_enabled`.
 
     * **The experiment flock (OPS-GUARD-01).** This is the same predicate
       `extractor.restart_ollama` uses, and deliberately the narrower
@@ -906,14 +928,22 @@ def _restart_ollama_and_retry(
     retries and will surface a TimeoutError either way.
     """
     from engine.core.run_manifest import (
-        DETAIL_POST_RESTART_FAILED, DETAIL_RESTART_COMMAND_FAILED, DETAIL_RESTART_REFUSED_LOCK,
-        DETAIL_RESTART_REFUSED_OPT_OUT, DETAIL_WORKER_ALIVE, check_call_digest, check_call_env,
+        DETAIL_POST_RESTART_FAILED, DETAIL_RESTART_COMMAND_FAILED, DETAIL_RESTART_NOT_ENABLED,
+        DETAIL_RESTART_REFUSED_LOCK, DETAIL_RESTART_REFUSED_OPT_OUT, DETAIL_WORKER_ALIVE,
+        check_call_digest, check_call_env, restart_on_read_timeout_enabled,
     )
     if restart_disabled():
         raise _RestartEnded(
             f"Ollama restart refused: {RESTART_OPT_OUT_ENV} is set "
             f"(model={model}, {paper_label}). Recovery is disabled for this process.",
             DETAIL_RESTART_REFUSED_OPT_OUT,
+        )
+    # U41, R819(d), (e): only a run whose manifest asked for it; a call outside any run never.
+    if not restart_on_read_timeout_enabled():
+        raise _RestartEnded(
+            f"Ollama recovery not enabled: no active run recorded "
+            f"ollama_restarts.on_read_timeout true (model={model}, {paper_label}).",
+            DETAIL_RESTART_NOT_ENABLED,
         )
     if foreign_lock_held():
         raise _RestartEnded(
@@ -929,7 +959,7 @@ def _restart_ollama_and_retry(
     )
     try:
         subprocess.run(
-            ["sudo", "systemctl", "restart", "ollama"],
+            ["sudo", "-n", "systemctl", "restart", "ollama"],
             timeout=30,
             check=True,
             capture_output=True,

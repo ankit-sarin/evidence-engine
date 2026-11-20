@@ -58,7 +58,7 @@ logger = logging.getLogger(__name__)
 MAX_RETRIES = 2
 RETRY_DELAY = 30  # seconds between retries
 SNIPPET_MAX_RETRIES = 2
-RESTART_EVERY_N = 25  # proactive Ollama restart interval (0 = disabled)
+RESTART_EVERY_N = 0  # proactive Ollama restart interval; 0 = off, the default (U41, R819(c))
 
 
 # ── Codebook Loader ──────────────────────────────────────────────────
@@ -744,7 +744,7 @@ def _recheck_env_after_restart(db: ReviewDatabase, run_id: int, papers_done: int
 def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> bool:
     """Restart the Ollama service and wait for it to become responsive.
 
-    Uses ``sudo systemctl restart ollama`` to fully clear CUDA context
+    Uses ``sudo -n systemctl restart ollama`` to fully clear CUDA context
     fragmentation (a simple model unload/reload is not sufficient).
 
     Returns True once the restarted server answers, False when the restart is
@@ -782,12 +782,12 @@ def restart_ollama(reason: str = "proactive", papers_done: int = 0) -> bool:
         return False
 
     logger.info(
-        "[%s] Ollama restart (%s, %d papers done) — running sudo systemctl restart ollama",
+        "[%s] Ollama restart (%s, %d papers done) — running sudo -n systemctl restart ollama",
         ts, reason, papers_done,
     )
     try:
         subprocess.run(
-            ["sudo", "systemctl", "restart", "ollama"],
+            ["sudo", "-n", "systemctl", "restart", "ollama"],
             timeout=30, check=True, capture_output=True,
         )
     except Exception as exc:
@@ -1272,12 +1272,14 @@ def _extract_selected(db: ReviewDatabase, spec: ReviewSpec, selection: Selection
                     reason=f"proactive after {papers_since_restart} papers",
                     papers_done=stats["extracted"] + stats["failed"],
                 )
-                papers_since_restart = 0
             except RuntimeError:
                 logger.exception(
                     "Proactive Ollama restart failed — continuing without restart. "
                     "Monitor for instability."
                 )
+            # R819(f): the counter resets whether the restart was performed, skipped or
+            # failed, so a failing restart is tried again after restart_every more papers.
+            papers_since_restart = 0
             if restarted:
                 # U19 (R734(c)(ii)): a performed restart applies the unit as loaded now,
                 # so the environment is checked again before the next paper; a failed

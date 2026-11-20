@@ -33,6 +33,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from engine.core.database import DATA_ROOT
 from engine.core.review_spec import PDFQualityCheck
 from engine.core.effective_config import EffectiveConfig, stage_config
+from engine.core.extraction_events import CONSECUTIVE_FAILURE_ABORT, is_run_fault
 from engine.utils.ollama_client import ollama_chat
 from engine.utils.ollama_lock import ExperimentLockHeld, hold_experiment_lock
 
@@ -136,6 +137,9 @@ def _classify_page(
             return result
 
         except Exception as exc:
+            # R819(g): a run fault is a condition of the run, not of this page: not retried.
+            if is_run_fault(exc):
+                raise
             if attempt < MAX_RETRIES:
                 logger.warning(
                     "Classification failed (attempt %d/%d): %s — retrying",
@@ -197,7 +201,12 @@ def run_quality_check(
         "skipped_no_file": 0,
         "failed": 0,
         "results": [],
+        "stopped": None,
     }
+    # R819(g): three papers in a row ending in a read timeout stop the loop, as do the
+    # extractor's (CONSECUTIVE_FAILURE_ABORT); a success resets the count; any other
+    # failure neither counts nor resets. A run fault stops it at once.
+    timed_out: list[str] = []
 
     for i, paper in enumerate(papers):
         pid = paper["id"]
@@ -250,10 +259,22 @@ def run_quality_check(
                 conn.commit()
 
             stats["checked"] += 1
+            timed_out = []
 
         except Exception as exc:
             logger.exception("  %s: FAILED — %s", ee, exc)
             stats["failed"] += 1
+            if is_run_fault(exc):
+                stats["stopped"] = {"cause": f"run fault: {type(exc).__name__}: {exc}",
+                                    "papers": [ee]}
+                break
+            if isinstance(exc, TimeoutError):
+                timed_out.append(ee)
+                if len(timed_out) >= CONSECUTIVE_FAILURE_ABORT:
+                    stats["stopped"] = {
+                        "cause": f"{len(timed_out)} papers in a row ended in a read timeout",
+                        "papers": list(timed_out)}
+                    break
 
     conn.close()
     return stats
@@ -326,6 +347,12 @@ def main():
         print(f"\n  Language summary:")
         for lang, cnt in sorted(lang_counts.items(), key=lambda x: -x[1]):
             print(f"    {lang:<25} {cnt}")
+
+    # R819(g): a stopped loop ends the process non-zero, naming the papers and the cause.
+    if stats.get("stopped"):
+        stop = stats["stopped"]
+        raise SystemExit(f"PDF quality check STOPPED — {stop['cause']}; papers: "
+                         f"{', '.join(stop['papers'])}. The loop stopped there.")
 
 
 if __name__ == "__main__":

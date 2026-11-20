@@ -3305,7 +3305,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 266,
+            "line": 287,
             "names": [
               "--review"
             ],
@@ -3314,7 +3314,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 267,
+            "line": 288,
             "names": [
               "--spec"
             ],
@@ -3323,7 +3323,7 @@
           {
             "default": "unset",
             "dest": null,
-            "line": 268,
+            "line": 289,
             "names": [
               "--dry-run"
             ],
@@ -3332,7 +3332,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 269,
+            "line": 290,
             "names": [
               "--limit"
             ],
@@ -3346,7 +3346,7 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 267,
+            "line": 288,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -3356,7 +3356,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 279,
+            "line": 300,
             "scope": "main"
           }
         ],
@@ -4634,13 +4634,13 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 753,
+            "line": 755,
             "role": "help_text",
             "text": "The review's identity, and the single one. The spec file is review_specs/<review_id>.yaml and the data root is data/<review_id>; neither is passed independen..."
           },
           {
             "kind": "f-string",
-            "line": 990,
+            "line": 992,
             "role": "message",
             "text": "f'Review spec not found at {path}. Expected a YAML file (e.g., review_specs/<review_id>.yaml).'"
           }
@@ -4652,7 +4652,7 @@
         "yaml_loads": [
           {
             "call": "safe_load",
-            "line": 987,
+            "line": 989,
             "scope": "load_review_spec",
             "target": "f"
           }
@@ -6653,7 +6653,7 @@
           {
             "default": "unset",
             "dest": "review",
-            "line": 595,
+            "line": 621,
             "names": [
               "--review",
               "--name"
@@ -6663,7 +6663,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 601,
+            "line": 627,
             "names": [
               "--spec"
             ],
@@ -6672,7 +6672,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 607,
+            "line": 633,
             "names": [
               "--skip-to"
             ],
@@ -6681,7 +6681,7 @@
           {
             "default": "None",
             "dest": null,
-            "line": 613,
+            "line": 639,
             "names": [
               "--limit"
             ],
@@ -6690,9 +6690,27 @@
           {
             "default": "None",
             "dest": null,
-            "line": 619,
+            "line": 645,
             "names": [
               "--max-papers"
+            ],
+            "required": false
+          },
+          {
+            "default": "0",
+            "dest": null,
+            "line": 653,
+            "names": [
+              "--restart-every"
+            ],
+            "required": false
+          },
+          {
+            "default": "unset",
+            "dest": null,
+            "line": 660,
+            "names": [
+              "--restart-on-read-timeout"
             ],
             "required": false
           }
@@ -6706,19 +6724,19 @@
         "path_construction": [
           {
             "kind": "literal",
-            "line": 347,
+            "line": 359,
             "role": "message",
             "text": "No papers with status PDF_ACQUIRED. PDF acquisition is manual for v1. Place PDFs in data/%s/pdfs/ named as {paper_id}.pdf, then set status to PDF_ACQUIRED."
           },
           {
             "kind": "literal",
-            "line": 597,
+            "line": 623,
             "role": "help_text",
             "text": "Review id. The review's identity \u2014 the spec file (review_specs/<review>.yaml) and the data root (data/<review>) both derive from it. --name is a deprecated a..."
           },
           {
             "kind": "literal",
-            "line": 603,
+            "line": 629,
             "role": "help_text",
             "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
           }
@@ -6726,7 +6744,7 @@
         "review_database": [
           {
             "data_root_passed": false,
-            "line": 93,
+            "line": 100,
             "scope": "run_pipeline"
           }
         ],
@@ -6734,7 +6752,7 @@
         "spec_access": [
           {
             "func": "load_spec_for",
-            "line": 89,
+            "line": 96,
             "scope": "run_pipeline"
           }
         ],
@@ -6871,7 +6889,7 @@
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "95ce15f0fe8df50618880b08d901a5c97496b9e0",
+    "generated_at_commit": "ee20dbab3b7ec37c31b9ca44a3ac8afea47131de",
     "scan_roots": [
       "engine",
       "scripts",

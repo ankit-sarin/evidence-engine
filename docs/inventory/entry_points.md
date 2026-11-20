@@ -1,7 +1,7 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `95ce15f0fe8df50618880b08d901a5c97496b9e0` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `ee20dbab3b7ec37c31b9ca44a3ac8afea47131de` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
@@ -141,7 +141,7 @@ Two figures deliberately have no baseline row. **entry points** (83) counts anyt
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/run_cloud_extraction.py` | `--review` required; `--arm`=None; `--spec`=None; `--db`=None; `--max-papers`=None; `--max-cost`=None; `--progress`; `--dry-run` | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
-| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None | load_spec_for | 93 | run_pipeline:spec_first |
+| `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None; `--restart-every`=0; `--restart-on-read-timeout` | load_spec_for | 100 | run_pipeline:spec_first |
 | `scripts/screen_expanded.py` | `--review` required; `--spec`=None; `--fetch-only`; `--screen-only`; `--verify-only`; `--fresh` | load_review_spec, load_spec_for, spec_path_for | — | — |
 
 ## Raw YAML loads (outside the spec loader)
@@ -150,7 +150,7 @@ Two figures deliberately have no baseline row. **entry points** (83) counts anyt
 |---|---:|---|---|
 | `engine/adjudication/categorizer.py` | 46 | `safe_load` | `f` |
 | `engine/core/codebook.py` | 474 | `safe_load` | `text` |
-| `engine/core/review_spec.py` | 987 | `safe_load` | `f` |
+| `engine/core/review_spec.py` | 989 | `safe_load` | `f` |
 
 ## Path construction in code
 

@@ -190,7 +190,11 @@ def main(argv: list[str] | None = None) -> int:
                     continue
                 if args.restart_every and n and n % args.restart_every == 0:
                     logger.info("proactive Ollama restart after %d calls", n)
-                    restart_ollama(reason="elicit01 cadence", papers_done=n)
+                    try:
+                        restart_ollama(reason="elicit01 cadence", papers_done=n)
+                    except RuntimeError:
+                        # R819(c): a failed restart no longer ends the study; it continues unrestarted.
+                        logger.exception("proactive Ollama restart failed after %d calls — continuing", n)
                 n += 1
                 prompt, nu = prompts[cond]
                 logger.info("[%d/%d] p%d %s (%s)", n, total, p.paper_id, cond, p.length_stratum)

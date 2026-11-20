@@ -153,9 +153,10 @@ INGESTED → ABSTRACT_SCREENED_IN / ABSTRACT_SCREENED_OUT / ABSTRACT_SCREEN_FLAG
 
 ## Ops Invariants — Ollama service safety
 
-Two independent code paths can run `sudo systemctl restart ollama`, and a
-`NOPASSWD` sudoers rule for exactly that command means both really fire. Both are
-now gated, and the suite is fenced. Do not add a third ungated path.
+Two independent code paths can run `sudo -n systemctl restart ollama`, and a
+`NOPASSWD` sudoers rule for exactly that command means both can fire. Both are off
+by default and run only for a run that asks (U41, R819(c)–(e)); both are gated, and
+the suite is fenced. Do not add a third ungated path.
 
 - **Experiment flock** (`engine/utils/ollama_lock.py`, OPS-GUARD-01): `flock(2)` on
   `~/.ollama_experiment.lock`, never an existence check, so a dead holder releases
@@ -170,13 +171,18 @@ now gated, and the suite is fenced. Do not add a third ungated path.
 - **Both restart paths gate on `foreign_lock_held()`**, deliberately narrower than
   `check_experiment_lock()` — a process holding the lock for its own run must still
   be able to restart, but restarting under *someone else's* experiment destroys it.
-  - `extractor.restart_ollama()` — proactive CUDA-defrag restart (`RESTART_EVERY_N`).
+  - `extractor.restart_ollama()` — proactive CUDA-defrag restart every `restart_every`
+    papers. `RESTART_EVERY_N` is 0, so it runs only when `run_pipeline --restart-every N`
+    asks; a failed restart resets the cadence counter as a performed one does (R819(f)).
   - `ollama_client._restart_ollama_and_retry()` — last-resort recovery after a request
-    ends by the read timeout (OPSFIX-01; U21, R761(c)(iii)).
+    ends by the read timeout (OPSFIX-01; U21, R761(c)(iii)), only inside a run whose
+    manifest records `ollama_restarts.on_read_timeout` true (`run_pipeline
+    --restart-on-read-timeout`); any other call, and every call outside a run, ends
+    `restart_not_enabled` with no restart (R819(d), (e)).
 - **Opt-out:** `EVIDENCE_ENGINE_NO_OLLAMA_RESTART` disarms both restart paths, for
-  harnesses pointed at a different server. The recovery branch refuses with
-  `RuntimeError`, which `ollama_chat` surfaces as `TimeoutError` — never a silent
-  success. The proactive restart is skipped with one log line naming the variable,
+  harnesses pointed at a different server, and wins over the manifest's request. The
+  recovery branch refuses with `RuntimeError`, which `ollama_chat` surfaces as
+  `TimeoutError` — never a silent success. The proactive restart is skipped with one log line naming the variable,
   and the run continues.
 - **Suite fence** (`tests/conftest.py`, OPSFIX-01): an autouse fixture wraps
   `subprocess.run/Popen/call/check_call/check_output` and `os.system` and refuses any
@@ -249,8 +255,10 @@ closeout; **the old record is superseded, never edited.**
   test; serving a publication is not a reason to retain. Legacy result tables stay
   under R25 because they serve the engine as a regression fixture. Retirement is
   recorded in a ledger and executed by the session that owns the artifact.
-- **No live write to review.db between 07:00 and 10:35 UTC** (R86: 07:00 Ollama health
-  check, 09:00 nightly suite, 10:30 dgx-snapshot-user timer +0–2 min, all read-only);
+- **No live write to review.db between 09:00 and 10:35 UTC Monday to Saturday, or
+  between 07:00 and 10:35 UTC on Sunday, by UTC day** (R86 as amended by R812(a): the
+  09:00 nightly suite and the 10:30 dgx-snapshot-user timer +0–2 min every day, and
+  the full Ollama health sweep at 07:00 on Sunday; all read-only);
   before any live write, exclusivity is checked against scheduled jobs that read or write
   review.db or the evidence-engine tree — not every timer on the box (R85) — plus
   lsof/fuser empty on review.db.

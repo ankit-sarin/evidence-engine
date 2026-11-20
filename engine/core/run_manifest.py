@@ -83,16 +83,19 @@ REASON_INTERRUPT_SIGTERM = "interrupt:SIGTERM"
 REASON_INTERRUPT_SIGHUP = "interrupt:SIGHUP"
 #: R761(c)(iv), R762(c): how a call's restart path or wait ended, written at the head of
 #: `run_calls.outcome_detail` under the existing outcome tokens. The closed set: the first
-#: five endings of `ollama_client`'s recovery restart, and a worker alive past the bound.
+#: five endings of `ollama_client`'s recovery restart, a worker alive past the bound, and a
+#: recovery the run did not ask for (U41, R819(e), amending the set from six to seven).
 DETAIL_RESTART_REFUSED_OPT_OUT = "restart_refused_opt_out"
 DETAIL_RESTART_REFUSED_LOCK = "restart_refused_foreign_lock"
 DETAIL_RESTART_COMMAND_FAILED = "restart_command_failed"
 DETAIL_POST_RESTART_FAILED = "post_restart_call_failed"
 DETAIL_RESTART_RECOVERED = "restart_recovered"
 DETAIL_WORKER_ALIVE = "worker_alive_at_read_timeout"
+DETAIL_RESTART_NOT_ENABLED = "restart_not_enabled"
 RUN_CALL_ENDING_DETAILS = (
     DETAIL_RESTART_REFUSED_OPT_OUT, DETAIL_RESTART_REFUSED_LOCK, DETAIL_RESTART_COMMAND_FAILED,
     DETAIL_POST_RESTART_FAILED, DETAIL_RESTART_RECOVERED, DETAIL_WORKER_ALIVE,
+    DETAIL_RESTART_NOT_ENABLED,
 )
 #: R761(c)(ii): a response after the watchdog fired, recorded 'completed'. A reading.
 LATE_COMPLETION_DETAIL = "late_completion: {late_by:.1f}s past the watchdog limit of {limit:.0f}s"
@@ -489,7 +492,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
              payload_description: str | None = None,
              selection_bound: Mapping[str, Any] | None = None,
              inputs: Mapping[str, str] | None = None,
-             ollama_environment: str | None = None) -> RunHandle:
+             ollama_environment: str | None = None,
+             ollama_restarts: Mapping[str, Any] | None = None) -> RunHandle:
     """Write the manifest and pin its arms, or refuse. Before the first call.
 
     The local extraction arm is the exception (R569(b)): it is registered and,
@@ -512,6 +516,11 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     `ollama_environment` (U19, R734(c)(i)) is the Ollama unit's `Environment=` value
     as `systemctl show` printed it, read by the caller before this open, recorded
     verbatim under the manifest's `ollama_environment` key. Absent, no such key.
+
+    `ollama_restarts` (U41, R819(d)), when given, is the run's request for the Ollama
+    restarts, `{"proactive_every": <int>, "on_read_timeout": <bool>}`, recorded verbatim
+    under the manifest's `ollama_restarts` key, as `selection_bound` is. Absent, no such
+    key, and neither restart is enabled for the run.
     """
     if kind not in RUN_KINDS:
         raise ValueError(f"run kind {kind!r} is not one of {RUN_KINDS}")
@@ -654,6 +663,8 @@ def open_run(conn, spec, *, kind: str, stages: Iterable[str], codebook,
     # A run that sends nothing to the Ollama server records no environment (R735(b)).
     if ollama_environment is not None:
         manifest["ollama_environment"] = ollama_environment
+    if ollama_restarts is not None:
+        manifest["ollama_restarts"] = dict(ollama_restarts)
     if cloud_list and not payload_description:
         raise ValueError("a run with cloud arms records a payload description (S3g)")
 
@@ -1092,6 +1103,23 @@ def active_run(conn, run_id: int):
         yield
     finally:
         deactivate(token)
+
+
+def restart_on_read_timeout_enabled() -> bool:
+    """U41, R819(d): whether the active run's manifest records
+    `ollama_restarts.on_read_timeout` true. Read from the run's own manifest row; false
+    with no active run, no such key, or any other value. Never read from the environment
+    or a module default. Reads only."""
+    active = _ACTIVE.get()
+    if active is None:
+        return False
+    conn, run_id = active
+    row = conn.execute("SELECT manifest_json FROM run_manifests WHERE run_id = ?",
+                       (run_id,)).fetchone()
+    if row is None:
+        return False
+    restarts = json.loads(row[0]).get("ollama_restarts")
+    return isinstance(restarts, dict) and restarts.get("on_read_timeout") is True
 
 
 def active_field_names() -> frozenset[str] | None:

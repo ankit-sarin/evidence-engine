@@ -82,7 +82,7 @@ def test_restart_proceeds_under_self_lock(tmp_path):
             assert L.foreign_lock_held() is False      # ...but by us
             extractor.restart_ollama(reason="proactive", papers_done=25)
         mock_run.assert_called_once()
-        assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+        assert mock_run.call_args[0][0] == ["sudo", "-n", "systemctl", "restart", "ollama"]  # R819(c)
 
 
 def test_restart_proceeds_when_lock_is_free():
@@ -165,7 +165,7 @@ def test_a_falsy_opt_out_value_does_not_disable_the_restart(monkeypatch, value):
         mock_get.return_value.status_code = 200
         extractor.restart_ollama(reason="proactive", papers_done=25)
     mock_run.assert_called_once()
-    assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+    assert mock_run.call_args[0][0] == ["sudo", "-n", "systemctl", "restart", "ollama"]  # R819(c)
 
 
 def test_the_extraction_loop_logs_one_skip_per_cadence_under_the_opt_out(

@@ -12,7 +12,10 @@ a process holding the lock for its own long run must still be able to recover.
 
 from __future__ import annotations
 
+import contextlib
+import json
 import os
+import sqlite3
 import subprocess
 import sys
 import textwrap
@@ -22,6 +25,7 @@ from unittest.mock import MagicMock, patch
 import httpx
 import pytest
 
+from engine.core import run_manifest as rm
 from engine.utils import ollama_client as oc
 from engine.utils import ollama_lock as L
 
@@ -65,11 +69,30 @@ def _spawn_holder(tmp_path):
     raise AssertionError("foreign holder did not acquire the lock in time")
 
 
+@contextlib.contextmanager
+def _asked_run():
+    """A run that asked for the recovery restart (U41, R819(d)): its manifest records
+    `ollama_restarts.on_read_timeout` true. The calls name no stage, so nothing but the
+    restart's gate reads the run."""
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE run_manifests (run_id INTEGER PRIMARY KEY, manifest_json TEXT)")
+    conn.execute("INSERT INTO run_manifests VALUES (1, ?)", (json.dumps(
+        {"ollama_restarts": {"proactive_every": 0, "on_read_timeout": True}}),))
+    try:
+        with rm.active_run(conn, 1):
+            yield
+    finally:
+        conn.close()
+
+
 def _call(**overrides):
+    """The recovery path, armed explicitly by a run that asked (U41): the gates under test
+    here are the opt-out and the flock, which come before and after the run's request."""
     kwargs = dict(model="deepseek-r1:32b", messages=[], paper_label="paper_id=1",
                   effective_timeout=1.0, max_retries=0)
     kwargs.update(overrides)
-    return oc._restart_ollama_and_retry(**kwargs)
+    with _asked_run():
+        return oc._restart_ollama_and_retry(**kwargs)
 
 
 # ── the flock gate ───────────────────────────────────────────────────────
@@ -98,7 +121,7 @@ def test_restart_proceeds_under_self_lock():
             assert L.foreign_lock_held() is False      # ...but by us
             _call()
         mock_run.assert_called_once()
-        assert mock_run.call_args[0][0] == ["sudo", "systemctl", "restart", "ollama"]
+        assert mock_run.call_args[0][0] == ["sudo", "-n", "systemctl", "restart", "ollama"]  # R819(c)
 
 
 def test_restart_proceeds_when_lock_is_free():

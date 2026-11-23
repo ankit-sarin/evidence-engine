@@ -21373,3 +21373,95 @@ R827(e) — The count so far in 12aj: one stop (R826(a)); no pause; one architec
 | 2026-11-23 | R827(a) — The 12aj-OPEN-R1 final report is accepted as printed. R826's blocking item held. The evidence commit cd6f9a8 (the gate's nineteen files and its two side files, the 2026-11-21 and 2026-11-22 job reads, the NVRM read, the resume file equal to the architect's copy), ledger b3b5f8f carrying five rows of another lane, named. The open check passed whole on the second config; the recount stands at 289 with 39 / 35; R510 215 / 215, in 0, out 0. With item 0 46339be (R826(c)), session 12aj is open on a verified base. R827(b) — The gate's 1017.85 s is the forty-seventh member of the series and is carried as confounded (R677(f)), its confounder named: another lane's pytest run that started at 04:19:24 UTC, inside the gate's window and after both snapshots, as the 12ag open's member was carried (R805(b)). It was launched as a unit, with no hold. The band stays 881–1076 s until the 12aj closeout cuts the next one in R683(c)'s form. R827(c) — Readings, no row. The open check's health section read the sweep written by the light/full script and passed, so the brief's D8 was not used and expires untested. Finding 2: the five foreign rows were carried and named as R654(d) has it. Finding 3: a sweep day's journal of this size is in the record already (2026-11-15's); it holds no lane's name by CC's reading; no action. Finding 4: another lane's runs rotated three basetemps out of the shared temp root during the open; with finding 1 it joins the cross-lane readings for dgx-infra. R827(d) — ~/scratch/12aj-open/between_sessions_read.txt stays held as R826(e) left it, at the sha256 above. Whether it is published, and in what form, is the PI's and is not ruled here. R827(e) — The count so far in 12aj: one stop (R826(a)); no pause; one architect's error. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next: U31's Phase A (the brief below), read-only; then the PI's decisions on its read-out; then its build. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-OPEN-R1 final report (evidence cd6f9a8) |
 
 The decision log in this file ends at R827.
+
+**Block 226.** *Transcribed 2026-11-23 (item 0 of the 12aj-U31R brief), in its own commit with the brief file it orders, in the R597(e) form:* ruling R828, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-U31A final report (item 0 `fed257bd169d374b75c5035e1b76da609180ae56`; read-out `8ae879f3a316fda1e74e74d574cb1ec2009ac073`). The 12aj-U31R brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R828] — U31's Phase A accepted; the PI's word on its eight
+  decisions: "package"; U31's design; the two repair scripts retire first, in a commit of
+  their own; no standing rule
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the 12aj-U31A
+  final report (item 0 fed257bd169d374b75c5035e1b76da609180ae56; read-out
+  8ae879f3a316fda1e74e74d574cb1ec2009ac073). Transcribe at item 0 of the 12aj-U31R brief
+  below, by transcribe_ruling.py, in the block after R827's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12aj-U31A final report, quoted; wrapped lines joined): "Commit:
+    fed257bd169d374b75c5035e1b76da609180ae56, parent cd6f9a8…; pushed, 0 0"; "Plan +169 / −0;
+    "ends at" lines 180 → 182; six-cell INT- rows 215 / 215"; "Plan now:
+    28d8ed36c67d5949675db6318579c498e391dc68716712f197a1d3497297d020, 3,543,659 B, 21,375
+    lines."; "Ledger: aeefffa3d3f198ef989d421ca51206de377efc04"; "Commit:
+    8ae879f3a316fda1e74e74d574cb1ec2009ac073, parent fed257b…"; "Ledger:
+    4cf8d55a6d3eb659e05b6828a21b9012f00b9f78"; "The acceptance test's three statements at
+    HEAD: (i) False, (ii) False, (iii) True"; "Seven of the ten shapes are stored"; "T5 last
+    span with no value key | completed with NR and stored"; "the real SDK client never
+    constructed, neither script imported".
+  READ (the committed read-out, 12aj_U31A/12aj_U31A.md, sha256
+    04979891d037e7f5a0c92f46ec1800c187649abca9c0587b6b6fba4553b14d45; its blocking answer and
+    its §7, §8 and §9 read whole, its Q5 read whole, the rest not read line by line; quoted,
+    wrapped lines joined): §7.1 "(a) Drop the span before validation, so its field reads
+    missing."; §7.2 "Joining the list with `"; "` would store the codebook's own form, and
+    would invent the separator and the claim that the list is the multi-value answer"; §7.3
+    "`sample_size` is the one numeric field"; §7.6 "parse a deep copy so the row holds what
+    was received"; §7.7 "removing step 9's missing-key repair closes the one path by which a
+    repair completes a cut-off span"; §7.8 "It moves: seven collected ids (3,608 → 3,601
+    selected)"; Q5 "each script names none" and "Nothing under `engine/` or `analysis/` names
+    either."; finding 6, "The local path already refuses these shapes".
+  READ (the architect's clone at 8ae879f): the two full hashes in STATUS in a straight chain
+    on cd6f9a8; 12aj_U31A/brief_12aj_U31A.md equal to the architect's copy by cmp; seven
+    lines of 12ai_close/collected_ids_12ai_close.txt name a script, three of
+    tests/test_review_paths.py and four of tests/test_api_parity.py; CLAUDE.md:613–614 "#
+    Cloud span backfill (for extractions missing span rows)" and "PYTHONPATH=. python
+    scripts/backfill_cloud_spans.py --review surgical_autonomy [--dry-run]"; the plan's rows
+    that name extracted_data in their finding, one, INT-j12-51, closed, a different finding.
+  INFERRED: none that a clause below rests on. How often a provider returns each shape is
+    not measured (the read-out's §9); no clause rests on a rate.
+
+R828(a) — The 12aj-U31A final report is accepted as printed: item 0 fed257b (Blocks 224 and
+  225; r826.txt and r827.txt at the architect's hashes; the brief file equal to the
+  architect's copy; the rules files untouched), ledger aeefffa; the read-out 8ae879f with
+  its census and probe, ledger 4cf8d55. The architect's errors in 12aj now number two: the
+  brief's "eleven" branches are twelve steps by the code.
+R828(b) — The PI's ruling on the eight decisions put to him from the read-out's §7, in his
+  word: "package". Each as recommended, (c)–(j) below. U31's title is the test of scope: the
+  cloud parser stops writing a value the model did not give; what it writes besides stays.
+R828(c) — A span with no value key (§7.1(a)): it is dropped before validation, so its field
+  reads missing and the completeness check re-asks as it re-asks any missing field. It is
+  never completed with the sentinel. The parser's test becomes a test on the key; an
+  explicit null still yields the codebook's canonical sentinel.
+R828(d) — A list, a dict or a bool (§7.2(a)): the span is dropped the same way. A list of
+  strings is not joined, on any field: the separator would be the engine's. bool is tested
+  before any numeric test.
+R828(e) — An int or a finite float keeps str() (§7.3(a)), on any field. A non-finite float is
+  dropped as (d).
+R828(f) — The snippet patches stay as they are (§7.4): a missing source_snippet key becomes
+  the empty string, and the snippet beside an explicit null is cleared.
+  test_null_converted_to_nr is not edited.
+R828(g) — No record of a repair is added in U31 (§7.5). A column or a token for it is a schema
+  change and 023's.
+R828(h) — extracted_data holds the response as received (§7.6): the parser works on a copy and
+  writes nothing into the object the transport stores. This makes the comment at
+  engine/cloud/base.py:440–442 true, as R807(b) had it. The finding has no row in the plan;
+  its row is composed at the build's item 0 and closes with U31.
+R828(i) — R800(c) is answered: at HEAD a response recorded as truncated is stored when its
+  text parses to a complete field set. U31 leaves that as it is (§7.7(a)); with (c) the one
+  path by which a repair completed a cut-off span is closed. A response is not refused for
+  its finish in U31. A call row that reads error / truncated beside a stored claim goes to
+  023 with the outcome-token question.
+R828(j) — The retirement (§7.8; R612(o), R31): scripts/reparse_cloud_spans.py and
+  scripts/backfill_cloud_spans.py retire in a commit of their own with its own gate, before
+  U31's engine fix, under the brief below (12aj-U31R). CLAUDE.md's two lines on the backfill
+  script are not in that commit: they are removed at the next item 0 on the PI's approval of
+  the text in words. INT-l12-2 closes at the item 0 after the retirement lands.
+R828(k) — Then U31's build (12aj-U31B), one engine commit confined to
+  engine/cloud/base.py's parser and store and their tests, its acceptance test the entry's
+  three statements in the shape of the read-out's §7.12, its pins unmoved. This ruling
+  states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched
+  at the item 0 that transcribes it, asserted by content.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R828(a) — The 12aj-U31A final report is accepted as printed: item 0 fed257b (Blocks 224 and 225; r826.txt and r827.txt at the architect's hashes; the brief file equal to the architect's copy; the rules files untouched), ledger aeefffa; the read-out 8ae879f with its census and probe, ledger 4cf8d55. The architect's errors in 12aj now number two: the brief's "eleven" branches are twelve steps by the code. R828(b) — The PI's ruling on the eight decisions put to him from the read-out's §7, in his word: "package". Each as recommended, (c)–(j) below. U31's title is the test of scope: the cloud parser stops writing a value the model did not give; what it writes besides stays. R828(c) — A span with no value key (§7.1(a)): it is dropped before validation, so its field reads missing and the completeness check re-asks as it re-asks any missing field. It is never completed with the sentinel. The parser's test becomes a test on the key; an explicit null still yields the codebook's canonical sentinel. R828(d) — A list, a dict or a bool (§7.2(a)): the span is dropped the same way. A list of strings is not joined, on any field: the separator would be the engine's. bool is tested before any numeric test. R828(e) — An int or a finite float keeps str() (§7.3(a)), on any field. A non-finite float is dropped as (d). R828(f) — The snippet patches stay as they are (§7.4): a missing source_snippet key becomes the empty string, and the snippet beside an explicit null is cleared. test_null_converted_to_nr is not edited. R828(g) — No record of a repair is added in U31 (§7.5). A column or a token for it is a schema change and 023's. R828(h) — extracted_data holds the response as received (§7.6): the parser works on a copy and writes nothing into the object the transport stores. This makes the comment at engine/cloud/base.py:440–442 true, as R807(b) had it. The finding has no row in the plan; its row is composed at the build's item 0 and closes with U31. R828(i) — R800(c) is answered: at HEAD a response recorded as truncated is stored when its text parses to a complete field set. U31 leaves that as it is (§7.7(a)); with (c) the one path by which a repair completed a cut-off span is closed. A response is not refused for its finish in U31. A call row that reads error / truncated beside a stored claim goes to 023 with the outcome-token question. R828(j) — The retirement (§7.8; R612(o), R31): scripts/reparse_cloud_spans.py and scripts/backfill_cloud_spans.py retire in a commit of their own with its own gate, before U31's engine fix, under the brief below (12aj-U31R). CLAUDE.md's two lines on the backfill script are not in that commit: they are removed at the next item 0 on the PI's approval of the text in words. INT-l12-2 closes at the item 0 after the retirement lands. R828(k) — Then U31's build (12aj-U31B), one engine commit confined to engine/cloud/base.py's parser and store and their tests, its acceptance test the entry's three statements in the shape of the read-out's §7.12, its pins unmoved. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-U31A final report (item 0 fed257b; read-out 8ae879f) |
+
+The decision log in this file ends at R828.

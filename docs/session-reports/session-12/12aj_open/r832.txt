@@ -1,0 +1,63 @@
+RULING [evidence-engine 12aj-R832] — 12aj-U31R accepted as resumed; the PI's word: "Wrap after
+  this evidence commit"; session 12aj closes with U31 half landed; INT-l12-2 closes with U31,
+  not at the closeout; no closeout gate; the closeout's retention file in the 12ah form; no
+  standing rule
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the
+  12aj-U31R-R3 final report (retirement 30b7f16ed676cbd204ac3a3dc11b1551e89484cf; evidence
+  e5a844e23f43b0788e2c85fa5cdaa6854d529973). Transcribe at item 0 of the 12aj-CLOSE brief
+  below, by transcribe_ruling.py, in the block after R831's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12aj-U31R-R3 final report, quoted; wrapped lines joined): "Commit:
+    e5a844e23f43b0788e2c85fa5cdaa6854d529973, parent 30b7f16…; pushed, 0 0; fingerprint
+    IDENTICAL before and after."; "Staged set exactly 28 new files (25 copies and the 3
+    resume files), +13,415; every copy sha256-equal to its scratch source; no path named
+    crontab_l.txt or timers.txt."; "Ledger: 09885a47ffc71b47f7788000a8365e25f13c6417, parent
+    4311b60…, no foreign rows."; "The read-out: sha256
+    f1d77dc2cc11a9c7f9230846f1a5624845c1c7427d4e4438f79b4c2498ce1c0e, 108 lines."; the three
+    resume files' sha256, bytes and lines as its table gives them (the architect's copies:
+    the same); "U31's engine fix is not started, no row is closed, and CLAUDE.md is
+    unedited."
+  READ (CC's): findings 1–4.
+  READ (the architect's clone at e5a844e): the two full hashes in STATUS in a straight chain
+    on 0c6a7b7; the three committed resume files equal to the architect's copies by cmp;
+    the plan's sha256 4b48f4ff1371b9b96b32ff780724cb5e6c400577bc9b6b92954db31710483e08,
+    3555965 bytes, 21469 lines, last line "The decision log in this file ends at R828.";
+    git diff --stat 30b7f16 HEAD on engine tests scripts analysis review_specs, empty;
+    12aj_U31R/gate_u31r/gate_wall.txt "wall: 974.876594091 s"; row INT-l12-2's package
+    cell, "P1, closing with unit U31 (INT-j12-18)"; 12ah_close/retention_close.txt's lines
+    26–29 and 12ai_close/retention_close.txt's lines 26–30 as R826 quotes them.
+  INFERRED: none.
+
+R832(a) — The 12aj-U31R-R3 final report is accepted as printed: the evidence commit e5a844e
+  (the retirement's read-out, the summary of I2's reads, the seven removed ids, the pins, the
+  gate's nineteen files and its two side files, the three resume files equal to the
+  architect's copies), ledger 09885a4. Finding 1, the inventory summary's three counts
+  against a hand-scan baseline, is a reading for the tools items. Finding 2, the read-out's
+  section of expected values, is accepted as written; the expected-nightly file is the
+  closeout's.
+R832(b) — The PI's ruling, in his words: "Wrap after this evidence commit". Session 12aj
+  closes under the brief below and the wrap ruling that follows its report. U31 stands half
+  landed: its Phase A read-out, its design (R828(c)–(i), (k)) and the retirement (30b7f16)
+  are done; its engine fix is not started and is the next session's, after its open. Fix
+  units stay 39, done 35.
+R832(c) — INT-l12-2. R828(j)'s last sentence is replaced: the row closes with its unit, at the
+  item 0 after U31's engine commit lands, as its own cell states, and not at this closeout.
+  The route it describes is closed in the tree (R831(c)); the closure says so. The closeout
+  writes no row note and no dated units line.
+R832(d) — No closeout gate. The engine tree is unchanged since 30b7f16, and the gate of record
+  on it is 12aj_U31R/gate_u31r/: 3,600 passed / 1 xfailed / 17 deselected on 3,618 / 3,601,
+  974.88 s, launched as a unit, no hold.
+R832(e) — What R826(f) left open. The closeout's retention file is written in
+  12ah_close/retention_close.txt's form: the hash lines, the total line, and the probe
+  scratch and stage readings as plain lines that the open check's reader does not take for a
+  hash line; the tool's own output is not pasted into it. 12ai_close/retention_close.txt
+  stays as committed. The reader's filter, which takes any line not beginning "#" that
+  holds " MATCH", joins the tools items.
+R832(f) — Carried, open with the PI and not ruled: CLAUDE.md's two lines on the retired
+  backfill script; whether ~/scratch/12aj-open/between_sessions_read.txt and
+  ~/scratch/12aj-u31r/'s crontab_l.txt and timers.txt are published. Carried between lanes:
+  deepseek-r1:32b is not in the Evidence Engine block of dgx-infra's lane-model list
+  (R826(d)).
+R832(g) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.

@@ -21467,3 +21467,267 @@ R828(k) — Then U31's build (12aj-U31B), one engine commit confined to
 | 2026-11-23 | R828(a) — The 12aj-U31A final report is accepted as printed: item 0 fed257b (Blocks 224 and 225; r826.txt and r827.txt at the architect's hashes; the brief file equal to the architect's copy; the rules files untouched), ledger aeefffa; the read-out 8ae879f with its census and probe, ledger 4cf8d55. The architect's errors in 12aj now number two: the brief's "eleven" branches are twelve steps by the code. R828(b) — The PI's ruling on the eight decisions put to him from the read-out's §7, in his word: "package". Each as recommended, (c)–(j) below. U31's title is the test of scope: the cloud parser stops writing a value the model did not give; what it writes besides stays. R828(c) — A span with no value key (§7.1(a)): it is dropped before validation, so its field reads missing and the completeness check re-asks as it re-asks any missing field. It is never completed with the sentinel. The parser's test becomes a test on the key; an explicit null still yields the codebook's canonical sentinel. R828(d) — A list, a dict or a bool (§7.2(a)): the span is dropped the same way. A list of strings is not joined, on any field: the separator would be the engine's. bool is tested before any numeric test. R828(e) — An int or a finite float keeps str() (§7.3(a)), on any field. A non-finite float is dropped as (d). R828(f) — The snippet patches stay as they are (§7.4): a missing source_snippet key becomes the empty string, and the snippet beside an explicit null is cleared. test_null_converted_to_nr is not edited. R828(g) — No record of a repair is added in U31 (§7.5). A column or a token for it is a schema change and 023's. R828(h) — extracted_data holds the response as received (§7.6): the parser works on a copy and writes nothing into the object the transport stores. This makes the comment at engine/cloud/base.py:440–442 true, as R807(b) had it. The finding has no row in the plan; its row is composed at the build's item 0 and closes with U31. R828(i) — R800(c) is answered: at HEAD a response recorded as truncated is stored when its text parses to a complete field set. U31 leaves that as it is (§7.7(a)); with (c) the one path by which a repair completed a cut-off span is closed. A response is not refused for its finish in U31. A call row that reads error / truncated beside a stored claim goes to 023 with the outcome-token question. R828(j) — The retirement (§7.8; R612(o), R31): scripts/reparse_cloud_spans.py and scripts/backfill_cloud_spans.py retire in a commit of their own with its own gate, before U31's engine fix, under the brief below (12aj-U31R). CLAUDE.md's two lines on the backfill script are not in that commit: they are removed at the next item 0 on the PI's approval of the text in words. INT-l12-2 closes at the item 0 after the retirement lands. R828(k) — Then U31's build (12aj-U31B), one engine commit confined to engine/cloud/base.py's parser and store and their tests, its acceptance test the entry's three statements in the shape of the read-out's §7.12, its pins unmoved. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-U31A final report (item 0 fed257b; read-out 8ae879f) |
 
 The decision log in this file ends at R828.
+
+**Block 227.** *Transcribed 2026-11-23 (item 0 of the 12aj-CLOSE brief), in its own commit with Blocks 228, 229 and 230 and the brief file it orders, in the R597(e) form:* ruling R829, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-U31R stop report (item 0 `0c6a7b78e7ca89a10296abb2d072168ab3b164d0`; stopped at step 2b, before any removal). The 12aj-U31R-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R829] — the 12aj-U31R stop at step 2b is correct and the
+  architect's; I3 restated to the fact the stop measured; item 0 and step 2a accepted; the
+  raw crontab and timer reads held out of the evidence commit; no standing rule; the
+  retirement resumes at 2c
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the 12aj-U31R
+  stop report (item 0 0c6a7b78e7ca89a10296abb2d072168ab3b164d0; stopped at step 2b, before
+  any removal). Transcribe at the next item 0, by transcribe_ruling.py, in the block after
+  R828's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted; wrapped lines joined): "ids: parent 3608; clone control
+    3608; without 3604"; "only in parent (removed with the scripts): 4"; "only without (new
+    ids): 0"; "with the :199 entry also removed in the clone, collection gives 3,601 selected
+    / 3,618 collected, and the difference is exactly R5's seven, none added"; "No other id
+    moved in either direction in either measurement."; "r828.txt:
+    084b9642e59808a5933db6e70d225e0e966bf4617a722d102c4d87fe87511712, 6,391 B, 81 lines;
+    equal to your hash, one write."; "sha256
+    dec9511fb12d84d5b107a6b233fae4e0917109747ec73b996cfba5d81b4db2b8, 29,084 B, 401 lines."
+    (the architect's copy: the same); "Plan +92 / −0; "ends at" lines 182 → 183; six-cell
+    INT- rows 215 / 215"; "Commit (PARENT for the retirement):
+    0c6a7b78e7ca89a10296abb2d072168ab3b164d0, parent 8ae879f…; pushed, 0 0"; "Plan now:
+    7a1fd2315cd86910cb41507cc0fa60980c824868abbda899860a7ea5e80adfbf, 3,554,022 B, 21,467
+    lines."; "Ledger: 117c05625437dc7d64e1adbde811c8093ea6e9b0, parent 4cf8d55…, no foreign
+    rows."; "I2 holds, with its negative control proven."; "16 hits in tracked files outside
+    the record, all placed, none "other""; "The raw crontab names another lane's project
+    path and the timer list names the host's backup timers."
+  READ (CC's): the cause as the report gives it; findings 1–4.
+  READ (the architect's clone at 0c6a7b7): the full hash in STATUS, its parent 8ae879f;
+    12aj_U31R/brief_12aj_U31R.md and 12aj_open/r828.txt equal to the architect's copies by
+    cmp; the plan's sha256 as the report gives it, last line "The decision log in this file
+    ends at R828."; tests/test_review_paths.py:211–212,
+    "@pytest.mark.parametrize("rel", SPEC_BEARING_ENTRY_POINTS)" above "def
+    test_entry_point_uses_the_resolver(rel):".
+  INFERRED: none.
+
+R829(a) — The stop at step 2b is correct: a blocking item that reads false stops the brief.
+  The cause is the architect's. I3 gave a method, both files absent, and expected seven ids
+  to go; three of the seven are generated from the list entry at tests/test_review_paths.py
+  :199 and not from the file, which the brief's own R3 and R5 had beside each other. A
+  mechanism's result stated without being worked through. The count so far in 12aj: two
+  stops (R826(a), this one); no pause; three architect's errors.
+R829(b) — I3, restated: with both script files absent and the :199 entry removed, the
+  collected ids differ from PARENT's by exactly R5's seven and by no other, none added. The
+  stop report's added reading measured this in the scratch clone and it stands as I3's
+  measurement; it is what step 2c produces. E1's figures are unchanged.
+R829(c) — Item 0 is accepted as reported: 0c6a7b7 (Block 226 by transcribe_ruling.py; r828.txt
+  equal to the architect's hash; the brief file equal to the architect's copy; the plan +92 /
+  −0; the rules files untouched), ledger 117c056. Step 2a is accepted as reported: I1 and I2
+  held, I2 with its negative control; every line of R2–R4 found as quoted; sixteen
+  references placed, none in "other".
+R829(d) — Finding 2: the raw crontab and timer reads are not committed. i2_regrep.txt, which
+  records both reads' outcomes, is committed alone; the two raw files stay in scratch,
+  unedited, their sha256, bytes and lines reported. The repository is public; whether lines
+  that name another lane's path are published is the PI's and is not ruled here, as
+  R826(e) left the between-session file.
+R829(e) — Readings, no row. Finding 3: the gitignored nightly logs that hold the retired ids
+  are records of past runs and are not touched. Finding 4: the added reading agrees with
+  E1. The scratch clone under ~/scratch/12aj-u31r/ stays as the stop left it.
+R829(f) — This ruling states no standing rule. The retirement resumes at step 2c under the
+  resume below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R829(a) — The stop at step 2b is correct: a blocking item that reads false stops the brief. The cause is the architect's. I3 gave a method, both files absent, and expected seven ids to go; three of the seven are generated from the list entry at tests/test_review_paths.py :199 and not from the file, which the brief's own R3 and R5 had beside each other. A mechanism's result stated without being worked through. The count so far in 12aj: two stops (R826(a), this one); no pause; three architect's errors. R829(b) — I3, restated: with both script files absent and the :199 entry removed, the collected ids differ from PARENT's by exactly R5's seven and by no other, none added. The stop report's added reading measured this in the scratch clone and it stands as I3's measurement; it is what step 2c produces. E1's figures are unchanged. R829(c) — Item 0 is accepted as reported: 0c6a7b7 (Block 226 by transcribe_ruling.py; r828.txt equal to the architect's hash; the brief file equal to the architect's copy; the plan +92 / −0; the rules files untouched), ledger 117c056. Step 2a is accepted as reported: I1 and I2 held, I2 with its negative control; every line of R2–R4 found as quoted; sixteen references placed, none in "other". R829(d) — Finding 2: the raw crontab and timer reads are not committed. i2_regrep.txt, which records both reads' outcomes, is committed alone; the two raw files stay in scratch, unedited, their sha256, bytes and lines reported. The repository is public; whether lines that name another lane's path are published is the PI's and is not ruled here, as R826(e) left the between-session file. R829(e) — Readings, no row. Finding 3: the gitignored nightly logs that hold the retired ids are records of past runs and are not touched. Finding 4: the added reading agrees with E1. The scratch clone under ~/scratch/12aj-u31r/ stays as the stop left it. R829(f) — This ruling states no standing rule. The retirement resumes at step 2c under the resume below. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-U31R stop report (item 0 0c6a7b7; stopped at step 2b, before any removal) |
+
+The decision log in this file ends at R829.
+
+**Block 228.** *Transcribed 2026-11-23 (item 0 of the 12aj-CLOSE brief), in its own commit with Blocks 227, 229 and 230 and the brief file it orders, in the R597(e) form:* ruling R830, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-U31R-R1 stop report (HEAD `0c6a7b78e7ca89a10296abb2d072168ab3b164d0`; the retirement staged, not committed). The 12aj-U31R-R2 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R830] — the 12aj-U31R-R1 stop before the retirement commit is
+  correct and CC's; the check's one-line correction allowed, no condition weakened; R0, R1
+  and the staged retirement accepted as reported; no standing rule; the resume continues at
+  the check
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the
+  12aj-U31R-R1 stop report (HEAD 0c6a7b78e7ca89a10296abb2d072168ab3b164d0; the retirement
+  staged, not committed). Transcribe at the next item 0, by transcribe_ruling.py, in the
+  block after R829's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted; wrapped lines joined): "IndexError: string index out of
+    range"; "The line before it filters diff lines with l[:1] in "+-", and the empty string
+    passes that test"; "What ran before it: eight assertions, all PASS"; "What did not run:
+    the assertions on the plan's diff, the INT- row count, the list entry and the two
+    architecture rows."; "HEAD 0c6a7b7… (proved), parent 8ae879f…, clean, 0 0, one worktree";
+    "PARENT minus the third is seven ids, R5's, with none in the reverse direction."; "len()
+    reads 16 before and 15 after"; "two rows appended after the ledger's last row, now lines
+    1732 and 1733; +2 / −0"; "3,618 collected, 3,601 selected; against PARENT the same seven
+    gone, none added"; "byte-identical to 12ai_close/pin_tuples_close.json; audit prompt_hash
+    unchanged"; "150 passed"; "exactly the seven expected paths, 37 insertions, 400
+    deletions".
+  READ (CC's): the proposed correction, "the filter becomes l[:1] in ("+", "-")"; findings
+    1–3.
+  INFERRED — expectation (shown by the resume's dry run; a mismatch is reported): with the
+    filter corrected the check reaches its last assertion. The architect has not read the
+    check file.
+
+R830(a) — The stop is correct: a check that crashes is a failed check (R763(c)), and it was not
+  corrected without a ruling. The cause is CC's, the fault R763(c) already records: a
+  substring test that the empty string passes. The count so far in 12aj: three stops
+  (R826(a), R829(a), this one, CC's); no pause; three architect's errors.
+R830(b) — The correction is allowed as proposed and no wider: the filter takes a line only when
+  its first character is "+" or "-". No assertion is removed, reordered or loosened. The
+  crashed check and its output are kept under their names; the corrected check is a new file.
+R830(c) — R0 and R1 are accepted as reported: I3 as R829(b) restated it holds on the three
+  collections on disk. The staged retirement is accepted as reported, subject to the check:
+  the seven paths, the two ledger rows at :1732–:1733, the inventory's two entries gone with
+  the counts derived from them, the ids changed by the seven and no other, the pins unmoved.
+  Finding 2 is CC's slip, stopped by its own assertion before a byte was written.
+R830(d) — This ruling states no standing rule. The resume continues under the lines below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R830(a) — The stop is correct: a check that crashes is a failed check (R763(c)), and it was not corrected without a ruling. The cause is CC's, the fault R763(c) already records: a substring test that the empty string passes. The count so far in 12aj: three stops (R826(a), R829(a), this one, CC's); no pause; three architect's errors. R830(b) — The correction is allowed as proposed and no wider: the filter takes a line only when its first character is "+" or "-". No assertion is removed, reordered or loosened. The crashed check and its output are kept under their names; the corrected check is a new file. R830(c) — R0 and R1 are accepted as reported: I3 as R829(b) restated it holds on the three collections on disk. The staged retirement is accepted as reported, subject to the check: the seven paths, the two ledger rows at :1732–:1733, the inventory's two entries gone with the counts derived from them, the ids changed by the seven and no other, the pins unmoved. Finding 2 is CC's slip, stopped by its own assertion before a byte was written. R830(d) — This ruling states no standing rule. The resume continues under the lines below. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-U31R-R1 stop report (HEAD 0c6a7b7; the retirement staged, not committed) |
+
+The decision log in this file ends at R830.
+
+**Block 229.** *Transcribed 2026-11-23 (item 0 of the 12aj-CLOSE brief), in its own commit with Blocks 227, 228 and 230 and the brief file it orders, in the R597(e) form:* ruling R831, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-U31R-R2 stop report (retirement `30b7f16ed676cbd204ac3a3dc11b1551e89484cf`; stopped before the evidence commit). The 12aj-U31R-R3 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R831] — the 12aj-U31R-R2 stop before the evidence commit is
+  correct by the resume's own line and the cause is the architect's; i2_regrep.txt is
+  committed as it stands; the retirement commit and its gate accepted; the gate's 974.88 s
+  enters the series; no standing rule; the resume continues at the evidence commit
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the
+  12aj-U31R-R2 stop report (retirement 30b7f16ed676cbd204ac3a3dc11b1551e89484cf; stopped
+  before the evidence commit). Transcribe at the next item 0, by transcribe_ruling.py, in
+  the block after R830's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted; wrapped lines joined): "~/scratch/12aj-u31r/i2_regrep.txt
+    line 15, a section heading I wrote: === dgx-infra scripts/"; "no content from that
+    directory is in the file"; "Dry run: 14 assertions, all PASS"; "Commit:
+    30b7f16ed676cbd204ac3a3dc11b1551e89484cf, parent
+    0c6a7b78e7ca89a10296abb2d072168ab3b164d0, in one chain with the corrected check; 7 files,
+    +37 / −400."; "Ledger: 4311b602913607eced517bfef21279472b6718ba, parent 117c056…, no
+    foreign rows."; "Hold: not needed; the snapshot at 06:38:58 UTC named surgical-cv's
+    uvicorn only, and the after-gate snapshot the same."; "collected 3618 items / 17
+    deselected / 3601 selected; 3600 passed, 17 deselected, 1 xfailed, 2 warnings; exit 0";
+    "only-gate 0; only-ref 7, R5's seven"; "Wall time: 974.88 s, inside 881–1076 s. No
+    concurrent job this time."; "Durations: no phase slower by more than 10 s."; "no load";
+    "i2_regrep.txt | 84b24eef89ff7f90f07c498695c1fa01734721c48eba05489bb61aad47e0682f | 1,296
+    | 20"; "crontab_l.txt | 2dad51473c9562ec38ecee8333cc22b75ab33cdbf37f0d87271abe47ca02fdca
+    | 827 | 8"; "timers.txt |
+    5924d33a780362a7c08d430d3cea96d8a96cf40bfcc7d445b83b7c2727f2126e | 4,788 | 39".
+  READ (CC's): the three options; findings 1–4.
+  READ (the architect's clone at 30b7f16): the full hash in STATUS, its parent 0c6a7b7; its
+    diff, seven paths, "7 files changed, 37 insertions(+), 400 deletions(-)"; both scripts
+    present at 0c6a7b7 by cat-file -e and absent at HEAD; no change under engine/ or
+    analysis/, to CLAUDE.md or to tests/test_api_parity.py; the two ledger rows at plan
+    :1732–:1733; the committed 12ai_open/between_sessions_read.txt, which holds
+    "/home/ankitsarin/projects/dgx-infra/scripts/ollama_health_check.sh" at its line 54, and
+    the committed 12aj_U31R/brief_12aj_U31R.md, whose I2 names "dgx-infra's scripts/".
+  INFERRED: none.
+
+R831(a) — The stop is correct by the line the resume gave. The cause is the architect's: R4 of
+  12aj-U31R-R1 made any path outside this lane a stop, where the concern of R829(d) was a
+  name of another lane not already in the public record. The directory the heading names is
+  in the committed record already, in this brief's own I2 and in the 12ai open's evidence. A
+  stop condition written wider than its reason. The count so far in 12aj: four stops
+  (R826(a), R829(a), R830(a), this one); no pause; four architect's errors.
+R831(b) — i2_regrep.txt is committed as it stands, at the sha256 above. It holds no content of
+  that directory and no name the record does not already hold. The crontab and timer reads
+  stay held as R829(d) left them.
+R831(c) — The retirement is accepted as reported: 30b7f16 on 0c6a7b7, seven paths, both scripts
+  recoverable at the parent, nothing under engine/ or analysis/ changed, the ids changed by
+  R5's seven and no other, the pins unmoved; ledger 4311b60. The gate is green at E1's
+  counts. The route INT-l12-2 describes is closed in the tree; the row closes at the next
+  item 0 (R828(j)).
+R831(d) — The gate's 974.88 s is the forty-eighth member of the series: a standard gate,
+  launched as a unit, with no hold and nothing beside it but surgical-cv's uvicorn. It ran
+  3,601 selected, a reading beside the figure. The band stays 881–1076 s until the 12aj
+  closeout cuts the next one in R683(c)'s form.
+R831(e) — Readings, no row. The 2026-11-23 nightly runs on this tree and is read against this
+  gate (3,600 passed on 3,618 / 3,601), as 12ai_close/expected_nightly_20261120.md's last
+  paragraph has it; the closeout writes the tree's expected file. This ruling states no
+  standing rule. The resume continues under the lines below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R831(a) — The stop is correct by the line the resume gave. The cause is the architect's: R4 of 12aj-U31R-R1 made any path outside this lane a stop, where the concern of R829(d) was a name of another lane not already in the public record. The directory the heading names is in the committed record already, in this brief's own I2 and in the 12ai open's evidence. A stop condition written wider than its reason. The count so far in 12aj: four stops (R826(a), R829(a), R830(a), this one); no pause; four architect's errors. R831(b) — i2_regrep.txt is committed as it stands, at the sha256 above. It holds no content of that directory and no name the record does not already hold. The crontab and timer reads stay held as R829(d) left them. R831(c) — The retirement is accepted as reported: 30b7f16 on 0c6a7b7, seven paths, both scripts recoverable at the parent, nothing under engine/ or analysis/ changed, the ids changed by R5's seven and no other, the pins unmoved; ledger 4311b60. The gate is green at E1's counts. The route INT-l12-2 describes is closed in the tree; the row closes at the next item 0 (R828(j)). R831(d) — The gate's 974.88 s is the forty-eighth member of the series: a standard gate, launched as a unit, with no hold and nothing beside it but surgical-cv's uvicorn. It ran 3,601 selected, a reading beside the figure. The band stays 881–1076 s until the 12aj closeout cuts the next one in R683(c)'s form. R831(e) — Readings, no row. The 2026-11-23 nightly runs on this tree and is read against this gate (3,600 passed on 3,618 / 3,601), as 12ai_close/expected_nightly_20261120.md's last paragraph has it; the closeout writes the tree's expected file. This ruling states no standing rule. The resume continues under the lines below. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-U31R-R2 stop report (retirement 30b7f16; stopped before the evidence commit) |
+
+The decision log in this file ends at R831.
+
+**Block 230.** *Transcribed 2026-11-23 (item 0 of the 12aj-CLOSE brief), in its own commit with Blocks 227, 228 and 229 and the brief file it orders, in the R597(e) form:* ruling R832, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-U31R-R3 final report (retirement `30b7f16ed676cbd204ac3a3dc11b1551e89484cf`; evidence `e5a844e23f43b0788e2c85fa5cdaa6854d529973`). The 12aj-CLOSE brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R832] — 12aj-U31R accepted as resumed; the PI's word: "Wrap after
+  this evidence commit"; session 12aj closes with U31 half landed; INT-l12-2 closes with U31,
+  not at the closeout; no closeout gate; the closeout's retention file in the 12ah form; no
+  standing rule
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the
+  12aj-U31R-R3 final report (retirement 30b7f16ed676cbd204ac3a3dc11b1551e89484cf; evidence
+  e5a844e23f43b0788e2c85fa5cdaa6854d529973). Transcribe at item 0 of the 12aj-CLOSE brief
+  below, by transcribe_ruling.py, in the block after R831's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12aj-U31R-R3 final report, quoted; wrapped lines joined): "Commit:
+    e5a844e23f43b0788e2c85fa5cdaa6854d529973, parent 30b7f16…; pushed, 0 0; fingerprint
+    IDENTICAL before and after."; "Staged set exactly 28 new files (25 copies and the 3
+    resume files), +13,415; every copy sha256-equal to its scratch source; no path named
+    crontab_l.txt or timers.txt."; "Ledger: 09885a47ffc71b47f7788000a8365e25f13c6417, parent
+    4311b60…, no foreign rows."; "The read-out: sha256
+    f1d77dc2cc11a9c7f9230846f1a5624845c1c7427d4e4438f79b4c2498ce1c0e, 108 lines."; the three
+    resume files' sha256, bytes and lines as its table gives them (the architect's copies:
+    the same); "U31's engine fix is not started, no row is closed, and CLAUDE.md is
+    unedited."
+  READ (CC's): findings 1–4.
+  READ (the architect's clone at e5a844e): the two full hashes in STATUS in a straight chain
+    on 0c6a7b7; the three committed resume files equal to the architect's copies by cmp;
+    the plan's sha256 4b48f4ff1371b9b96b32ff780724cb5e6c400577bc9b6b92954db31710483e08,
+    3555965 bytes, 21469 lines, last line "The decision log in this file ends at R828.";
+    git diff --stat 30b7f16 HEAD on engine tests scripts analysis review_specs, empty;
+    12aj_U31R/gate_u31r/gate_wall.txt "wall: 974.876594091 s"; row INT-l12-2's package
+    cell, "P1, closing with unit U31 (INT-j12-18)"; 12ah_close/retention_close.txt's lines
+    26–29 and 12ai_close/retention_close.txt's lines 26–30 as R826 quotes them.
+  INFERRED: none.
+
+R832(a) — The 12aj-U31R-R3 final report is accepted as printed: the evidence commit e5a844e
+  (the retirement's read-out, the summary of I2's reads, the seven removed ids, the pins, the
+  gate's nineteen files and its two side files, the three resume files equal to the
+  architect's copies), ledger 09885a4. Finding 1, the inventory summary's three counts
+  against a hand-scan baseline, is a reading for the tools items. Finding 2, the read-out's
+  section of expected values, is accepted as written; the expected-nightly file is the
+  closeout's.
+R832(b) — The PI's ruling, in his words: "Wrap after this evidence commit". Session 12aj
+  closes under the brief below and the wrap ruling that follows its report. U31 stands half
+  landed: its Phase A read-out, its design (R828(c)–(i), (k)) and the retirement (30b7f16)
+  are done; its engine fix is not started and is the next session's, after its open. Fix
+  units stay 39, done 35.
+R832(c) — INT-l12-2. R828(j)'s last sentence is replaced: the row closes with its unit, at the
+  item 0 after U31's engine commit lands, as its own cell states, and not at this closeout.
+  The route it describes is closed in the tree (R831(c)); the closure says so. The closeout
+  writes no row note and no dated units line.
+R832(d) — No closeout gate. The engine tree is unchanged since 30b7f16, and the gate of record
+  on it is 12aj_U31R/gate_u31r/: 3,600 passed / 1 xfailed / 17 deselected on 3,618 / 3,601,
+  974.88 s, launched as a unit, no hold.
+R832(e) — What R826(f) left open. The closeout's retention file is written in
+  12ah_close/retention_close.txt's form: the hash lines, the total line, and the probe
+  scratch and stage readings as plain lines that the open check's reader does not take for a
+  hash line; the tool's own output is not pasted into it. 12ai_close/retention_close.txt
+  stays as committed. The reader's filter, which takes any line not beginning "#" that
+  holds " MATCH", joins the tools items.
+R832(f) — Carried, open with the PI and not ruled: CLAUDE.md's two lines on the retired
+  backfill script; whether ~/scratch/12aj-open/between_sessions_read.txt and
+  ~/scratch/12aj-u31r/'s crontab_l.txt and timers.txt are published. Carried between lanes:
+  deepseek-r1:32b is not in the Evidence Engine block of dgx-infra's lane-model list
+  (R826(d)).
+R832(g) — This ruling states no standing rule: the id list, the glosses file and
+  STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R832(a) — The 12aj-U31R-R3 final report is accepted as printed: the evidence commit e5a844e (the retirement's read-out, the summary of I2's reads, the seven removed ids, the pins, the gate's nineteen files and its two side files, the three resume files equal to the architect's copies), ledger 09885a4. Finding 1, the inventory summary's three counts against a hand-scan baseline, is a reading for the tools items. Finding 2, the read-out's section of expected values, is accepted as written; the expected-nightly file is the closeout's. R832(b) — The PI's ruling, in his words: "Wrap after this evidence commit". Session 12aj closes under the brief below and the wrap ruling that follows its report. U31 stands half landed: its Phase A read-out, its design (R828(c)–(i), (k)) and the retirement (30b7f16) are done; its engine fix is not started and is the next session's, after its open. Fix units stay 39, done 35. R832(c) — INT-l12-2. R828(j)'s last sentence is replaced: the row closes with its unit, at the item 0 after U31's engine commit lands, as its own cell states, and not at this closeout. The route it describes is closed in the tree (R831(c)); the closure says so. The closeout writes no row note and no dated units line. R832(d) — No closeout gate. The engine tree is unchanged since 30b7f16, and the gate of record on it is 12aj_U31R/gate_u31r/: 3,600 passed / 1 xfailed / 17 deselected on 3,618 / 3,601, 974.88 s, launched as a unit, no hold. R832(e) — What R826(f) left open. The closeout's retention file is written in 12ah_close/retention_close.txt's form: the hash lines, the total line, and the probe scratch and stage readings as plain lines that the open check's reader does not take for a hash line; the tool's own output is not pasted into it. 12ai_close/retention_close.txt stays as committed. The reader's filter, which takes any line not beginning "#" that holds " MATCH", joins the tools items. R832(f) — Carried, open with the PI and not ruled: CLAUDE.md's two lines on the retired backfill script; whether ~/scratch/12aj-open/between_sessions_read.txt and ~/scratch/12aj-u31r/'s crontab_l.txt and timers.txt are published. Carried between lanes: deepseek-r1:32b is not in the Evidence Engine block of dgx-infra's lane-model list (R826(d)). R832(g) — This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-U31R-R3 final report (retirement 30b7f16; evidence e5a844e) |
+
+The decision log in this file ends at R832.

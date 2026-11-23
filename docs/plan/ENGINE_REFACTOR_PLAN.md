@@ -21204,3 +21204,172 @@ R825(h) — Session 12ai closes now. After R825(f) has landed, run /wrap; this r
 | 2026-11-20 | R825(a) — The 12ai-CLOSE closeout is accepted as committed: item 0 45980ce (Block 222; the brief file equal to the architect's copy; the rules files untouched), the closeout dccc546 (the closure and the 12aj expected-values block, +185 / −0 at the matched position; 12ai_close/'s twenty-six files; the new recount script and its recount; the band computation; the new expected-nightly file), ledgers 6d31de6 and 606f870. I1 and I2 held. E1–E7 held. The 2026-11-20 nightly matched the gate of the tree it ran on. Nine committed brief and resume files this session, nine equal to the architect's copies; the interim session's brief was not saved. R825(b) — The band for 12aj is 881–1076 s: ±10% of 978.655 s, the mean of the last four standard gates on this host state (978.22, 995.53, 963.33, 977.54), rounded inward. All four were launched as units; none is a confounded member. The four ran different test counts (3,574, 3,574, 3,594, 3,608 selected), a reading beside the figure. The series stands at forty-six. A 12aj gate outside the band is reported with its concurrent jobs, not adapted to. R825(c) — The stops, counted from the rulings: one, the architect's — 12ai-CLNA at its step 2j (R822(a)). Pauses: none. CC's stops: none. The architect's errors this session, fifteen: R824(g)'s fourteen and the closeout's finding 1 (the brief called a net change of thirty-four ids "the thirty-four new ids"; the record shows thirty-seven and three). The closure's "fourteen" stands as written at its time; this clause governs. They are of two kinds: a statement about a file or a code path that no one had read it for, and a mechanism's behaviour taken from its name. The session's measured point for the estimate: one CC session (the open at 14:57 UTC on 2026-11-19 to this wrap) and one interim read-only session before it; two fix units landed, each with one gate; no standing rule; one publication read-out and one removal on a measured list; one stop, no pause. R825(d) — Readings, no row. The closeout's five choices are accepted as made. Findings 2 and 3 are CC's own slips, each corrected before the commit (a rounding comparison; a header line counted). Finding 4: the kept clones number five, as R824(e) allows. R825(e) — Carried to 12aj and the plan, from the closure's "Carried forward": U31's Phase A, then U32–U36; INT-ai12-2 (Class 2, P4); the read-out R819(k) orders before the freeze; the stale restart text, HK-ARCH's (R820(e)); R807(d)'s three items; the tools items; the five kept clones; the cross-lane readings for dgx-infra and what is owed between lanes (R824(f)); the 2026-11-21 and later nightlies against 12ai_close/expected_nightly_20261120.md. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at 12aj-OPEN's item 0, asserted by content. R825(f) — The lane line (sha256 85bd8ddc602b5f1668a2071f5c488d4bc9843687c3357a47cd3193af3ec33667, 8,474 bytes, 10 lines, ~/scratch/12ai-close/lane_line_12ai.txt) is approved on the condition above, its fifth line's closing mark kept as the form has it. First verify the file's sha256 and quote its fifth "+" line whole from the file, its code marks shown. If it is the line the closeout report quotes — its "next:" clause running from 12aj-OPEN through U31's Phase A and U32–U36 to the freeze, the tag and Run 7 with no words missing — apply it: replace lines 41–45 of ~/claude-config/primer.md (which must equal its five "−" lines, taken from primer.md itself) with its five "+" lines, applied from the file, not from a paste; commit primer.md with any uncommitted hook row ("ledger" form, trailers, the row's exact timestamp, foreign rows counted from the diff and named by hash); push; level. If the line differs in the file, STOP before anything is applied and report the line as it stands; the architect then rules its text. R825(g) — 12aj-OPEN checks claude-config at the commit the wrap leaves (the lane-line commit, or a child carrying only hook rows, reported), level and clean but for other lanes' hook rows. Its item 0 writes this ruling with transcribe_ruling.py as the next block (Block 223) and copies lane_line_12ai.txt into docs/session-reports/session-12/12ai_close/, with r825.txt beside it; no standing rule, the three rules files untouched by content. It runs session_open_check.py and the steps R747(b) keeps explicit, a light-check day's health read among them, against the "Expected values at session-12aj open" block, the recount by 12ai_close/recount_12ai_close.py (289; 39 done 35); reads the 2026-11-21 and every later job run before it against 12ai_close/expected_nightly_20261120.md; the gate by the wrapper as a unit, against 881–1076 s, its references 12ai_close/collected_ids_12ai_close.txt and durations_12ai_u30b.txt. Its brief is committed at its item 0 as brief_12aj_OPEN.md (R784(g)(v)), in 12ai_open/brief_12ai_OPEN.md's form. Then U31's Phase A. R825(h) — Session 12ai closes now. After R825(f) has landed, run /wrap; this ruling authorizes /wrap's own commits and pushes and nothing else. The project primer and the global primer record the session as the lane line states it. Lane status: closed clean; next, 12aj-OPEN. Report the lane-line commit's hash and parent, the fifth "+" line as quoted from the file, the wrap's verdict, and the archive command to be run after /exit. | PI, 2026-11-20, during session 12ai, on architect recommendation, on the PI's word "wrap" (R824(c)) and the 12ai-CLOSE closeout report (item 0 45980ce; closeout dccc546) |
 
 The decision log in this file ends at R825.
+
+**Block 224.** *Transcribed 2026-11-23 (item 0 of the 12aj-U31A brief), in its own commit with Block 225 and the brief file it orders, in the R597(e) form:* ruling R826, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-OPEN stop report (item 0 `46339bebf2a63e981fd9a94c2dc2fbc374e46661`; stopped at step 3b, before the gate). The 12aj-OPEN-R1 resume that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R826] — the 12aj-OPEN stop at step 3b is correct; the PI's word:
+  the open check is run again whole with its retention reference pointed at the 12ah
+  closeout's file; item 0 accepted; steps 0 and 1 accepted; the between-session file held out
+  of the evidence commit; readings; no standing rule; the open resumes at 3b
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the 12aj-OPEN
+  stop report (item 0 46339bebf2a63e981fd9a94c2dc2fbc374e46661; stopped at step 3b, before
+  the gate). Transcribe at the next item 0, by transcribe_ruling.py, in the block after
+  R825's, not now.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the stop report, quoted; wrapped lines joined): "session_open_check.py crashed in
+    its retention section"; "ValueError: too many values to unpack (expected 3)"; "repos,
+    plan, fingerprint, hashes, pins and dbchecks all MATCH (22 rows)"; "Not run:
+    probe_scratch, stage, nightly, health, ollama, temp_root, cc_sessions."; "Commit:
+    46339bebf2a63e981fd9a94c2dc2fbc374e46661, parent dccc546…; pushed, 0 0. Fingerprint
+    IDENTICAL before and after."; "Ledger: b13d194ea4cf81c470de734dac613fe6cc1122c8, parent
+    7c88f52…, row 2026-11-23T03:52:17Z, no foreign rows; pushed, 0 0."; "r825.txt:
+    f08a80d6bec8f7ab6948ac7791a123bc72d3834385480972499c23fe03801417, 8,687 B, 105 lines;
+    equal to the architect's hash, one write."; "sha256
+    9ee21bdad33f6602f2488f36b66925c2e284ae21e047e057184a0df1fa08295a, 45,125 B, 603 lines."
+    (the architect's copy: the same); "Plan +116 / −0; "ends at" lines 179 → 180; six-cell
+    INT- rows 215 / 215"; "Plan now:
+    c03d2356ebe2a32c35859f74c19ec14fd75569160892057da49f11e9c99d7f6c, 3,525,551 B, 21,206
+    lines."; "HEAD 7c88f52 at the open, level and clean"; "primer.md unchanged since
+    42fabff"; "No session of this lane after it except this one"; "kept present 5 of 5;
+    removed absent 53 of 53"; "Both nightlies ran on a tree equal to 7fad72a's (I3 TRUE)";
+    "20 of 20 OK, 0 FAIL"; "No new NV_ERR_NO_MEMORY line; still 55 this boot"; "Loads outside
+    the health windows: 18, on 2026-11-22 05:31:59–05:48:22 UTC"; "deepseek-r1:32b is not in
+    that block."; "Last commit touching the file:
+    b5af93d854060402a33bdf767adfa0ff286d8dbe"; "At 0h(vii) I quoted the whole lane-model
+    file where the brief asked for the Evidence Engine block."
+  READ (CC's): the cause as the report gives it; findings 1–7; the proposed revised check.
+  READ (the architect's clone at 46339be): the full hash in STATUS, its parent dccc546;
+    12aj_open/brief_12aj_OPEN.md and 12ai_close/r825.txt equal to the architect's copies by
+    cmp; the plan's sha256, bytes and lines as the report gives them; session_open_check.py's
+    retention reader, "if l.startswith("#") or " MATCH" not in l:" then "s, p, _ =
+    l.split()"; 12ai_close/retention_close.txt (sha256
+    18704ed119d6305516d3c705ec340fda8ccb2f8d11113fa4ad553dca8513d596, 30 lines), its line 27
+    "MATCH     retention MATCH / MISMATCH: [23, 0]", its lines 28–30 beginning "MATCH" too;
+    12ah_close/retention_close.txt (sha256
+    8b6e6e749d5444ce2f045d9c7ddc74b40bee5454ac79b04fcc1003ded519e434, 29 lines), its lines
+    27–28 "requests: 10 of 10 equal" and "responses: 53 files; name-equal 53/53;
+    committed-equal 53/53"; lines 2–24 of the two files equal by diff, twenty-three lines;
+    the tool's probe_scratch and stage readers take their values from the config and read
+    neither file; 12ai_close/health_job_20261120.txt, which holds the light check's list of
+    thirteen lane models with no lane named.
+  INFERRED — BLOCKING (verified by the resume's R1 before the check is run; false = STOP):
+    read by the tool's rule, 12ah_close/retention_close.txt yields twenty-three lines of
+    three tokens each and no other.
+
+R826(a) — The stop at step 3b is correct: a check that crashes is a failed check (R763(c)).
+  The cause is the form of 12ai_close/retention_close.txt, whose lines 27–30 are the open
+  check's own output pasted under the probe-scratch heading: CC's, at the 12ai closeout. It
+  is the architect's as well: the closeout was accepted on that directory's listing (R825's
+  READ), and the 12aj-OPEN brief named the directory's files as references, with this file
+  not read against the tool that reads it. A statement about a file that no one had read it
+  for. The count so far in 12aj: one stop; no pause; one architect's error, reaching a
+  commit (the brief's).
+R826(b) — The PI's ruling, in his word: "Re-run". The open check is run again, whole, from a
+  second config equal to the first but for one value: the retention section's reference is
+  12ah_close/retention_close.txt. Its twenty-three hash lines equal the 12ai file's lines
+  2–24. session_open_check.py is not edited. 12ai_close/retention_close.txt is not edited
+  and gets no successor here. The crashed run's output and the first config are kept as they
+  are.
+R826(c) — Item 0 is accepted as reported: 46339be (Block 223 by transcribe_ruling.py, its
+  header carrying the PI's word "wrap" before the report, rendered as one sentence; r825.txt
+  equal to the architect's hash; the 12ai lane-line copy; the brief file equal to the
+  architect's copy; the plan +116 / −0; the rules files untouched), ledger b13d194.
+  claude-config at 7c88f52, two commits past 42fabff, both another lane's ledger rows only,
+  is accepted under R663(b).
+R826(d) — Steps 0 and 1 are accepted as reported: I1, I2, I3, I5 and I6 held; E1, E3 and E6
+  held. Readings, no row: the 2026-11-22 sweep is the first written by the light/full
+  script, twenty of twenty, with no new NV_ERR_NO_MEMORY line; its log holds no lock line, so
+  that the lock was taken is read from the script and not from the log (finding 3); the
+  eighteen model loads of 2026-11-22 05:31:59–05:48:22 UTC are another lane's and join the
+  cross-lane readings for dgx-infra (finding 4); deepseek-r1:32b is not in the Evidence
+  Engine block of dgx-infra's lane-model list and the file is unchanged since b5af93d
+  (finding 2), which the PI carries to the workbench; CC's two slips of finding 6 and its
+  memory note (finding 7).
+R826(e) — ~/scratch/12aj-open/between_sessions_read.txt quotes the whole lane-model file, other
+  lanes' blocks among them. The repository is public, and whether those lines are published
+  is the PI's and is not ruled here. Until he rules, the file is held out of the evidence
+  commit: it stays in scratch, unedited, its sha256, bytes and lines reported. Nothing else
+  of step 4 waits on it.
+R826(f) — Not ruled here: the form of the retention file the 12aj closeout writes; whether the
+  reader's filter joins the tools items. This ruling states no standing rule. The open
+  resumes at step 3b under the resume below.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R826(a) — The stop at step 3b is correct: a check that crashes is a failed check (R763(c)). The cause is the form of 12ai_close/retention_close.txt, whose lines 27–30 are the open check's own output pasted under the probe-scratch heading: CC's, at the 12ai closeout. It is the architect's as well: the closeout was accepted on that directory's listing (R825's READ), and the 12aj-OPEN brief named the directory's files as references, with this file not read against the tool that reads it. A statement about a file that no one had read it for. The count so far in 12aj: one stop; no pause; one architect's error, reaching a commit (the brief's). R826(b) — The PI's ruling, in his word: "Re-run". The open check is run again, whole, from a second config equal to the first but for one value: the retention section's reference is 12ah_close/retention_close.txt. Its twenty-three hash lines equal the 12ai file's lines 2–24. session_open_check.py is not edited. 12ai_close/retention_close.txt is not edited and gets no successor here. The crashed run's output and the first config are kept as they are. R826(c) — Item 0 is accepted as reported: 46339be (Block 223 by transcribe_ruling.py, its header carrying the PI's word "wrap" before the report, rendered as one sentence; r825.txt equal to the architect's hash; the 12ai lane-line copy; the brief file equal to the architect's copy; the plan +116 / −0; the rules files untouched), ledger b13d194. claude-config at 7c88f52, two commits past 42fabff, both another lane's ledger rows only, is accepted under R663(b). R826(d) — Steps 0 and 1 are accepted as reported: I1, I2, I3, I5 and I6 held; E1, E3 and E6 held. Readings, no row: the 2026-11-22 sweep is the first written by the light/full script, twenty of twenty, with no new NV_ERR_NO_MEMORY line; its log holds no lock line, so that the lock was taken is read from the script and not from the log (finding 3); the eighteen model loads of 2026-11-22 05:31:59–05:48:22 UTC are another lane's and join the cross-lane readings for dgx-infra (finding 4); deepseek-r1:32b is not in the Evidence Engine block of dgx-infra's lane-model list and the file is unchanged since b5af93d (finding 2), which the PI carries to the workbench; CC's two slips of finding 6 and its memory note (finding 7). R826(e) — ~/scratch/12aj-open/between_sessions_read.txt quotes the whole lane-model file, other lanes' blocks among them. The repository is public, and whether those lines are published is the PI's and is not ruled here. Until he rules, the file is held out of the evidence commit: it stays in scratch, unedited, its sha256, bytes and lines reported. Nothing else of step 4 waits on it. R826(f) — Not ruled here: the form of the retention file the 12aj closeout writes; whether the reader's filter joins the tools items. This ruling states no standing rule. The open resumes at step 3b under the resume below. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-OPEN stop report (item 0 46339be; stopped at step 3b, before the gate) |
+
+The decision log in this file ends at R826.
+
+**Block 225.** *Transcribed 2026-11-23 (item 0 of the 12aj-U31A brief), in its own commit with Block 224 and the brief file it orders, in the R597(e) form:* ruling R827, made by PI on architect recommendation on 2026-11-23 UTC, during session 12aj, on the 12aj-OPEN-R1 final report (evidence `cd6f9a895cae052bd89d7d871bbcd759014dbd97`). The 12aj-U31A brief that followed the ruling in the paste is not part of the block. The ruling as issued, with its line breaks:
+
+```text
+RULING [evidence-engine 12aj-R827] — 12aj-OPEN accepted as resumed; the gate's 1017.85 s enters
+  the series as confounded; readings on the findings; the between-session file stays held; no
+  standing rule; next, U31's Phase A
+STATUS: PI ruling, 2026-11-23 UTC, session 12aj, on architect recommendation, on the
+  12aj-OPEN-R1 final report (evidence cd6f9a895cae052bd89d7d871bbcd759014dbd97). Transcribe
+  at item 0 of the 12aj-U31A brief below, by transcribe_ruling.py, in the block after R826's.
+
+ASSUMPTIONS IN THIS RULING:
+  MEASURED (the 12aj-OPEN-R1 final report, quoted; wrapped lines joined): "By the reader's
+    rule the 12ah file yields 23 lines, three tokens each, lines 2–24, and no other."; "Open
+    check (R3): exit 0, RESULT: PASS (0 mismatches), 42 MATCH, no SKIPPED"; "Health section
+    passed (health last 20 models OK: 20), so D8 was not needed."; "rows 289, 94 / 59 / 136,
+    0 unclassed; dated lines 39 with 35 done; expected_holds true"; "dccc546: 215; 46339be:
+    215; rows in 0; rows out 0; no class or package move"; "Hold: not needed. The snapshot at
+    04:04:58 UTC named surgical-cv's uvicorn only."; "3607 passed, 17 deselected, 1 xfailed,
+    2 warnings; exit 0; ids 0 / 0"; "Wall time: 1017.85 s, inside 881–1076 s."; "another
+    lane's pytest run started at 04:19:24 UTC, in the gate's last three minutes, and was
+    still running at 04:22"; "Durations: no phase slower by more than 10 s."; "Commit:
+    cd6f9a895cae052bd89d7d871bbcd759014dbd97, parent 46339be…; 31 new files, +16,000; pushed,
+    0 0. Fingerprint IDENTICAL before and after."; "sha256
+    e169195ce7a76830b48f15ec59b0b0049add464d98d96a114cf2d5e85d469fe9, 11,477 B, 155 lines"
+    (the architect's copy: the same); "between_sessions_read.txt, held out (R826(e)): sha256
+    7fd1a1724e3aa88b8cf341fba87a40f1f33de742849a1ffca44a0987d62d462b, 22,029 B, 311 lines; in
+    scratch, unedited."; "Ledger: b3b5f8ffc0beea5898e1b2d56e1266484f0e2588, parent b13d194…";
+    "It carries five foreign pending rows"; "health_journal_20261122.txt is 402,940 B".
+  READ (CC's): findings 1–4.
+  READ (the architect's clone at cd6f9a8): the full hash in STATUS, its parent 46339be;
+    12aj_open/brief_12aj_OPEN_R1.md equal to the architect's copy by cmp;
+    12aj_open/gate_12aj_open/gate_wall.txt "wall: 1017.852609782 s"; 12aj_open/ holding
+    twenty-three files, none named between_sessions_read.txt;
+    12ag_close/health_journal_20261115.txt, the earlier sweep day's journal, 395,665 bytes,
+    committed; the plan's series table for the 12ag open, "1042.65 s, **confounded**
+    (R805(b))", its confounder "another lane's suite started inside the window after both
+    snapshots".
+  INFERRED: none that a clause below rests on.
+
+R827(a) — The 12aj-OPEN-R1 final report is accepted as printed. R826's blocking item held. The
+  evidence commit cd6f9a8 (the gate's nineteen files and its two side files, the 2026-11-21
+  and 2026-11-22 job reads, the NVRM read, the resume file equal to the architect's copy),
+  ledger b3b5f8f carrying five rows of another lane, named. The open check passed whole on
+  the second config; the recount stands at 289 with 39 / 35; R510 215 / 215, in 0, out 0.
+  With item 0 46339be (R826(c)), session 12aj is open on a verified base.
+R827(b) — The gate's 1017.85 s is the forty-seventh member of the series and is carried as
+  confounded (R677(f)), its confounder named: another lane's pytest run that started at
+  04:19:24 UTC, inside the gate's window and after both snapshots, as the 12ag open's member
+  was carried (R805(b)). It was launched as a unit, with no hold. The band stays 881–1076 s
+  until the 12aj closeout cuts the next one in R683(c)'s form.
+R827(c) — Readings, no row. The open check's health section read the sweep written by the
+  light/full script and passed, so the brief's D8 was not used and expires untested.
+  Finding 2: the five foreign rows were carried and named as R654(d) has it. Finding 3: a
+  sweep day's journal of this size is in the record already (2026-11-15's); it holds no
+  lane's name by CC's reading; no action. Finding 4: another lane's runs rotated three
+  basetemps out of the shared temp root during the open; with finding 1 it joins the
+  cross-lane readings for dgx-infra.
+R827(d) — ~/scratch/12aj-open/between_sessions_read.txt stays held as R826(e) left it, at the
+  sha256 above. Whether it is published, and in what form, is the PI's and is not ruled here.
+R827(e) — The count so far in 12aj: one stop (R826(a)); no pause; one architect's error. This
+  ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are
+  untouched at the item 0 that transcribes it, asserted by content. Next: U31's Phase A (the
+  brief below), read-only; then the PI's decisions on its read-out; then its build.
+```
+
+| Date | Ruling | Made by |
+| --- | --- | --- |
+| 2026-11-23 | R827(a) — The 12aj-OPEN-R1 final report is accepted as printed. R826's blocking item held. The evidence commit cd6f9a8 (the gate's nineteen files and its two side files, the 2026-11-21 and 2026-11-22 job reads, the NVRM read, the resume file equal to the architect's copy), ledger b3b5f8f carrying five rows of another lane, named. The open check passed whole on the second config; the recount stands at 289 with 39 / 35; R510 215 / 215, in 0, out 0. With item 0 46339be (R826(c)), session 12aj is open on a verified base. R827(b) — The gate's 1017.85 s is the forty-seventh member of the series and is carried as confounded (R677(f)), its confounder named: another lane's pytest run that started at 04:19:24 UTC, inside the gate's window and after both snapshots, as the 12ag open's member was carried (R805(b)). It was launched as a unit, with no hold. The band stays 881–1076 s until the 12aj closeout cuts the next one in R683(c)'s form. R827(c) — Readings, no row. The open check's health section read the sweep written by the light/full script and passed, so the brief's D8 was not used and expires untested. Finding 2: the five foreign rows were carried and named as R654(d) has it. Finding 3: a sweep day's journal of this size is in the record already (2026-11-15's); it holds no lane's name by CC's reading; no action. Finding 4: another lane's runs rotated three basetemps out of the shared temp root during the open; with finding 1 it joins the cross-lane readings for dgx-infra. R827(d) — ~/scratch/12aj-open/between_sessions_read.txt stays held as R826(e) left it, at the sha256 above. Whether it is published, and in what form, is the PI's and is not ruled here. R827(e) — The count so far in 12aj: one stop (R826(a)); no pause; one architect's error. This ruling states no standing rule: the id list, the glosses file and STANDING_RULES.md are untouched at the item 0 that transcribes it, asserted by content. Next: U31's Phase A (the brief below), read-only; then the PI's decisions on its read-out; then its build. | PI, 2026-11-23, during session 12aj, on architect recommendation, on the 12aj-OPEN-R1 final report (evidence cd6f9a8) |
+
+The decision log in this file ends at R827.

@@ -1,0 +1,11 @@
+# I3 (R829(b)): PARENT 0c6a7b7's collected ids (standard-gate marker) minus the ids collected in the scratch clone with both script files absent and the tests/test_review_paths.py:199 entry removed; the reverse difference beside it
+only in PARENT: 7
+tests/test_api_parity.py::test_engine_import_resolves[backfill_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.core.review_paths.load_spec_for]
+tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.core.review_paths.spec_path_for]
+tests/test_review_paths.py::test_entry_point_builds_no_spec_path_of_its_own[scripts/reparse_cloud_spans.py]
+tests/test_review_paths.py::test_entry_point_names_no_hardcoded_review[scripts/reparse_cloud_spans.py]
+tests/test_review_paths.py::test_entry_point_uses_the_resolver[scripts/reparse_cloud_spans.py]
+only in the clone (reverse): 0
+against R5's seven (the lines of 12ai_close/collected_ids_12ai_close.txt naming a script): differing 0

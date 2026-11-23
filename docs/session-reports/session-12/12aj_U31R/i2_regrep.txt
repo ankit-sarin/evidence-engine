@@ -1,0 +1,20 @@
+# I2 re-grep at PARENT 0c6a7b7 (2026-11-23T06:14:29Z); pattern: reparse_cloud_spans|backfill_cloud_spans; read-only
+=== negative control: the same pattern at PARENT must find R3's entry and the scripts' own lines
+scripts/backfill_cloud_spans.py:6:    python scripts/backfill_cloud_spans.py --dry-run
+scripts/backfill_cloud_spans.py:7:    python scripts/backfill_cloud_spans.py --confirm
+tests/test_review_paths.py:199:    "scripts/reparse_cloud_spans.py",
+(control: 1 in tests/test_review_paths.py, 2 in backfill's own lines; reparse names itself 0 times — its name is its file name only)
+=== engine/ analysis/ scripts/ tests/ (every line, comments and strings included)
+tests/test_review_paths.py:199:    "scripts/reparse_cloud_spans.py",
+scripts/backfill_cloud_spans.py:6:    python scripts/backfill_cloud_spans.py --dry-run
+scripts/backfill_cloud_spans.py:7:    python scripts/backfill_cloud_spans.py --confirm
+=== imports of either as a module (import scripts.<name> / from scripts import <name> / importlib / runpy / subprocess naming it)
+(end; empty = none)
+=== shell scripts and the nightly wrapper
+(end; empty = none)
+=== dgx-infra scripts/
+(end; empty = none)
+=== crontab -l
+(end; empty = none; crontab lines: 8)
+=== systemd: unit files and timers, system and user
+(end; empty = none)

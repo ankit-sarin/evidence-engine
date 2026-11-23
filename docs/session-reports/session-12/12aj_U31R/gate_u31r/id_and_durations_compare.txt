@@ -1,0 +1,22 @@
+gate ids 3601 ref 3608
+only-gate: 0; only-ref: 7
+  only-ref tests/test_api_parity.py::test_engine_import_resolves[backfill_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+  only-ref tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+  only-ref tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.core.review_paths.load_spec_for]
+  only-ref tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.core.review_paths.spec_path_for]
+  only-ref tests/test_review_paths.py::test_entry_point_builds_no_spec_path_of_its_own[scripts/reparse_cloud_spans.py]
+  only-ref tests/test_review_paths.py::test_entry_point_names_no_hardcoded_review[scripts/reparse_cloud_spans.py]
+  only-ref tests/test_review_paths.py::test_entry_point_uses_the_resolver[scripts/reparse_cloud_spans.py]
+phases ref 2721 gate 2713
+slower by >10 s: 0
+-- summary line
+==== 3600 passed, 17 deselected, 1 xfailed, 2 warnings in 972.46s (0:16:12) ====
+-- warnings
+===============================
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.
+    warnings.warn(
+
+tests/test_kappa.py::test_both_raters_constant_and_identical_is_undefined_not_one
+  /home/ankitsarin/projects/evidence-engine/.venv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:991: RuntimeWarning: invalid value encountered in scalar divide
+    k = xp.sum(w_mat * confusion) / xp.sum(w_mat * expected)

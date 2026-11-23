@@ -6157,73 +6157,6 @@
         "unparsed": [],
         "yaml_loads": []
       },
-      "scripts/backfill_cloud_spans.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "dynamic: DEFAULT_REVIEW",
-            "dest": null,
-            "line": 34,
-            "names": [
-              "--review"
-            ],
-            "required": false
-          },
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 35,
-            "names": [
-              "--confirm"
-            ],
-            "required": false
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 36,
-            "names": [
-              "--db"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [
-          {
-            "line": 29,
-            "role": "code",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "order": {},
-        "path": "scripts/backfill_cloud_spans.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 36,
-            "role": "help_text",
-            "text": "Database path (default: data/<review>/review.db)"
-          },
-          {
-            "kind": "f-string",
-            "line": 42,
-            "role": "code",
-            "text": "f'data/{args.review}/review.db'"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [
-          {
-            "line": 29,
-            "name": "DEFAULT_REVIEW",
-            "value": "surgical_autonomy"
-          }
-        ],
-        "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
       "scripts/parse_expanded_corpus.py": {
         "entry_point": true,
         "flags": [
@@ -6466,63 +6399,6 @@
           }
         ],
         "spec_access": [],
-        "unparsed": [],
-        "yaml_loads": []
-      },
-      "scripts/reparse_cloud_spans.py": {
-        "entry_point": true,
-        "flags": [
-          {
-            "default": "unset",
-            "dest": null,
-            "line": 28,
-            "names": [
-              "--review"
-            ],
-            "required": true
-          },
-          {
-            "default": "None",
-            "dest": null,
-            "line": 29,
-            "names": [
-              "--spec"
-            ],
-            "required": false
-          }
-        ],
-        "has_main_guard": true,
-        "literal_review_ids": [],
-        "order": {},
-        "path": "scripts/reparse_cloud_spans.py",
-        "path_construction": [
-          {
-            "kind": "literal",
-            "line": 29,
-            "role": "help_text",
-            "text": "Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the same review_id."
-          },
-          {
-            "kind": "f-string",
-            "line": 33,
-            "role": "code",
-            "text": "f'data/{review}/review.db'"
-          }
-        ],
-        "review_database": [],
-        "review_id_constants": [],
-        "spec_access": [
-          {
-            "func": "load_spec_for",
-            "line": 36,
-            "scope": "main"
-          },
-          {
-            "func": "spec_path_for",
-            "line": 37,
-            "scope": "main"
-          }
-        ],
         "unparsed": [],
         "yaml_loads": []
       },
@@ -6868,28 +6744,28 @@
     ],
     "summary": {
       "db_before_spec_scopes": 0,
-      "default_review_named_constants": 5,
-      "entry_points": 83,
+      "default_review_named_constants": 4,
+      "entry_points": 81,
       "entry_points_constructing_reviewdatabase": 22,
-      "entry_points_name_only": 41,
-      "entry_points_with_review_name_flag": 58,
-      "entry_points_with_spec_flag": 17,
+      "entry_points_name_only": 40,
+      "entry_points_with_review_name_flag": 56,
+      "entry_points_with_spec_flag": 16,
       "files_calling_load_review_spec_directly": 8,
-      "files_calling_resolver": 21,
-      "files_scanned": 204,
+      "files_calling_resolver": 20,
+      "files_scanned": 202,
       "files_with_raw_yaml_loads": 3,
       "fstring_spec_path_sites": 0,
-      "literal_review_id_sites_in_code": 28,
+      "literal_review_id_sites_in_code": 27,
       "name_only_constructing_reviewdatabase": 18,
-      "path_construction_sites_in_code": 56,
+      "path_construction_sites_in_code": 54,
       "raw_yaml_load_sites": 3,
-      "review_id_constants": 6,
+      "review_id_constants": 5,
       "unparsed_sites": 0
     },
     "throwaway_copies": []
   },
   "meta": {
-    "generated_at_commit": "b998dfb33b8c2c804dd9597bcd76c002d4596eea",
+    "generated_at_commit": "0c6a7b78e7ca89a10296abb2d072168ab3b164d0",
     "scan_roots": [
       "engine",
       "scripts",

@@ -164,7 +164,8 @@ def test_run_pipeline_takes_the_review_first_and_the_spec_as_override():
 # The spec-bearing entry points: 29 as enumerated in the SPEC-AUTH-01 Phase 1
 # read-out, 25 after the retirements noted inline (measured 2026-09-24 by
 # len(SPEC_BEARING_ENTRY_POINTS) and by collection, R135); 16 after the 2026-10-13
-# retirement (22 before it, measured the same way). Pinned as a list so
+# retirement (22 before it, measured the same way); 15 after the 2026-11-23
+# retirement (16 before it, measured the same way). Pinned as a list so
 # a new one cannot join them quietly on a hand-built path.
 SPEC_BEARING_ENTRY_POINTS = [
     # The ELICIT-DESIGN-01 smoke retired 2026-09-25 (I18, 9b-2e/f): no run manifest.
@@ -196,7 +197,10 @@ SPEC_BEARING_ENTRY_POINTS = [
     # extractions and forced papers to PARSED. Its parametrized case retires with it.
     # The failed-paper re-extraction side runner retired 2026-09-25 (R113, 9b-2e/f).
     # Its parametrized cases retire with it (R47); see the retention ledger.
-    "scripts/reparse_cloud_spans.py",
+    # scripts/reparse_cloud_spans.py retired 2026-11-23 under R828(j) (R612(o), R31): it
+    # wrote the cloud response parser's output to a review database outside a run,
+    # the opt-in and the guards. Its three parametrized cases retire with it (R47);
+    # see the retention ledger.
     # scripts/run5_extract_and_audit.py retired 2026-09-25 under R113 (R47),
     # brought forward by the cut-over (9b-FLIP R7): it imported the retired
     # run_audit. Its parametrized cases retire with it.

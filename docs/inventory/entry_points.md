@@ -1,30 +1,30 @@
 # Entry-point and authority-reader inventory
 
 **GENERATED — DO NOT EDIT.** Regenerate with `python -m engine.tools.inventory --write`.
-Generated at commit `b998dfb33b8c2c804dd9597bcd76c002d4596eea` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
+Generated at commit `0c6a7b78e7ca89a10296abb2d072168ab3b164d0` by `engine/tools/inventory.py`, AST only — no scanned module is imported and no database is opened.
 A drift test at the standard gate fails if this file's JSON twin stops matching the tree.
 
 ## Summary
 
 | count | value |
 |---|---:|
-| files scanned | 204 |
-| entry points | 83 |
-| entry points with spec flag | 17 |
-| entry points with review name flag | 58 |
-| entry points name only | 41 |
+| files scanned | 202 |
+| entry points | 81 |
+| entry points with spec flag | 16 |
+| entry points with review name flag | 56 |
+| entry points name only | 40 |
 | entry points constructing reviewdatabase | 22 |
 | name only constructing reviewdatabase | 18 |
-| files calling resolver | 21 |
+| files calling resolver | 20 |
 | files calling load review spec directly | 8 |
 | raw yaml load sites | 3 |
 | files with raw yaml loads | 3 |
-| review id constants | 6 |
-| literal review id sites in code | 28 |
-| path construction sites in code | 56 |
+| review id constants | 5 |
+| literal review id sites in code | 27 |
+| path construction sites in code | 54 |
 | db before spec scopes | 0 |
 | fstring spec path sites | 0 |
-| default review named constants | 5 |
+| default review named constants | 4 |
 | unparsed sites | 0 |
 
 Review ids on disk: `surgical_autonomy`
@@ -45,16 +45,16 @@ Baselines are the figures measured by hand in GENERALIZE-READOUT-01 and SPEC-AUT
 
 | figure | hand-built | measured now | |
 |---|---:|---:|---|
-| argparse entry points naming a review | 74 | 58 | the hand scan keyed on --review/--name, which is what this counts |
-| of those, spec-bearing | 29 | 17 | differs — unexplained, investigate |
-| of those, name-only | 45 | 41 | differs — unexplained, investigate |
+| argparse entry points naming a review | 74 | 56 | the hand scan keyed on --review/--name, which is what this counts |
+| of those, spec-bearing | 29 | 16 | differs — unexplained, investigate |
+| of those, name-only | 45 | 40 | differs — unexplained, investigate |
 | entry points constructing ReviewDatabase | 35 | 22 | the hand scan enumerated files by argparse FLAG, so it could not see an entry point that constructs a database without a --review/--name flag; the tool finds those through the __main__ guard instead |
 | name-only, constructing ReviewDatabase | 20 | 18 | differs — unexplained, investigate |
 | raw yaml load sites | 13 | 3 | differs — unexplained, investigate |
 | f-string spec-path builders | 19 | 0 | SPEC-AUTH-01 moved every one of these onto the resolver; a non-zero value here means a hand-built spec path has come back |
-| DEFAULT_REVIEW constants | 7 | 5 | differs — unexplained, investigate |
+| DEFAULT_REVIEW constants | 7 | 4 | differs — unexplained, investigate |
 
-Two figures deliberately have no baseline row. **entry points** (83) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
+Two figures deliberately have no baseline row. **entry points** (81) counts anything with argparse flags or a `__main__` guard, which is a wider net than the hand scan's review-naming CLIs. And the hand-built note that 12 of the 13 raw YAML loads are codebook readers is a semantic judgement about what a file MEANS; this tool reports the call site and its target expression and makes no such claim.
 
 ## Entry points
 
@@ -131,7 +131,6 @@ Two figures deliberately have no baseline row. **entry points** (83) counts anyt
 | `scripts/_pass2_eyeball.py` | — | — | — | — |
 | `scripts/advance_to_pdf_acquired.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
 | `scripts/backfill_authors.py` | `--review`=dynamic: DEFAULT_REVIEW; `--dry-run` | — | — | — |
-| `scripts/backfill_cloud_spans.py` | `--review`=dynamic: DEFAULT_REVIEW; `--confirm`; `--db`=None | — | — | — |
 | `scripts/parse_expanded_corpus.py` | `--review`=dynamic: DEFAULT_REVIEW | load_spec_for | 53 | _main_locked:spec_first |
 | `scripts/pdf_acquisition/step1_export_citations.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step2_unpaywall_check.py` | — | — | — | — |
@@ -139,7 +138,6 @@ Two figures deliberately have no baseline row. **entry points** (83) counts anyt
 | `scripts/pdf_acquisition/step3b_retry_failed.py` | — | — | — | — |
 | `scripts/pdf_acquisition/step4_manual_download_list.py` | — | — | — | — |
 | `scripts/prepare_concordance_pdfs.py` | `--review`=dynamic: DEFAULT_REVIEW | — | — | — |
-| `scripts/reparse_cloud_spans.py` | `--review` required; `--spec`=None | load_spec_for, spec_path_for | — | — |
 | `scripts/run_cloud_extraction.py` | `--review` required; `--arm`=None; `--spec`=None; `--db`=None; `--max-papers`=None; `--max-cost`=None; `--progress`; `--dry-run` | data_root_for, load_review_spec, load_spec_for, spec_path_for | — | — |
 | `scripts/run_pipeline.py` | `--review/--name` required; `--spec`=None; `--skip-to`=None; `--limit`=None; `--max-papers`=None; `--restart-every`=0; `--restart-on-read-timeout` | load_spec_for | 100 | run_pipeline:spec_first |
 | `scripts/screen_expanded.py` | `--review` required; `--spec`=None; `--fetch-only`; `--screen-only`; `--verify-only`; `--fresh` | load_review_spec, load_spec_for, spec_path_for | — | — |
@@ -212,9 +210,7 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `scripts/_pass2_eyeball.py` | 15 | literal | `data/surgical_autonomy/review.db` |
 | `scripts/_pass2_eyeball.py` | 17 | literal | `data/surgical_autonomy/exports/disagreement_pairs_3arm.csv` |
 | `scripts/backfill_authors.py` | 98 | f-string | `f'data/{args.review}/review.db'` |
-| `scripts/backfill_cloud_spans.py` | 42 | f-string | `f'data/{args.review}/review.db'` |
 | `scripts/pdf_acquisition/step4_manual_download_list.py` | 121 | f-string | `f"""<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Manual PD...` |
-| `scripts/reparse_cloud_spans.py` | 33 | f-string | `f'data/{review}/review.db'` |
 | `scripts/screen_expanded.py` | 511 | f-string | `f'data/{review}/expanded_search'` |
 
 ## Literal review ids in code
@@ -232,7 +228,6 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/migrations/005_model_digest.py` | 66 | `surgical_autonomy` |
 | `scripts/advance_to_pdf_acquired.py` | 19 | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `surgical_autonomy` |
-| `scripts/backfill_cloud_spans.py` | 29 | `surgical_autonomy` |
 | `scripts/parse_expanded_corpus.py` | 30 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step1_export_citations.py` | 14 | `surgical_autonomy` |
 | `scripts/pdf_acquisition/step1_export_citations.py` | 15 | `surgical_autonomy` |
@@ -257,7 +252,6 @@ Strings carrying `review_specs`, `data/` or `.yaml` outside docstrings, argparse
 | `engine/analysis/normalize.py` | 60 | `_FALLBACK_REVIEW_ID` | `surgical_autonomy` |
 | `scripts/advance_to_pdf_acquired.py` | 19 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/backfill_authors.py` | 23 | `DEFAULT_REVIEW` | `surgical_autonomy` |
-| `scripts/backfill_cloud_spans.py` | 29 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/parse_expanded_corpus.py` | 30 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 | `scripts/prepare_concordance_pdfs.py` | 12 | `DEFAULT_REVIEW` | `surgical_autonomy` |
 

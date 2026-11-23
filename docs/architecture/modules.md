@@ -452,8 +452,8 @@ Adds model_digest + auditor_model_digest columns to extractions table. Idempoten
 | `parse_expanded_corpus.py` | Advance SCREENED_IN → PARSED | `--review` |
 | `advance_to_pdf_acquired.py` | Bulk status advancement for PDFs on disk | `--review` |
 | `backfill_authors.py` | Backfill missing author metadata | `--review`, `--dry-run` |
-| `reparse_cloud_spans.py` | Re-parse 0-span cloud extractions from stored JSON | `--review` |
-| `backfill_cloud_spans.py` | Backfill cloud extractions missing span rows | `--review`, `--dry-run` |
+| `reparse_cloud_spans.py` | **Retired 2026-11-23** (R828(j); R612(o), R31) — recoverable at `0c6a7b7` | — |
+| `backfill_cloud_spans.py` | **Retired 2026-11-23** (R828(j); R612(o), R31) — recoverable at `0c6a7b7` | — |
 | `prepare_concordance_pdfs.py` | Copy + rename PDFs for concordance | `--review` |
 
 ### Testing / Validation

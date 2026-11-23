@@ -1,0 +1,35 @@
+# health job reads, 2026-11-22, read at 12aj-OPEN (2026-11-23T03:50:39Z). FORM: full sweep, the first written by the light/full script (dgx-infra b5af93d 2026-11-15T23:55:39Z); the dated log's own mode line: 'Mode: full (Sunday (UTC) full sweep)'. From /home/ankitsarin/logs/ollama_health_cron.log (mtime 2026-11-22 07:05:20.445760 +0000); the log carries no date lines, so the 2026-11-22 run is the 20-line block starting at line 4242 (the last of 117 blocks each opening 'Testing qwen3.6:35b-a3b'), its length the dated log's own row count, confirmed against the same run's dated log /home/ankitsarin/logs/ollama_health_20261122.log (mtime 2026-11-22 07:05:20.448761 +0000): model, status and elapsed equal line for line: True (R737(c))
+loads OK/total: 20/20; FAIL lines: 0
+models tested: 20 (beside twenty, the 2026-11-15 figure; the sweep tests every model `ollama list` returns that day)
+POST /api/generate in the journal window: 20
+the lock, as the log shows it: 0 line(s) of the dated log name the lock; the script writes a lock line only when it stands down (SKIPPED, lock HELD) or cannot open the lock (WARN), so a sweep that ran with no such line consulted the lock and acquired it (script :147-159, :214-235); the log itself records neither the consultation nor the state
+-- dated log: Ollama Health Check — Sun Nov 22 07:00:01 AM UTC 2026; Mode: full (Sunday (UTC) full sweep); Resident at start: none; Done: Sun Nov 22 07:05:20 AM UTC 2026
+-- journal 06:59–07:12 (health_journal_20261122.txt)
+lines 2706
+GIN 66
+GIN non-200 0
+GIN by method and path: GET /api/ps x44; GET /api/tags x1; HEAD / x1; POST /api/generate x20
+model loads (starting runner --model) 20
+-- kernel NV_ERR_NO_MEMORY lines inside 06:59–07:12: 0
+(no NV_ERR_NO_MEMORY line in the sweep's window: no new line this sweep)
+-- the 20 lines
+Testing qwen3.6:35b-a3b                (300s) ... OK 10.3s
+Testing qwen3.6:27b                    (300s) ... OK 15.9s
+Testing gpt-oss:20b                    (300s) ... OK 6.0s
+Testing gemma4:26b                     (300s) ... OK 6.4s
+Testing qwen3:30b-instruct             (300s) ... OK 5.2s
+Testing gemma4:31b                     (300s) ... OK 10.4s
+Testing qwen3.5:27b                    (300s) ... OK 21.3s
+Testing gemma3:27b                     (300s) ... OK 7.4s
+Testing qwen2.5vl:7b                   (120s) ... OK 4.1s
+Testing qwen3:8b                       (120s) ... OK 5.8s
+Testing qwen3:32b                      (300s) ... OK 18.2s
+Testing minicpm-v:latest               (120s) ... OK 6.5s
+Testing qwen3-vl:8b                    (120s) ... OK 26.5s
+Testing qwen2.5:7b-instruct            (120s) ... OK 4.9s
+Testing deepseek-r1:32b                (300s) ... OK 24.6s
+Testing mistral:7b                     (120s) ... OK 5.3s
+Testing gemma2:27b                     (300s) ... OK 7.4s
+Testing qwen2.5:32b                    (300s) ... OK 17.4s
+Testing llama3.3:70b                   (600s) ... OK 111.2s
+Testing llama3.2:3b                    (120s) ... OK 3.9s

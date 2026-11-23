@@ -1,0 +1,132 @@
+=== PART 1 — Q2's ten shapes, each as the 'sample_size' span of an otherwise complete 20-field response (FAKE)
+--- shape 1 no value key (snippet sent)
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [('NR', '')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('NR', '', None)]; field_events (event_type, value, source_snippet) [('asserted', 'NR', None)]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'source_snippet': '', 'value': 'NR'}
+
+--- shape 2 explicit null (snippet sent)
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': None, 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [('NR', '')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('NR', '', None)]; field_events (event_type, value, source_snippet) [('asserted', 'NR', None)]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': 'NR', 'source_snippet': ''}
+
+--- shape 3 empty string (no snippet)
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': '', 'source_snippet': ''}
+    parse_response_to_spans → (value, source_snippet) [('', '')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 0, cloud_evidence_spans 0, field_events 0, claim_inputs 0
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) []; field_events (event_type, value, source_snippet) []
+    sample_size in the stored extracted_data (the response as received): None
+
+--- shape 4 int 40
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': 40, 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [('40', 'Forty patients were enrolled.')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('40', 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', '40', 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': '40', 'source_snippet': 'Forty patients were enrolled.'}
+
+--- shape 5 float 40.5
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': 40.5, 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [('40.5', 'Forty patients were enrolled.')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('40.5', 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', '40.5', 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': '40.5', 'source_snippet': 'Forty patients were enrolled.'}
+
+--- shape 6 bool true
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': True, 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [('True', 'Forty patients were enrolled.')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('True', 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', 'True', 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': 'True', 'source_snippet': 'Forty patients were enrolled.'}
+
+--- shape 7 list of strings
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': ['40', '38'], 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [("['40', '38']", 'Forty patients were enrolled.')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [("['40', '38']", 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', "['40', '38']", 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': "['40', '38']", 'source_snippet': 'Forty patients were enrolled.'}
+
+--- shape 8 list of mixed types
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': ['40', 38, None, True], 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [("['40', 38, None, True]", 'Forty patients were enrolled.')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [("['40', 38, None, True]", 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', "['40', 38, None, True]", 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': "['40', 38, None, True]", 'source_snippet': 'Forty patients were enrolled.'}
+
+--- shape 9 dict
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': {'n': 40}, 'source_snippet': 'Forty patients were enrolled.'}
+    parse_response_to_spans → (value, source_snippet) [("{'n': 40}", 'Forty patients were enrolled.')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [("{'n': 40}", 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', "{'n': 40}", 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': "{'n': 40}", 'source_snippet': 'Forty patients were enrolled.'}
+
+--- shape 10 no source_snippet key (value '40')
+    sent: {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': '40'}
+    parse_response_to_spans → (value, source_snippet) [('40', '')]; _last_salvage None; spans returned 1
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('completed', None)]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 0, cloud_evidence_spans 0, field_events 0, claim_inputs 0
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) []; field_events (event_type, value, source_snippet) []
+    sample_size in the stored extracted_data (the response as received): None
+
+=== PART 2 — the acceptance test's three statements at HEAD, from PART 1's rows (FAKE)
+  (i) 'A span with no value key yields no sentinel claim and its field is reported missing': False — stored span [('NR', '', None)], claim [('asserted', 'NR', None)], sends 1 (a field reported missing would be re-asked)
+  (ii) 'a list, dict or bool value is rejected, not stored as its repr': False — stored values: bool [('True', 'Forty patients were enrolled.', None)], list [("['40', '38']", 'Forty patients were enrolled.', None)], mixed list [("['40', 38, None, True]", 'Forty patients were enrolled.', None)], dict [("{'n': 40}", 'Forty patients were enrolled.', None)]
+  (iii) 'an explicit JSON null still yields the canonical sentinel': True — stored span [('NR', '', None)]
+
+=== PART 3 — Q4: a response the transport reads as truncated (finish_reason 'length'), five forms (FAKE)
+--- T1 cut mid-string: the text is not valid JSON
+    json.loads(content) in the transport: JSONDecodeError → the transport passes {'fields': [], 'raw': <content>}; parse_response_to_spans returns 0 spans; _last_salvage None
+    run_arm returned; provider sends 3; run_calls (outcome, detail) [('error', 'truncated: finish_reason=length'), ('error', 'truncated: finish_reason=length'), ('error', 'truncated: finish_reason=length')]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 0, cloud_evidence_spans 0, field_events 0, claim_inputs 0
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) []; field_events (event_type, value, source_snippet) []
+    sample_size in the stored extracted_data (the response as received): None
+
+--- T2 the JSON is whole (all fields) and the provider still says 'length'
+    json.loads(content) in the transport: parses; parse_response_to_spans returns 20 spans; _last_salvage None
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('error', 'truncated: finish_reason=length')]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('40', 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', '40', 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'value': '40', 'source_snippet': 'Forty patients were enrolled.'}
+
+--- T3 fenced ```json, the JSON whole, cut before the closing fence
+    json.loads(content) in the transport: JSONDecodeError → the transport passes {'fields': [], 'raw': <content>}; parse_response_to_spans returns 20 spans; _last_salvage None
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('error', 'truncated: finish_reason=length')]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('40', 'Forty patients were enrolled.', None)]; field_events (event_type, value, source_snippet) [('asserted', '40', 'Forty patients were enrolled.')]
+    sample_size in the stored extracted_data (the response as received): '(no fields list in extracted_data)'
+
+--- T4 valid JSON, the last field absent (19 of 20)
+    json.loads(content) in the transport: parses; parse_response_to_spans returns 19 spans; _last_salvage None
+    run_arm returned; provider sends 3; run_calls (outcome, detail) [('error', 'truncated: finish_reason=length'), ('error', 'truncated: finish_reason=length'), ('error', 'truncated: finish_reason=length')]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 0, cloud_evidence_spans 0, field_events 0, claim_inputs 0
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) []; field_events (event_type, value, source_snippet) []
+    sample_size in the stored extracted_data (the response as received): None
+
+--- T5 valid JSON, all field names present, the cut-off field's span holding no value key
+    json.loads(content) in the transport: parses; parse_response_to_spans returns 20 spans; _last_salvage None
+    run_arm returned; provider sends 1; run_calls (outcome, detail) [('error', 'truncated: finish_reason=length')]; manifest (end_status, end_reason) [(None, None), ('completed', None)]
+    rows for the paper: cloud_extractions 1, cloud_evidence_spans 20, field_events 20, claim_inputs 1
+    sample_size: cloud_evidence_spans (value, source_snippet, notes) [('NR', '', None)]; field_events (event_type, value, source_snippet) [('asserted', 'NR', None)]
+    sample_size in the stored extracted_data (the response as received): {'field_name': 'sample_size', 'confidence': 0.9, 'tier': 1, 'source_snippet': '', 'value': 'NR'}
+
+=== PART 4 — two neighbours (CODE ORDER, each a pure call; no transport, no database)
+  the Anthropic transport's ''→None span (anthropic_extractor.py, 'empty_string_to_null') at the store's citation guard: ok False, offenders (('sample_size', 'VALUE_WITHOUT_CITATION'),)
+  CloudExtractorBase.parse_response_to_spans(CloudExtractorBase.__new__(CloudExtractorBase), <a null value>) — backfill_cloud_spans.py:58,66's call form: raised AttributeError: 'CloudExtractorBase' object has no attribute '_codebook'
+  CloudExtractorBase.parse_response_to_spans(CloudExtractorBase.__new__(CloudExtractorBase), <no null value>) — backfill_cloud_spans.py:58,66's call form: returned 1 span(s)
+
+=== the record
+SDK constructions recorded (FakeOpenAI, no client): 15, keywords [{'api_key': 'placeholder-not-a-credential', 'max_retries': 0}]; provider creates 19; sleeps []; httpx sends 0; socket connects 0; real openai.OpenAI never constructed (patched in every driven case; the parse-only instances have no PROVIDER and build no client); scripts.reparse_cloud_spans / scripts.backfill_cloud_spans imported: []
+
+=== Ollama journal, the probe's window 2026-11-23 05:20:57 → 2026-11-23 05:21:25 UTC
+-- No entries --

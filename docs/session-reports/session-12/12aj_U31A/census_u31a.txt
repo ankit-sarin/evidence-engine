@@ -1,0 +1,162 @@
+
+-- (a) calls of parse_response_to_spans: 11
+  engine/cloud/anthropic_extractor.py:132 <module>.AnthropicExtractor.extract_paper | receiver self | spans = self.parse_response_to_spans(extracted_data)
+  engine/cloud/openai_extractor.py:127 <module>.OpenAIExtractor.extract_paper | receiver self | spans = self.parse_response_to_spans(extracted_data)
+  scripts/backfill_cloud_spans.py:66 <module>.main | receiver CloudExtractorBase | spans = CloudExtractorBase.parse_response_to_spans(base, data)
+  scripts/reparse_cloud_spans.py:70 <module>.main | receiver extractor | spans = extractor.parse_response_to_spans(raw_data)
+  tests/test_cloud_extraction.py:298 <module>.TestCloudExtractorBase.test_parse_response_valid_json | receiver base | spans = base.parse_response_to_spans(SAMPLE_RESPONSE)
+  tests/test_cloud_extraction.py:310 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | receiver base | spans = base.parse_response_to_spans("not json at all")
+  tests/test_cloud_extraction.py:314 <module>.TestCloudExtractorBase.test_parse_response_malformed_json | receiver base | spans = base.parse_response_to_spans({"study_type": "RCT"})
+  tests/test_cloud_extraction.py:321 <module>.TestCloudExtractorBase.test_parse_response_bare_list | receiver base | spans = base.parse_response_to_spans(SAMPLE_FIELDS)
+  tests/test_cloud_extraction.py:327 <module>.TestCloudExtractorBase.test_parse_response_data_extraction_key | receiver base | spans = base.parse_response_to_spans({"data_extraction": SAMPLE_FIELDS})
+  tests/test_cloud_extraction.py:336 <module>.TestCloudExtractorBase.test_parse_response_recovers_from_raw | receiver base | spans = base.parse_response_to_spans({"fields": [], "raw": raw_json})
+  tests/test_u30_cloud_interrupt.py:313 <module>._store_first_paper | receiver ex | spans = ex.parse_response_to_spans(_content())
+
+-- (b) _last_salvage: 8
+  engine/cloud/base.py:128 <module>.CloudExtractorBase.__init__ | WRITE | self._last_salvage: str | None = None
+  engine/cloud/base.py:276 <module>.CloudExtractorBase.parse_response_to_spans | WRITE | self._last_salvage = None
+  engine/cloud/base.py:552 <module>.CloudExtractorBase.extract_with_completeness | read | salvage = self._last_salvage
+  engine/cloud/base.py:438 <module>.CloudExtractorBase.store_result | read | salvage=self._last_salvage,
+  engine/cloud/base.py:334 <module>.CloudExtractorBase.parse_response_to_spans | WRITE | self._last_salvage = "single_span_dict"
+  engine/cloud/base.py:343 <module>.CloudExtractorBase.parse_response_to_spans | WRITE | self._last_salvage = "flat_field_dict"
+  tests/test_completeness_guard.py:237 <module>._FakeCloud.__init__ | WRITE | self._last_salvage = None
+  tests/test_completeness_guard.py:243 <module>._FakeCloud.extract_paper | WRITE | self._last_salvage = r.get("_salvage")
+
+-- (c) canonical_absence_sentinel on the cloud path: 2
+  engine/cloud/base.py:378 <module>.CloudExtractorBase.parse_response_to_spans | span["value"] = self._codebook.canonical_absence_sentinel
+  engine/cloud/base.py:376 <module>.CloudExtractorBase.parse_response_to_spans | self._codebook.canonical_absence_sentinel, span.get("field_name"),
+
+-- (d') uses of either model in engine/core/effective_config.py: 2
+  engine/core/effective_config.py:424 <module>.render_messages | span = EvidenceSpan(field_name="f", value="v", source_snippet="s", confidence=0.5, tier=1)
+  engine/core/effective_config.py:289 <module>._format | return ExtractionOutput.model_json_schema()
+
+-- (d) imports of ExtractionOutput / EvidenceSpan: 38
+  analysis/eval/run_local_ab.py:38 <module> | ExtractionOutput | from engine.agents.models import ExtractionOutput
+  analysis/eval/run_local_abc.py:48 <module> | ExtractionOutput | from engine.agents.models import ExtractionOutput
+  analysis/eval/run_qualgap01.py:68 <module> | ExtractionOutput | from engine.agents.models import ExtractionOutput
+  engine/agents/audit_events.py:53 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  engine/agents/auditor.py:14 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  engine/agents/extractor.py:17 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+  engine/cloud/base.py:13 <module> | ExtractionOutput | from engine.agents.models import ExtractionOutput
+  engine/core/effective_config.py:288 <module>._format | ExtractionOutput | from engine.agents.models import ExtractionOutput
+  engine/core/effective_config.py:423 <module>.render_messages | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  engine/elicitation/pipeline.py:399 <module>._token_span | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  engine/elicitation/pipeline.py:432 <module>.extract_paper_elicited | EvidenceSpan | from engine.agents.models import EvidenceSpan, ExtractionResult
+  tests/test_audit_stage_completion.py:36 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan, ExtractionResult
+  tests/test_auditor.py:139 <module>.test_semantic_verify_mocked | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  tests/test_citation_guard.py:117 <module>.test_uncited_value_never_reaches_the_database | EvidenceSpan | from engine.agents.models import EvidenceSpan, ExtractionResult
+  tests/test_citation_record.py:28 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_cut_over.py:26 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_duplicate_on_pass1_attempt_2.py:29 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_elicitation_pipeline.py:25 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_extraction_events.py:21 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan, ExtractionResult
+  tests/test_extraction_run_link.py:19 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_extraction_signatures.py:25 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  tests/test_extractor.py:23 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+  tests/test_extractor.py:658 <module>.TestProactiveRestart._make_fake_extract._fake | EvidenceSpan | from engine.agents.models import ExtractionResult, EvidenceSpan
+  tests/test_extractor.py:740 <module>.TestRestartOllamaGraceful._make_fake_extract._fake | EvidenceSpan | from engine.agents.models import ExtractionResult, EvidenceSpan
+  tests/test_floor_and_stored_attempt.py:35 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+  tests/test_presented_context.py:21 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_request_capture.py:51 <module>._schemas | ExtractionOutput | from engine.agents.models import ExtractionOutput
+  tests/test_request_capture.py:229 <module>.test_extraction_pass1_pass2_and_snippet_retry | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_run_fault_predicate.py:31 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_run_interrupts.py:27 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_selection_bound.py:29 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_text_refusal_at_selection.py:32 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan, ExtractionResult
+  tests/test_u38_snippet_precheck.py:26 <module> | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  tests/test_u39_runtime_equals_hash.py:167 <module>.test_audit_runtime_equals_hash | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  tests/test_u39_runtime_equals_hash.py:184 <module>.test_audit_every_codebook_type_equals_a_rendered_variant | EvidenceSpan | from engine.agents.models import EvidenceSpan
+  tests/test_units_as_source_slices.py:25 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput
+  tests/test_value_divergence.py:28 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+  tests/test_write_boundary_guard.py:32 <module> | EvidenceSpan, ExtractionOutput | from engine.agents.models import EvidenceSpan, ExtractionOutput, ExtractionResult
+
+-- (e'') references outside the four trees (count, lines): 4
+  CLAUDE.md | 1 | lines [614]
+  docs/architecture/modules.md | 2 | lines [455, 456]
+  docs/inventory/entry_points.json | 4 | lines [6160, 6200, 6472, 6497]
+  docs/inventory/entry_points.md | 6 | lines [134, 142, 215, 217, 235, 260]
+
+-- (e') the scripts naming themselves or each other: 2
+  scripts/backfill_cloud_spans.py:6 | python scripts/backfill_cloud_spans.py --dry-run
+  scripts/backfill_cloud_spans.py:7 | python scripts/backfill_cloud_spans.py --confirm
+
+-- (e) references to the two scripts (text lines; engine/, scripts/, tests/, analysis/; the scripts' own lines apart): 1
+  tests/test_review_paths.py:199 | "scripts/reparse_cloud_spans.py",
+
+-- (f) scripts/backfill_cloud_spans.py: 13
+  run_arm path elements named: none; absent: ['open_run', 'close_run', 'record_call', 'hold_experiment_lock', 'select_cloud_arms', 'enabled_arms', 'enforce_completeness', 'drop_unexpected', 'enforce_citations', 'write_extraction_events', 'store_result', 'init_cloud_tables']
+  :42 db_path = args.db or f"data/{args.review}/review.db"
+  :34 parser.add_argument("--review", default=DEFAULT_REVIEW, help=f"Review name (default: {DEFAULT_REVIEW})")
+  :35 parser.add_argument("--confirm", action="store_true", help="Actually write spans (default is dry-run)")
+  :36 parser.add_argument("--db", default=None, help="Database path (default: data/<review>/review.db)")
+  :44 conn = sqlite3.connect(db_path)
+  :46 execute — SQL verb(s): ['PRAGMA']
+  :50 execute — SQL verb(s): ['SELECT']
+  :58 base = CloudExtractorBase.__new__(CloudExtractorBase)
+  :66 spans = CloudExtractorBase.parse_response_to_spans(base, data)
+  :106 execute — SQL verb(s): ['SELECT']
+  :90 conn.commit()
+  :75 execute — SQL verb(s): ['INSERT']
+
+-- (f) scripts/reparse_cloud_spans.py: 11
+  run_arm path elements named: none; absent: ['open_run', 'close_run', 'record_call', 'hold_experiment_lock', 'select_cloud_arms', 'enabled_arms', 'enforce_completeness', 'drop_unexpected', 'enforce_citations', 'write_extraction_events', 'store_result', 'init_cloud_tables']
+  :33 db_path = f"data/{review}/review.db"
+  :28 parser.add_argument("--review", required=True, help="Review id. The review's identity — the spec file and the data root both derive from it.")
+  :29 parser.add_argument("--spec", default=None, help="Override the Review Spec path. Defaults to review_specs/<review>.yaml; an override must carry the sa
+  :39 conn = sqlite3.connect(db_path)
+  :41 execute — SQL verb(s): ['PRAGMA']
+  :60 extractor = CloudExtractorBase(db_path, spec_path)
+  :70 spans = extractor.parse_response_to_spans(raw_data)
+  :44 execute — SQL verb(s): ['SELECT']
+  :83 conn.commit()
+  :74 execute — SQL verb(s): ['INSERT']
+
+-- (g') tests that call the parser or extract_paper with string values only: 22
+  tests/test_cloud_extraction.py:296 test_parse_response_valid_json | names ['parse_response_to_spans'] | value kinds [] | params ['test_db', 'spec_path'] | asserts 4
+  tests/test_cloud_extraction.py:306 test_parse_response_malformed_json | names ['parse_response_to_spans'] | value kinds [] | params ['test_db', 'spec_path'] | asserts 2
+  tests/test_cloud_extraction.py:319 test_parse_response_bare_list | names ['parse_response_to_spans'] | value kinds [] | params ['test_db', 'spec_path'] | asserts 1
+  tests/test_cloud_extraction.py:325 test_parse_response_data_extraction_key | names ['parse_response_to_spans'] | value kinds [] | params ['test_db', 'spec_path'] | asserts 2
+  tests/test_cloud_extraction.py:332 test_parse_response_recovers_from_raw | names ['parse_response_to_spans'] | value kinds [] | params ['test_db', 'spec_path'] | asserts 1
+  tests/test_cloud_extraction.py:445 test_extract_paper | names ['extract_paper'] | value kinds [] | params ['mock_openai_cls', 'test_db', 'spec_path'] | asserts 6
+  tests/test_cloud_extraction.py:472 test_cost_calculation | names ['extract_paper'] | value kinds [] | params ['mock_openai_cls', 'test_db', 'spec_path'] | asserts 1
+  tests/test_cloud_extraction.py:516 test_extract_paper | names ['extract_paper'] | value kinds [] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | asserts 4
+  tests/test_cloud_extraction.py:539 test_reasoning_trace_from_thinking_blocks | names ['extract_paper'] | value kinds [] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | asserts 1
+  tests/test_cloud_extraction.py:560 test_json_extracted_from_text_blocks | names ['extract_paper'] | value kinds [] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | asserts 2
+  tests/test_cloud_extraction.py:582 test_cost_calculation | names ['extract_paper'] | value kinds [] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | asserts 1
+  tests/test_cloud_extraction.py:723 test_nonempty_string_unchanged | names ['extract_paper'] | value kinds [] | params ['mock_anthropic_cls', 'test_db', 'spec_path'] | asserts 2
+  tests/test_request_capture.py:225 test_extraction_pass1_pass2_and_snippet_retry | names ['extract_paper'] | value kinds [] | params ['capture', 'spec', 'tmp_path'] | asserts 1
+  tests/test_request_capture.py:350 test_openai_request_as_sent | names ['extract_paper'] | value kinds [] | params ['tmp_path', 'spec'] | asserts 5
+  tests/test_request_capture.py:378 test_anthropic_request_as_sent | names ['extract_paper'] | value kinds [] | params ['tmp_path', 'spec'] | asserts 4
+  tests/test_u29_cloud_call_record.py:165 test_a_cloud_send_that_raises_still_records_its_call | names ['extract_paper'] | value kinds [] | params ['world', 'provider'] | asserts 5
+  tests/test_u29_cloud_call_record.py:195 test_a_truncated_or_refused_response_is_an_error_row_with_its_detail_and_a_digest | names ['extract_paper'] | value kinds [] | params ['world', 'provider', 'form', 'detail'] | asserts 4
+  tests/test_u29_cloud_call_record.py:218 test_a_complete_response_is_completed_with_a_content_digest | names ['extract_paper'] | value kinds [] | params ['world', 'provider'] | asserts 2
+  tests/test_u29_cloud_call_record.py:236 test_every_hash_in_a_stored_claims_chain_has_a_run_calls_row | names ['extract_paper'] | value kinds [] | params ['world', 'provider'] | asserts 3
+  tests/test_u29_cloud_call_record.py:279 test_a_recorder_fault_during_a_provider_exception_surfaces_as_the_run_fault | names ['extract_paper'] | value kinds [] | params ['world', 'provider', 'monkeypatch'] | asserts 2
+  tests/test_u29_cloud_call_record.py:299 test_outside_a_run_nothing_is_recorded_and_the_exception_passes | names ['extract_paper'] | value kinds [] | params ['world', 'provider'] | asserts 2
+  tests/test_u40_cloud_claim_events.py:217 test_a_refused_cloud_store_leaves_nothing_in_either_store | names ['extract_paper'] | value kinds [] | params ['cloud', 'case', 'refusal'] | asserts 3
+
+-- (g) tests coupled — holding a null, missing-key, non-string or empty value, or a missing snippet: 2
+  tests/test_cloud_extraction.py:648 test_an_empty_value_is_refused_at_the_write_boundary | names [] | value kinds ['empty string'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+      assert stats['failed'] == 1
+      assert stats['extracted'] == 0
+      assert extractor._conn.execute('SELECT COUNT(*) FROM cloud_extractions WHERE paper_id = ? AND arm = ?', (pid, extract
+  tests/test_cloud_extraction.py:685 test_null_converted_to_nr | names ['extract_paper'] | value kinds ['None'] | params ['mock_anthropic_cls', 'test_db', 'spec_path']
+      assert len(result['spans']) == 2
+      assert nr_span['value'] == 'NR'
+      assert nr_span['source_snippet'] == ''
+      assert nr_span.get('notes') is None
+      assert num_span['value'] == '42'
+
+== counts
+(a) calls of parse_response_to_spans: 11
+(b) _last_salvage: 8
+(c) canonical_absence_sentinel on the cloud path: 2
+(d') uses of either model in engine/core/effective_config.py: 2
+(d) imports of ExtractionOutput / EvidenceSpan: 38
+(e'') references outside the four trees (count, lines): 4
+(e') the scripts naming themselves or each other: 2
+(e) references to the two scripts (text lines; engine/, scripts/, tests/, analysis/; the scripts' own lines apart): 1
+(f) scripts/backfill_cloud_spans.py: 13
+(f) scripts/reparse_cloud_spans.py: 11
+(g') tests that call the parser or extract_paper with string values only: 22
+(g) tests coupled — holding a null, missing-key, non-string or empty value, or a missing snippet: 2

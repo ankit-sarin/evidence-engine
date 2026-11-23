@@ -1,0 +1,4 @@
+# R510 for session 12aj: six-cell INT- rows at dccc546 (HEAD at the 12aj open, the 12ai closeout) and at bc42a1f (12aj-CLOSE item 0)
+dccc546: 215; bc42a1f: 215; rows in 0 []; rows out 0 []
+no class or package move: True [] (leading digit of the Class cell and first token of the Owning-package cell compared, row by row)
+method: lines starting '| INT-' with six ' | '-separated cells, as 12ai_close/r510_12ai.txt's method line

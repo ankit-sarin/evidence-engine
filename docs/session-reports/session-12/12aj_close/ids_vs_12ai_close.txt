@@ -1,0 +1,9 @@
+# collected_ids_12aj_close.txt (the U31R gate's, 3601) against 12ai_close/collected_ids_12ai_close.txt (3608); a set comparison
+only-12aj: 0; only-12ai: 7; net -7
+  only-12ai tests/test_api_parity.py::test_engine_import_resolves[backfill_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+  only-12ai tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.cloud.base.CloudExtractorBase]
+  only-12ai tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.core.review_paths.load_spec_for]
+  only-12ai tests/test_api_parity.py::test_engine_import_resolves[reparse_cloud_spans.py::engine.core.review_paths.spec_path_for]
+  only-12ai tests/test_review_paths.py::test_entry_point_builds_no_spec_path_of_its_own[scripts/reparse_cloud_spans.py]
+  only-12ai tests/test_review_paths.py::test_entry_point_names_no_hardcoded_review[scripts/reparse_cloud_spans.py]
+  only-12ai tests/test_review_paths.py::test_entry_point_uses_the_resolver[scripts/reparse_cloud_spans.py]
